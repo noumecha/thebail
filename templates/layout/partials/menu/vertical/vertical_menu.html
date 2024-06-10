@@ -23,42 +23,37 @@
     <li class="menu-item {% if 'index' == request.resolver_match.url_name or '/dashbord/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-        <div class="text-truncate" data-i18n="Dashboards">Dashboards</div>
-        <span class="badge bg-danger rounded-pill ms-auto">5</span>
+        <div class="text-truncate" data-i18n="Dashboards">Accueil</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item">
-          <a href="{% get_theme_variables 'live_preview' %}dashboard/crm/" class="menu-link" target="_blank">
-            <div class="text-truncate" data-i18n="CRM">CRM</div>
-            <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto">PRO</span>
+        <li class="menu-item {% if 'index' == request.resolver_match.url_name %}active{% endif %}">
+          <a href="{% url 'index' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Analytics">Statistiques</div>
+          </a>
+        </li>
+        <li class="menu-item {% if '/input_groups/' in request.path %}active{% endif %}">
+          <a href="{% url 'forms-input-groups' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Input groups">Input groups</div>
           </a>
         </li>
         <li class="menu-item {% if 'index' == request.resolver_match.url_name %}active{% endif %}">
           <a href="{% url 'index' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Analytics">Analytics</div>
+            <div class="text-truncate" data-i18n="Analytics">Locataire</div>
           </a>
         </li>
-        <li class="menu-item">
-          <a href="{% get_theme_variables 'live_preview' %}app/ecommerce/dashboard/" class="menu-link" target="_blank">
-            <div class="text-truncate" data-i18n="eCommerce">eCommerce</div>
-            <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto">PRO</span>
+        <li class="menu-item {% if 'index' == request.resolver_match.url_name %}active{% else %}{% endif %}">
+          <a href="{% url 'index' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Analytics">Bailleurs</div>
           </a>
         </li>
-        <li class="menu-item">
-          <a href="{% get_theme_variables 'live_preview' %}app/logistics/dashboard/" class="menu-link" target="_blank">
-            <div class="text-truncate" data-i18n="Logistics">Logistics</div>
-            <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto">PRO</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% get_theme_variables 'live_preview' %}app/academy/dashboard/" class="menu-link" target="_blank">
-            <div class="text-truncate" data-i18n="Academy">Academy</div>
-            <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto">PRO</span>
+        <li class="menu-item {% if 'index' == request.resolver_match.url_name %}active{% endif %}">
+          <a href="{% url 'index' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Analytics">Paiements</div>
           </a>
         </li>
       </ul>
     </li>
-    <!-- Layouts -->
+    <!-- Layouts>
     <li class="menu-item {% if '/layouts/' in request.path  %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-layout"></i>
@@ -91,9 +86,9 @@
           </a>
         </li>
       </ul>
-    </li>
+    </li -->
     <!-- Front Pages -->
-    <li class="menu-item">
+    <!-- li class="menu-item">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class='menu-icon tf-icons bx bx-store'></i>
         <div class="text-truncate" data-i18n="Front Pages">Front Pages</div>
@@ -167,17 +162,17 @@
         <div class="text-truncate" data-i18n="Kanban">Kanban</div>
         <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto">PRO</span>
       </a>
-    </li>
+    </li -->
     <!-- Account -->
     <li class="menu-item {% if '/account_settings/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-dock-top"></i>
-        <div class="text-truncate" data-i18n="Account Settings">Account Settings</div>
+        <div class="text-truncate" data-i18n="Account Settings">Compte</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {% if '/account/' in request.path %}active{% endif %}">
           <a href="{% url 'pages-account-settings-account' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Account">Account</div>
+            <div class="text-truncate" data-i18n="Account">Configuration</div>
           </a>
         </li>
         <li class="menu-item {% if '/notifications/' in request.path %}active{% endif %}">
@@ -192,32 +187,32 @@
         </li>
       </ul>
     </li>
-    <!-- Auth -->
+    <!-- Auth >
     <li class="menu-item {% if '/auth/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-        <div class="text-truncate" data-i18n="Authentications">Authentications</div>
+        <div class="text-truncate" data-i18n="Authentications">Compte</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {% if '/login/' in request.path %}active{% endif %}">
           <a href="{% url 'auth-login-basic' %}" class="menu-link" target="_blank">
-            <div class="text-truncate" data-i18n="Login">Login</div>
+            <div class="text-truncate" data-i18n="Login">Connexion</div>
           </a>
         </li>
         <li class="menu-item {% if '/register/' in request.path %}active{% endif %}">
           <a href="{% url 'auth-register-basic' %}" class="menu-link" target="_blank">
-            <div class="text-truncate" data-i18n="Register">Register</div>
+            <div class="text-truncate" data-i18n="Register">Ajouter un utilisateur</div>
           </a>
         </li>
         <li class="menu-item {% if '/forgot_password/' in request.path %}active{% endif %}">
           <a href="{% url 'auth-forgot-password-basic' %}" class="menu-link" target="_blank">
-            <div class="text-truncate" data-i18n="Frogot Password">Frogot Password</div>
+            <div class="text-truncate" data-i18n="Frogot Password">Paramètres</div>
           </a>
         </li>
       </ul>
-    </li>
+    </li -->
     <!-- Misc -->
-    <li class="menu-item {% if '/misc/' in request.path %}active open{% endif %}">
+    <!--li class="menu-item {% if '/misc/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-cube-alt"></i>
         <div class="text-truncate" data-i18n="Misc">Misc</div>
@@ -234,9 +229,9 @@
           </a>
         </li>
       </ul>
-    </li>
+    </li -->
 
-    <li class="menu-header small text-uppercase">
+    <!-- li class="menu-header small text-uppercase">
       <span class="menu-header-text">Components</span>
     </li>
 
@@ -245,8 +240,8 @@
         <i class="menu-icon tf-icons bx bx-collection"></i>
         <div class="text-truncate" data-i18n="Card">Card</div>
       </a>
-    </li>
-    <!-- UI -->
+    </li -->
+    <!-- UI >
     <li class="menu-item {% if '/ui/' in request.path %}active open{% endif %}">
       <a href=" javascript:void(0)" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-box"></i>
@@ -349,8 +344,8 @@
           </a>
         </li>
       </ul>
-    </li>
-    <!-- Extended UI -->
+    </li -->
+    <!-- Extended UI >
     <li class="menu-item {% if '/extended_ui/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0)" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-copy"></i>
@@ -368,8 +363,8 @@
           </a>
         </li>
       </ul>
-    </li>
-    <!-- Icons -->
+    </li -->
+    <!-- Icons >
     <li class="menu-item {% if '/boxicons/' in request.path %}active{% endif %}">
       <a href="{% url 'icons-boxicons' %}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-crown"></i>
@@ -379,9 +374,9 @@
 
     <li class="menu-header small text-uppercase">
       <span class="menu-header-text">Forms & Tables</span>
-    </li>
+    </li -->
 
-    <!-- Form -->
+    <!-- Form >
     <li class="menu-item {% if '/forms/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0)" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -399,9 +394,9 @@
           </a>
         </li>
       </ul>
-    </li>
+    </li -->
 
-    <!-- Form Layouts -->
+    <!-- Form Layouts >
     <li class="menu-item {% if '/form/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0)" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -460,7 +455,7 @@
       </a>
     </li>
 
-  </ul>
+  </ul -->
 
 
 </aside>
