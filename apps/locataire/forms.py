@@ -1,12 +1,12 @@
-from django.db import forms
-from . import models
+from django import forms
+from .models import Locataire, TypePersonne
 
 class LocataireForm(forms.ModelForm):
     class Meta:
-        model = models.Locataire
+        model = Locataire
         fields = ['intitule','observation','type_personne']
 
 class TypePeronneForm(forms.ModelForm):
     class Meta:
-        model = models.TypePersonne
+        model = TypePersonne
         fields = ['libelle']
