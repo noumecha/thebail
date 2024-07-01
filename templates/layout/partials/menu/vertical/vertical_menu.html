@@ -68,6 +68,25 @@
         </li>
       </ul>
     </li>
+    <!-- Locataire -->
+    <li class="menu-item {% if '/bailleur/' == request.resolver_match.url_name or '/bailleur/' in request.path %}active open{% endif %}">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <div class="text-truncate" data-i18n="Form Elements">Bailleur</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item {% if '/add/' in request.path %}active{% endif %}">
+          <a href="{% url 'bailleur-add' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
+          </a>
+        </li>
+        <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
+          <a href="{% url 'bailleur-list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
+          </a>
+        </li>
+      </ul>
+    </li>
     <!-- Layouts>
     <li class="menu-item {% if '/layouts/' in request.path  %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">

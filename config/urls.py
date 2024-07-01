@@ -57,6 +57,9 @@ urlpatterns = [
 
     # Locataire urls
     path("", include("apps.locataire.urls")),
+    
+    # Bailleur urls
+    path("", include("apps.bailleur.urls")),
 ]
 
 handler404 = SystemView.as_view(template_name="pages_misc_error.html", status=404)

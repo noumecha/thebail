@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "apps.form_layouts",
     "apps.tables",
     "apps.locataire",
+    "apps.bailleur",
 ]
 
 MIDDLEWARE = [
