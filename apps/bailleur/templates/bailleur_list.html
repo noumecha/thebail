@@ -16,23 +16,35 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Intitulé</th>
-          <th>Observation</th>
-          <th>Type personne</th>
+          <th>Nom &amp; Prenoms</th>
+          <th>NUI</th>
+          <th>Date délivrance</th>
+          <th>Registre</th>
+          <th>Nom &amp; Prenoms responsable</th>
+          <th>Telephone</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
-        <!-- {% for locataire in Bailleurs %}
+        {% for bailleur in bailleurs %}
           <tr>
             <td>
-              {{ locataire.intitule }}
+              {{ bailleur.nom_prenom_bailleur }}
             </td>
             <td>
-              {{ locataire.observation }}
+              {{ bailleur.niu_bailleur }}
             </td>
             <td>
-              {{ locataire.type_personne }}
+              {{ bailleur.num_cni_bailleur }}
+            </td>
+            <td>
+              {{ bailleur.registre_commerce_bailleur }}
+            </td>
+            <td>
+              {{ bailleur.nom_prenom_responsable }}
+            </td>
+            <td>
+              {{ bailleur.telephone_bailleur }}
             </td>
             <td class="rounded-end-bottom">
               <div class="dropdown">
@@ -45,7 +57,6 @@
             </td>
           </tr>
         {% endfor %}
-      -->
       </tbody>
     </table>
   </div>
