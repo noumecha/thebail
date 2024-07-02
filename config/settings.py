@@ -69,6 +69,10 @@ INSTALLED_APPS = [
     "apps.tables",
     "apps.locataire",
     "apps.bailleur",
+    "apps.baux",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    #"crispy_bootstrap4",
 ]
 
 MIDDLEWARE = [
@@ -177,7 +181,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Template Settings
 # ------------------------------------------------------------------------------
-
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 THEME_LAYOUT_DIR = THEME_LAYOUT_DIR
 THEME_VARIABLES = THEME_VARIABLES
 

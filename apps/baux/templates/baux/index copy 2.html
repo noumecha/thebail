@@ -1,0 +1,97 @@
+
+{% extends  "baux/layout.html" %}
+                                                                                                                                                                                                                                                                
+<!-- {% block title %}
+Home PAGE
+{% endblock %} -->
+
+{% block content %}
+
+<div class="d-flex justify-content-center">
+  <div class="overflow-auto" style="height: 400px"> 
+      
+     <div class="card m-2" style="max-width: 300px;">
+        <div class="card-body">
+          <h5 class="card-title">IMMEUBLES (1) </h5>
+          <p class="card-text">Proceder au renseignement en machine d'un bien sujet à location. Ce bien est referencé dans le contrat de bail administritif</p>
+          <a href="{% url 'baux:immeuble' %}" class="btn btn-primary">Enregistrer un Immeuble</a>
+        </div>
+      </div>
+    
+
+    
+      <div class="card m-2" style="max-width: 300px;">
+        <div class="card-body">
+          <h5 class="card-title">BAILLEURS (2) </h5>class="d-flex"
+          <p class="card-text">Proceder aux renseignements des informations portant sur le prioprietaire (personne morale ou physique) du bien sujet à location.</p>
+          <a href="{% url 'baux:bailleur' %}" class="btn btn-primary">Enregistrer un bailleur</a>
+        </div>
+      </div>
+  
+
+    
+        <div class="card m-2" style="max-width: 300px;">
+          <div class="card-body">
+            <h5 class="card-title">LOCATAIRE (3)</h5>
+            <p class="card-text">Proceder aux renseignements des informations portant sur l'entité qui sollicite une location''.</p>
+            <a href="{% url 'baux:locataire' %}" class="btn btn-primary">Enregistrer un Locataire</a>
+          </div>
+        </div>
+      
+
+    
+        <div class="card m-2">
+          <div class="card-body" style="max-width: 300px;">
+            <h5 class="card-title"> CONTRAT (4)</h5>
+            <p class="card-text">Proceder aux renseignements des informations portant sur l'acte juridique liant un bailleur et un locataire au sujet d' un bail'.</p>
+            <a href="{% url 'baux:contrat' %}" class="btn btn-primary">Enregistrer un Contat</a>
+          </div>
+        </div>
+  
+
+      
+        <div class="card m-2">
+          <div class="card-body" style="max-width: 300px;">
+            <h5 class="card-title"> LOGEMENT</h5>
+            <p class="card-text">Proceder aux renseignements des informations portant sur la personne phyique ou morale effectivement logés dans un immeuble loué.</p>
+            <a href="#" class="btn btn-primary">Enregistrer un logé</a>
+          </div>
+        </div>
+      
+
+      
+        <div class="card m-2">
+          <div class="card-body" style="max-width: 300px;">
+            <h5 class="card-title"> DOSSIER DE REGLEMENTS</h5>
+            <p class="card-text">Enregister les factures de regelements des mensualités de loyer d'un contrat de bail administratif.</p>
+            <a href="#" class="btn btn-primary">Enregistrer une facture</a>
+          </div>
+        </div>
+      
+
+
+      
+        <div class="card m-2">
+          <div class="card-body" style="max-width: 300px;">
+            <h5 class="card-title">REPORTING</h5>
+            <p class="card-text">Acceder aux differents etat de synthese disponible.</p>
+            <a href="#" class="btn btn-primary">Statistique</a>
+          </div>
+        </div>
+      
+
+      
+        <div class="card m-2">
+          <div class="card-body" style="max-width: 300px;">
+            <h5 class="card-title">CONSULTATION</h5>
+            <p class="card-text">proceder aux recherhes multicritere</p>
+            <a href="#" class="btn btn-primary">Consultation</a>
+          </div>
+        </div>
+      
+      </div>
+  </div>
+
+
+
+{% endblock %}

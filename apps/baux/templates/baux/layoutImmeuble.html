@@ -1,0 +1,41 @@
+{% extends "baux/layout.html" %}
+
+<!-- {% block title %}
+Home PAGE
+{% endblock %} -->
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row row-cols1  row-cols-sm-2 row-cols-md-3 row cols-lg4 g-3">
+  
+      <div class="col">
+        <div class="card m-2">
+          <div class="card-body">
+            <h5 class="card-title"> Localisation (1) </h5>
+            <p class="card-text">Proceder a lenregistrement la localisation dun bien sujet à location</p>
+            <a href="{% url 'baux:localisation' %}" class="btn btn-success">Enregistrer une localisation</a>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col">
+        <div class="card m-2">
+          <div class="card-body">
+            <h5 class="card-title"> Immeuble (2) </h5>
+            <p class="card-text">Proceder aux renseignements des informations portant sur l'article sujet a location.</p>
+            <a href="{% url 'baux:immeuble' %}" class="btn btn-success">Enregistrer un bailleur</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class = "container-fluid justify-content-center">
+
+    <div class="col-md-6 align-self-end">
+        <a href="{% url 'baux:Home' %}">Revenir au Menu principal</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

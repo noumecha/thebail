@@ -60,6 +60,9 @@ urlpatterns = [
     
     # Bailleur urls
     path("", include("apps.bailleur.urls")),
+
+    # baux 
+    path("", include("apps.baux.urls")),
 ]
 
 handler404 = SystemView.as_view(template_name="pages_misc_error.html", status=404)

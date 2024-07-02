@@ -1,0 +1,72 @@
+{% extends "baux/layout.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+Bailleur
+{% endblock %}
+
+
+{% block content %}
+<h1>Enregistrement des Bailleurs </h1>
+
+<!-- enregistrement -->
+
+<div >
+    <form method="post" action="{% url 'baux:bailleur' %}">
+        {% csrf_token %}
+
+        <!-- enregistrement -->
+        {% if not form.instance.id %}
+        
+            {% include 'baux/saveBailleur.html' %}
+        
+        {% endif %}
+
+        <!-- listing -->
+        <div class="container-fluid">
+            <table class="table table-sm">
+                <tr>
+                    <th>Nom du Bailleur</th>
+                    <th>Identifiant NIU </th>
+                    <th>Representant</th>
+                    <th>Contact</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for score in BailleursList %}
+                <tr>
+                    {% if form.instance.id == score.id %}
+                    {% include 'baux/saveBailleur.html' %}
+                    {% else %}
+                    <td>{{ score.Nom_prenom }} </td>
+                    <td>{{ score.NIU }}</td>
+                    <td>{{ score.Nom_Prenom_Representant }}</td>
+                    <td>{{ score.Telephone }}</td>
+
+                    <td>
+                        <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
+                        <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<div class = "container-fluid justify-content-center">
+    <div class="form-group row">
+      <div class="col-md-6 align-self-start">
+          <a href="{{ request.META.HTTP_REFERER }}"> &lt;&lt; Retouner à la page précedente</a>
+      </div>
+      <div class="col-md-6 align-self-end">
+          <a href="{% url 'baux:Home' %}">Revenir au Menu principal</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

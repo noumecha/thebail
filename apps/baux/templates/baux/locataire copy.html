@@ -1,0 +1,52 @@
+{% extends "baux/layout.html" %}
+{% block title %}
+Locataire
+{% endblock %}
+
+{% block content %}
+    <h1>Enregistrement des locataires </h1>
+    <form method="post" action="{% url 'baux:locataire' %}">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>Intitule</th>
+                <th>NIU</th>
+                <th>Representant</th>
+                <th>Num_Cni</th>
+                <th>Date CNI</th>
+                <th>Type_personne</th>
+                <th>Action</th>
+            </tr>
+
+            {% if not form.instance.id %}
+            <tr>
+                {% include 'baux/saveLocataire.html' %}
+            </tr>
+            {% endif %}
+
+            {% for score in locatairesList %}
+            <tr>
+                {% if form.instance.id == score.id %}
+                 {% include 'baux/saveLocataire.html' %}
+                {% else %}
+                <td>{{ score.Intitule }} </td>
+                <td>{{ score.NIU }}</td>
+                <td>{{ score.Intitule }}</td>
+                <td>{{ score.Nom_Prenom_Representant }}</td>
+                <td>{{ score.Num_Cni}}</td>
+                <td>{{ score.Date_delivrance_cni }}</td>
+                <td>{{ score.Type_personne }}</td>
+                <td>
+                    <button formnovalidate name="edit" value="{{ score.id }}">Edit</button>
+                    <button formnovalidate name="delete" value="{{ score.id }}">Delete</button>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+        </table>
+    </form>
+
+    <a href="{% url 'baux:Home' %}"> Revenir au Menu principal </a>
+
+{% endblock %}

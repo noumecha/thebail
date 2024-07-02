@@ -1,0 +1,55 @@
+{% load crispy_forms_tags %}
+
+
+{% crispy form%}
+
+<button class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" name="save" value="{{ score.id }}">Enregistrer</button>
+
+<!-- 
+  <div class="form-group row">
+    <div class="col-md-4">
+      {{ form.Nom_prenom|as_crispy_field }}
+    </div>
+    <div class="col-md-4">
+      {{ form.NIU|as_crispy_field }}
+    </div>
+    <div class="col-md-4">
+      {{ form.Registre_commerce|as_crispy_field }}
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="form-group col-md-4 mb-0">
+      {{ form.Num_Cni|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-4 mb-0" >
+      {{ form.Date_delivrance_cni|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-4 mb-0">
+      {{ form.Type_personne|as_crispy_field }}
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="form-group col-md-4 mb-0">
+      {{ form.NumPassePort|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-4 mb-0">
+      {{ form.Date_delivrance_PassePort|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-4 mb-0">
+      {{ form.Telephone|as_crispy_field }}
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="form-group col-md-6 mb-0">
+      {{ form.Nom_Prenom_Representant|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-6 mb-0">
+      {{ form.Adresse|as_crispy_field }}
+    </div>
+  </div>
+
+
+ -->

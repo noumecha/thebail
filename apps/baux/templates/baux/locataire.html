@@ -1,0 +1,64 @@
+{% extends "baux/layout.html" %}
+{% block title %}
+Locataire
+{% endblock %}
+
+{% block content %}
+<h1>Enregistrement des locataires </h1>
+<form method="post" action="{% url 'baux:locataire' %}">
+    {% csrf_token %}
+    <!-- enregistrement -->
+    {% if not form.instance.id %}
+
+    {% include 'baux/saveLocataire.html' %}
+
+    {% endif %}
+
+    <!-- listing -->
+
+    <div class="container-fluid">
+        <table class="table table-sm">
+
+            <tr>
+                <th>Intitule</th>
+                <th>NIU</th>
+                <th>Representant</th>
+                <th>Num_Cni</th>
+                <th>Date CNI</th>
+                <th>Action</th>
+            </tr>
+
+            {% for score in locatairesList %}
+            <tr>
+                {% if form.instance.id == score.id %}
+                {% include 'baux/saveLocataire.html' %}
+                {% else %}
+                <td>{{ score.Intitule }} </td>
+                <td>{{ score.NIU }}</td>
+                <td>{{ score.Nom_Prenom_Representant }}</td>
+                <td>{{ score.Num_Cni}}</td>
+                <td>{{ score.Date_delivrance_cni }}</td>
+                <td>
+                    <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
+                    <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+        </table>
+        <div>
+</form>
+
+<div class = "container-fluid justify-content-center">
+    <div class="form-group row">
+      <div class="col-md-6 align-self-start">
+          <a href="{{ request.META.HTTP_REFERER }}"> &lt;&lt; Retouner à la page précedente</a>
+      </div>
+      <div class="col-md-6 align-self-end">
+          <a href="{% url 'baux:Home' %}">Revenir au Menu principal</a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
