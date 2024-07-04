@@ -56,10 +56,10 @@ urlpatterns = [
     path("", include("apps.tables.urls")),
 
     # Locataire urls
-    path("", include("apps.locataire.urls")),
+    #path("", include("apps.locataire.urls")),
     
     # Bailleur urls
-    path("", include("apps.bailleur.urls")),
+    #path("", include("apps.bailleur.urls")),
 
     # baux 
     path("", include("apps.baux.urls")),

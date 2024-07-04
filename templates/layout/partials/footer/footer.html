@@ -1,13 +1,7 @@
-<footer class="content-footer footer bg-footer-theme">
-  <div class="{{container_class}} d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+<footer class="content-footer footer bg-footer-theme align-items-center">
+  <div class="{{container_class}} d-flex flex-wrap justify-content-center py-2 flex-lg-row align-items-center flex-column">
     <div class="mb-2 mb-md-0">
-      ©
-      <script>
-        document.write(new Date().getFullYear());
-      </script>
-      <a href="{% get_theme_variables 'creator_url' %}" target="_blank" class="footer-link fw-medium"
-        >{% get_theme_variables 'creator_name' %}</a
-      >
+      <p>&copy; Copyright {% now "Y" %} by <a href="www.dgb.cm" target="_blank">Direction Générale du Budget</a></p>
     </div>
   </div>
 </footer>
