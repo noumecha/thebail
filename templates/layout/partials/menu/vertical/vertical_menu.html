@@ -23,7 +23,7 @@
 
     <!-- Accueil -->
     <li class="menu-item {% if 'index' == request.resolver_match.url_name or '/dashbord/' in request.path %}active open{% endif %}">
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <a href="/" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
         <div class="text-truncate" data-i18n="Dashboards">Accueil</div>
       </a>
@@ -250,6 +250,7 @@
         <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto">PRO</span>
       </a>
     </li -->
+    <!-- MENU DE COMPTE UTILISATEUR -->
     <!-- Account>
     <li class="menu-item {% if '/account_settings/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">

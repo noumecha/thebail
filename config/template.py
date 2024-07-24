@@ -7,7 +7,7 @@
 THEME_VARIABLES = {
     "creator_name": "Direction Général du Budget",
     "creator_url": "#",
-    "template_name": "BAUX ADMINISTRATION",
+    "template_name": "BAUX ADMINISTRATIFS",
     "template_suffix": "Baux Admin Template",
     "template_version": "1.0.0",
     "template_free": True,
