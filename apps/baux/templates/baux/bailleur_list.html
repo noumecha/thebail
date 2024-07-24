@@ -1,0 +1,47 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Bailleur_list{% endblock %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="card mt-3 p-3">
+        <h1>Listes des Bailleurs</h1>
+        <!-- listing class="container-fluid" -->
+        <div>
+            <table class="table table-sm">
+                <tr>
+                    <th>Nom du Bailleur</th>
+                    <th>Identifiant NIU </th>
+                    <th>Representant</th>
+                    <th>Contact</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for score in BailleursList %}
+                <tr>
+                    {% if form.instance.id == score.id %}
+                    {% include 'baux/saveBailleur.html' %}
+                    {% else %}
+                    <td>{{ score.Nom_prenom }} </td>
+                    <td>{{ score.NIU }}</td>
+                    <td>{{ score.Nom_Prenom_Representant }}</td>
+                    <td>{{ score.Telephone }}</td>
+
+                    <td>
+                        <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
+                        <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+    </div>
+{% endblock %}

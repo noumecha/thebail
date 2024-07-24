@@ -2,7 +2,7 @@
   <!-- ! Hide app brand if navbar-full -->
   {% if not navbar_full %}
   <div class="app-brand demo">
-    <a href="{% url 'index' %}" class="app-brand-link">
+    <a href="{% url 'index' %}" class="app-brand-link br-30 active open rounded">
       <div class="text-capitalize demo menu-text fw-bold">{% get_theme_variables 'template_name' %}</div>
       <div class="app-brand-divider"></div>
       <div class="">
@@ -77,7 +77,7 @@
           </a>
         </li>
         <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
-          <a href="{% url 'baux:bailleur' %}" class="menu-link">
+          <a href="{% url 'baux:bailleur_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
         </li>
@@ -96,7 +96,7 @@
           </a>
         </li>
         <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
-          <a href="{% url 'baux:locataire' %}" class="menu-link">
+          <a href="{% url 'baux:locataire_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes de locataires</div>
           </a>
         </li>
@@ -115,7 +115,7 @@
           </a>
         </li>
         <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
-          <a href="{% url 'baux:contrat' %}" class="menu-link">
+          <a href="{% url 'baux:contrat_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
         </li>
@@ -134,7 +134,7 @@
           </a>
         </li>
         <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
-          <a href="{% url 'baux:localisation' %}" class="menu-link">
+          <a href="{% url 'baux:localisation_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
         </li>
