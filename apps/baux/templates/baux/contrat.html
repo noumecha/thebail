@@ -8,33 +8,37 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h1>Enregistrement d'un contrat de bail administratif</h1>
+    <div class="card p-3">
+        <h1>Enregistrement d'un contrat de bail administratif</h1>
 
-<!-- enregistrement 
+        <!-- enregistrement 
 
-'Bailleur', 'Locataire','Immeubles', 
-'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
-'Periodicite_Reglement', 'Type_location', 'Nom_CF', 'Date_visa_CF','Montant_TTC_Mensuel',
-'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'Compte_Bancaire', 
-'observation'
--->
-
-<div>
-    <form method="post" action="{% url 'baux:contrat' %}">
-        {% csrf_token %}
-
-        <!-- enregistrement -->
-        {% if not form.instance.id %}
-
-        {% include 'baux/saveContrat.html' %}
-
-        {% endif %}
-
-        <!-- listing 
- Ref_contrat  Date_Signature  Duree_Contrat 'Bailleur', 'Locataire','Immeubles', Montant_TTC_Mensuel
-        
+        'Bailleur', 'Locataire','Immeubles', 
+        'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
+        'Periodicite_Reglement', 'Type_location', 'Nom_CF', 'Date_visa_CF','Montant_TTC_Mensuel',
+        'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'Compte_Bancaire', 
+        'observation'
         -->
-        <div class="container-fluid">
+
+        <div>
+            <form method="post" action="{% url 'baux:contrat' %}">
+                {% csrf_token %}
+
+                <!-- enregistrement -->
+                {% if not form.instance.id %}
+
+                {% include 'baux/saveContrat.html' %}
+
+                {% endif %}
+
+            </form>
+
+        </div>
+    </div>
+    <div class="card mt-3 p-3">
+        <h1>Listes des Contrats de bails</h1>
+        <!-- listing Ref_contrat  Date_Signature  Duree_Contrat 'Bailleur', 'Locataire','Immeubles', Montant_TTC_Mensuel -->
+        <div > <!-- class="container-fluid" -->
             <table class="table table-sm">
                 <tr>
                     <th>Reference contrat</th>
@@ -71,10 +75,7 @@
             </table>
 
         </div>
-
-    </form>
-
-</div>
+    </div>
 
 
 <!--div class = "container-fluid justify-content-center">
