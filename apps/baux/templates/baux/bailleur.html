@@ -9,21 +9,23 @@
 
 
 {% block content %}
-<h1>Enregistrement des Bailleurs </h1>
-
-<!-- enregistrement -->
-
-<div >
-    <form method="post" action="{% url 'baux:bailleur' %}">
-        {% csrf_token %}
+        
+    <div class="card p-3">
+        <h1>Enregistrement des Bailleurs </h1>
 
         <!-- enregistrement -->
-        {% if not form.instance.id %}
-        
-            {% include 'baux/saveBailleur.html' %}
-        
-        {% endif %}
 
+        <div >
+            <form method="post" action="{% url 'baux:bailleur' %}">
+                {% csrf_token %}
+                <!-- enregistrement -->
+                {% if not form.instance.id %}
+                    {% include 'baux/saveBailleur.html' %}
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    <div class="card mt-3 p-3">
         <!-- listing -->
         <div class="container-fluid">
             <table class="table table-sm">
@@ -56,10 +58,7 @@
             </table>
 
         </div>
-
-    </form>
-
-</div>
+    </div>
 
 
 <!--div class = "container-fluid justify-content-center">

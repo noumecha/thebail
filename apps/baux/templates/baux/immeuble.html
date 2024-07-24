@@ -9,27 +9,34 @@
 
 
 {% block content %}
-<h1>Enregistrement d'un immeuble</h1>
-
-<!-- enregistrement -->
-
-<div>
-    <form method="post" action="{% url 'baux:immeuble' %}">
-        {% csrf_token %}
+    <div class="card p-3">
+        <h1>Enregistrement d'un immeuble</h1>
 
         <!-- enregistrement -->
-        {% if not form.instance.id %}
 
-        {% include 'baux/saveimmeuble.html' %}
+        <div>
+            <form method="post" action="{% url 'baux:immeuble' %}">
+                {% csrf_token %}
 
-        {% endif %}
+                <!-- enregistrement -->
+                {% if not form.instance.id %}
 
-        <!-- listing 
-        "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",
-                   "Superficie","Date_Construction","Type_immeuble","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
-                   "Coordonee_gps_Position","Adresse","Description","Localisation","Norme"
-        
-        -->
+                {% include 'baux/saveimmeuble.html' %}
+
+                {% endif %}
+
+                <!-- listing 
+                "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",
+                        "Superficie","Date_Construction","Type_immeuble","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
+                        "Coordonee_gps_Position","Adresse","Description","Localisation","Norme"
+                
+                -->
+
+            </form>
+
+        </div>
+    </div>
+    <div class="card mt-3 p-3">
         <div class="container-fluid">
             <table class="table table-sm">
                 <tr>
@@ -40,9 +47,8 @@
                     <th>localisation</th>
                     <th>Action</th>
                 </tr>
-
                 {% for score in immeubleList %}
-                   <tr>
+                <tr>
                         {% if form.instance.id == score.id %}
                         {% include 'baux/saveimmeuble.html' %}
                         {% else %}
@@ -51,22 +57,16 @@
                             <td>{{ score.Reference_TF }}</td>
                             <td>{{ score.Norme }}</td>
                             <td>{{ score.Localisation }}</td>
-
                             <td>
                                 <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
                                 <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
                             </td>
                         {% endif %}
-                     </tr>
+                    </tr>
                 {% endfor %}
-
             </table>
-
         </div>
-
-    </form>
-
-</div>
+    </div>
 
 <!--div class = "container-fluid justify-content-center">
     <div class="form-group row">

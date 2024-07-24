@@ -8,99 +8,61 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h1>Enregistrement des locataires </h1>
-<form method="post" action="{% url 'baux:locataire' %}">
-    {% csrf_token %}
-    <!-- enregistrement -->
-    {% if not form.instance.id %}
+    <div class="card p-3">
+        <h1>Enregistrement des locataires </h1>
+        <form method="post" action="{% url 'baux:locataire' %}">
+        {% csrf_token %}
+        <!-- enregistrement -->
+        {% if not form.instance.id %}
 
-    {% include 'baux/saveLocataire.html' %}
+        {% include 'baux/saveLocataire.html' %}
 
-    {% endif %}
-
-    <!-- listing -->
-
-    <div class="container-fluid">
-        <div class="table-responsive text-nowrap">
-          <table class="table">
-            <thead>
-                <tr>
-                    <th>Intitule</th>
-                    <th>NIU</th>
-                    <th>Representant</th>
-                    <th>Num_Cni</th>
-                    <th>Date CNI</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                {% for score in locatairesList %}
-                <tr>
-                    {% if form.instance.id == score.id %}
-                        {% include 'baux/saveLocataire.html' %}
-                    {% else %}
-                        <td>{{ score.Intitule }} </td>
-                        <td>{{ score.NIU }}</td>
-                        <td>{{ score.Nom_Prenom_Representant }}</td>
-                        <td>{{ score.Num_Cni}}</td>
-                        <td>{{ score.Date_delivrance_cni }}</td>
-                        <td class="rounded-end-bottom">
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                <div class="dropdown-menu">
-                                    <button formnovalidate class="btn d-flex btn-primary dropdown-item"  name="edit" value="{{ score.id }}"><i class="bx bx-edit-alt me-1"></i> Edit</button>
-                                    <button formnovalidate class="btn d-flex btn-danger dropdown-item"  name="delete" value="{{ score.id }}"><i class="bx bx-trash me-1"></i> Delete</button>
-                                </div>
-                            </div>
-                        </td>
-                    {% endif %}
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <!-- table class="table table-sm">
-
-            <tr>
-                <th>Intitule</th>
-                <th>NIU</th>
-                <th>Representant</th>
-                <th>Num_Cni</th>
-                <th>Date CNI</th>
-                <th>Action</th>
-            </tr>
-
-            {% for score in locatairesList %}
-            <tr>
-                {% if form.instance.id == score.id %}
-                {% include 'baux/saveLocataire.html' %}
-                {% else %}
-                <td>{{ score.Intitule }} </td>
-                <td>{{ score.NIU }}</td>
-                <td>{{ score.Nom_Prenom_Representant }}</td>
-                <td>{{ score.Num_Cni}}</td>
-                <td>{{ score.Date_delivrance_cni }}</td>
-                <td>
-                    <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
-                    <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
-                </td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-
-        </table -->
-        <div>
-</form>
-
-<!--div class = "container-fluid justify-content-center">
-    <div class="form-group row">
-        <div class="col-md-6 align-self-start">
-            <a href="{{ request.META.HTTP_REFERER }}"> &lt;&lt; Retouner à la page précedente</a>
-        </div>
-        <div class="col-md-6 align-self-end">
-            <a href="{% url 'baux:Home' %}">Revenir au Menu principal</a>
-        </div>
+        {% endif %}
+        </form>
     </div>
-</div-->
+     
+    <div class="card mt-3 p-3">
+        <!-- listing -->
+        <div class="container-fluid">
+            <div class="table-responsive text-nowrap">
+              <table class="table">
+                <thead>
+                    <tr>
+                        <th>Intitule</th>
+                        <th>NIU</th>
+                        <th>Representant</th>
+                        <th>Num_Cni</th>
+                        <th>Date CNI</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for score in locatairesList %}
+                    <tr>
+                        {% if form.instance.id == score.id %}
+                            {% include 'baux/saveLocataire.html' %}
+                        {% else %}
+                            <td>{{ score.Intitule }} </td>
+                            <td>{{ score.NIU }}</td>
+                            <td>{{ score.Nom_Prenom_Representant }}</td>
+                            <td>{{ score.Num_Cni}}</td>
+                            <td>{{ score.Date_delivrance_cni }}</td>
+                            <td class="rounded-end-bottom">
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                    <div class="dropdown-menu">
+                                        <button formnovalidate class="btn d-flex btn-primary dropdown-item"  name="edit" value="{{ score.id }}"><i class="bx bx-edit-alt me-1"></i> Edit</button>
+                                        <button formnovalidate class="btn d-flex btn-danger dropdown-item"  name="delete" value="{{ score.id }}"><i class="bx bx-trash me-1"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+        <div>
+    <div>
 
 {% endblock %}

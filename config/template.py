@@ -5,10 +5,10 @@
 # Theme Variables
 # ? Personalize template by changing theme variables (For ex: Name, URL Version etc...)
 THEME_VARIABLES = {
-    "creator_name": "TheBail",
+    "creator_name": "Direction Général du Budget",
     "creator_url": "#",
-    "template_name": "TheBail",
-    "template_suffix": "The bail Admin Template",
+    "template_name": "BAUX ADMINISTRATION",
+    "template_suffix": "Baux Admin Template",
     "template_version": "1.0.0",
     "template_free": True,
     "template_description": "Modern Template for Django - Bail project",
