@@ -2,7 +2,7 @@ from django import forms
 from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Legend
 
 class LocatairesForm(forms.ModelForm):
     class Meta:
@@ -179,28 +179,40 @@ class ImmeublesForm(forms.ModelForm):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
-             Row(
-                Column(FloatingField("Designation"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Reference_TF"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Localisation"), css_class='form-group col-md-4 mb-0'),
-                css_class='form-row' 
+            Fieldset(
+                Legend(
+                    "TF"
+                ),
+                Row(
+                    Column(FloatingField("Designation"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Reference_TF"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Localisation"), css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row' 
+                ),
+                css_class="border p-2"
             ),
-            Row(
-                Column(FloatingField("Superficie"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Date_Construction"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Type_immeuble"), css_class='form-group col-md-4 mb-0'),               
-                Column(FloatingField("Norme"), css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
+            Fieldset(
+                "Immeuble",
+                Row(
+                    Column(FloatingField("Superficie"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Date_Construction"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Type_immeuble"), css_class='form-group col-md-4 mb-0'),               
+                    Column(FloatingField("Norme"), css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
             ),
-            Row(
-                Column(FloatingField("Coordonee_gps_latitude"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Coordonee_gps_longitude"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Coordonee_gps_Position"), css_class='form-group col-md-2 mb-0'),
-                Column(FloatingField("Adresse"), css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
+            Fieldset(
+                "Localisation",
+                Row(
+                    Column(FloatingField("Coordonee_gps_latitude"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Coordonee_gps_longitude"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Coordonee_gps_Position"), css_class='form-group col-md-2 mb-0'),
+                    Column(FloatingField("Adresse"), css_class='form-group col-md-4 mb-0'),
+                    css_class='form-row'
+                ),
             ),
             FloatingField("Description"),
 
@@ -251,6 +263,3 @@ class ContratsForm(forms.ModelForm):
 
 
     
-
-
-
