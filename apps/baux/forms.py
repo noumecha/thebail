@@ -2,7 +2,7 @@ from django import forms
 from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Legend
+from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset
 
 class LocatairesForm(forms.ModelForm):
     class Meta:
@@ -179,44 +179,55 @@ class ImmeublesForm(forms.ModelForm):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
-            Fieldset(
-                Legend(
-                    "TF"
+            Row (
+                Fieldset(
+                    "TF",
+                    Row(
+                        Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Reference_TF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Superficie"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row' 
+                    ),
+                    css_class="line__text border p-2"
                 ),
-                Row(
-                    Column(FloatingField("Designation"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Reference_TF"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Localisation"), css_class='form-group col-md-4 mb-0'),
-                    css_class='form-row' 
-                ),
-                css_class="border p-2"
+                css_class="p-3 pt-0"
             ),
-            Fieldset(
-                "Immeuble",
-                Row(
-                    Column(FloatingField("Superficie"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Date_Construction"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Type_immeuble"), css_class='form-group col-md-4 mb-0'),               
-                    Column(FloatingField("Norme"), css_class='form-group col-md-4 mb-0'),
-                    css_class='form-row'
+            Row(
+                Fieldset(
+                    "Immeuble",
+                    Row(
+                        Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),               
+                        Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row'
+                    ),
+                    css_class="line__text border p-2"
                 ),
+                css_class="p-3 pt-0"
             ),
-            Fieldset(
-                "Localisation",
-                Row(
-                    Column(FloatingField("Coordonee_gps_latitude"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Coordonee_gps_longitude"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Coordonee_gps_Position"), css_class='form-group col-md-2 mb-0'),
-                    Column(FloatingField("Adresse"), css_class='form-group col-md-4 mb-0'),
-                    css_class='form-row'
+            Row(
+                Fieldset(
+                    "Localisation",
+                    Row(
+                        Column(FloatingField("Localisation"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Coordonee_gps_latitude"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Coordonee_gps_longitude"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Coordonee_gps_Position"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row'
+                    ),
+                    css_class="line_text border p-2"
                 ),
+                css_class="p-3 pt-0"
             ),
-            FloatingField("Description"),
-
-            )
+            FloatingField(
+                "Description",
+                css_class="mt-1"
+            ),
+        )
         self.helper.form_tag = False;self.fields['Coordonee_gps_latitude'].required = False   
         self.fields['Coordonee_gps_longitude'].required = False; self.fields['Coordonee_gps_altitude'].required = False        
         self.fields['Date_Construction'].required = False;self.fields['Coordonee_gps_Position'].required = False   
