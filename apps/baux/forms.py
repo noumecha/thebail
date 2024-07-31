@@ -181,7 +181,7 @@ class ImmeublesForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row (
                 Fieldset(
-                    "TF",
+                    "Eléments Fonciers",
                     Row(
                         Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Reference_TF"), css_class='form-group col-md-6 mb-0'),
@@ -190,7 +190,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row' 
                     ),
-                    css_class="line__text border p-2"
+                    css_class="line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -203,7 +203,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
-                    css_class="line__text border p-2"
+                    css_class="line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -219,7 +219,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
-                    css_class="line_text border p-2"
+                    css_class="line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
