@@ -127,12 +127,19 @@ class LocalisationForm(forms.ModelForm):
         super(LocalisationForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
-             Row(
-                Column(FloatingField("pays"), css_class='form-group col-md-4 mb-0'),
-                Column(FloatingField("arrondissement"), css_class='form-group col-md-4 mb-0'),
-                Column(FloatingField("Quartier"), css_class='form-group col-md-4 mb-0'),
-                css_class='form-row' 
-                """ ,label_class='text-decoration-none' """
+            Row(
+                Fieldset(
+                    "Coordonnées géorgraphiques",
+                    Row(
+                        Column(FloatingField("pays"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("arrondissement"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Quartier"), css_class='form-group col-md-12 mb-0'),
+                        css_class='form-row' 
+                        """ ,label_class='text-decoration-none' """
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0"
             ),
             FloatingField("Observation"),
 
@@ -196,7 +203,7 @@ class ImmeublesForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Immeuble",
+                    "Eléments normatifs",
                     Row(
                         Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),               
@@ -209,13 +216,23 @@ class ImmeublesForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Localisation",
+                    "Coordonnées GPS",
                     Row(
-                        Column(FloatingField("Localisation"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Coordonee_gps_latitude"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Coordonee_gps_longitude"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Coordonee_gps_Position"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row'
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0"
+            ),
+            Row(
+                Fieldset(
+                    "Adresse",
+                    Row(
+                        Column(FloatingField("Localisation"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
