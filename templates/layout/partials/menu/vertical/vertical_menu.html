@@ -140,6 +140,25 @@
         </li>
       </ul>
     </li>
+    <!-- Logés -->
+    <li class="menu-item {% if '/loges/' == request.resolver_match.url_name or '/loges/' in request.path %}active open{% endif %}">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <div class="text-truncate" data-i18n="Form Elements">Logés</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item {% if '/add/' in request.path %}active{% endif %}">
+          <a href="{% url 'baux:loges' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
+          </a>
+        </li>
+        <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
+          <a href="{% url 'baux:loges_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
+          </a>
+        </li>
+      </ul>
+    </li>
     <!-- Layouts>
     <li class="menu-item {% if '/layouts/' in request.path  %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">

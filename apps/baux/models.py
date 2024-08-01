@@ -54,7 +54,22 @@ TYPE_DOSSIER = (
         (str(M), '1 - facture paiyée (mandatée)'),
         (str(N), '2 - facture non-paiyée (non-mandatée)'),
      )  
-
+V = 'VILLA'
+D = 'DUPLEX'
+A = 'AUTRES'
+DESCRIPTION_IMMEUBLE = (
+    ('', 'Choisir la description de l\'immeuble'),
+    (str(V), '1 - Villa'),
+    (str(D), '2 - Duplex '),
+    (str(A), '3 - Autres'),
+)
+C = 'Carrelé'
+P = 'Peint'
+TYPE_MUR = (
+    ('', 'Choisir le type de mur'),
+    (str(C), 'Carrelé'),
+    (str(P), 'Peint'),
+)
 class Exercice(models.Model):
     annee = models.IntegerField(unique=True)
     LibelleFR = models.CharField(max_length=20, null=True)
@@ -167,6 +182,12 @@ class Immeubles (models.Model):
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Date_Construction = models.DateField(null=True)
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
+    Description_immeuble = models.CharField(choices=DESCRIPTION_IMMEUBLE, max_length=255, null=True)
+    Type_mur = models.CharField(choices=TYPE_MUR, max_length=255, null=True)
+    Nombre_de_pieces = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Nombre_d_etage = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Emprise_au_sol = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Coordonee_gps_latitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Coordonee_gps_longitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Coordonee_gps_altitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
