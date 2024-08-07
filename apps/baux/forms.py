@@ -212,7 +212,6 @@ class LogesForm(forms.ModelForm):
                         Column(FloatingField("Fonction"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Administration_tutelle"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
