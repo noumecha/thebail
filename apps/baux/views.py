@@ -180,7 +180,8 @@ class ImmeubleView(TemplateView):
                 else:
                     immeubleList = Immeubles.objects.get(id=pk)
                     form = ImmeublesForm(request.POST, instance=immeubleList)
-                form.save()
+                if form.is_valid():
+                    form.save()
                 form = ImmeublesForm()
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')

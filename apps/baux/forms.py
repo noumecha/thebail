@@ -227,7 +227,7 @@ class ImmeublesForm(forms.ModelForm):
         model = Immeubles
 
         fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",
-                   "Superficie","Date_Construction","Type_immeuble","Description_immeuble","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
+                   "Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
                    "Coordonee_gps_Position","Adresse","Type_mur","Description","Localisation","Norme","Nombre_de_pieces","Nombre_d_etage","Superficie_louer","Emprise_au_sol")
         labels = {
             "Designation": " Désignation du Bien",
@@ -237,7 +237,7 @@ class ImmeublesForm(forms.ModelForm):
             "Superficie" : "superficie du TF",
             "Date_Construction" : "date de construction",
             "Type_immeuble" : "Type immeuble ",
-            "Description_immeuble" : "Description de l'immeuble",
+            "Type_construction" : "Type de construction",
             "Type_mur" : "Type de Mur",
             "Nombre_de_pieces" : "Nombre total de pieces",
             "Nombre_d_etage" : "Nombre total d'étages",
@@ -248,7 +248,7 @@ class ImmeublesForm(forms.ModelForm):
             "Coordonee_gps_altitude": "Coordonne GPS 3 ",
             "Coordonee_gps_Position" : "Coordonne GPS 4 ",
             "Adresse" : "Adresse ou boite postale ",
-            "Description" : "Description de l'immeuble",
+            "Description" : "Autre information",
             "Localisation"  : "localisation",
             "Norme" : "Norme  de l'immeuble (Cadastre)",
         }
@@ -266,9 +266,9 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Eléments Fonciers",
                     Row(
-                        Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Reference_TF"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Superficie"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),   
                         Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row' 
@@ -279,11 +279,11 @@ class ImmeublesForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Eléments normatifs",
+                    "Caractéristiques du batiment",
                     Row(
-                        Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),               
-                        Column(FloatingField("Description_immeuble"), css_class='form-group col-md-6 mb-0'),               
+                        Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),            
+                        Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Nombre_d_etage"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),               
@@ -302,7 +302,7 @@ class ImmeublesForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Coordonee_gps_latitude"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Coordonee_gps_longitude"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Coordonee_gps_Position"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
@@ -312,7 +312,7 @@ class ImmeublesForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Adresse",
+                    "Position Géographique",
                     Row(
                         Column(FloatingField("Localisation"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),

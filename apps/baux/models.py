@@ -57,8 +57,8 @@ TYPE_DOSSIER = (
 V = 'VILLA'
 D = 'DUPLEX'
 A = 'AUTRES'
-DESCRIPTION_IMMEUBLE = (
-    ('', 'Choisir la description de l\'immeuble'),
+TYPE_CONSTRUCTION = (
+    ('', 'Choisir le type de construction de l\'immeuble'),
     (str(V), '1 - Villa'),
     (str(D), '2 - Duplex '),
     (str(A), '3 - Autres'),
@@ -182,7 +182,7 @@ class Immeubles (models.Model):
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Date_Construction = models.DateField(null=True)
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
-    Description_immeuble = models.CharField(choices=DESCRIPTION_IMMEUBLE, max_length=255, null=True)
+    Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
     Type_mur = models.CharField(choices=TYPE_MUR, max_length=255, null=True)
     Nombre_de_pieces = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Nombre_d_etage = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
