@@ -72,12 +72,12 @@ TYPE_MUR = (
 )
 MINDCAF = 'MINDCAF'
 MINFI = 'MINFI'
-MINDEV = 'MINDEV'
-ADMINISTRATION_PAYEUSE = (
-    ('', 'Selectionner l\'Administration payeuse'),
+MINDEF = 'MINDEF'
+PEUT_PAYER = (
+    ('', 'Selectionner l\'Administration'),
     (str(MINDCAF), 'MINDCAF'),
     (str(MINFI), 'MINFI'),
-    (str(MINDEV), 'MINDEV'),
+    (str(MINDEF), 'MINDEF'),
 )
 class Exercice(models.Model):
     annee = models.IntegerField(unique=True)
@@ -114,7 +114,7 @@ class Locataires(models.Model):
     Num_Cni = models.CharField(max_length=50, null=True)
     Date_delivrance_cni = models.DateField(null=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=2, null=False)
-    Administration_payeuse = models.CharField(choices=ADMINISTRATION_PAYEUSE, max_length=255, null=True)
+    Peut_payer = models.CharField(choices=PEUT_PAYER, max_length=255, null=True)
     Observation = models.TextField(blank = True,null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)

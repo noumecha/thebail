@@ -8,16 +8,16 @@ class LocatairesForm(forms.ModelForm):
     class Meta:
         model = Locataires
 
-        fields = ('Intitule','NIU','Nom_Prenom_Representant','Administration_payeuse','Num_Cni','Date_delivrance_cni','Type_personne','Observation')
+        fields = ('Intitule','NIU','Nom_Prenom_Representant','Peut_payer','Num_Cni','Date_delivrance_cni','Type_personne','Observation')
         labels = {
-            "Intitule": " intitulé ou  Nom et prenom",
+            "Intitule": " Autorité signataire",
             "NIU": "NIU(idientifiant unique DGI)",
             "Nom_Prenom_Representant": " Nom et prenoms du Representant" ,
             "Num_Cni": " Numero carte d'identité nationnale",
             "Date_delivrance_cni" :"date de delivrance CNI" ,
             "Type_personne": "Type de personne",
             "Observation": "Observation" ,
-            "Administration_payeuse" : "Administration payeuse",
+            "Peut_payer" : "Peut payer",
         }
         
         widgets = {
@@ -33,7 +33,7 @@ class LocatairesForm(forms.ModelForm):
                     "Informations locataire",
                     Row(
                         Column(FloatingField("Intitule"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Administration_payeuse"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Peut_payer"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),  
                         Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0'),
@@ -250,9 +250,9 @@ class ImmeublesForm(forms.ModelForm):
             "Coordonee_gps_altitude": "Coordonne GPS 3 ",
             "Coordonee_gps_Position" : "Coordonne GPS 4 ",
             "Adresse" : "Adresse ou boite postale ",
-            "Description" : "Autre information",
+            "Description" : "Autres informations",
             "Localisation"  : "localisation",
-            "Norme" : "Norme  de l'immeuble (Cadastre)",
+            "Norme" : "Norme de l'immeuble (Cadastre)",
         }
         widgets = {
           'Date_Construction'  :  forms.TextInput(attrs={'type': 'date'}),
