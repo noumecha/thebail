@@ -14,6 +14,7 @@ urlpatterns = [
     path("bailleur/list/", BailleurView.as_view(template_name="baux/bailleur_list.html"), name='bailleur_list'),
     #path("immeuble/add/", views.immeuble, name='immeuble'),
     path("immeuble/add/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble'),
+    path("immeuble/list/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
     #path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     #path("contrat/add/", views.contrat, name='contrat'),

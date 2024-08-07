@@ -166,7 +166,7 @@ class ImmeubleView(TemplateView):
         context["form"] = ImmeublesForm()
         return context
 
-    def immeuble (request):
+    def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = ImmeublesForm()

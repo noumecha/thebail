@@ -1,0 +1,47 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Liste des immeubles{% endblock %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="card p-3">
+        
+        <h1>Listes des immeubles enregistrés</h1>
+
+        <div class="container-flex">
+            <table class="table table-sm">
+                <tr>
+                    <th>Designation</th>
+                    <th>proprietaire </th>
+                    <th>Reference Fonciere</th>
+                    <th>Type</th>
+                    <th>localisation</th>
+                    <th>Action</th>
+                </tr>
+                {% for score in immeubleList %}
+                <tr>
+                        {% if form.instance.id == score.id %}
+                        {% include 'baux/saveimmeuble.html' %}
+                        {% else %}
+                            <td>{{ score.Designation}} </td>
+                            <td>{{ score.Nom_prenom_proprietaireTF }}</td>
+                            <td>{{ score.Reference_TF }}</td>
+                            <td>{{ score.Norme }}</td>
+                            <td>{{ score.Localisation }}</td>
+                            <td>
+                                <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
+                                <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
