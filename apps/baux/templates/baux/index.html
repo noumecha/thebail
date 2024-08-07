@@ -1,8 +1,11 @@
-{% extends "baux/layout.html" %}
+{% extends layout_path %}
 
-<!-- {% block title %}
-Home PAGE
-{% endblock %} -->
+{% load static %}
+{% load i18n %}
+
+{% block title %}index{% endblock %}
+
+{% load static %}
 
 {% block content %}
 
@@ -99,12 +102,4 @@ Home PAGE
   </div>
 </div>
 
-
-
 {% endblock %}
-
-<!-- 
-  <div class="col">
- 
-  </div> 
--->

@@ -18,19 +18,11 @@
             <form method="post" action="{% url 'baux:immeuble' %}">
                 {% csrf_token %}
 
-                <!-- enregistrement -->
                 {% if not form.instance.id %}
 
                 {% include 'baux/saveimmeuble.html' %}
 
                 {% endif %}
-
-                <!-- listing 
-                "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",
-                        "Superficie","Date_Construction","Type_immeuble","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
-                        "Coordonee_gps_Position","Adresse","Description","Localisation","Norme"
-                
-                -->
 
             </form>
 
@@ -67,16 +59,5 @@
             </table>
         </div>
     </div>
-
-<!--div class = "container-fluid justify-content-center">
-    <div class="form-group row">
-        <div class="col-md-6 align-self-start">
-            <a href="{{ request.META.HTTP_REFERER }}"> &lt;&lt; Retouner à la page précedente</a>
-        </div>
-        <div class="col-md-6 align-self-end">
-            <a href="{% url 'baux:Home' %}">Revenir au Menu principal</a>
-        </div>
-    </div>
-</div-->
 
 {% endblock %}

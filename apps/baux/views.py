@@ -12,6 +12,12 @@ def index (request):
 def Menuimmeuble (request):
     return render(request, "baux/layoutImmeuble.html")
 
+class HomeView(TemplateView):
+    #predefined functiion
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        return context
+
 class LogesView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):

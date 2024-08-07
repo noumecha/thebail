@@ -1,14 +1,12 @@
 from django.urls import path
 from . import views
-from .views import LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, LogesView
+from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, LogesView
 
 # from .api_views import BudgetArticleApiView, BudgetArticleMvtDepenseApiView
 
 app_name = 'baux'
 urlpatterns = [
-    #path('infocentre/', EntiteList.as_view(), name='infocentre-entites'),
-
-    path("baux", views.index, name='Home'),
+    path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     #path("bailleur/add/", views.bailleur, name='bailleur'),
     path("bailleur/add/", BailleurView.as_view(template_name="baux/bailleur.html"), name='bailleur'),
     path("bailleur/list/", BailleurView.as_view(template_name="baux/bailleur_list.html"), name='bailleur_list'),
