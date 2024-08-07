@@ -66,7 +66,7 @@
 
                             <td>
                                 <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
-                                <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
+                                <button formnovalidate class="btn btn-success" name="delete" value="{{ score.id }}">Delete</button>
                             </td>
                         {% endif %}
                      </tr>
@@ -76,17 +76,5 @@
 
         </div>
     </div>
-
-
-<!--div class = "container-fluid justify-content-center">
-    <div class="form-group row">
-        <div class="col-md-6 align-self-start">
-            <a href="{{ request.META.HTTP_REFERER }}"> &lt;&lt; Retouner à la page précedente</a>
-        </div>
-        <div class="col-md-6 align-self-end">
-            <a href="{% url 'baux:Home' %}">Revenir au Menu principal</a>
-        </div>
-    </div>
-</div-->
 
 {% endblock %}
