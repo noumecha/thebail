@@ -70,6 +70,15 @@ TYPE_MUR = (
     (str(C), 'Carrelé'),
     (str(P), 'Peint'),
 )
+MINDCAF = 'MINDCAF'
+MINFI = 'MINFI'
+MINDEV = 'MINDEV'
+ADMINISTRATION_PAYEUSE = (
+    ('', 'Selectionner l\'Administration payeuse'),
+    (str(MINDCAF), 'MINDCAF'),
+    (str(MINFI), 'MINFI'),
+    (str(MINDEV), 'MINDEV'),
+)
 class Exercice(models.Model):
     annee = models.IntegerField(unique=True)
     LibelleFR = models.CharField(max_length=20, null=True)
@@ -105,6 +114,7 @@ class Locataires(models.Model):
     Num_Cni = models.CharField(max_length=50, null=True)
     Date_delivrance_cni = models.DateField(null=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=2, null=False)
+    Administration_payeuse = models.CharField(choices=ADMINISTRATION_PAYEUSE, max_length=255, null=True)
     Observation = models.TextField(blank = True,null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)

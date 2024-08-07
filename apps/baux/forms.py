@@ -8,7 +8,7 @@ class LocatairesForm(forms.ModelForm):
     class Meta:
         model = Locataires
 
-        fields = ('Intitule','NIU','Nom_Prenom_Representant','Num_Cni','Date_delivrance_cni','Type_personne','Observation')
+        fields = ('Intitule','NIU','Nom_Prenom_Representant','Administration_payeuse','Num_Cni','Date_delivrance_cni','Type_personne','Observation')
         labels = {
             "Intitule": " intitulé ou  Nom et prenom",
             "NIU": "NIU(idientifiant unique DGI)",
@@ -17,6 +17,7 @@ class LocatairesForm(forms.ModelForm):
             "Date_delivrance_cni" :"date de delivrance CNI" ,
             "Type_personne": "Type de personne",
             "Observation": "Observation" ,
+            "Administration_payeuse" : "Administration payeuse",
         }
         
         widgets = {
@@ -32,6 +33,7 @@ class LocatairesForm(forms.ModelForm):
                     "Informations locataire",
                     Row(
                         Column(FloatingField("Intitule"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Administration_payeuse"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),  
                         Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0'),
@@ -163,7 +165,7 @@ class LogesForm(forms.ModelForm):
         fields = ("Designation","Administration_tutelle","Immeuble","Nom_Prenom","Ref_ActeJuridique","NumCNI","Date_delivrance_CNI","Matricule","Fonction","Telephone","AdresseMail","NumPassePort","Date_Delivrance_PassePort")
         labels = {
             "Designation" : "Désignation",
-            "Administration_tutelle" : "Administration de Tutelle",
+            "Administration_tutelle" : "Administration de Utilisatrice",
             "Immeuble" : "Imeuble",
             "Nom_Prenom" : "Noms et prénoms du logé",
             "Ref_ActeJuridique" : "Référence juridique",
@@ -187,16 +189,13 @@ class LogesForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row(
                 Fieldset(
-                    "Informations sur le logés",
+                    "Informations administratives",
                     Row(
                         Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("NumCNI"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("AdresseMail"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_delivrance_CNI"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_Delivrance_PassePort"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ref_ActeJuridique"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Matricule"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Fonction"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Administration_tutelle"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
@@ -206,12 +205,15 @@ class LogesForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Informations administratives",
+                    "Informations sur le logés",
                     Row(
-                        Column(FloatingField("Matricule"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Administration_tutelle"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("NumCNI"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("AdresseMail"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_delivrance_CNI"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Delivrance_PassePort"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_ActeJuridique"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
