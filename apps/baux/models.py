@@ -174,15 +174,13 @@ class Arrondissemements (models.Model):
 class Localisation (models.Model):
     Quartier = models.CharField(max_length=50,null=True)
     Observation = models.TextField(blank = True,null= True)
-    """ region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=True, related_name="region")
-    departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="departement")
-    """
-    arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="arrondissement")
-    
+    region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=True, related_name="loca_region")
+    departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="loca_departement")
+    arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="loca_arrondissement")
     pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="etranger")
 
     def __str__(self):
-        return f" {self.Quartier}/{self.arrondissement}/{self.arrondissement.departement}/{self.arrondissement.departement.Region} "
+        return f" {self.arrondissement.departement.Region}/{self.arrondissement.departement}/{self.arrondissement}/{self.Quartier} "
 
 class Immeubles (models.Model):
     Designation = models.CharField(max_length=50)
@@ -194,6 +192,7 @@ class Immeubles (models.Model):
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
     Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
     Type_mur = models.CharField(choices=TYPE_MUR, max_length=255, null=True)
+    Couleur = models.CharField(max_length=255,null=True)
     Nombre_de_pieces = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Nombre_d_etage = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
@@ -247,7 +246,8 @@ class Ayant_droits (models.Model):
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=False, related_name= "bailleur")
     Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=False, related_name= "locataire")
-    Immeubles =  models.ManyToManyField(Immeubles, blank=True)
+    Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name= "immeuble")
+    #Immeubles =  models.ManyToManyField(Immeubles, blank=True)
     Duree_Contrat = models.CharField(max_length=10)
     Signataire = models.CharField(max_length=50)
     Date_Signature = models.DateField(null=True)

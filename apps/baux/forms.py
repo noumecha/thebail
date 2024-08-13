@@ -124,10 +124,12 @@ class LocalisationForm(forms.ModelForm):
     class Meta:
         model = Localisation
 
-        fields = ('Quartier','Observation','arrondissement','pays')
+        fields = ('Quartier','Observation','arrondissement','pays','region','departement')
         labels = {
             "Quartier": "Nom du Quartier ",
             "arrondissement": "Arrondissement",
+            "departement": "Département",
+            "region" : "Region",
             "pays": " Pays" ,
             "Observation": "Observation" ,
         }
@@ -144,10 +146,11 @@ class LocalisationForm(forms.ModelForm):
                     "Coordonnées géorgraphiques",
                     Row(
                         Column(FloatingField("pays"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("region"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("departement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("arrondissement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Quartier"), css_class='form-group col-md-12 mb-0'),
-                        css_class='form-row' 
-                        """ ,label_class='text-decoration-none' """
+                        css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
                 ),
@@ -228,7 +231,7 @@ class ImmeublesForm(forms.ModelForm):
     class Meta:
         model = Immeubles
 
-        fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",
+        fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF","Couleur",
                    "Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
                    "Coordonee_gps_Position","Adresse","Type_mur","Description","Localisation","Norme","Nombre_de_pieces","Nombre_d_etage","Superficie_louer","Emprise_au_sol")
         labels = {
@@ -241,6 +244,7 @@ class ImmeublesForm(forms.ModelForm):
             "Type_immeuble" : "Type immeuble ",
             "Type_construction" : "Type de construction",
             "Type_mur" : "Type de Mur",
+            "Couleur" : "Ajouter la couleur",
             "Nombre_de_pieces" : "Nombre total de pieces",
             "Nombre_d_etage" : "Nombre total d'étages",
             "Superficie_louer" : "Superficie louée",
@@ -288,9 +292,10 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Nombre_d_etage"), css_class='form-group col-md-6 mb-0'),               
-                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),               
-                        Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),               
-                        Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),               
+                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
+                        Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
                         Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
@@ -342,7 +347,7 @@ class ContratsForm(forms.ModelForm):
                   'Montant_TTC_Mensuel', 'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'Compte_Bancaire', 'Type_location', 'Nom_CF', 'Date_visa_CF','observation' )
         labels = {
             "Bailleur": "Bailleur ",  
-            "Locataire": "Locataire",  
+            "Locataire": "Administration Signataire",  
             "Immeubles": "Imeubles Loués",  
             "Duree_Contrat":" Durée du Contrat", 
             "Signataire":" Autorité Signataire du contrat",
@@ -362,6 +367,7 @@ class ContratsForm(forms.ModelForm):
         }
         widgets = {
           'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
+          #'Immeubles' : forms.SelectMultiple(attrs={'class':'select2'}),
           'Date_visa_CF'  :  forms.TextInput(attrs={'type': 'date'}),
           'Date_Debut'  :  forms.TextInput(attrs={'type': 'date'}),
           'Date_Signature'  :  forms.TextInput(attrs={'type': 'date'}),
@@ -374,9 +380,51 @@ class ContratsForm(forms.ModelForm):
                 Fieldset(
                     "Elements du contrat",
                     Row(
-                        Column(FloatingField("Bailleur"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Immeubles"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Bailleur"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_contrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0",
+            ),
+            Row(
+                Fieldset(
+                    "Elements financiers",
+                    Row(
+                        Column(FloatingField("Nom_CF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_visa_CF"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0",
+            ),
+            Row(
+                Fieldset(
+                    "Durée",
+                    Row(
+                        Column(FloatingField("Date_Debut"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Duree_Contrat"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0",
+            ),
+            Row(
+                Fieldset(
+                    "Règlement",
+                    Row(
+                        Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Compte_Bancaire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_TTC_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
