@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, CreateView
 from django.views.generic.edit import FormView
 from web_project import TemplateLayout
-from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,LogesForm
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Loges
+from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm
+from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants
 
 # Create your views here.
 def index (request):
@@ -18,41 +18,41 @@ class HomeView(TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         return context
 
-class LogesView(TemplateView):
+class OccupantsView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["logesList"] = Loges.objects.all()
-        context["form"] = LogesForm()
+        context["OccupantsList"] = Occupants.objects.all()
+        context["form"] = OccupantsForm()
         return context
 
     def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = LogesForm()
-        logesList = Loges.objects.all()
-        context['logesList'] = logesList
+        form = OccupantsForm()
+        OccupantsList = Occupants.objects.all()
+        context['OccupantsList'] = OccupantsList
         if request.method == 'POST':
             if 'save' in request.POST:
                 pk = request.POST.get('save')
                 if not pk:
-                    form = LogesForm(request.POST)
+                    form = OccupantsForm(request.POST)
                 else:
-                    logesnList = Loges.objects.get(id=pk)
-                    form = LogesForm(request.POST, instance=logesList)
+                    OccupantsnList = Occupants.objects.get(id=pk)
+                    form = OccupantsForm(request.POST, instance=OccupantsList)
                 form.save()
-                form = LogesForm()
+                form = OccupantsForm()
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')
-                logesList = Loges.objects.get(id=pk)
-                logesList.delete()
+                OccupantsList = Occupants.objects.get(id=pk)
+                OccupantsList.delete()
             elif 'edit' in request.POST:
                 pk = request.POST.get('edit')
-                logesList = Loges.objects.get(id=pk)
-                form = LogesForm(instance=logesList)
+                OccupantsList = Occupants.objects.get(id=pk)
+                form = OccupantsForm(instance=OccupantsList)
         context['form'] = form
-        return render(request, "baux/loges.html",context)
+        return render(request, "baux/occupants.html",context)
 
 class LocalisationView(TemplateView):
     #predefined functiion

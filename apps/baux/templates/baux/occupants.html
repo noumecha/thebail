@@ -3,25 +3,25 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Logés{% endblock %}
+{% block title %}Occupant{% endblock %}
 
 {% load crispy_forms_tags %}
 
 
 {% block content %}
     <div class="card p-3">
-        <h1>Enregistrement d'un logé</h1>
+        <h1>Enregistrement d'un Occupant</h1>
 
         <!-- enregistrement -->
 
         <div class="">
-            <form method="post" action="{% url 'baux:loges' %}">
+            <form method="post" action="{% url 'baux:occupants' %}">
                 {% csrf_token %}
 
                 <!-- enregistrement -->
                 {% if not form.instance.id %}
 
-                {% include 'baux/saveLoges.html' %}
+                {% include 'baux/saveOccupants.html' %}
 
                 {% endif %}
 
@@ -40,7 +40,7 @@
                     <th>Telephone</th>
                     <th>Action</th>
                 </tr>
-                {% for score in logesList %}
+                {% for score in OccupantsList %}
                 <tr>
                         {% if form.instance.id == score.id %}
                         {% include 'baux/saveimmeuble.html' %}

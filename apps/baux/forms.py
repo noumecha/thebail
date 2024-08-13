@@ -1,5 +1,5 @@
 from django import forms
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Loges
+from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset
@@ -161,9 +161,9 @@ class LocalisationForm(forms.ModelForm):
             )
         self.helper.form_tag = False
 
-class LogesForm(forms.ModelForm):
+class OccupantsForm(forms.ModelForm):
     class Meta:
-        model = Loges
+        model = Occupants
 
         fields = ("Designation","Administration_tutelle","Immeuble","Nom_Prenom","Ref_ActeJuridique","NumCNI","Date_delivrance_CNI","Matricule","Fonction","Telephone","AdresseMail","NumPassePort","Date_Delivrance_PassePort")
         labels = {
@@ -187,7 +187,7 @@ class LogesForm(forms.ModelForm):
             'Date_Delivrance_PassePort'  :  forms.TextInput(attrs={'type': 'date'}),
         }
     def __init__(self, *args, **kwargs):
-        super(LogesForm, self).__init__(*args, **kwargs)
+        super(OccupantsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(

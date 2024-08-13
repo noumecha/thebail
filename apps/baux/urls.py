@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, LogesView
+from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView
 
 # from .api_views import BudgetArticleApiView, BudgetArticleMvtDepenseApiView
 
@@ -25,8 +25,8 @@ urlpatterns = [
     path("localisation/add/", LocalisationView.as_view(template_name="baux/localisation.html"), name='localisation'),
     path("localisation/list/", LocalisationView.as_view(template_name="baux/localisation_list.html"), name='localisation_list'),
     #logés routes 
-    path("loges/add/", LogesView.as_view(template_name="baux/loges.html"), name='loges'),
-    path("loges/list/", LogesView.as_view(template_name="baux/loges_list.html"), name='loges_list'),
+    path("occupants/add/", OccupantsView.as_view(template_name="baux/occupants.html"), name='occupants'),
+    path("occupants/list/", OccupantsView.as_view(template_name="baux/occupants_list.html"), name='occupants_list'),
 
 
 ]
