@@ -89,16 +89,16 @@ class Exercice(models.Model):
         return f"Exercice budgetaire {self.annee}"
 
 class Bailleurs(models.Model):
-    Nom_prenom = models.CharField(max_length=50)
+    Nom_prenom = models.CharField(max_length=50, null=True, blank=True)
     NIU = models.CharField(max_length=20, null=True)
-    Reference_doc_identification = models.CharField(max_length=20, null=True)
-    Registre_commerce = models.CharField(max_length=100, null=True)
-    Raison_social = models.CharField(max_length=100, null=True)
-    Date_creationEnt = models.DateField(null=True)
-    Num_Cni = models.CharField(max_length=50, null=True)
+    Reference_doc_identification = models.CharField(max_length=20, null=True, blank=True)
+    Registre_commerce = models.CharField(max_length=100, null=True, blank=True)
+    Raison_social = models.CharField(max_length=100, null=True, blank=True)
+    Date_creationEnt = models.DateField(null=True, blank=True)
+    Num_Cni = models.CharField(max_length=50, null=True, blank=True)
     # image fields for saving some stuff
     #Scan_cni = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=None, null=True)
-    Date_delivrance_cni = models.DateField(null=True)
+    Date_delivrance_cni = models.DateField(null=True, blank=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
     NumPassePort = models.CharField(max_length=50, null=True)
     Date_delivrance_PassePort = models.DateField(null=True)
