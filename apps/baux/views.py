@@ -150,7 +150,8 @@ class BailleurView(TemplateView):
                 else:
                     BailleursList = Bailleurs.objects.get(id=pk)
                     form = BailleursForm(request.POST, instance=BailleursList)
-                form.save()
+                if form.is_valid():
+                    form.save()
                 form = BailleursForm()
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')

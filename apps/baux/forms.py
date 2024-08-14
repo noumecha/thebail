@@ -58,13 +58,15 @@ class BailleursForm(forms.ModelForm):
     class Meta:
         model = Bailleurs
 
-        fields = ( 'Nom_prenom','NIU','Registre_commerce','Num_Cni','Date_delivrance_cni','Type_personne',
-                   'NumPassePort','Date_delivrance_PassePort','Nom_Prenom_Representant','Telephone','Adresse')
+        fields = ( 'Nom_prenom','NIU','Registre_commerce','Num_Cni','Date_delivrance_cni','Type_personne','Raison_social','Reference_doc_identification','Date_creationEnt','NumPassePort','Date_delivrance_PassePort','Nom_Prenom_Representant','Telephone','Adresse')
         labels = {
             "Nom_prenom": " intitulé ou  Nom et prenoms",
             "NIU": "NIU(idientifiant unique DGI)",
+            "Reference_doc_identification" : "Reference du document d'identification",
             "Registre_commerce": "Registre du commerce",
             "Nom_Prenom_Representant": " Nom et prenoms du Representant" ,
+            "Raison_social" : "Raison social",
+            "Date_creationEnt" : "Date de création",
             "Num_Cni": " Numero CNI",
             "Date_delivrance_cni" :"date de delivrance CNI" ,
             "Type_personne": "Type de personne",
@@ -76,6 +78,7 @@ class BailleursForm(forms.ModelForm):
         widgets = {
           'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
           'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
+          'Date_creationEnt'  :  forms.TextInput(attrs={'type': 'date'}),
           'Date_delivrance_PassePort'  :  forms.TextInput(attrs={'type': 'date'}),
         }
 
@@ -87,11 +90,15 @@ class BailleursForm(forms.ModelForm):
                 Fieldset(
                     "Informations Bailleur",
                     Row(
-                        Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Registre_commerce"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
+                        Column(FloatingField("Date_creationEnt"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
+                        Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
+                        Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Reference_doc_identification"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Registre_commerce"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
+                        Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
+                        Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_cni'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -104,8 +111,7 @@ class BailleursForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NumPassePort"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_delivrance_PassePort"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0'),               
+                        Column(FloatingField("Date_delivrance_PassePort"), css_class='form-group col-md-6 mb-0'),            
                         Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
@@ -168,7 +174,7 @@ class OccupantsForm(forms.ModelForm):
         fields = ("Designation","Administration_tutelle","Immeuble","Nom_Prenom","Ref_ActeJuridique","NumCNI","Date_delivrance_CNI","Matricule","Fonction","Telephone","AdresseMail","NumPassePort","Date_Delivrance_PassePort")
         labels = {
             "Designation" : "Désignation",
-            "Administration_tutelle" : "Administration de Utilisatrice",
+            "Administration_tutelle" : "Administration utilisatrice",
             "Immeuble" : "Imeuble",
             "Nom_Prenom" : "Noms et prénoms du logé",
             "Ref_ActeJuridique" : "Référence juridique",
@@ -208,7 +214,7 @@ class OccupantsForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Informations sur le logés",
+                    "Informations sur l'occupant",
                     Row(
                         Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NumCNI"), css_class='form-group col-md-6 mb-0'),
@@ -231,13 +237,15 @@ class ImmeublesForm(forms.ModelForm):
     class Meta:
         model = Immeubles
 
-        fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF","Couleur",
-                   "Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
+        fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF","Couleur",'Element_immeuble',
+                   'Accessoires',"Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
                    "Coordonee_gps_Position","Adresse","Type_mur","Description","Localisation","Norme","Nombre_de_pieces","Nombre_d_etage","Superficie_louer","Emprise_au_sol")
         labels = {
             "Designation": " Désignation du Bien",
             "Reference_TF": " reference titre foncier (TF)",
+            "Element_immeuble" : "Element de l'immeuble",
             "Nom_prenom_proprietaireTF" : "Nom du priopritaire TF",
+            "Accessoires" : "Accesoires",
             "Date_signatureTF" : "Date de signature du TF",
             "Superficie" : "superficie du TF",
             "Date_Construction" : "date de construction",
@@ -289,14 +297,16 @@ class ImmeublesForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),            
-                        Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),               
+                        Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),              
                         Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Nombre_d_etage"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),             
                         Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
                         Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
                         Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
-                        Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),               
+                        Column(FloatingField("Element_immeuble"), css_class='form-group col-md-12 mb-0'),               
+                        Column(FloatingField("Accessoires"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -344,11 +354,12 @@ class ContratsForm(forms.ModelForm):
         model = Contrats
 
         fields = ( 'Bailleur', 'Locataire','Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat','Periodicite_Reglement', 
-                  'Montant_TTC_Mensuel', 'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'Compte_Bancaire', 'Type_location', 'Nom_CF', 'Date_visa_CF','observation' )
+                  'Montant_TTC_Mensuel','Administration_beneficiaire', 'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'Compte_Bancaire', 'Type_location', 'Nom_CF', 'Date_visa_CF','observation' )
         labels = {
             "Bailleur": "Bailleur ",  
             "Locataire": "Administration Signataire",  
-            "Immeubles": "Imeubles Loués",  
+            "Immeubles": "Imeubles Loués",
+            "Administration_beneficiaire" : "Administration bénéficiaire",  
             "Duree_Contrat":" Durée du Contrat", 
             "Signataire":" Autorité Signataire du contrat",
             "Date_Signature":" Date de Signature du contrat",  
@@ -385,6 +396,7 @@ class ContratsForm(forms.ModelForm):
                         Column(FloatingField("Bailleur"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Ref_contrat"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
