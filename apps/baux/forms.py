@@ -276,21 +276,6 @@ class ImmeublesForm(forms.ModelForm):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
-            Row (
-                Fieldset(
-                    "Eléments Fonciers",
-                    Row(
-                        Column(FloatingField("Reference_TF"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Superficie"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),   
-                        Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-6 mb-0'),
-                        css_class='form-row' 
-                    ),
-                    css_class="line__text border p-2 pt-4"
-                ),
-                css_class="p-3 pt-0"
-            ),
             Row(
                 Fieldset(
                     "Caractéristiques du batiment",
@@ -308,6 +293,21 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Element_immeuble"), css_class='form-group col-md-12 mb-0'),               
                         Column(FloatingField("Accessoires"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row'
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0"
+            ),
+            Row (
+                Fieldset(
+                    "Eléments Fonciers",
+                    Row(
+                        Column(FloatingField("Reference_TF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Superficie"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),   
+                        Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row' 
                     ),
                     css_class="line__text border p-2 pt-4"
                 ),

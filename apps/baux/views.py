@@ -219,20 +219,25 @@ class ContratView(TemplateView):
         if request.method == 'POST':
             if 'save' in request.POST:
                 pk = request.POST.get('save')
-                if not pk:
-                    form = ContratsForm(request.POST)
-                else:
+                if pk:
                     contratList = Contrats.objects.get(id=pk)
                     form = ContratsForm(request.POST, instance=contratList)
-                form.save()
-                form = ContratsForm()
+                else:
+                    form = ContratsForm(request.POST)
+                
+                if form.is_valid():
+                    form.save()
+                    form = ContratsForm()
+
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')
                 contratList = Contrats.objects.get(id=pk)
                 contratList.delete()
+
             elif 'edit' in request.POST:
                 pk = request.POST.get('edit')
                 contratList = Contrats.objects.get(id=pk)
                 form = ContratsForm(instance=contratList)
+
         context['form'] = form
-        return render(request, 'baux/contrat.html',context)
+        return render(request, 'baux/contrat.html', context)
