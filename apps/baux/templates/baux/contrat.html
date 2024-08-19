@@ -11,20 +11,16 @@
     <div class="card p-3">
 
         <h1>Enregistrement d'un contrat de bail administratif</h1>
+        <form method="post" action="{% url 'baux:contrat' %}">
+            {% csrf_token %}
 
-        <div class="">
-            <form method="post" action="{% url 'baux:contrat' %}">
-                {% csrf_token %}
+            {% if not form.instance.id %}
 
-                {% if not form.instance.id %}
+            {% crispy form %}
 
-                {% include 'baux/saveContrat.html' %}
+            {% endif %}
 
-                {% endif %}
-
-            </form>
-
-        </div>
+        </form>
 
     </div>
 

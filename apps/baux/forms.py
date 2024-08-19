@@ -2,7 +2,7 @@ from django import forms
 from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset
+from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button
 
 class LocatairesForm(forms.ModelForm):
     class Meta:
@@ -446,6 +446,11 @@ class ContratsForm(forms.ModelForm):
             FloatingField(
                 "observation",
             ),
+            Submit(
+                "enregistrer",
+                "Enregistrer",
+                css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
+            )
         )
         
 
