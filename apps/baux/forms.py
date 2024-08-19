@@ -447,7 +447,7 @@ class ContratsForm(forms.ModelForm):
                 "observation",
             ),
             Submit(
-                "enregistrer",
+                "save",
                 "Enregistrer",
                 css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
             )

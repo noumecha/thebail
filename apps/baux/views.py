@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, DeleteView, UpdateView, ListView
 from django.views.generic.edit import FormView
+from django.urls import reverse_lazy
 from web_project import TemplateLayout
 from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm
 from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants
@@ -201,7 +202,53 @@ class ImmeubleView(TemplateView):
         context['form'] = form
         return render(request, 'baux/immeuble.html', context)
 
+# contrat class new approach using Django CBGVs
+"""class ContratCreateView(CreateView):
+    model = Contrat
+    form_class = ContratsForm
+    template_name = 'baux/contrat.html'
+    success_url = reverse_lazy('baux:contrat')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['contratList'] = Contrat.objects.all()
+        context['form'] = ContratsForm(instance=self.object)
+        return context"""
+
+class ContratListView(ListView):
+    model = Contrats
+    template_name = 'baux/contrat_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['contratList'] = Contrats.objects.all()
+        return context
+
+class ContratUpdateView(UpdateView):
+    model = Contrats
+    form_class = ContratsForm
+    template_name = 'baux/contrat.html'
+    success_url = reverse_lazy('baux:contrat')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['contratList'] = Contrats.objects.all()
+        context['form'] = ContratsForm(instance=self.object)
+        return context
+
+class ContratDeleteView(DeleteView):
+    model = Contrats
+    template_name = 'baux/contrat_delete.html'
+    success_url = reverse_lazy('baux:contrat')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['contratList'] = Contrats.objects.all()
+        return context
+
 class ContratView(TemplateView):
+    model = Contrats
+    template_name = 'baux/contrat.html'
     #predefined functiion
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
@@ -213,20 +260,12 @@ class ContratView(TemplateView):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = ContratsForm()
-        contratList = Contrats.objects.all()
-        context['contratList'] = contratList
         if request.method == 'POST':
             if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if pk:
-                    contratList = Contrats.objects.get(id=pk)
-                    form = ContratsForm(request.POST, instance=contratList)
-                else:
-                    form = ContratsForm(request.POST)
-                
+                form = ContratsForm(request.POST)
                 if form.is_valid():
                     form.save()
-                    form = ContratsForm()
+                form = ContratsForm()
 
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')
