@@ -23,18 +23,19 @@ $(document).ready(function () {
   // bailleur
   $('#id_Type_personne').on('input', function () {
     var type_personne = $(this).val();
-    console.log('type_personne : ', type_personne);
     $('.bailleur_nom_prenom').show();
     $('.bailleur_num_cni').show();
     $('.bailleur_date_deliv_cni').show();
     $('.bailleur_date_creation_ent').show();
     $('.bailleur_raison_social').show();
     $('.bailleur_registre_commerce').show();
+    $('#div_id_Type_id_bailleur').show();
     switch (type_personne) {
       case '1':
         $('.bailleur_nom_prenom').hide();
         $('.bailleur_num_cni').hide();
         $('.bailleur_date_deliv_cni').hide();
+        $('#div_id_Type_id_bailleur').hide();
         $('#id_Registre_commerce').attr('required', true);
         $('#id_Reference_doc_identification').attr('required', true);
         $('#id_Raison_social').attr('required', true);
