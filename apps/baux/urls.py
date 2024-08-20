@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,ContratDeleteView, ContratUpdateView, ContratListView
+from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView
 
 app_name = 'baux'
 urlpatterns = [

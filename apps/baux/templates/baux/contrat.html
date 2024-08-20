@@ -12,14 +12,21 @@
 
         <h1>Enregistrement d'un contrat de bail administratif</h1>
         <form method="post" action="{% url 'baux:contrat' %}">
-            {% csrf_token %}
-
             {% if not form.instance.id %}
 
             {% crispy form %}
 
             {% endif %}
 
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field , errors in form.errors.items %}
+                            <li>{{ field }} : {{ errors|striptags }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         </form>
 
     </div>

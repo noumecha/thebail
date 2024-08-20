@@ -394,6 +394,7 @@ class ContratsForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Immeubles"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Bailleur"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Ref_contrat"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),
@@ -437,6 +438,7 @@ class ContratsForm(forms.ModelForm):
                         Column(FloatingField("Compte_Bancaire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_TTC_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Nap_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),

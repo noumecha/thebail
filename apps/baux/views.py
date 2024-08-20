@@ -38,34 +38,6 @@ class OccupantsView(TemplateView):
             context["form"] = occupants_form
             return self.render_to_response(context)
 
-    """def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = OccupantsForm()
-        OccupantsList = Occupants.objects.all()
-        context['OccupantsList'] = OccupantsList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = OccupantsForm(request.POST)
-                else:
-                    OccupantsnList = Occupants.objects.get(id=pk)
-                    form = OccupantsForm(request.POST, instance=OccupantsList)
-                if form.is_valid():
-                    form.save()
-                form = OccupantsForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                OccupantsList = Occupants.objects.get(id=pk)
-                OccupantsList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                OccupantsList = Occupants.objects.get(id=pk)
-                form = OccupantsForm(instance=OccupantsList)
-        context['form'] = form
-        return render(request, "baux/occupants_list.html",context)"""
-
 class LocalisationView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
@@ -213,53 +185,7 @@ class ImmeubleView(TemplateView):
         context['form'] = form
         return render(request, 'baux/immeuble.html', context)
 
-# contrat class new approach using Django CBGVs
-"""class ContratCreateView(CreateView):
-    model = Contrat
-    form_class = ContratsForm
-    template_name = 'baux/contrat.html'
-    success_url = reverse_lazy('baux:contrat')
-
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context['contratList'] = Contrat.objects.all()
-        context['form'] = ContratsForm(instance=self.object)
-        return context"""
-
-class ContratListView(ListView):
-    model = Contrats
-    template_name = 'baux/contrat_list.html'
-
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context['contratList'] = Contrats.objects.all()
-        return context
-
-class ContratUpdateView(UpdateView):
-    model = Contrats
-    form_class = ContratsForm
-    template_name = 'baux/contrat.html'
-    success_url = reverse_lazy('baux:contrat')
-
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context['contratList'] = Contrats.objects.all()
-        context['form'] = ContratsForm(instance=self.object)
-        return context
-
-class ContratDeleteView(DeleteView):
-    model = Contrats
-    template_name = 'baux/contrat_delete.html'
-    success_url = reverse_lazy('baux:contrat')
-
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context['contratList'] = Contrats.objects.all()
-        return context
-
 class ContratView(TemplateView):
-    model = Contrats
-    template_name = 'baux/contrat.html'
     #predefined functiion
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
@@ -268,6 +194,16 @@ class ContratView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        contrat_form = ContratsForm(request.POST)
+        if contrat_form.is_valid():
+            contrat_form.save()
+            return redirect('baux:contrat_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = contrat_form
+            return self.render_to_response(context)
+
+    """def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = ContratsForm()
@@ -289,4 +225,4 @@ class ContratView(TemplateView):
                 form = ContratsForm(instance=contratList)
 
         context['form'] = form
-        return render(request, 'baux/contrat.html', context)
+        return render(request, 'baux/contrat.html', context)"""
