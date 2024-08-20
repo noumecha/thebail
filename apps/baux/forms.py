@@ -219,6 +219,7 @@ class OccupantsForm(forms.ModelForm):
                         Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NumCNI"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("NumPassePort"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("AdresseMail"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_delivrance_CNI"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_Delivrance_PassePort"), css_class='form-group col-md-6 mb-0'),

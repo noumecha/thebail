@@ -22,7 +22,7 @@
                     <th>Telephone</th>
                     <th>Action</th>
                 </tr>
-                {% for score in logesList %}
+                {% for score in OccupantsList %}
                 <tr>
                         {% if form.instance.id == score.id %}
                         {% include 'baux/saveimmeuble.html' %}

@@ -27,8 +27,18 @@ class OccupantsView(TemplateView):
         context["OccupantsList"] = Occupants.objects.all()
         context["form"] = OccupantsForm()
         return context
-
+    
     def post(self, request, *args, **kwargs):
+        occupants_form = OccupantsForm(request.POST)
+        if occupants_form.is_valid():
+            occupants_form.save()
+            return redirect('baux:occupants_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = occupants_form
+            return self.render_to_response(context)
+
+    """def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = OccupantsForm()
@@ -42,7 +52,8 @@ class OccupantsView(TemplateView):
                 else:
                     OccupantsnList = Occupants.objects.get(id=pk)
                     form = OccupantsForm(request.POST, instance=OccupantsList)
-                form.save()
+                if form.is_valid():
+                    form.save()
                 form = OccupantsForm()
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')
@@ -53,7 +64,7 @@ class OccupantsView(TemplateView):
                 OccupantsList = Occupants.objects.get(id=pk)
                 form = OccupantsForm(instance=OccupantsList)
         context['form'] = form
-        return render(request, "baux/occupants.html",context)
+        return render(request, "baux/occupants_list.html",context)"""
 
 class LocalisationView(TemplateView):
     #predefined functiion
@@ -265,7 +276,7 @@ class ContratView(TemplateView):
                 form = ContratsForm(request.POST)
                 if form.is_valid():
                     form.save()
-                form = ContratsForm()
+                    form = ContratsForm()
 
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')
