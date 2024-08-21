@@ -13,50 +13,27 @@
     <div class="card p-3">
         <h1>Enregistrement des Bailleurs </h1>
 
-        <!-- enregistrement -->
-
         <div >
             <form method="post" action="{% url 'baux:bailleur' %}">
-                {% csrf_token %}
-                <!-- enregistrement -->
+                <!--{% csrf_token %} -->
+                
                 {% if not form.instance.id %}
-                    {% include 'baux/saveBailleur.html' %}
-                {% endif %}
-                <table class="table table-sm">
-                    <tr>
-                        <th>Nom du Bailleur</th>
-                        <th>Identifiant NIU </th>
-                        <th>Representant</th>
-                        <th>Contact</th>
-                        <th>Action</th>
-                    </tr>
-    
-                    {% for score in BailleursList %}
-                    <tr>
-                        {% if form.instance.id == score.id %}
-                        {% include 'baux/saveBailleur.html' %}
-                        {% else %}
-                        <td>{{ score.Nom_prenom }} </td>
-                        <td>{{ score.NIU }}</td>
-                        <td>{{ score.Nom_Prenom_Representant }}</td>
-                        <td>{{ score.Telephone }}</td>
-    
-                        <td>
-                            <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
-                            <button formnovalidate class="btn btn-success" name="delete" value="{{ score.id }}">Delete</button>
-                        </td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-    
-                </table>
-            </form>
-        </div>
-    </div>
-    <div class="card mt-3 p-3">
-        <!-- listing -->
-        <div class="container-fluid">
 
+                    {% include 'baux/saveBailleur.html' %}
+
+                {% endif %}
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for field , errors in form.errors.items %}
+                                <li>{{ field }} : {{ errors|striptags }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+            </form>
         </div>
     </div>
 

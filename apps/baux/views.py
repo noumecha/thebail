@@ -121,6 +121,16 @@ class BailleurView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        bailleur_form = BailleursForm(request.POST)
+        if bailleur_form.is_valid():
+            bailleur_form.save()
+            return redirect('baux:bailleur_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = bailleur_form
+            return self.render_to_response(context)
+
+    """def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = BailleursForm()
@@ -146,7 +156,7 @@ class BailleurView(TemplateView):
                 BailleursList = Bailleurs.objects.get(id=pk)
                 form = BailleursForm(instance=BailleursList)
         context['form'] = form
-        return render(request, 'baux/bailleur.html', context)
+        return render(request, 'baux/bailleur_list.html', context)"""
 
 class ImmeubleView(TemplateView):
     #predefined functiion
@@ -202,27 +212,3 @@ class ContratView(TemplateView):
             context = self.get_context_data()
             context["form"] = contrat_form
             return self.render_to_response(context)
-
-    """def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = ContratsForm()
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                form = ContratsForm(request.POST)
-                if form.is_valid():
-                    form.save()
-                    form = ContratsForm()
-
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                contratList = Contrats.objects.get(id=pk)
-                contratList.delete()
-
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                contratList = Contrats.objects.get(id=pk)
-                form = ContratsForm(instance=contratList)
-
-        context['form'] = form
-        return render(request, 'baux/contrat.html', context)"""

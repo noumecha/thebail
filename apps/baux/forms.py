@@ -58,7 +58,29 @@ class BailleursForm(forms.ModelForm):
     class Meta:
         model = Bailleurs
 
-        fields = ( 'Nom_prenom','NIU','Registre_commerce','Num_Cni','Date_delivrance_cni','Type_personne','Raison_social','Reference_doc_identification','Date_creationEnt','NumPassePort','Date_delivrance_PassePort','Nom_Prenom_Representant','Telephone','Adresse')
+        fields = ( 'Nom_prenom',
+                'NIU',
+                'Registre_commerce',
+                'Num_Cni',
+                'Date_delivrance_cni',
+                'Type_personne',
+                'Raison_social',
+                'Reference_doc_identification',
+                'Date_creationEnt',
+                'NumPassePort',
+                'Date_delivrance_PassePort',
+                'Nom_Prenom_Representant',
+                'Telephone',
+                'Adresse',
+                'Type_id_bailleur',
+                'Num_Cni_representant',
+                'Date_delivrance_cni_representant',
+                'Type_id_representant',
+                'NumPassePort_representant',
+                'Date_delivrance_PassePort_representant',
+                'Telephone_representant',
+                'Adresse_representant',
+            )
         labels = {
             "Nom_prenom": " intitulé ou  Nom et prenoms",
             "NIU": "NIU(idientifiant unique DGI)",
@@ -74,12 +96,22 @@ class BailleursForm(forms.ModelForm):
             "Date_delivrance_PassePort" :"date de delivrance" ,
             "Telephone": "N° Télephone" ,
             "Adresse": "Adresse ou boite postal" ,
+            "Num_Cni_representant" : "Numero de CNI du Representant" ,
+            "Date_delivrance_cni_representant" : "Date de delivrance CNI Representant" ,
+            "Type_id_bailleur" : "Type Identification du bailleur" ,
+            "Type_id_representant" : "Type Identification Representant" ,
+            "NumPassePort_representant" : "Numero de passeport du Representant" ,
+            "Date_delivrance_PassePort_representant" : "Date de delivrance PassePort de Representant" ,
+            "Telephone_representant" : "N° Télephone du Representant",
+            "Adresse_representant" : "Adresse du Representant",
         }
         widgets = {
-          'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
-          'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
-          'Date_creationEnt'  :  forms.TextInput(attrs={'type': 'date'}),
-          'Date_delivrance_PassePort'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
+            'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Date_creationEnt'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Date_delivrance_PassePort'  :  forms.TextInput(attrs={'type': 'date'}),
+            "Date_delivrance_cni_representant" : forms.TextInput(attrs={'type': 'date'}),
+            "Date_delivrance_PassePort_representant" : forms.TextInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -97,8 +129,13 @@ class BailleursForm(forms.ModelForm):
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
                         Column(FloatingField("Reference_doc_identification"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
                         Column(FloatingField("Registre_commerce"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
+                        Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_type_id'),  
                         Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
                         Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_cni'),
+                        Column(FloatingField("NumPassePort"), css_class='form-group col-md-6 mb-0 bailleur_num_passeport'),
+                        Column(FloatingField("Date_delivrance_PassePort"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_passeport'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -110,20 +147,26 @@ class BailleursForm(forms.ModelForm):
                     "Informations Representant",
                     Row(
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("NumPassePort"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_delivrance_PassePort"), css_class='form-group col-md-6 mb-0'),            
-                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_id_representant"), css_class='form-group col-md-6 mb-0 representant_type_id'),    
+                        Column(FloatingField("Num_Cni_representant"), css_class='form-group col-md-6 mb-0 representant_num_cni'),
+                        Column(FloatingField("Date_delivrance_cni_representant"), css_class='form-group col-md-6 mb-0 representant_date_deliv_cni'),
+                        Column(FloatingField("NumPassePort_representant"), css_class='form-group col-md-6 mb-0 representant_num_passeport'),
+                        Column(FloatingField("Date_delivrance_PassePort_representant"), css_class='form-group col-md-6 mb-0 representant_date_deliv_passeport'),            
+                        Column(FloatingField("Telephone_representant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Adresse_representant"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
                 ),
                 css_class="p-3 pt-0",
             ),
-            FloatingField("Adresse"),
-            )
+        )
         self.helper.form_tag = False;self.fields['NIU'].required = False   
         self.fields['Registre_commerce'].required = False; self.fields['Nom_Prenom_Representant'].required = False        
-        self.fields['NumPassePort'].required = False;self.fields['Date_delivrance_PassePort'].required = False   
+        self.fields['Num_Cni'].required = False;self.fields['Date_delivrance_cni'].required = False 
+        self.fields['NumPassePort'].required = False;self.fields['Date_delivrance_PassePort'].required = False 
+        self.fields['Num_Cni_representant'].required = False;self.fields['Date_delivrance_cni_representant'].required = False
+        self.fields['NumPassePort_representant'].required = False;self.fields['Date_delivrance_PassePort_representant'].required = False   
 
 
 class LocalisationForm(forms.ModelForm):

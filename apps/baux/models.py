@@ -79,6 +79,14 @@ PEUT_PAYER = (
     (str(MINFI), 'MINFI'),
     (str(MINDEF), 'MINDEF'),
 )
+CNI = 'CNI'
+PASSEPORT = 'PASSEPORT'
+TYPE_IDENTIFICATION = (
+    ('', 'Choisir le type d\'identification'),
+    (str(CNI), 'CNI'),
+    (str(PASSEPORT), 'PASSEPORT'),
+)
+
 class Exercice(models.Model):
     annee = models.IntegerField(unique=True)
     LibelleFR = models.CharField(max_length=20, null=True)
@@ -96,15 +104,23 @@ class Bailleurs(models.Model):
     Raison_social = models.CharField(max_length=100, null=True, blank=True)
     Date_creationEnt = models.DateField(null=True, blank=True)
     Num_Cni = models.CharField(max_length=50, null=True, blank=True)
+    Num_Cni_representant = models.CharField(max_length=50, null=True, blank=True)
     # image fields for saving some stuff
     #Scan_cni = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=None, null=True)
     Date_delivrance_cni = models.DateField(null=True, blank=True)
+    Date_delivrance_cni_representant = models.DateField(null=True, blank=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
+    Type_id_bailleur = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True)
+    Type_id_representant = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True)
     NumPassePort = models.CharField(max_length=50, null=True)
+    NumPassePort_representant = models.CharField(max_length=50, null=True)
     Date_delivrance_PassePort = models.DateField(null=True)
+    Date_delivrance_PassePort_representant = models.DateField(null=True)
     Nom_Prenom_Representant = models.CharField(max_length=50, null=True)
     Telephone = models.CharField(max_length=20, null=True)
+    Telephone_representant = models.CharField(max_length=20, null=True)
     Adresse = models.CharField(max_length=50, null=True)
+    Adresse_representant = models.CharField(max_length=50, null=True)
     Observation = models.TextField(blank = True, null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
