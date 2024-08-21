@@ -1,5 +1,5 @@
 from django import forms
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants
+from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button
@@ -214,21 +214,20 @@ class OccupantsForm(forms.ModelForm):
     class Meta:
         model = Occupants
 
-        fields = ("Designation","Administration_tutelle","Immeuble","Nom_Prenom","Ref_ActeJuridique","NumCNI","Date_delivrance_CNI","Matricule","Fonction","Telephone","AdresseMail","NumPassePort","Date_Delivrance_PassePort")
+        fields = ("Administration_tutelle","Immeuble","Nom_Prenom","Ref_ActeJuridique","NumCNI","Date_delivrance_CNI","Matricule","Fonction","Telephone","AdresseMail","NumPassePort","Date_Delivrance_PassePort")
         labels = {
-            "Designation" : "Désignation",
             "Administration_tutelle" : "Administration utilisatrice",
             "Immeuble" : "Imeuble",
-            "Nom_Prenom" : "Noms et prénoms du logé",
+            "Nom_Prenom" : "Noms et prénoms occupant",
             "Ref_ActeJuridique" : "Référence juridique",
             "NumCNI" : "Numero de CNI",
             "Date_delivrance_CNI" : "Date de délivrance de CNI",
-            "Matricule" : "Matricule du logé",
-            "Fonction" : "Fonction du logé",
-            "Telephone" : "Telephone du logé",
-            "AdresseMail" : "Adresse mail du logé",
-            "NumPassePort" : "Numero de passeport du logé",
-            "Date_Delivrance_PassePort" : "Date de délivrance de passeport du logé",
+            "Matricule" : "Matricule occupant",
+            "Fonction" : "Fonction occupant",
+            "Telephone" : "Telephone occupant",
+            "AdresseMail" : "Adresse mail occupant",
+            "NumPassePort" : "Numero de passeport occupant",
+            "Date_Delivrance_PassePort" : "Date de délivrance de passeport du occupant",
         }
 
         widgets = {
@@ -243,9 +242,6 @@ class OccupantsForm(forms.ModelForm):
                 Fieldset(
                     "Informations administratives",
                     Row(
-                        Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Matricule"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Administration_tutelle"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row' 
@@ -259,6 +255,8 @@ class OccupantsForm(forms.ModelForm):
                 Fieldset(
                     "Informations sur l'occupant",
                     Row(
+                        Column(FloatingField("Matricule"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Fonction"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NumCNI"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
@@ -499,9 +497,93 @@ class ContratsForm(forms.ModelForm):
             )
         )
         
-
-
-
-
-
-    
+class DossiersReglementsForm(forms.ModelForm):
+    class Meta:
+        model = Dossiers_Reglements
+        fields = (
+            "Avenant",
+            "Contrat",
+            "Ref_facture",
+            "Signataire_liquidateur",
+            "Date_signature",
+            "Ref_bonEngagement",
+            "lieu",
+            "Date_Effet_debut",
+            "Date_Effet_fin",
+            "Montant_Brut",
+            "Montant_Charges",
+            "Montant_Nap",
+            "Montant_reglé",
+            "Etat",
+            "Observation",
+        )
+        labels = {
+            "Avenant" : "Selectionner l'avenant",
+            "Contrat" : "Selectionner le contrat",
+            "Ref_facture" : "Saisir la Reférence de la facture",
+            "Signataire_liquidateur" : "Signataire liquidateur",
+            "Date_signature" : "Date de la signature",
+            "Ref_bonEngagement" : "Numero de référecne du bon d'engagement",
+            "lieu" : "Saisir le lieu",
+            "Date_Effet_debut" : "Date effective de debut",
+            "Date_Effet_fin" : "Date effective de fin",
+            "Montant_Brut" : "Montant Brut",
+            "Montant_Charges" : "Montant des charges",
+            "Montant_Nap" : "Montant Net à Payer",
+            "Montant_reglé" : "Montant Réglé",
+            "Etat" : "Etat",
+            "Observation" : "Observation",
+        }
+        widgets = {
+          "Observation" : forms.Textarea(attrs={'rows':4, 'cols':10}),
+          "Date_Effet_debut"  :  forms.TextInput(attrs={'type': 'date'}),
+          "Date_Effet_fin"  :  forms.TextInput(attrs={'type': 'date'}),
+        }
+        def __init__(self, *args, **kwargs):
+            super(DossiersReglementsForm, self).__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.layour = Layout(
+                Row(
+                    Fieldset(
+                        "Elements de règlement",
+                        Row(
+                            Column(FloatingField("Avenant"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Contrat"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Ref_bonEngagement"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Date_Effet_debut"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Date_Effet_fin"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Ref_facture"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Signataire_liquidateur"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("lieu"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Etat"), css_class='form-group col-md-6 mb-0'),
+                            css_class="form-row",
+                        ),
+                        css_class="line__text border p-2 pt-4"
+                    ),
+                    css_class="p-3 pt-0",
+                ),
+                Row(
+                    Fieldset(
+                        "Règlement",
+                        Row(
+                            Column(FloatingField("Montant_Brut"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Montant_Charges"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Montant_Nap"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Montant_reglé"), css_class='form-group col-md-6 mb-0'),
+                            css_class="form-row",
+                        ),
+                        css_class="line__text border p-2 pt-4"
+                    ),
+                    css_class="p-3 pt-0",
+                ),
+                FloatingField(
+                    "Observation",
+                ),
+                Submit(
+                    "save",
+                    "Enregistrer",
+                    css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
+                )
+            )
+        

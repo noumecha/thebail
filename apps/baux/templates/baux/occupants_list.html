@@ -10,12 +10,11 @@
 
 {% block content %}
     <div class="card mt-3 p-3">
-        <h1>Liste des logés </h1>
+        <h1>Liste des Occupants </h1>
         <!-- listing class="container-fluid" -->
         <div class="container-fluid">
             <table class="table table-sm">
                 <tr>
-                    <th>Designation</th>
                     <th>Noms et prenoms</th>
                     <th>Administration_tutelle</th>
                     <th>Matricule</th>
@@ -27,7 +26,6 @@
                         {% if form.instance.id == score.id %}
                         {% include 'baux/saveimmeuble.html' %}
                         {% else %}
-                            <td>{{ score.Designation}} </td>
                             <td>{{ score.Nom_Prenom }}</td>
                             <td>{{ score.Administration_tutelle }}</td>
                             <td>{{ score.Matricule }}</td>

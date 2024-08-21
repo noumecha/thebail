@@ -235,7 +235,6 @@ class Immeubles (models.Model):
         return f" {self.Designation}/{self.Localisation} "
 
 class Occupants (models.Model):
-    Designation = models.CharField(max_length=50)
     Administration_tutelle = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "tutelle")
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment")
     Nom_Prenom = models.CharField(max_length=50,null=True)
