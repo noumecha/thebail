@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, DeleteView, UpdateView, ListView
 from django.views.generic.edit import FormView
+from django.urls import reverse_lazy
 from web_project import TemplateLayout
-from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,LogesForm
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Loges
+from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm
+from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants
 
 # Create your views here.
 def index (request):
@@ -18,41 +19,24 @@ class HomeView(TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         return context
 
-class LogesView(TemplateView):
+class OccupantsView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["logesList"] = Loges.objects.all()
-        context["form"] = LogesForm()
+        context["OccupantsList"] = Occupants.objects.all()
+        context["form"] = OccupantsForm()
         return context
-
+    
     def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = LogesForm()
-        logesList = Loges.objects.all()
-        context['logesList'] = logesList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = LogesForm(request.POST)
-                else:
-                    logesnList = Loges.objects.get(id=pk)
-                    form = LogesForm(request.POST, instance=logesList)
-                form.save()
-                form = LogesForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                logesList = Loges.objects.get(id=pk)
-                logesList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                logesList = Loges.objects.get(id=pk)
-                form = LogesForm(instance=logesList)
-        context['form'] = form
-        return render(request, "baux/loges.html",context)
+        occupants_form = OccupantsForm(request.POST)
+        if occupants_form.is_valid():
+            occupants_form.save()
+            return redirect('baux:occupants_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = occupants_form
+            return self.render_to_response(context)
 
 class LocalisationView(TemplateView):
     #predefined functiion
@@ -137,6 +121,16 @@ class BailleurView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        bailleur_form = BailleursForm(request.POST)
+        if bailleur_form.is_valid():
+            bailleur_form.save()
+            return redirect('baux:bailleur_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = bailleur_form
+            return self.render_to_response(context)
+
+    """def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = BailleursForm()
@@ -150,7 +144,8 @@ class BailleurView(TemplateView):
                 else:
                     BailleursList = Bailleurs.objects.get(id=pk)
                     form = BailleursForm(request.POST, instance=BailleursList)
-                form.save()
+                if form.is_valid():
+                    form.save()
                 form = BailleursForm()
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')
@@ -161,7 +156,7 @@ class BailleurView(TemplateView):
                 BailleursList = Bailleurs.objects.get(id=pk)
                 form = BailleursForm(instance=BailleursList)
         context['form'] = form
-        return render(request, 'baux/bailleur.html', context)
+        return render(request, 'baux/bailleur_list.html', context)"""
 
 class ImmeubleView(TemplateView):
     #predefined functiion
@@ -203,35 +198,17 @@ class ImmeubleView(TemplateView):
 class ContratView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
-        #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["contratList"] = Contrats.objects.all()
         context["form"] = ContratsForm()
         return context
 
     def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = ContratsForm()
-        contratList = Contrats.objects.all()
-        context['contratList'] = contratList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = ContratsForm(request.POST)
-                else:
-                    contratList = Contrats.objects.get(id=pk)
-                    form = ContratsForm(request.POST, instance=contratList)
-                form.save()
-                form = ContratsForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                contratList = Contrats.objects.get(id=pk)
-                contratList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                contratList = Contrats.objects.get(id=pk)
-                form = ContratsForm(instance=contratList)
-        context['form'] = form
-        return render(request, 'baux/contrat.html',context)
+        contrat_form = ContratsForm(request.POST)
+        if contrat_form.is_valid():
+            contrat_form.save()
+            return redirect('baux:contrat_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = contrat_form
+            return self.render_to_response(context)

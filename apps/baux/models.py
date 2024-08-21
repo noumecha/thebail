@@ -70,6 +70,23 @@ TYPE_MUR = (
     (str(C), 'Carrelé'),
     (str(P), 'Peint'),
 )
+MINDCAF = 'MINDCAF'
+MINFI = 'MINFI'
+MINDEF = 'MINDEF'
+PEUT_PAYER = (
+    ('', 'Selectionner l\'Administration'),
+    (str(MINDCAF), 'MINDCAF'),
+    (str(MINFI), 'MINFI'),
+    (str(MINDEF), 'MINDEF'),
+)
+CNI = 'CNI'
+PASSEPORT = 'PASSEPORT'
+TYPE_IDENTIFICATION = (
+    ('', 'Choisir le type d\'identification'),
+    (str(CNI), 'CNI'),
+    (str(PASSEPORT), 'PASSEPORT'),
+)
+
 class Exercice(models.Model):
     annee = models.IntegerField(unique=True)
     LibelleFR = models.CharField(max_length=20, null=True)
@@ -80,17 +97,30 @@ class Exercice(models.Model):
         return f"Exercice budgetaire {self.annee}"
 
 class Bailleurs(models.Model):
-    Nom_prenom = models.CharField(max_length=50)
+    Nom_prenom = models.CharField(max_length=50, null=True, blank=True)
     NIU = models.CharField(max_length=20, null=True)
-    Registre_commerce = models.CharField(max_length=100, null=True)
-    Num_Cni = models.CharField(max_length=50, null=True)
-    Date_delivrance_cni = models.DateField(null=True)
+    Reference_doc_identification = models.CharField(max_length=20, null=True, blank=True)
+    Registre_commerce = models.CharField(max_length=100, null=True, blank=True)
+    Raison_social = models.CharField(max_length=100, null=True, blank=True)
+    Date_creationEnt = models.DateField(null=True, blank=True)
+    Num_Cni = models.CharField(max_length=50, null=True, blank=True)
+    Num_Cni_representant = models.CharField(max_length=50, null=True, blank=True)
+    # image fields for saving some stuff
+    #Scan_cni = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=None, null=True)
+    Date_delivrance_cni = models.DateField(null=True, blank=True)
+    Date_delivrance_cni_representant = models.DateField(null=True, blank=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
+    Type_id_bailleur = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True)
+    Type_id_representant = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True)
     NumPassePort = models.CharField(max_length=50, null=True)
+    NumPassePort_representant = models.CharField(max_length=50, null=True)
     Date_delivrance_PassePort = models.DateField(null=True)
+    Date_delivrance_PassePort_representant = models.DateField(null=True)
     Nom_Prenom_Representant = models.CharField(max_length=50, null=True)
     Telephone = models.CharField(max_length=20, null=True)
+    Telephone_representant = models.CharField(max_length=20, null=True)
     Adresse = models.CharField(max_length=50, null=True)
+    Adresse_representant = models.CharField(max_length=50, null=True)
     Observation = models.TextField(blank = True, null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
@@ -105,6 +135,7 @@ class Locataires(models.Model):
     Num_Cni = models.CharField(max_length=50, null=True)
     Date_delivrance_cni = models.DateField(null=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=2, null=False)
+    Peut_payer = models.CharField(choices=PEUT_PAYER, max_length=255, null=True)
     Observation = models.TextField(blank = True,null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
@@ -164,26 +195,27 @@ class Arrondissemements (models.Model):
 class Localisation (models.Model):
     Quartier = models.CharField(max_length=50,null=True)
     Observation = models.TextField(blank = True,null= True)
-    """ region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=True, related_name="region")
-    departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="departement")
-    """
-    arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="arrondissement")
-    
+    region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=True, related_name="loca_region")
+    departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="loca_departement")
+    arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="loca_arrondissement")
     pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="etranger")
 
     def __str__(self):
-        return f" {self.Quartier}/{self.arrondissement}/{self.arrondissement.departement}/{self.arrondissement.departement.Region} "
+        return f" {self.arrondissement.departement.Region}/{self.arrondissement.departement}/{self.arrondissement}/{self.Quartier} "
 
 class Immeubles (models.Model):
     Designation = models.CharField(max_length=50)
     Reference_TF = models.CharField(max_length=50,null=True)
     Nom_prenom_proprietaireTF = models.CharField(max_length=50,null=True)
+    Element_immeuble = models.CharField(max_length=50,null=True,blank=True)
+    Accessoires = models.CharField(max_length=50,null=True,blank=True)
     Date_signatureTF = models.DateField(null=True)
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Date_Construction = models.DateField(null=True)
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
     Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
     Type_mur = models.CharField(choices=TYPE_MUR, max_length=255, null=True)
+    Couleur = models.CharField(max_length=255,null=True,blank=True)
     Nombre_de_pieces = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Nombre_d_etage = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
@@ -202,7 +234,7 @@ class Immeubles (models.Model):
     def __str__(self):
         return f" {self.Designation}/{self.Localisation} "
 
-class Loges (models.Model):
+class Occupants (models.Model):
     Designation = models.CharField(max_length=50)
     Administration_tutelle = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "tutelle")
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment")
@@ -235,24 +267,26 @@ class Ayant_droits (models.Model):
     Bailleur = models.ManyToManyField(Bailleurs, blank=True)
 
 class Contrats (models.Model):
-    Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=False, related_name= "bailleur")
-    Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=False, related_name= "locataire")
-    Immeubles =  models.ManyToManyField(Immeubles, blank=True)
-    Duree_Contrat = models.CharField(max_length=10)
-    Signataire = models.CharField(max_length=50)
+    Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
+    Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
+    Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name= "immeuble")
+    #Immeubles =  models.ManyToManyField(Immeubles, blank=True)
+    Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "beneficiaire")
+    Duree_Contrat = models.CharField(max_length=10, null=False)
+    Signataire = models.CharField(max_length=50, null=False)
     Date_Signature = models.DateField(null=True)
     Date_Debut = models.DateField(null=True)
-    Ref_contrat = models.CharField(max_length=50)
+    Ref_contrat = models.CharField(max_length=50, null=True)
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True) 
     Montant_TTC_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Banque = models.CharField(max_length=50)
-    Compte_Bancaire = models.CharField(max_length=50)
+    Banque = models.CharField(max_length=50, null=True)
+    Compte_Bancaire = models.CharField(max_length=50, null=True)
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True) 
-    Nom_CF = models.CharField(max_length=50)
+    Nom_CF = models.CharField(max_length=50, null=True)
     Date_visa_CF = models.DateField(null=True)
-    Etat = models.BooleanField()
+    Etat = models.BooleanField(null=True, blank=True)
     observation = models.CharField(max_length=200)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)

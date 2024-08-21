@@ -1,8 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, LogesView
-
-# from .api_views import BudgetArticleApiView, BudgetArticleMvtDepenseApiView
+from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView
 
 app_name = 'baux'
 urlpatterns = [
@@ -18,15 +16,17 @@ urlpatterns = [
     #path("contrat/add/", views.contrat, name='contrat'),
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
+    #path("contrat/<int:pk>/edit/", ContratUpdateView.as_view(), name='contrat_edit'),
+    #path("contrat/<int:pk>/delete/", ContratDeleteView.as_view(), name='contrat_delete'),"""
     #path("locataire/add/", views.locataire, name='locataire'),
     path("locataire/add/", LocataireView.as_view(template_name="baux/locataire.html"), name='locataire'),
     path("locataire/list/", LocataireView.as_view(template_name="baux/locataire_list.html"), name='locataire_list'),
     #path("localisation/add/", views.localisation, name='localisation'),
     path("localisation/add/", LocalisationView.as_view(template_name="baux/localisation.html"), name='localisation'),
     path("localisation/list/", LocalisationView.as_view(template_name="baux/localisation_list.html"), name='localisation_list'),
-    #logés routes 
-    path("loges/add/", LogesView.as_view(template_name="baux/loges.html"), name='loges'),
-    path("loges/list/", LogesView.as_view(template_name="baux/loges_list.html"), name='loges_list'),
+    #routes for occupants
+    path("occupants/add/", OccupantsView.as_view(template_name="baux/occupants.html"), name='occupants'),
+    path("occupants/list/", OccupantsView.as_view(template_name="baux/occupants_list.html"), name='occupants_list'),
 
 
 ]

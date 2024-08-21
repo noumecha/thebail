@@ -9,84 +9,26 @@
 
 {% block content %}
     <div class="card p-3">
+
         <h1>Enregistrement d'un contrat de bail administratif</h1>
+        <form method="post" action="{% url 'baux:contrat' %}">
+            {% if not form.instance.id %}
 
-        <!-- enregistrement 
+            {% crispy form %}
 
-        'Bailleur', 'Locataire','Immeubles', 
-        'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
-        'Periodicite_Reglement', 'Type_location', 'Nom_CF', 'Date_visa_CF','Montant_TTC_Mensuel',
-        'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'Compte_Bancaire', 
-        'observation'
-        -->
+            {% endif %}
 
-        <div class="test">
-            <form method="post" action="{% url 'baux:contrat' %}">
-                {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field , errors in form.errors.items %}
+                            <li>{{ field }} : {{ errors|striptags }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </form>
 
-                <!-- enregistrement -->
-                {% if not form.instance.id %}
-
-                {% include 'baux/saveContrat.html' %}
-
-                {% endif %}
-
-            </form>
-
-        </div>
     </div>
-    <div class="card mt-3 p-3">
-        <h1>Listes des Contrats de bails</h1>
-        <!-- listing Ref_contrat  Date_Signature  Duree_Contrat 'Bailleur', 'Locataire','Immeubles', Montant_TTC_Mensuel -->
-        <div > <!-- class="container-fluid" -->
-            <table class="table table-sm">
-                <tr>
-                    <th>Reference contrat</th>
-                    <th>Date de signature </th>
-                    <th>Date du Contrat </th>
-                    <th>Bailleur</th>
-                    <th>Locataire</th>
-                    <th>Article loué</th>
-                    <th>Loyer mensuel TTC </th>
-                    <th>Action</th>
-                </tr>
-                 
-                {% for score in contratList %}
-                   <tr>
-                        {% if form.instance.id == score.id %}
-                        {% include 'baux/saveContrat.html' %}
-                        {% else %}
-                            <td>{{ score.Ref_contrat}} </td>
-                            <td>{{ score.Date_Signature }}</td>
-                            <td>{{ score.Duree_Contrat }}</td>
-                            <td>{{ score.Bailleur }}</td>
-                            <td>{{ score.Locataire }}</td>
-                            <td>{{ score.Immeubles }}</td>
-                            <td>{{ score.Montant_TTC_Mensuel }}</td>
-
-                            <td>
-                                <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
-                                <button formnovalidate class="btn btn-danger" name="delete" value="{{ score.id }}">Delete</button>
-                            </td>
-                        {% endif %}
-                     </tr>
-                {% endfor %}
-
-            </table>
-
-        </div>
-    </div>
-
-
-<!--div class = "container-fluid justify-content-center">
-    <div class="form-group row">
-        <div class="col-md-6 align-self-start">
-            <a href="{{ request.META.HTTP_REFERER }}"> &lt;&lt; Retouner à la page précedente</a>
-        </div>
-        <div class="col-md-6 align-self-end">
-            <a href="{% url 'baux:Home' %}">Revenir au Menu principal</a>
-        </div>
-    </div>
-</div-->
 
 {% endblock %}

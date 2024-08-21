@@ -3,26 +3,28 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Bailleur{% endblock %}
+{% block title %}Occupant{% endblock %}
 
 {% load crispy_forms_tags %}
 
 
 {% block content %}
-        
     <div class="card p-3">
-        <h1>Enregistrement des Bailleurs </h1>
+        <h1>Enregistrement d'un Occupant</h1>
 
-        <div >
-            <form method="post" action="{% url 'baux:bailleur' %}">
-                <!--{% csrf_token %} -->
-                
+        <!-- enregistrement -->
+
+        <div class="">
+            <form method="post" action="{% url 'baux:occupants' %}">
+                <!-- enregistrement -->
                 {% if not form.instance.id %}
 
-                    {% include 'baux/saveBailleur.html' %}
+                {% crispy form %}
+
+                <input type="submit" class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" name="save" value="Enregistrer">
 
                 {% endif %}
-
+                
                 {% if form.errors %}
                     <div class="alert alert-danger">
                         <ul>
@@ -32,8 +34,8 @@
                         </ul>
                     </div>
                 {% endif %}
-                
             </form>
+
         </div>
     </div>
 
