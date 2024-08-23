@@ -159,6 +159,25 @@
         </li>
       </ul>
     </li>
+    <!-- Avenants -->
+    <li class="menu-item {% if '/avenant/' == request.resolver_match.url_name or '/avenant/' in request.path %}active open{% endif %}">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <div class="text-truncate" data-i18n="Form Elements">Avenants</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item {% if '/add/' in request.path %}active{% endif %}">
+          <a href="{% url 'baux:avenant' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
+          </a>
+        </li>
+        <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
+          <a href="{% url 'baux:avenant_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
+          </a>
+        </li>
+      </ul>
+    </li>
     <!-- Non Mandatement -->
     <li class="menu-item {% if '/dossier_reglement/' == request.resolver_match.url_name or '/dossier_reglement/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">

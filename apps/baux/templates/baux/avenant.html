@@ -1,0 +1,35 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Avenants{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="card p-3">
+
+        <h1>Enregistrement d'un dossier avenant</h1>
+        <form method="post" action="{% url 'baux:avenant' %}">
+
+            {% if not form.instance.id %}
+
+            {% crispy form %}
+
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field , errors in form.errors.items %}
+                            <li>{{ field }} : {{ errors|striptags }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </form>
+
+    </div>
+
+{% endblock %}

@@ -3,8 +3,8 @@ from django.views.generic import TemplateView, CreateView, DeleteView, UpdateVie
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from web_project import TemplateLayout
-from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Dossiers_ReglementsForm
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements
+from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Dossiers_ReglementsForm,AvenantsForm
+from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
 
 # Create your views here.
 def index (request):
@@ -228,4 +228,21 @@ class Dossiers_ReglementsView(TemplateView):
         else:
             context = self.get_context_data()
             context["form"] = doss_reglement_form
+            return self.render_to_response(context)
+
+class AvenantsView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["avenantsList"] = Avenants.objects.all()
+        context["form"] = AvenantsForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        avenants_form = AvenantsForm(request.POST)
+        if avenants_form.is_valid():
+            avenants_form.save()
+            return redirect('baux:avenant_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = avenants_form
             return self.render_to_response(context)

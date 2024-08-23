@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Dossiers_ReglementsView
+from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Dossiers_ReglementsView,AvenantsView
 
 app_name = 'baux'
 urlpatterns = [
@@ -30,5 +30,8 @@ urlpatterns = [
     # dossier reglements : 
     path("dossier_reglement/add/", Dossiers_ReglementsView.as_view(template_name="baux/dossier_reglement.html"), name='dossier_reglement'),
     path("dossier_reglement/list/", Dossiers_ReglementsView.as_view(template_name="baux/dossier_reglement_list.html"), name='dossier_reglement_list'),
+    # avenants : 
+    path("avenant/add/", AvenantsView.as_view(template_name="baux/avenant.html"), name='avenant'),
+    path("avenant/list/", AvenantsView.as_view(template_name="baux/avenant_list.html"), name='avenant_list'),
 
 ]

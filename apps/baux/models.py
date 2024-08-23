@@ -309,7 +309,7 @@ class Avenants (models.Model):
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True) 
     Nom_CF = models.CharField(max_length=50)
     Date_visa_CF = models.DateField(null=True)
-    Etat = models.BooleanField()
+    Etat = models.BooleanField(null=True, blank=True)
     observation = models.CharField(max_length=200)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements
+from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button
@@ -496,7 +496,112 @@ class ContratsForm(forms.ModelForm):
             )
         )
         self.fields['observation'].required = False
-        
+
+class AvenantsForm(forms.ModelForm):
+    class Meta:
+        model = Avenants
+        fields = (
+            "contrat",
+            "Duree_Contrat",
+            "Signataire",
+            "Date_Signature",
+            "Date_Debut",
+            "Ref_Avenant",
+            "Periodicite_Reglement",
+            "Montant_TTC_Mensuel",
+            "Montant_Charges_Mensuel",
+            "Montant_Nap_Mensuel",
+            "Banque",
+            "Compte_Bancaire",
+            "Type_location",
+            "Nom_CF",
+            "Date_visa_CF",
+            "observation",
+        )
+        labels = {
+            "contrat" : "Selectionner le contrat",
+            "Duree_Contrat" : "Entrez la durée du contrat",
+            "Signataire" : "Entrez le nom du signataire",
+            "Date_Signature" : "Selectionner la date de signature",
+            "Date_Debut" : "Selectionner la date de debut du contrat",
+            "Ref_Avenant" : "Entrez la référence de l'avenant",
+            "Periodicite_Reglement" : "Entrez la périodicité de règlement",
+            "Montant_TTC_Mensuel" : "Entrez le montant TCC mensuel",
+            "Montant_Charges_Mensuel" : "Entrez le montant des charges mensuelles",
+            "Montant_Nap_Mensuel" : "Entrez le Net A payer",
+            "Banque" : "Entrez le nom de la banque",
+            "Compte_Bancaire " : "Entrez le numero du compte bancaire",
+            "Type_location" : "Selectionner le type de location",
+            "Nom_CF" : "Entrez le nom du controlleur financier",
+            "Date_visa_CF" : "Selectionner la date de visa du Controlleur financier",
+            "Etat" : "Selectionner l'Etat",
+            "observation" : "Observation",
+        }
+        widgets = {
+            "observation" : forms.Textarea(attrs={'rows':4, 'cols':10}),
+            "Date_Signature" : forms.TextInput(attrs={'type': 'date'}),
+            "Date_Debut" : forms.TextInput(attrs={'type': 'date'}),
+            "Date_visa_CF" : forms.TextInput(attrs={'type': 'date'}),
+        }
+    def __init__(self, *args, **kwargs):
+        super(AvenantsForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Fieldset(
+                    "Elémnts du Contrat",
+                    Row(
+                        Column(FloatingField("contrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_Avenant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Duree_Contrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Debut"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0",
+            ),
+            Row(
+                Fieldset(
+                    "Eléments CF",
+                    Row(
+                        Column(FloatingField("Nom_CF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_visa_CF"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0",
+            ),
+            Row(
+                Fieldset(
+                    "Eléments de règelement",
+                    Row(
+                        Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Compte_Bancaire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_TTC_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Nap_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0",
+            ),
+            FloatingField(
+                "observation",
+            ),
+            Submit(
+                "save",
+                "Enregistrer",
+            ),
+        )
+        self.fields['observation'].required = False
+
 class Dossiers_ReglementsForm(forms.ModelForm):
     class Meta:
         model = Dossiers_Reglements
