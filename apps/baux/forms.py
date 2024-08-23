@@ -47,7 +47,8 @@ class LocatairesForm(forms.ModelForm):
                 css_class="p-3 pt-0",
             ),
             FloatingField("Observation"),
-            )
+        )
+        self.fields['Observation'].required = False
         self.helper.form_tag = False
         self.fields['NIU'].required = False
         self.fields['Num_Cni'].required = False
@@ -106,7 +107,6 @@ class BailleursForm(forms.ModelForm):
             "Adresse_representant" : "Adresse du Representant",
         }
         widgets = {
-            'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
             'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
             'Date_creationEnt'  :  forms.TextInput(attrs={'type': 'date'}),
             'Date_delivrance_PassePort'  :  forms.TextInput(attrs={'type': 'date'}),
@@ -161,7 +161,7 @@ class BailleursForm(forms.ModelForm):
                 css_class="p-3 pt-0",
             ),
         )
-        self.helper.form_tag = False;self.fields['NIU'].required = False   
+        self.helper.form_tag = False;self.fields['NIU'].required = False
         self.fields['Registre_commerce'].required = False; self.fields['Nom_Prenom_Representant'].required = False        
         self.fields['Num_Cni'].required = False;self.fields['Date_delivrance_cni'].required = False 
         self.fields['NumPassePort'].required = False;self.fields['Date_delivrance_PassePort'].required = False 
@@ -206,9 +206,8 @@ class LocalisationForm(forms.ModelForm):
                 css_class="p-3 pt-0"
             ),
             FloatingField("Observation"),
-
-            )
-        self.helper.form_tag = False
+        )
+        self.helper.form_tag = False;self.fields['Observation'].required = False
 
 class OccupantsForm(forms.ModelForm):
     class Meta:
@@ -419,7 +418,7 @@ class ContratsForm(forms.ModelForm):
             "observation" : 'Observation',
         }
         widgets = {
-          'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
+          'observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
           #'Immeubles' : forms.SelectMultiple(attrs={'class':'select2'}),
           'Date_visa_CF'  :  forms.TextInput(attrs={'type': 'date'}),
           'Date_Debut'  :  forms.TextInput(attrs={'type': 'date'}),
@@ -496,8 +495,9 @@ class ContratsForm(forms.ModelForm):
                 css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
             )
         )
+        self.fields['observation'].required = False
         
-class DossiersReglementsForm(forms.ModelForm):
+class Dossiers_ReglementsForm(forms.ModelForm):
     class Meta:
         model = Dossiers_Reglements
         fields = (
@@ -536,54 +536,56 @@ class DossiersReglementsForm(forms.ModelForm):
         }
         widgets = {
           "Observation" : forms.Textarea(attrs={'rows':4, 'cols':10}),
+          "Date_signature"  :  forms.TextInput(attrs={'type': 'date'}),
           "Date_Effet_debut"  :  forms.TextInput(attrs={'type': 'date'}),
           "Date_Effet_fin"  :  forms.TextInput(attrs={'type': 'date'}),
         }
-        def __init__(self, *args, **kwargs):
-            super(DossiersReglementsForm, self).__init__(*args, **kwargs)
-            self.helper = FormHelper()
-            self.helper.layour = Layout(
-                Row(
-                    Fieldset(
-                        "Elements de règlement",
-                        Row(
-                            Column(FloatingField("Avenant"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Contrat"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Ref_bonEngagement"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_Effet_debut"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_Effet_fin"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Ref_facture"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Signataire_liquidateur"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("lieu"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Etat"), css_class='form-group col-md-6 mb-0'),
-                            css_class="form-row",
-                        ),
-                        css_class="line__text border p-2 pt-4"
+    def __init__(self, *args, **kwargs):
+        super(Dossiers_ReglementsForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Fieldset(
+                    "Elements de règlement",
+                    Row(
+                        Column(FloatingField("Avenant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Contrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_bonEngagement"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Effet_debut"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Effet_fin"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_facture"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Signataire_liquidateur"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("lieu"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Etat"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
                     ),
-                    css_class="p-3 pt-0",
+                    css_class="line__text border p-2 pt-4"
                 ),
-                Row(
-                    Fieldset(
-                        "Règlement",
-                        Row(
-                            Column(FloatingField("Montant_Brut"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Montant_Charges"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Montant_Nap"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Montant_reglé"), css_class='form-group col-md-6 mb-0'),
-                            css_class="form-row",
-                        ),
-                        css_class="line__text border p-2 pt-4"
+                css_class="p-3 pt-0",
+            ),
+            Row(
+                Fieldset(
+                    "Règlement",
+                    Row(
+                        Column(FloatingField("Montant_Brut"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Charges"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Nap"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_reglé"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
                     ),
-                    css_class="p-3 pt-0",
+                    css_class="line__text border p-2 pt-4"
                 ),
-                FloatingField(
-                    "Observation",
-                ),
-                Submit(
-                    "save",
-                    "Enregistrer",
-                    css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
-                )
+                css_class="p-3 pt-0",
+            ),
+            FloatingField(
+                "Observation",
+            ),
+            Submit(
+                "save",
+                "Enregistrer",
+                css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
             )
+        )
+        self.fields['Observation'].required = False
         

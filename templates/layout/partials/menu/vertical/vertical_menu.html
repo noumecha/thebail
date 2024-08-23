@@ -87,7 +87,7 @@
     <li class="menu-item {% if '/locataire/' == request.resolver_match.url_name or '/locataire/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-detail"></i>
-        <div class="text-truncate" data-i18n="Form Elements">Administration signataire</div>
+        <div class="text-truncate" data-i18n="Form Elements">Locataire</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {% if '/add/' in request.path %}active{% endif %}">
@@ -97,7 +97,7 @@
         </li>
         <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
           <a href="{% url 'baux:locataire_list' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Listes de locataires</div>
+            <div class="text-truncate" data-i18n="Basic Inputs">Listes des locataires</div>
           </a>
         </li>
       </ul>
@@ -154,6 +154,25 @@
         </li>
         <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
           <a href="{% url 'baux:occupants_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- Non Mandatement -->
+    <li class="menu-item {% if '/dossier_reglement/' == request.resolver_match.url_name or '/dossier_reglement/' in request.path %}active open{% endif %}">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <div class="text-truncate" data-i18n="Form Elements">Dossier de Reglement</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item {% if '/add/' in request.path %}active{% endif %}">
+          <a href="{% url 'baux:dossier_reglement' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
+          </a>
+        </li>
+        <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
+          <a href="{% url 'baux:dossier_reglement_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
         </li>

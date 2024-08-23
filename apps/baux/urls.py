@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView
+from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Dossiers_ReglementsView
 
 app_name = 'baux'
 urlpatterns = [
@@ -27,6 +27,8 @@ urlpatterns = [
     #routes for occupants
     path("occupants/add/", OccupantsView.as_view(template_name="baux/occupants.html"), name='occupants'),
     path("occupants/list/", OccupantsView.as_view(template_name="baux/occupants_list.html"), name='occupants_list'),
-
+    # dossier reglements : 
+    path("dossier_reglement/add/", Dossiers_ReglementsView.as_view(template_name="baux/dossier_reglement.html"), name='dossier_reglement'),
+    path("dossier_reglement/list/", Dossiers_ReglementsView.as_view(template_name="baux/dossier_reglement_list.html"), name='dossier_reglement_list'),
 
 ]

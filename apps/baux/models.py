@@ -51,8 +51,8 @@ M= 'MANDATE'
 N = 'NON_MANDATE'
 TYPE_DOSSIER = (
         ('', 'Choose type of FILES'),
-        (str(M), '1 - facture paiyée (mandatée)'),
-        (str(N), '2 - facture non-paiyée (non-mandatée)'),
+        (str(M), '1 - facture payée (mandatée)'),
+        (str(N), '2 - facture non-payée (non-mandatée)'),
      )  
 V = 'VILLA'
 D = 'DUPLEX'
@@ -258,7 +258,7 @@ class Ayant_droits (models.Model):
     Num_Cni = models.CharField(max_length=50)
     Date_delivrance_cni = models.DateField(null=True)
     Reference_juridique = models.CharField(max_length=50)
-    Observation = models.CharField(max_length=200)
+    Observation = models.CharField(max_length=200, null=True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
     """ Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=False, related_name= "bailleur")
@@ -332,7 +332,7 @@ class Dossiers_Reglements (models.Model):
     Montant_Nap = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_reglé = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Etat = models.CharField(choices=TYPE_DOSSIER, max_length=12, null=True) 
-    Observation = models.CharField(max_length=200)
+    Observation = models.TextField(blank=True, null=True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 

@@ -1,0 +1,53 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Dossier de règlements{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="card mt-3 p-3">
+        <h1>Listes des Dossiers de Règlements</h1>
+        <!-- listing Ref_contrat  Date_Signature  Duree_Contrat 'Bailleur', 'Locataire','Immeubles', Montant_TTC_Mensuel -->
+        <div > <!-- class="container-fluid" -->
+            <table class="table table-sm">
+                <tr>
+                    <th>Contrat</th>
+                    <th>Référence facture </th>
+                    <th>Date signature </th>
+                    <th>Date de debut</th>
+                    <th>Date de fin</th>
+                    <th>Montant NAP</th>
+                    <th>Etat </th>
+                    <th>Action</th>
+                </tr>
+                 
+                {% for score in dossiersReglementsList %}
+                   <tr>
+                        {% if form.instance.id == score.id %}
+                        {% include 'baux/saveContrat.html' %}
+                        {% else %}
+                            <td>{{ score.Contrat }} </td>
+                            <td>{{ score.Ref_facture}}</td>
+                            <td>{{ score.Date_signature }}</td>
+                            <td>{{ score.Date_Effet_debut }}</td>
+                            <td>{{ score.Date_Effet_fin }}</td>
+                            <td>{{ score.Montant_Nap }}</td>
+                            <td>{{ score.Etat }}</td>
+
+                            <td>
+                                <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
+                                <button formnovalidate class="btn btn-success" name="delete" value="{{ score.id }}">Delete</button>
+                            </td>
+                        {% endif %}
+                     </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}
