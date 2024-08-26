@@ -45,10 +45,25 @@
         </li>
       </ul-->
     </li>
+    <!-- Stats -->
+    <li class="menu-item {% if '/stats' == request.resolver_match.url_name or '/stats' in request.path %}active open{% endif %}">
+      <a href="/stats" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-pie-chart-alt"></i>
+        <div class="text-truncate" data-i18n="Dashboards">Statistiques</div>
+      </a>
+    </li>
+    <!-- Consultation -->
+    <li class="menu-item {% if '/consultation' == request.resolver_match.url_name or '/consultation' in request.path %}active open{% endif %}">
+      <a href="/consultation" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-task"></i>
+        <div class="text-truncate" data-i18n="Dashboards">Consultation</div>
+      </a>
+    </li>
+
     <!-- Immeuble -->
     <li class="menu-item {% if '/immeuble/' == request.resolver_match.url_name or '/immeuble/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <i class="menu-icon tf-icons bx bx-building"></i>
         <div class="text-truncate" data-i18n="Form Elements">Immeuble</div>
       </a>
       <ul class="menu-sub">
@@ -67,7 +82,7 @@
     <!-- Bailleur -->
     <li class="menu-item {% if '/bailleur/' == request.resolver_match.url_name or '/bailleur/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <i class="menu-icon tf-icons bx bx-user"></i>
         <div class="text-truncate" data-i18n="Form Elements">Bailleur</div>
       </a>
       <ul class="menu-sub">
@@ -86,7 +101,7 @@
     <!-- Locataire -->
     <li class="menu-item {% if '/locataire/' == request.resolver_match.url_name or '/locataire/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <i class="menu-icon tf-icons bx bx-user"></i>
         <div class="text-truncate" data-i18n="Form Elements">Locataire</div>
       </a>
       <ul class="menu-sub">
@@ -105,7 +120,7 @@
     <!-- Contrat -->
     <li class="menu-item {% if '/contrat/' == request.resolver_match.url_name or '/contrat/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <i class="menu-icon tf-icons bx bx-file"></i>
         <div class="text-truncate" data-i18n="Form Elements">Contrat</div>
       </a>
       <ul class="menu-sub">
@@ -124,7 +139,7 @@
     <!-- Localisation -->
     <li class="menu-item {% if '/localisation/' == request.resolver_match.url_name or '/localisation/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <i class="menu-icon tf-icons bx bx-map"></i>
         <div class="text-truncate" data-i18n="Form Elements">Localisation</div>
       </a>
       <ul class="menu-sub">
@@ -143,7 +158,7 @@
     <!-- Logés -->
     <li class="menu-item {% if '/occupants/' == request.resolver_match.url_name or '/occupants/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <i class="menu-icon tf-icons bx bx-user"></i>
         <div class="text-truncate" data-i18n="Form Elements">Occupants</div>
       </a>
       <ul class="menu-sub">
@@ -162,7 +177,7 @@
     <!-- Avenants -->
     <li class="menu-item {% if '/avenant/' == request.resolver_match.url_name or '/avenant/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
+        <i class="menu-icon tf-icons bx bx-user"></i>
         <div class="text-truncate" data-i18n="Form Elements">Avenants</div>
       </a>
       <ul class="menu-sub">
@@ -181,8 +196,8 @@
     <!-- Non Mandatement -->
     <li class="menu-item {% if '/dossier_reglement/' == request.resolver_match.url_name or '/dossier_reglement/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-detail"></i>
-        <div class="text-truncate" data-i18n="Form Elements">Dossier de Reglement</div>
+        <i class="menu-icon tf-icons bx bx-folder"></i>
+        <div class="text-truncate" data-i18n="Form Elements">Non mandatement</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {% if '/add/' in request.path %}active{% endif %}">

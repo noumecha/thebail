@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView, LocataireView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Dossiers_ReglementsView,AvenantsView
+from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Dossiers_ReglementsView,AvenantsView
 
 app_name = 'baux'
 urlpatterns = [
@@ -33,5 +33,9 @@ urlpatterns = [
     # avenants : 
     path("avenant/add/", AvenantsView.as_view(template_name="baux/avenant.html"), name='avenant'),
     path("avenant/list/", AvenantsView.as_view(template_name="baux/avenant_list.html"), name='avenant_list'),
+    # consultation : 
+    path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
+    # Statistiques : 
+    path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
 
 ]

@@ -89,7 +89,7 @@ TYPE_IDENTIFICATION = (
 )
 STATUT_PAY = (
     ('Soumis à l\'impot', 'Soumis à l\'impot'),
-    ('Rejetable en hausse', 'Rejetable en hausse'),
+    ('Revisitable à la hausse', 'Revisitable à la hausse'),
 )
 
 class Exercice(models.Model):
@@ -115,17 +115,17 @@ class Bailleurs(models.Model):
     Date_delivrance_cni = models.DateField(null=True, blank=True)
     Date_delivrance_cni_representant = models.DateField(null=True, blank=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
-    Type_id_bailleur = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True)
-    Type_id_representant = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True)
+    Type_id_bailleur = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True, blank=True)
+    Type_id_representant = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True,blank=True)
     NumPassePort = models.CharField(max_length=50, null=True)
-    NumPassePort_representant = models.CharField(max_length=50, null=True)
+    NumPassePort_representant = models.CharField(max_length=50, null=True, blank=True)
     Date_delivrance_PassePort = models.DateField(null=True)
-    Date_delivrance_PassePort_representant = models.DateField(null=True)
-    Nom_Prenom_Representant = models.CharField(max_length=50, null=True)
+    Date_delivrance_PassePort_representant = models.DateField(null=True, blank=True)
+    Nom_Prenom_Representant = models.CharField(max_length=50, null=True, blank=True)
     Telephone = models.CharField(max_length=20, null=True)
-    Telephone_representant = models.CharField(max_length=20, null=True)
+    Telephone_representant = models.CharField(max_length=20, null=True, blank=True)
     Adresse = models.CharField(max_length=50, null=True)
-    Adresse_representant = models.CharField(max_length=50, null=True)
+    Adresse_representant = models.CharField(max_length=50, null=True, blank=True)
     Observation = models.TextField(blank = True, null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
@@ -213,7 +213,7 @@ class Immeubles (models.Model):
     Reference_TF = models.CharField(max_length=50,null=True)
     Nom_prenom_proprietaireTF = models.CharField(max_length=50,null=True)
     Element_immeuble = models.CharField(max_length=50,null=True,blank=True)
-    Accessoires = models.CharField(max_length=50,null=True,blank=True)
+    #Accessoires = models.CharField(max_length=50,null=True,blank=True)
     Date_signatureTF = models.DateField(null=True)
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Date_Construction = models.DateField(null=True)
@@ -252,6 +252,7 @@ class Occupants (models.Model):
     AdresseMail = models.CharField(max_length=20,null=True)
     NumPassePort = models.CharField(max_length=50,null=True)
     Date_Delivrance_PassePort = models.CharField(max_length=50,null=True)
+    Date_Signature_acte_juridique = models.CharField(max_length=50,null=True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 

@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
@@ -166,7 +167,9 @@ class BailleursForm(forms.ModelForm):
         self.fields['Num_Cni'].required = False;self.fields['Date_delivrance_cni'].required = False 
         self.fields['NumPassePort'].required = False;self.fields['Date_delivrance_PassePort'].required = False 
         self.fields['Num_Cni_representant'].required = False;self.fields['Date_delivrance_cni_representant'].required = False
-        self.fields['NumPassePort_representant'].required = False;self.fields['Date_delivrance_PassePort_representant'].required = False   
+        self.fields['NumPassePort_representant'].required = False;self.fields['Date_delivrance_PassePort_representant'].required = False
+        self.fields['Telephone_representant'].required = False
+        self.fields['Adresse_representant'].required = False;self.fields['Type_id_representant'].required = False
 
 
 class LocalisationForm(forms.ModelForm):
@@ -213,12 +216,13 @@ class OccupantsForm(forms.ModelForm):
     class Meta:
         model = Occupants
 
-        fields = ("Administration_tutelle","Immeuble","Nom_Prenom","Ref_ActeJuridique","NumCNI","Date_delivrance_CNI","Matricule","Fonction","Telephone","AdresseMail","NumPassePort","Date_Delivrance_PassePort")
+        fields = ("Administration_tutelle","Date_Signature_acte_juridique","Immeuble","Nom_Prenom","Ref_ActeJuridique","NumCNI","Date_delivrance_CNI","Matricule","Fonction","Telephone","AdresseMail","NumPassePort","Date_Delivrance_PassePort")
         labels = {
             "Administration_tutelle" : "Administration utilisatrice",
             "Immeuble" : "Imeuble",
             "Nom_Prenom" : "Noms et prénoms occupant",
             "Ref_ActeJuridique" : "Référence juridique",
+            "Date_Signature_acte_juridique" : "Date Signature de l'acte juridique",
             "NumCNI" : "Numero de CNI",
             "Date_delivrance_CNI" : "Date de délivrance de CNI",
             "Matricule" : "Matricule occupant",
@@ -232,6 +236,7 @@ class OccupantsForm(forms.ModelForm):
         widgets = {
             'Date_delivrance_CNI'  :  forms.TextInput(attrs={'type': 'date'}),
             'Date_Delivrance_PassePort'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Date_Signature_acte_juridique' : forms.TextInput(attrs={'type': 'date'}),
         }
     def __init__(self, *args, **kwargs):
         super(OccupantsForm, self).__init__(*args, **kwargs)
@@ -264,6 +269,7 @@ class OccupantsForm(forms.ModelForm):
                         Column(FloatingField("Date_delivrance_CNI"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_Delivrance_PassePort"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Ref_ActeJuridique"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Signature_acte_juridique"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
@@ -279,14 +285,13 @@ class ImmeublesForm(forms.ModelForm):
         model = Immeubles
 
         fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF","Couleur",'Element_immeuble',
-                   'Accessoires',"Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
+                   "Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
                    "Coordonee_gps_Position","Adresse","Type_mur","Description","Localisation","Norme","Nombre_de_pieces","Nombre_d_etage","Superficie_louer","Emprise_au_sol")
         labels = {
             "Designation": " Désignation du Bien",
             "Reference_TF": " reference titre foncier (TF)",
             "Element_immeuble" : "Element de l'immeuble",
             "Nom_prenom_proprietaireTF" : "Nom du priopritaire TF",
-            "Accessoires" : "Accesoires",
             "Date_signatureTF" : "Date de signature du TF",
             "Superficie" : "superficie du TF",
             "Date_Construction" : "date de construction",
@@ -385,7 +390,7 @@ class ImmeublesForm(forms.ModelForm):
                 css_class="mt-1"
             ),
             Submit(
-                "save",
+                "save-immeuble",
                 "Enregistrer",
                 css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
             )
@@ -414,7 +419,7 @@ class AccessoiresForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Libelle"), css_class='form-group col-md-4 mb-0'),
                         Column(FloatingField("Quantite"), css_class='form-group col-md-4 mb-0'),
-                        Column(Submit("save","Ajouter",css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3")),
+                        Column(Submit("save-accessoire","Ajouter",css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3")),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"

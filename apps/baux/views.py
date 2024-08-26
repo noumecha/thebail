@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, CreateView, DeleteView, UpdateVie
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from web_project import TemplateLayout
-from .forms import LocatairesForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Dossiers_ReglementsForm,AvenantsForm
+from .forms import LocatairesForm,AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Dossiers_ReglementsForm,AvenantsForm
 from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
 
 # Create your views here.
@@ -268,3 +268,16 @@ class AvenantsView(TemplateView):
             context = self.get_context_data()
             context["form"] = avenants_form
             return self.render_to_response(context)
+
+class ConsultationView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["datas"] = []
+        return context
+    
+class StatsView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["datas"] = []
+        return context
+    
