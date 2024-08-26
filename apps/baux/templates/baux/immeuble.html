@@ -20,43 +20,30 @@
 
                 {% if not form.instance.id %}
 
-                {% include 'baux/saveimmeuble.html' %}
+                    {% crispy form %}
 
+                    {% crispy accessoire_form %}
+
+                    <ul id="accesoires-list">
+
+                    </ul>
+
+                    <input type="submit" class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" name="save" value="Enregistrer">
+
+                {% endif %}
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for field , errors in form.errors.items %}
+                                <li>{{ field }} : {{ errors|striptags }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
 
             </form>
 
-        </div>
-    </div>
-    <div class="card mt-3 p-3">
-        <div class="container-fluid">
-            <table class="table table-sm">
-                <tr>
-                    <th>Designation</th>
-                    <th>proprietaire </th>
-                    <th>Reference Fonciere</th>
-                    <th>Type</th>
-                    <th>localisation</th>
-                    <th>Action</th>
-                </tr>
-                {% for score in immeubleList %}
-                <tr>
-                        {% if form.instance.id == score.id %}
-                        {% include 'baux/saveimmeuble.html' %}
-                        {% else %}
-                            <td>{{ score.Designation}} </td>
-                            <td>{{ score.Nom_prenom_proprietaireTF }}</td>
-                            <td>{{ score.Reference_TF }}</td>
-                            <td>{{ score.Norme }}</td>
-                            <td>{{ score.Localisation }}</td>
-                            <td>
-                                <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
-                                <button formnovalidate class="btn btn-success" name="delete" value="{{ score.id }}">Delete</button>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
         </div>
     </div>
 

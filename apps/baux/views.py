@@ -3,8 +3,8 @@ from django.views.generic import TemplateView, CreateView, DeleteView, UpdateVie
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from web_project import TemplateLayout
-from .forms import LocatairesForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Dossiers_ReglementsForm,AvenantsForm
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
+from .forms import LocatairesForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Dossiers_ReglementsForm,AvenantsForm
+from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
 
 # Create your views here.
 def index (request):
@@ -165,9 +165,30 @@ class ImmeubleView(TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context['immeubleList'] = Immeubles.objects.all()
         context["form"] = ImmeublesForm()
+        context["accessoire_form"] = AccessoiresForm()
         return context
-
+    
     def post(self, request, *args, **kwargs):
+        immeuble_form = ImmeublesForm(request.POST)
+        accessoire_form = AccessoiresForm()
+        if immeuble_form.is_valid():
+            immeuble_form.save()
+            accessoires_data = request.POST.getlist('accessoires_data')
+            for data in accessoires_data:
+                libelle, quantite = data.split(':')
+                Accessoires.objects.create(
+                    Libelle=libelle,
+                    Quantite=quantite,
+                    Immeuble=Immeubles.objects.get(id=immeuble_form.instance.id)
+                )
+            return redirect('baux:immeuble_list')
+        else:
+            context = self.get_context_data()
+            context["form"] = immeuble_form
+            context["accessoire_form"] = accessoire_form
+            return self.render_to_response(context)
+
+    """def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = ImmeublesForm()
@@ -184,6 +205,7 @@ class ImmeubleView(TemplateView):
                 if form.is_valid():
                     form.save()
                 form = ImmeublesForm()
+                accesoire_form = AccessoiresForm()
             elif 'delete' in request.POST:
                 pk = request.POST.get('delete')
                 immeubleList = Immeubles.objects.get(id=pk)
@@ -193,7 +215,7 @@ class ImmeubleView(TemplateView):
                 immeubleList = Immeubles.objects.get(id=pk)
                 form = ImmeublesForm(instance=immeubleList)
         context['form'] = form
-        return render(request, 'baux/immeuble.html', context)
+        return render(request, 'baux/immeuble.html', context)"""
 
 class ContratView(TemplateView):
     #predefined functiion

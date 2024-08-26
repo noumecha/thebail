@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 
 # Create your models here.
 
@@ -32,7 +33,7 @@ LP= 2
 TYPE_LOCATION = (
         ('', 'Choose type of location'),
         (str(LB), '1 - Location Pour Bureaux'),
-        (str(LP), '2 - Location pour proprieté'),
+        (str(LP), '2 - Location pour logement'),
      )  
 
 Mensuel='M'
@@ -85,6 +86,10 @@ TYPE_IDENTIFICATION = (
     ('', 'Choisir le type d\'identification'),
     (str(CNI), 'CNI'),
     (str(PASSEPORT), 'PASSEPORT'),
+)
+STATUT_PAY = (
+    ('Soumis à l\'impot', 'Soumis à l\'impot'),
+    ('Rejetable en hausse', 'Rejetable en hausse'),
 )
 
 class Exercice(models.Model):
@@ -265,6 +270,11 @@ class Ayant_droits (models.Model):
     """
     Bailleur = models.ManyToManyField(Bailleurs, blank=True)
 
+class Accessoires(models.Model):
+    Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name='Immeubles')
+    Libelle = models.CharField(max_length=255, blank=True, null=True)
+    Quantite = models.IntegerField()
+
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
     Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
@@ -277,14 +287,15 @@ class Contrats (models.Model):
     Date_Debut = models.DateField(null=True)
     Ref_contrat = models.CharField(max_length=50, null=True)
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True) 
-    Montant_TTC_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    #Montant_TTC_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Banque = models.CharField(max_length=50, null=True)
-    Compte_Bancaire = models.CharField(max_length=50, null=True)
+    RIB = models.CharField(max_length=50, null=True)
+    Imposable = models.CharField(max_length=255, choices=STATUT_PAY, null=True)
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True) 
-    Nom_CF = models.CharField(max_length=50, null=True)
-    Date_visa_CF = models.DateField(null=True)
+    #Nom_CF = models.CharField(max_length=50, null=True)
+    #Date_visa_CF = models.DateField(null=True)
     Etat = models.BooleanField(null=True, blank=True)
     observation = models.CharField(max_length=200)
     Date_creation = models.DateTimeField(auto_now_add=True)

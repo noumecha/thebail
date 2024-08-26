@@ -1,5 +1,5 @@
 from django import forms
-from .models import Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
+from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button
@@ -384,10 +384,44 @@ class ImmeublesForm(forms.ModelForm):
                 "Description",
                 css_class="mt-1"
             ),
+            Submit(
+                "save",
+                "Enregistrer",
+                css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
+            )
         )
         self.helper.form_tag = False;self.fields['Coordonee_gps_latitude'].required = False   
+        self.fields['Description'].required = False   
         self.fields['Coordonee_gps_longitude'].required = False; self.fields['Coordonee_gps_altitude'].required = False        
         self.fields['Date_Construction'].required = False;self.fields['Coordonee_gps_Position'].required = False   
+
+
+class AccessoiresForm(forms.ModelForm):
+    class Meta:
+        model = Accessoires
+        fields = ('Libelle', 'Quantite')
+        labels = {
+            'Libelle': "Nom accessoires",
+            'Quantite': "Quantité",
+        }
+    def __init__(self, *args, **kwargs):
+        super(AccessoiresForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Fieldset(
+                    "Accessoires",
+                    Row(
+                        Column(FloatingField("Libelle"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Quantite"), css_class='form-group col-md-4 mb-0'),
+                        Column(Submit("save","Ajouter",css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3")),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0",
+            ),
+        )
 
 
 class ContratsForm(forms.ModelForm):
@@ -395,10 +429,10 @@ class ContratsForm(forms.ModelForm):
         model = Contrats
 
         fields = ( 'Bailleur', 'Locataire','Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat','Periodicite_Reglement', 
-                  'Montant_TTC_Mensuel','Administration_beneficiaire', 'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'Compte_Bancaire', 'Type_location', 'Nom_CF', 'Date_visa_CF','observation' )
+                'Administration_beneficiaire','Imposable', 'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'RIB', 'Type_location','observation' )
         labels = {
             "Bailleur": "Bailleur ",  
-            "Locataire": "Administration Signataire",  
+            "Locataire": "Locataire",  
             "Immeubles": "Imeubles Loués",
             "Administration_beneficiaire" : "Administration bénéficiaire",  
             "Duree_Contrat":" Durée du Contrat", 
@@ -406,21 +440,18 @@ class ContratsForm(forms.ModelForm):
             "Date_Signature":" Date de Signature du contrat",  
             "Date_Debut":" Date de prise d'effet du contrat ",
             "Ref_contrat":" Réference du contrat",
-            "Periodicite_Reglement":"Periodicite de Reglement ", 
-            "Montant_TTC_Mensuel":" Montant TTC du loyer Mensuel",  
+            "Periodicite_Reglement":"Periodicite de Reglement ",   
             "Montant_Charges_Mensuel":" Montant des Charges Mensuel",
-            "Montant_Nap_Mensuel":"Montant NAP LOYER Mensuel",  
+            "Montant_Nap_Mensuel":"Montant LOYER Mensuel",  
             "Banque":" LIBELLE DE LA BANQUE", 
-            "Compte_Bancaire":" Numéro du Compte Bancaire",  
-            "Type_location":"Type de location", 
-            "Nom_CF":" Nom Controleur Financier(CF) Validateur",  
-            "Date_visa_CF":"Date du visa du CF ",
+            "Imposable":"Choisir le type",
+            "RIB":"RIB",  
+            "Type_location":"Type de location",
             "observation" : 'Observation',
         }
         widgets = {
           'observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
           #'Immeubles' : forms.SelectMultiple(attrs={'class':'select2'}),
-          'Date_visa_CF'  :  forms.TextInput(attrs={'type': 'date'}),
           'Date_Debut'  :  forms.TextInput(attrs={'type': 'date'}),
           'Date_Signature'  :  forms.TextInput(attrs={'type': 'date'}),
         }
@@ -430,8 +461,11 @@ class ContratsForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row(
                 Fieldset(
-                    "Elements du contrat",
+                    "Caractéristiques du contrat",
                     Row(
+                        Column(FloatingField("Date_Debut"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Duree_Contrat"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Immeubles"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
@@ -447,39 +481,14 @@ class ContratsForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Elements financiers",
-                    Row(
-                        Column(FloatingField("Nom_CF"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_visa_CF"), css_class='form-group col-md-6 mb-0'),
-                        css_class="form-row",
-                    ),
-                    css_class="line__text border p-2 pt-4"
-                ),
-                css_class="p-3 pt-0",
-            ),
-            Row(
-                Fieldset(
-                    "Durée",
-                    Row(
-                        Column(FloatingField("Date_Debut"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Duree_Contrat"), css_class='form-group col-md-6 mb-0'),
-                        css_class="form-row",
-                    ),
-                    css_class="line__text border p-2 pt-4"
-                ),
-                css_class="p-3 pt-0",
-            ),
-            Row(
-                Fieldset(
-                    "Règlement",
+                    "Eléments financiers",
                     Row(
                         Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Compte_Bancaire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("RIB"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_TTC_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Nap_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Imposable"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -651,7 +660,7 @@ class Dossiers_ReglementsForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row(
                 Fieldset(
-                    "Elements de règlement",
+                    "Carractéristiques du dossier de règlement",
                     Row(
                         Column(FloatingField("Avenant"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Contrat"), css_class='form-group col-md-6 mb-0'),
@@ -671,7 +680,7 @@ class Dossiers_ReglementsForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Règlement",
+                    "Eléments financiers",
                     Row(
                         Column(FloatingField("Montant_Brut"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Charges"), css_class='form-group col-md-6 mb-0'),
