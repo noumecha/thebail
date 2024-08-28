@@ -276,6 +276,28 @@ class Accessoires(models.Model):
     Libelle = models.CharField(max_length=255, blank=True, null=True)
     Quantite = models.IntegerField()
 
+class Banques(models.Model):
+    codeBanque = models.CharField(max_length=255, blank=True, null=True)
+    sigle = models.CharField(max_length=255, blank=True)
+    denominationFR = models.CharField(max_length=255, blank=True, null=True)
+    denominationUS = models.CharField(max_length=255, blank=True, null=True)
+    denominationES = models.CharField(max_length=255, blank=True, null=True)
+    siege = models.CharField(max_length=255, blank=True, null=True)
+    adresse = models.CharField(max_length=255, blank=True, null=True)
+    telephone = models.CharField(max_length=255, blank=True, null=True)
+    fax = models.CharField(max_length=255, blank=True, null=True)
+    webSite = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+    def __str__(self):
+        if self.sigle == "" or len(self.sigle) == 1:
+            return f" {self.denominationES} "
+        elif self.denominationES == "NULL":
+            return f" {self.denominationUS} "
+        elif self.denominationUS == "":
+            return f" {self.denominationFR} "
+        else:
+            return f" {self.sigle} "
+
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
     Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
@@ -291,8 +313,9 @@ class Contrats (models.Model):
     #Montant_TTC_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Banque = models.CharField(max_length=50, null=True)
-    RIB = models.CharField(max_length=50, null=True)
+    #Banque = models.CharField(max_length=50, null=True)
+    Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
+    RIB = models.CharField(max_length=26, null=True)
     Imposable = models.CharField(max_length=255, choices=STATUT_PAY, null=True)
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True) 
     #Nom_CF = models.CharField(max_length=50, null=True)
