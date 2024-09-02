@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, CreateView, DeleteView, UpdateView, ListView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
@@ -217,21 +217,56 @@ class ImmeubleView(TemplateView):
         context['form'] = form
         return render(request, 'baux/immeuble.html', context)"""
 
+#Contrat Class : 
+class ContratUpdateView(UpdateView):
+    model = Contrats
+    form_class = ContratsForm
+    template_name = 'baux/contrat.html'
+    success_url = reverse_lazy('baux:contrat_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = self.get_form()
+        return context
+
+class ContratDeleteView(DeleteView):
+    model = Contrats
+    template_name = 'baux/contrat_delete.html'
+    success_url = reverse_lazy('baux:contrat_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = ContratsForm()
+        return context
+
 class ContratView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["contratList"] = Contrats.objects.all()
-        context["form"] = ContratsForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            contrat = get_object_or_404(Contrats, pk=pk)
+            form = ContratsForm(instance=contrat)
+        else:
+            form = ContratsForm()
+        context["form"] = form
+        context["is_update"] = pk is not None
         return context
 
     def post(self, request, *args, **kwargs):
-        contrat_form = ContratsForm(request.POST)
+        pk = kwargs.get('pk', None)
+        if pk:
+            contrat = get_object_or_404(Contrats, pk=pk)
+            contrat_form = ContratsForm(request.POST, instance=contrat)
+        else:
+            contrat_form = ContratsForm(request.POST)
+
         if contrat_form.is_valid():
             contrat_form.save()
             return redirect('baux:contrat_list')
         else:
-            context = self.get_context_data()
+            context = self.get_context_data(pk=pk)
             context["form"] = contrat_form
             return self.render_to_response(context)
 

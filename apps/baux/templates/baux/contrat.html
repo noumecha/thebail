@@ -10,8 +10,14 @@
 {% block content %}
     <div class="card p-3">
 
-        <h1>Enregistrement d'un contrat de bail administratif</h1>
-        <form method="post" action="{% url 'baux:contrat' %}">
+        <h1>
+            {% if is_update %} 
+                Mise à jour du contrat "{{ form.instance }}" 
+            {% else %}  
+                Enregistrement d'un contrat de bail administratif 
+            {% endif %}
+        </h1>
+        <form method="post" action="{% if is_update %}{% url 'baux:contrat_update' form.instance.id %}{% else %}{% url 'baux:contrat' %}{% endif %}">
             {% if not form.instance.id %}
 
             {% crispy form %}

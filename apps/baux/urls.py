@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView
+from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 
 app_name = 'baux'
 urlpatterns = [
@@ -16,8 +16,8 @@ urlpatterns = [
     #path("contrat/add/", views.contrat, name='contrat'),
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
-    #path("contrat/<int:pk>/edit/", ContratUpdateView.as_view(), name='contrat_edit'),
-    #path("contrat/<int:pk>/delete/", ContratDeleteView.as_view(), name='contrat_delete'),"""
+    path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
+    path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
     #path("locataire/add/", views.locataire, name='locataire'),
     path("locataire/add/", LocataireView.as_view(template_name="baux/locataire.html"), name='locataire'),
     path("locataire/list/", LocataireView.as_view(template_name="baux/locataire_list.html"), name='locataire_list'),
