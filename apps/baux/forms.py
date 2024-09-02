@@ -1,9 +1,9 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
+from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button
+from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field
 
 class LocatairesForm(forms.ModelForm):
     class Meta:
@@ -434,7 +434,7 @@ class ContratsForm(forms.ModelForm):
         model = Contrats
 
         fields = ( 'Bailleur', 'Locataire','Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat','Periodicite_Reglement', 
-                'Administration_beneficiaire','Imposable', 'Montant_Charges_Mensuel','Montant_Nap_Mensuel', 'Banque', 'RIB', 'Type_location','observation' )
+                'Administration_beneficiaire', 'Montant_Charges_Mensuel','Visa_controlleur','Montant_Nap_Mensuel', 'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable' )
         labels = {
             "Bailleur": "Bailleur ",  
             "Locataire": "Locataire",  
@@ -448,17 +448,22 @@ class ContratsForm(forms.ModelForm):
             "Periodicite_Reglement":"Periodicite de Reglement ",   
             "Montant_Charges_Mensuel":" Montant des Charges Mensuel",
             "Montant_Nap_Mensuel":"Montant LOYER Mensuel",  
-            "Banque":" LIBELLE DE LA BANQUE", 
-            "Imposable":"Choisir le type",
+            "Banque":" LIBELLE DE LA BANQUE",
             "RIB":"RIB",  
             "Type_location":"Type de location",
             "observation" : 'Observation',
+            'Soumis_impot' : 'Soumis à l\'impôt',
+            'Revisitable' : 'Revisitable en hausse',
+            'Visa_controlleur' : 'Visa du controlleur',
         }
         widgets = {
           'observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
           #'Immeubles' : forms.SelectMultiple(attrs={'class':'select2'}),
-          'Date_Debut'  :  forms.TextInput(attrs={'type': 'date'}),
-          'Date_Signature'  :  forms.TextInput(attrs={'type': 'date'}),
+          'Date_Debut'  : forms.TextInput(attrs={'type': 'date'}),
+          'Date_Signature'  : forms.TextInput(attrs={'type': 'date'}),
+          'Soumis_impot' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+          'Revisitable' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+          'Visa_controlleur' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
     def __init__(self, *args, **kwargs):
         super(ContratsForm, self).__init__(*args, **kwargs)
@@ -493,8 +498,18 @@ class ContratsForm(forms.ModelForm):
                         Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Nap_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Imposable"), css_class='form-group col-md-6 mb-0'),
-                        css_class="form-row",
+                        Column(
+                            Field('Soumis_impot'),
+                            css_class='form-group col-md-2 mb-0 pt-3'
+                        ),
+                        Column(
+                            Field('Revisitable'),
+                            css_class='form-group col-md-2 mb-0 pt-3'
+                        ),
+                        Column(
+                            Field('Visa_controlleur'),
+                            css_class='form-group col-md-2 mb-0 pt-3'
+                        ),
                     ),
                     css_class="line__text border p-2 pt-4"
                 ),
@@ -616,9 +631,9 @@ class AvenantsForm(forms.ModelForm):
         )
         self.fields['observation'].required = False
 
-class Dossiers_ReglementsForm(forms.ModelForm):
+class Non_MandatementForm(forms.ModelForm):
     class Meta:
-        model = Dossiers_Reglements
+        model = Non_Mandatement
         fields = (
             "Avenant",
             "Contrat",
@@ -660,7 +675,7 @@ class Dossiers_ReglementsForm(forms.ModelForm):
           "Date_Effet_fin"  :  forms.TextInput(attrs={'type': 'date'}),
         }
     def __init__(self, *args, **kwargs):
-        super(Dossiers_ReglementsForm, self).__init__(*args, **kwargs)
+        super(Non_MandatementForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(

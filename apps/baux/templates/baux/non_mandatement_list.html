@@ -3,13 +3,13 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Dossier de règlements{% endblock %}
+{% block title %}Non Mandatement{% endblock %}
 
 {% load crispy_forms_tags %}
 
 {% block content %}
     <div class="card mt-3 p-3">
-        <h1>Listes des Dossiers de Règlements</h1>
+        <h1>Listes des Non Mandatement</h1>
         <!-- listing Ref_contrat  Date_Signature  Duree_Contrat 'Bailleur', 'Locataire','Immeubles', Montant_TTC_Mensuel -->
         <div > <!-- class="container-fluid" -->
             <table class="table table-sm">
@@ -24,7 +24,7 @@
                     <th>Action</th>
                 </tr>
                  
-                {% for score in dossiersReglementsList %}
+                {% for score in NonMandatementList %}
                    <tr>
                         {% if form.instance.id == score.id %}
                         {% include 'baux/saveContrat.html' %}

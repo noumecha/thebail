@@ -194,19 +194,19 @@
       </ul>
     </li>
     <!-- Non Mandatement -->
-    <li class="menu-item {% if '/dossier_reglement/' == request.resolver_match.url_name or '/dossier_reglement/' in request.path %}active open{% endif %}">
+    <li class="menu-item {% if '/non_mandatement/' == request.resolver_match.url_name or '/non_mandatement/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-folder"></i>
         <div class="text-truncate" data-i18n="Form Elements">Non mandatement</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {% if '/add/' in request.path %}active{% endif %}">
-          <a href="{% url 'baux:dossier_reglement' %}" class="menu-link">
+          <a href="{% url 'baux:non_mandatement' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
           </a>
         </li>
         <li class="menu-item {% if '/list/' in request.path %}active{% endif %}">
-          <a href="{% url 'baux:dossier_reglement_list' %}" class="menu-link">
+          <a href="{% url 'baux:non_mandatement_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
         </li>

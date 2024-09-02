@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Dossiers_ReglementsView,AvenantsView
+from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView
 
 app_name = 'baux'
 urlpatterns = [
@@ -28,8 +28,8 @@ urlpatterns = [
     path("occupants/add/", OccupantsView.as_view(template_name="baux/occupants.html"), name='occupants'),
     path("occupants/list/", OccupantsView.as_view(template_name="baux/occupants_list.html"), name='occupants_list'),
     # dossier reglements : 
-    path("dossier_reglement/add/", Dossiers_ReglementsView.as_view(template_name="baux/dossier_reglement.html"), name='dossier_reglement'),
-    path("dossier_reglement/list/", Dossiers_ReglementsView.as_view(template_name="baux/dossier_reglement_list.html"), name='dossier_reglement_list'),
+    path("non_mandatement/add/", Non_MandatementView.as_view(template_name="baux/non_mandatement.html"), name='non_mandatement'),
+    path("non_mandatement/list/", Non_MandatementView.as_view(template_name="baux/non_mandatement_list.html"), name='non_mandatement_list'),
     # avenants : 
     path("avenant/add/", AvenantsView.as_view(template_name="baux/avenant.html"), name='avenant'),
     path("avenant/list/", AvenantsView.as_view(template_name="baux/avenant_list.html"), name='avenant_list'),

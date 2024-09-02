@@ -131,7 +131,7 @@ class Bailleurs(models.Model):
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Bailleur N {self.id} : {self.Nom_prenom} "
+        return f"Bailleur N° {self.id} : {self.Nom_prenom} "
 
 class Locataires(models.Model):
     Intitule = models.CharField(max_length=50)
@@ -146,7 +146,7 @@ class Locataires(models.Model):
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"locataire N {self.id} : {self.Intitule} "
+        return f"locataire N° {self.id} : {self.Intitule} "
 
 class Administrations (models.Model):
     LibelleFr = models.CharField(max_length=50)
@@ -316,7 +316,7 @@ class Contrats (models.Model):
     #Banque = models.CharField(max_length=50, null=True)
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
     RIB = models.CharField(max_length=26, null=True)
-    Imposable = models.CharField(max_length=255, choices=STATUT_PAY, null=True)
+    #Imposable = models.CharField(max_length=255, choices=STATUT_PAY, null=True)
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True) 
     #Nom_CF = models.CharField(max_length=50, null=True)
     #Date_visa_CF = models.DateField(null=True)
@@ -324,6 +324,9 @@ class Contrats (models.Model):
     observation = models.CharField(max_length=200)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
+    Soumis_impot = models.BooleanField(null=True, blank=True)
+    Revisitable = models.BooleanField(null=True, blank=True)
+    Visa_controlleur = models.BooleanField(null=True, blank=True)
     
     def __str__(self):
         return f" Contrat : {self.Ref_contrat}  entre : {self.Bailleur} et  {self.Locataire} " 
@@ -352,7 +355,7 @@ class Avenants (models.Model):
     def __str__(self):
         return f" Avenant : {self.Ref_Avenant}  du  {self.contrat}  " 
 
-class Dossiers_Reglements (models.Model):
+class Non_Mandatement (models.Model):
     Avenant = models.ForeignKey(Avenants, on_delete=models.CASCADE, null=True, related_name= "Avenant")
     Contrat = models.ForeignKey(Contrats, on_delete=models.CASCADE, null=True, related_name= "Contrat")
     Ref_facture = models.CharField(max_length=50)

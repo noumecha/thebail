@@ -3,8 +3,8 @@ from django.views.generic import TemplateView, CreateView, DeleteView, UpdateVie
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from web_project import TemplateLayout
-from .forms import LocatairesForm,AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Dossiers_ReglementsForm,AvenantsForm
-from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Dossiers_Reglements,Avenants
+from .forms import LocatairesForm,AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
+from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 
 # Create your views here.
 def index (request):
@@ -235,21 +235,21 @@ class ContratView(TemplateView):
             context["form"] = contrat_form
             return self.render_to_response(context)
 
-class Dossiers_ReglementsView(TemplateView):
+class Non_MandatementView(TemplateView):
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["dossiersReglementsList"] = Dossiers_Reglements.objects.all()
-        context["form"] = Dossiers_ReglementsForm()
+        context["NonMandatementList"] = Non_Mandatement.objects.all()
+        context["form"] = Non_MandatementForm()
         return context
     
     def post(self, request, *args, **kwargs):
-        doss_reglement_form = Dossiers_ReglementsForm(request.POST)
-        if doss_reglement_form.is_valid():
-            doss_reglement_form.save()
-            return redirect('baux:dossier_reglement_list')
+        non_mandatement_form = Non_MandatementForm(request.POST)
+        if non_mandatement_form.is_valid():
+            non_mandatement_form.save()
+            return redirect('baux:non_mandatement_list')
         else:
             context = self.get_context_data()
-            context["form"] = doss_reglement_form
+            context["form"] = non_mandatement_form
             return self.render_to_response(context)
 
 class AvenantsView(TemplateView):

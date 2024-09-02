@@ -10,8 +10,8 @@
 {% block content %}
     <div class="card p-3">
 
-        <h1>Enregistrement d'un dossier de règlement</h1>
-        <form method="post" action="{% url 'baux:dossier_reglement' %}">
+        <h1>Enregistrement d'un non mandatement</h1>
+        <form method="post" action="{% url 'baux:non_mandatement' %}">
 
             {% if not form.instance.id %}
 
