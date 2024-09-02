@@ -18,11 +18,11 @@
             {% endif %}
         </h1>
         <form method="post" action="{% if is_update %}{% url 'baux:contrat_update' form.instance.id %}{% else %}{% url 'baux:contrat' %}{% endif %}">
-            {% if not form.instance.id %}
+            {#% if not form.instance.id %#}
 
             {% crispy form %}
 
-            {% endif %}
+            {#% endif %#}
 
             {% if form.errors %}
                 <div class="alert alert-danger">

@@ -11,7 +11,7 @@
     <form method="post">
         {% csrf_token %}
         <p>Êtes-vous sûr de vouloir supprimer le contrat "{{ object }}" ?</p>
-        <button type="submit">Oui, supprimer</button>
-        <a href="{% url 'baux:contrat_list' %}">Annuler</a>
+        <button type="submit" class="btn btn-primary">Oui, supprimer</button>
+        <a href="{% url 'baux:contrat_list' %}" class="btn btn-primary">Annuler</a>
     </form>
 {% endblock %}
