@@ -1,0 +1,17 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Immeuble - supression{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <p>Êtes-vous sûr de vouloir supprimer l'immeuble "{{ object }}" ?</p>
+        <button type="submit" class="btn btn-primary">Oui, supprimer</button>
+        <a href="{% url 'baux:immeuble_list' %}" class="btn btn-primary">Annuler</a>
+    </form>
+{% endblock %}

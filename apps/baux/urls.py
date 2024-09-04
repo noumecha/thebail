@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, ImmeubleDeleteView,OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 
 app_name = 'baux'
 urlpatterns = [
@@ -11,6 +11,8 @@ urlpatterns = [
     #path("immeuble/add/", views.immeuble, name='immeuble'),
     path("immeuble/add/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble'),
     path("immeuble/list/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
+    path("immeuble/delete/<int:pk>/", ImmeubleDeleteView.as_view(), name='immeuble_delete'),
+    path("immeuble/update/<int:pk>/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble_update'),
     #path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     #path("contrat/add/", views.contrat, name='contrat'),

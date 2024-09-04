@@ -158,19 +158,44 @@ class BailleurView(TemplateView):
         context['form'] = form
         return render(request, 'baux/bailleur_list.html', context)"""
 
+class ImmeubleDeleteView(DeleteView):
+    model = Immeubles
+    template_name = 'baux/immeuble_delete.html'
+    success_url = reverse_lazy('baux:immeuble_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = ImmeublesForm()
+        return context
+
+
 class ImmeubleView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context['immeubleList'] = Immeubles.objects.all()
-        context["form"] = ImmeublesForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            immeuble = get_object_or_404(Immeubles, pk=pk)
+            form = ImmeublesForm(instance=immeuble)
+        else:
+            form = ImmeublesForm()
+        context["form"] = form
+        context["is_update"] = pk is not None
         context["accessoire_form"] = AccessoiresForm()
         return context
     
     def post(self, request, *args, **kwargs):
         immeuble_form = ImmeublesForm(request.POST)
         accessoire_form = AccessoiresForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            immeuble = get_object_or_404(Immeubles, pk=pk)
+            immeuble_form = ImmeublesForm(request.POST, instance=immeuble)
+        else:
+            immeuble_form = ImmeublesForm(request.POST)
+
         if immeuble_form.is_valid():
             immeuble_form.save()
             accessoires_data = request.POST.getlist('accessoires_data')
@@ -183,41 +208,12 @@ class ImmeubleView(TemplateView):
                 )
             return redirect('baux:immeuble_list')
         else:
-            context = self.get_context_data()
+            context = self.get_context_data(pk=pk)
             context["form"] = immeuble_form
             context["accessoire_form"] = accessoire_form
             return self.render_to_response(context)
 
-    """def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = ImmeublesForm()
-        immeubleList = Immeubles.objects.all()
-        context['immeubleList'] = immeubleList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = ImmeublesForm(request.POST)
-                else:
-                    immeubleList = Immeubles.objects.get(id=pk)
-                    form = ImmeublesForm(request.POST, instance=immeubleList)
-                if form.is_valid():
-                    form.save()
-                form = ImmeublesForm()
-                accesoire_form = AccessoiresForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                immeubleList = Immeubles.objects.get(id=pk)
-                immeubleList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                immeubleList = Immeubles.objects.get(id=pk)
-                form = ImmeublesForm(instance=immeubleList)
-        context['form'] = form
-        return render(request, 'baux/immeuble.html', context)"""
-
-#Contrat Class : 
+#Contrat Classes : 
 class ContratUpdateView(UpdateView):
     model = Contrats
     form_class = ContratsForm
