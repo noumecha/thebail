@@ -43,6 +43,7 @@ $(document).ready(function () {
         $('#id_Reference_doc_identification').attr('required', true);
         $('#id_Raison_social').attr('required', true);
         $('#id_Date_creationEnt').attr('required', true);
+        $('#div_id_Type_id_bailleur').attr('required', false);
         $('#id_NIU').attr('required', true);
         break;
       case '2':
@@ -141,6 +142,10 @@ $(document).ready(function () {
         $('.representant_date_deliv_cni').show();
         $('.representant_num_passeport').show();
         $('.representant_date_deliv_passeport').show();
+        $('#id_Num_Cni_representant').attr('required', false);
+        $('#id_Date_delivrance_cni_representant').attr('required', false);
+        $('#id_NumPassePort_representant').attr('required', false);
+        $('#id_Date_delivrance_PassePort_representant').attr('required', false);
         break;
     }
   });

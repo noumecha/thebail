@@ -3,15 +3,15 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Contrat{% endblock %}
+{% block title %}Occupant - supression{% endblock %}
 
 {% load crispy_forms_tags %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <p>Êtes-vous sûr de vouloir supprimer le contrat "{{ object }}" ?</p>
+        <p>Êtes-vous sûr de vouloir supprimer l'occupant "{{ object }}" ?</p>
         <button type="submit" class="btn btn-primary">Oui, supprimer</button>
-        <a href="{% url 'baux:contrat_list' %}" class="btn btn-primary">Annuler</a>
+        <a href="{% url 'baux:occupants_list' %}" class="btn btn-primary">Annuler</a>
     </form>
 {% endblock %}

@@ -3,7 +3,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Contrat{% endblock %}
+{% block title %}Dossier de règlements{% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -12,17 +12,14 @@
 
         <h1>
             {% if is_update %} 
-                Mise à jour du contrat "{{ form.instance }}" 
+                Mise à jour du non mandatement "{{ form.instance }}" 
             {% else %}  
-                Enregistrement d'un contrat de bail administratif 
+                Enregistrement d'un non mandatement
             {% endif %}
         </h1>
-        <form method="post" action="{% if is_update %}{% url 'baux:contrat_update' form.instance.id %}{% else %}{% url 'baux:contrat' %}{% endif %}">
-            {#% if not form.instance.id %#}
+        <form method="post" action="{% if is_update %}{% url 'baux:non_mandatement_update' form.instance.id %}{% else %}{% url 'baux:non_mandatement' %}{% endif %}">
 
             {% crispy form %}
-
-            {#% endif %#}
 
             {% if form.errors %}
                 <div class="alert alert-danger">

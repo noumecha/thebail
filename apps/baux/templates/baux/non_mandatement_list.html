@@ -1,0 +1,57 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Non Mandatement{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="card mt-3 p-3">
+        <h1>Listes des Non Mandatement</h1>
+        <!-- listing Ref_contrat  Date_Signature  Duree_Contrat 'Bailleur', 'Locataire','Immeubles', Montant_TTC_Mensuel -->
+        <div > <!-- class="container-fluid" -->
+            <table class="table table-sm">
+                <tr>
+                    <th>Contrat</th>
+                    <th>Référence facture </th>
+                    <th>Date signature </th>
+                    <th>Date de debut</th>
+                    <th>Date de fin</th>
+                    <th>Montant NAP</th>
+                    <th>Etat </th>
+                    <th>Action</th>
+                </tr>
+                 
+                {% for score in NonMandatementList %}
+                   <tr>
+                        {% if form.instance.id == score.id %}
+                        {% include 'baux/saveContrat.html' %}
+                        {% else %}
+                            <td>{{ score.Contrat }} </td>
+                            <td>{{ score.Ref_facture}}</td>
+                            <td>{{ score.Date_signature }}</td>
+                            <td>{{ score.Date_Effet_debut }}</td>
+                            <td>{{ score.Date_Effet_fin }}</td>
+                            <td>{{ score.Montant_Nap }}</td>
+                            <td>{{ score.Etat }}</td>
+                            <td>
+                                <div class="dropdown">
+                                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item primary" href="{% url 'baux:non_mandatement_update' score.id %}"><i class="bx bx-edit-alt me-1"></i>Modifier</a>
+                                    <a href="{% url 'baux:non_mandatement_delete' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal"><i class="bx bx-trash me-1"></i>Supprimer</a>
+                                  </div>
+                                </div>
+                            </td>
+                        {% endif %}
+                     </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}

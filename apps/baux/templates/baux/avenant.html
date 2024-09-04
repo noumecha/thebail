@@ -3,7 +3,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Contrat{% endblock %}
+{% block title %}Avenants{% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -12,17 +12,14 @@
 
         <h1>
             {% if is_update %} 
-                Mise à jour du contrat "{{ form.instance }}" 
+                Mise à jour de l'avenant "{{ form.instance }}" 
             {% else %}  
-                Enregistrement d'un contrat de bail administratif 
+                Enregistrement d'un dossier avenant
             {% endif %}
         </h1>
-        <form method="post" action="{% if is_update %}{% url 'baux:contrat_update' form.instance.id %}{% else %}{% url 'baux:contrat' %}{% endif %}">
-            {#% if not form.instance.id %#}
+        <form method="post" action="{% if is_update %}{% url 'baux:avenant_update' form.instance.id %}{% else %}{% url 'baux:avenant' %}{% endif %}">
 
             {% crispy form %}
-
-            {#% endif %#}
 
             {% if form.errors %}
                 <div class="alert alert-danger">
