@@ -11,17 +11,19 @@
 {% block content %}
         
     <div class="card p-3">
-        <h1>Enregistrement des Bailleurs </h1>
+        <h1>
+            {% if is_update %} 
+                Mise à jour du bailleur "{{ form.instance }}" 
+            {% else %}  
+                Enregistrement des Bailleurs 
+            {% endif %}
+        </h1>
 
         <div >
-            <form method="post" action="{% url 'baux:bailleur' %}">
+            <form method="post" action="{% if is_update %}{% url 'baux:bailleur_update' form.instance.id %}{% else %}{% url 'baux:bailleur' %}{% endif %}">
                 <!--{% csrf_token %} -->
-                
-                {% if not form.instance.id %}
 
-                    {% include 'baux/saveBailleur.html' %}
-
-                {% endif %}
+                {% include 'baux/saveBailleur.html' %}
 
                 {% if form.errors %}
                     <div class="alert alert-danger">

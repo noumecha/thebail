@@ -19,24 +19,59 @@ class HomeView(TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         return context
 
+#occupants classes : 
+class OccupantsDeleteView(DeleteView):
+    model = Occupants
+    template_name = 'baux/occupants_delete.html'
+    success_url = reverse_lazy('baux:occupants_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = OccupantsForm()
+        return context
+
 class OccupantsView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["OccupantsList"] = Occupants.objects.all()
-        context["form"] = OccupantsForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            occupants = get_object_or_404(Occupants, pk=pk)
+            context["form"] = OccupantsForm(instance=occupants)
+        else:
+            context["form"] = OccupantsForm()
+        context["is_update"] = pk is not None
         return context
     
     def post(self, request, *args, **kwargs):
         occupants_form = OccupantsForm(request.POST)
+        pk = kwargs.get('pk', None)
+        if pk:
+            occupants = get_object_or_404(Occupants, pk=pk)
+            occupants_form = OccupantsForm(request.POST, instance=occupants)
+        else:
+            occupants_form = OccupantsForm(request.POST)
         if occupants_form.is_valid():
             occupants_form.save()
             return redirect('baux:occupants_list')
         else:
+            context = self.get_context_data(pk=pk)
             context = self.get_context_data()
             context["form"] = occupants_form
             return self.render_to_response(context)
+
+#localisation classes : 
+class LocalisationDeleteView(DeleteView):
+    model = Localisation
+    template_name = 'baux/localisation_delete.html'
+    success_url = reverse_lazy('baux:localisation_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = LocalisationForm()
+        return context
 
 class LocalisationView(TemplateView):
     #predefined functiion
@@ -44,35 +79,41 @@ class LocalisationView(TemplateView):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["localisationList"] = Localisation.objects.all()
-        context["form"] = LocalisationForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            localisation = get_object_or_404(Localisation, pk=pk)
+            context["form"] = LocalisationForm(instance=localisation)
+        else:
+            context["form"] = LocalisationForm()
+        context["is_update"] = pk is not None
         return context
 
     def post(self, request, *args, **kwargs):
-        context = {}
+        localisation_form = LocalisationForm(request.POST)
+        pk = kwargs.get('pk', None)
+        if pk:
+            localisation= get_object_or_404(Localisation, pk=pk)
+            localisation_form = LocalisationForm(request.POST, instance=localisation)
+        else:
+            localisation_form = LocalisationForm(request.POST)
+        if localisation_form.is_valid():
+            localisation_form.save()
+            return redirect('baux:localisation_list')
+        else:
+            context = self.get_context_data(pk=pk)
+            context["form"] = localisation_form
+            return self.render_to_response(context)
+
+#locataire classes
+class LocataireDeleteView(DeleteView):
+    model = Locataires
+    template_name = 'baux/locataire_delete.html'
+    success_url = reverse_lazy('baux:locataire_list')
+
+    def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = LocalisationForm()
-        localisationList = Localisation.objects.all()
-        context['localisationList'] = localisationList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = LocalisationForm(request.POST)
-                else:
-                    localisationList = Localisation.objects.get(id=pk)
-                    form = LocalisationForm(request.POST, instance=localisationList)
-                form.save()
-                form = LocalisationForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                localisationList = Localisation.objects.get(id=pk)
-                localisationList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                localisationList = Localisation.objects.get(id=pk)
-                form = LocalisationForm(instance=localisationList)
-        context['form'] = form
-        return render(request, "baux/localisation.html",context)
+        context["form"] = LocatairesForm()
+        return context
 
 class LocataireView(TemplateView):
     #predefined functiion
@@ -111,53 +152,50 @@ class LocataireView(TemplateView):
         context['form'] = form
         return render(request, 'baux/locataire.html', context)
 
+#bailleur classes 
+class BailleurDeleteView(DeleteView):
+    model = Bailleurs
+    template_name = 'baux/bailleur_delete.html'
+    success_url = reverse_lazy('baux:bailleur_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = BailleursForm()
+        return context
+
 class BailleurView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["BailleursList"] = Bailleurs.objects.all()
-        context["form"] = BailleursForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            bailleur = get_object_or_404(Bailleurs, pk=pk)
+            context["form"] = BailleursForm(instance=bailleur)
+        else:
+            context["form"] = BailleursForm()
+        context["is_update"] = pk is not None
         return context
 
     def post(self, request, *args, **kwargs):
         bailleur_form = BailleursForm(request.POST)
+        pk = kwargs.get('pk', None)
+        if pk:
+            bailleur = get_object_or_404(Bailleurs, pk=pk)
+            bailleur_form = BailleursForm(request.POST, instance=bailleur)
+        else:
+            bailleur_form = BailleursForm(request.POST)
+
         if bailleur_form.is_valid():
             bailleur_form.save()
             return redirect('baux:bailleur_list')
         else:
-            context = self.get_context_data()
+            context = self.get_context_data(pk=pk)
             context["form"] = bailleur_form
             return self.render_to_response(context)
 
-    """def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = BailleursForm()
-        BailleursList = Bailleurs.objects.all()
-        context['BailleursList'] = BailleursList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = BailleursForm(request.POST)
-                else:
-                    BailleursList = Bailleurs.objects.get(id=pk)
-                    form = BailleursForm(request.POST, instance=BailleursList)
-                if form.is_valid():
-                    form.save()
-                form = BailleursForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                BailleursList = Bailleurs.objects.get(id=pk)
-                BailleursList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                BailleursList = Bailleurs.objects.get(id=pk)
-                form = BailleursForm(instance=BailleursList)
-        context['form'] = form
-        return render(request, 'baux/bailleur_list.html', context)"""
-
+#immeuble classes
 class ImmeubleDeleteView(DeleteView):
     model = Immeubles
     template_name = 'baux/immeuble_delete.html'
@@ -266,37 +304,81 @@ class ContratView(TemplateView):
             context["form"] = contrat_form
             return self.render_to_response(context)
 
+#non_mandatement classes : 
+class Non_MandatementDeleteView(DeleteView):
+    model = Non_Mandatement
+    template_name = 'baux/non_mandatement_delete.html'
+    success_url = reverse_lazy('baux:_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = Non_MandatementForm()
+        return context
+
 class Non_MandatementView(TemplateView):
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["NonMandatementList"] = Non_Mandatement.objects.all()
-        context["form"] = Non_MandatementForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            non_mandatement = get_object_or_404(Non_Mandatement, pk=pk)
+            context["form"] = Non_MandatementForm(instance=non_mandatement)
+        else:
+            context["form"] = Non_MandatementForm()
+        context["is_update"] = pk is not None
         return context
     
     def post(self, request, *args, **kwargs):
         non_mandatement_form = Non_MandatementForm(request.POST)
+        if pk:
+            non_mandatement = get_object_or_404(Non_Mandatement, pk=pk)
+            non_mandatement_form = Non_MandatementForm(request.POST, instance=non_mandatement)
+        else:
+            non_mandatement_form = Non_MandatementForm(request.POST)
         if non_mandatement_form.is_valid():
             non_mandatement_form.save()
             return redirect('baux:non_mandatement_list')
         else:
-            context = self.get_context_data()
+            context = self.get_context_data(pk=pk)
             context["form"] = non_mandatement_form
             return self.render_to_response(context)
+
+#aventnas classes : 
+class AvenantsDeleteView(DeleteView):
+    model = Avenants
+    template_name = 'baux/avenant_delete.html'
+    success_url = reverse_lazy('baux:avenant_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = AvenantsForm()
+        return context
 
 class AvenantsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["avenantsList"] = Avenants.objects.all()
-        context["form"] = AvenantsForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            avenant = get_object_or_404(Avenants, pk=pk)
+            context["form"] = AvenantsForm(instance=avenant)
+        else:
+            context["form"] = AvenantsForm()
+        context["is_update"] = pk is not None
         return context
     
     def post(self, request, *args, **kwargs):
         avenants_form = AvenantsForm(request.POST)
+        if pk:
+            avenant = get_object_or_404(Avenants, pk=pk)
+            avenant_form = AvenantsForm(request.POST, instance=avenant)
+        else:
+            avenant_form = AvenantsForm(request.POST)
         if avenants_form.is_valid():
             avenants_form.save()
             return redirect('baux:avenant_list')
         else:
-            context = self.get_context_data()
+            context = self.get_context_data(pk=pk)
             context["form"] = avenants_form
             return self.render_to_response(context)
 
