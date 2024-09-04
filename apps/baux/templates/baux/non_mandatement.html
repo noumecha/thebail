@@ -10,14 +10,16 @@
 {% block content %}
     <div class="card p-3">
 
-        <h1>Enregistrement d'un non mandatement</h1>
-        <form method="post" action="{% url 'baux:non_mandatement' %}">
-
-            {% if not form.instance.id %}
+        <h1>
+            {% if is_update %} 
+                Mise à jour du non mandatement "{{ form.instance }}" 
+            {% else %}  
+                Enregistrement d'un non mandatement
+            {% endif %}
+        </h1>
+        <form method="post" action="{% if is_update %}{% url 'baux:non_mandatement_update' form.instance.id %}{% else %}{% url 'baux:non_mandatement' %}{% endif %}">
 
             {% crispy form %}
-
-            {% endif %}
 
             {% if form.errors %}
                 <div class="alert alert-danger">

@@ -121,36 +121,30 @@ class LocataireView(TemplateView):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["locatairesList"] = Locataires.objects.all()
-        context["form"] = LocatairesForm()
+        pk = kwargs.get('pk', None)
+        if pk:
+            locataire = get_object_or_404(Locataires, pk=pk)
+            context["form"] = LocatairesForm(instance=locataire)
+        else:
+            context["form"] = LocatairesForm()
+        context["is_update"] = pk is not None
         return context
-    
+
     def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        #context["locatairesList"] = Locataires.objects.all()
-        form = LocatairesForm()
-        locatairesList = Locataires.objects.all()
-        context['locatairesList'] = locatairesList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = LocatairesForm(request.POST)
-                else:
-                    locatairesList = Locataires.objects.get(id=pk)
-                    form = LocatairesForm(request.POST, instance=locatairesList)
-                form.save()
-                form = LocatairesForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                locatairesList = Locataires.objects.get(id=pk)
-                locatairesList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                locatairesList = Locataires.objects.get(id=pk)
-                form = LocatairesForm(instance=locatairesList)
-        context['form'] = form
-        return render(request, 'baux/locataire.html', context)
+        locataire_form = LocatairesForm(request.POST)
+        pk = kwargs.get('pk', None)
+        if pk:
+            locataire = get_object_or_404(Locataires, pk=pk)
+            locataire_form = LocatairesForm(request.POST, instance=locataire)
+        else:
+            locataire_form = LocatairesForm(request.POST)
+        if locataire_form.is_valid():
+            locataire_form.save()
+            return redirect('baux:locataire_list')
+        else:
+            context = self.get_context_data(pk=pk)
+            context["form"] = locataire_form
+            return self.render_to_response(context)
 
 #bailleur classes 
 class BailleurDeleteView(DeleteView):
@@ -308,7 +302,7 @@ class ContratView(TemplateView):
 class Non_MandatementDeleteView(DeleteView):
     model = Non_Mandatement
     template_name = 'baux/non_mandatement_delete.html'
-    success_url = reverse_lazy('baux:_list')
+    success_url = reverse_lazy('baux:non_mandatement_list')
 
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
@@ -330,6 +324,7 @@ class Non_MandatementView(TemplateView):
     
     def post(self, request, *args, **kwargs):
         non_mandatement_form = Non_MandatementForm(request.POST)
+        pk = kwargs.get('pk', None)
         if pk:
             non_mandatement = get_object_or_404(Non_Mandatement, pk=pk)
             non_mandatement_form = Non_MandatementForm(request.POST, instance=non_mandatement)
@@ -368,18 +363,19 @@ class AvenantsView(TemplateView):
         return context
     
     def post(self, request, *args, **kwargs):
-        avenants_form = AvenantsForm(request.POST)
+        pk = kwargs.get('pk', None)
         if pk:
             avenant = get_object_or_404(Avenants, pk=pk)
             avenant_form = AvenantsForm(request.POST, instance=avenant)
         else:
             avenant_form = AvenantsForm(request.POST)
-        if avenants_form.is_valid():
-            avenants_form.save()
+
+        if avenant_form.is_valid():
+            avenant_form.save()
             return redirect('baux:avenant_list')
         else:
             context = self.get_context_data(pk=pk)
-            context["form"] = avenants_form
+            context["form"] = avenant_form
             return self.render_to_response(context)
 
 class ConsultationView(TemplateView):

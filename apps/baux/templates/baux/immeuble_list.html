@@ -24,7 +24,7 @@
                     <th>Action</th>
                 </tr>
                 {% for score in immeubleList %}
-                <tr>
+                    <tr>
                         {% if form.instance.id == score.id %}
                         {% include 'baux/saveimmeuble.html' %}
                         {% else %}
