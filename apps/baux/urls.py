@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
-from .views import HomeView,AvenantsDeleteView,LocataireDeleteView, ConsultationView,LocalisationDeleteView, BailleurDeleteView, OccupantsDeleteView, LocataireView,StatsView,Non_MandatementDeleteView,  BailleurView, AvenantsDeleteView, LocalisationView, ContratView, ImmeubleView, ImmeubleDeleteView,OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from django.conf.urls.static import static
+from django.conf import settings
+from .views import AccessoireView,AccessoireDeleteView,HomeView,AvenantsDeleteView,LocataireDeleteView, ConsultationView,LocalisationDeleteView, BailleurDeleteView, OccupantsDeleteView, LocataireView,StatsView,Non_MandatementDeleteView,  BailleurView, AvenantsDeleteView, LocalisationView, ContratView, ImmeubleView, ImmeubleDeleteView,OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 
 app_name = 'baux'
 urlpatterns = [
@@ -13,6 +15,9 @@ urlpatterns = [
     #path("immeuble/add/", views.immeuble, name='immeuble'),
     path("immeuble/add/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble'),
     path("immeuble/list/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
+    path("immeuble/accessoire/", AccessoireView.as_view(template_name="baux/immeuble_accessoire.html"), name='immeuble_accessoire'),
+    path("accessoire/update/<int:pk>", AccessoireView.as_view(template_name="baux/immeuble_accessoire.html"), name='accessoire_update'),
+    path("accessoire/delete/<int:pk>", AccessoireDeleteView.as_view(), name='accessoire_delete'),
     path("immeuble/delete/<int:pk>/", ImmeubleDeleteView.as_view(), name='immeuble_delete'),
     path("immeuble/update/<int:pk>/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble_update'),
     #path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
@@ -53,3 +58,7 @@ urlpatterns = [
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
 
 ]
+
+#debuging images : 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

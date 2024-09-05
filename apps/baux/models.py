@@ -136,8 +136,10 @@ class Bailleurs(models.Model):
 class Locataires(models.Model):
     Intitule = models.CharField(max_length=50)
     NIU = models.CharField(max_length=20, null=True)
+    scan_niu = models.ImageField(upload_to='baux/files/locataire-niu/', blank=True, null=True)
     Nom_Prenom_Representant = models.CharField(max_length=100, null=True)
     Num_Cni = models.CharField(max_length=50, null=True)
+    scan_cni = models.ImageField(upload_to='baux/files/locataire-cni/', blank=True, null=True)
     Date_delivrance_cni = models.DateField(null=True)
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=2, null=False)
     Peut_payer = models.CharField(choices=PEUT_PAYER, max_length=255, null=True)
@@ -272,9 +274,12 @@ class Ayant_droits (models.Model):
     Bailleur = models.ManyToManyField(Bailleurs, blank=True)
 
 class Accessoires(models.Model):
-    Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name='Immeubles')
+    #Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name='Immeubles')
     Libelle = models.CharField(max_length=255, blank=True, null=True)
-    Quantite = models.IntegerField()
+    #Quantite = models.IntegerField()
+
+    def __str__(self):
+        return f" {self.Libelle} "
 
 class Banques(models.Model):
     codeBanque = models.CharField(max_length=255, blank=True, null=True)

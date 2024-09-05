@@ -131,13 +131,12 @@ class LocataireView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        locataire_form = LocatairesForm(request.POST)
         pk = kwargs.get('pk', None)
         if pk:
             locataire = get_object_or_404(Locataires, pk=pk)
-            locataire_form = LocatairesForm(request.POST, instance=locataire)
+            locataire_form = LocatairesForm(request.POST, request.FILES, instance=locataire)
         else:
-            locataire_form = LocatairesForm(request.POST)
+            locataire_form = LocatairesForm(request.POST, request.FILES)
         if locataire_form.is_valid():
             locataire_form.save()
             return redirect('baux:locataire_list')
@@ -200,6 +199,46 @@ class ImmeubleDeleteView(DeleteView):
         context["form"] = ImmeublesForm()
         return context
 
+class AccessoireDeleteView(DeleteView):
+    model = Accessoires
+    template_name = 'baux/accessoire_delete.html'
+    success_url = reverse_lazy('baux:immeuble_accessoire')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = AccessoiresForm()
+        return context
+
+class AccessoireView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['accessoireList'] = Accessoires.objects.all()
+        pk = kwargs.get('pk', None)
+        if pk:
+            accessoire = get_object_or_404(Accessoires, pk=pk)
+            form = AccessoiresForm(instance=accessoire)
+        else:
+            form = AccessoiresForm()
+        context["form"] = form
+        context["is_update"] = pk is not None
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        accessoire_form = AccessoiresForm(request.POST)
+        pk = kwargs.get('pk', None)
+        if pk:
+            accessoire = get_object_or_404(Accessoires, pk=pk)
+            accessoire_form = AccessoiresForm(request.POST, instance=accessoire)
+        else:
+            accessoire_form = AccessoiresForm(request.POST)
+
+        if accessoire_form.is_valid():
+            accessoire_form.save()
+            return redirect('baux:immeuble_accessoire')
+        else:
+            context = self.get_context_data(pk=pk)
+            context["form"] = accessoire_form
+            return self.render_to_response(context)
 
 class ImmeubleView(TemplateView):
     #predefined functiion

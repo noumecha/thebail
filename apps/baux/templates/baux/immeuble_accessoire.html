@@ -1,0 +1,68 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Immeuble{% endblock %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="card p-3">
+        <h1>
+            {% if is_update %} 
+                Mise à jour de l'accessoire "{{ form.instance }}" 
+            {% else %}  
+                Enregistrement d'un accessoire
+            {% endif %}
+        </h1>
+
+        <div class="">
+            <form method="post" action="{% if is_update %}{% url 'baux:accessoire_update' form.instance.id %}{% else %}{% url 'baux:immeuble_accessoire' %}{% endif %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% crispy form %}
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for field , errors in form.errors.items %}
+                                <li>{{ field }} : {{ errors|striptags }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+    <div class="card mt-3 p-3">
+        
+        <h1>Listes des accessoires</h1>
+
+        <div class="container-flex">
+            <table class="table table-sm">
+                <tr>
+                    <th>Libellé</th>
+                    <th>Action</th>
+                </tr>
+                {% for score in accessoireList %}
+                    <tr>
+                        <td>{{ score.Libelle}} </td>
+                        <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item primary" href="{% url 'baux:accessoire_update' score.id %}"><i class="bx bx-edit-alt me-1"></i>Modifier</a>
+                                <a href="{% url 'baux:accessoire_delete' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal"><i class="bx bx-trash me-1"></i>Supprimer</a>
+                              </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
