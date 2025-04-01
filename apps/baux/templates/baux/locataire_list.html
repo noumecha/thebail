@@ -3,17 +3,17 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Listes Locataires{% endblock %}
+{% block title %}Locataire List{% endblock %}
 
 {% load crispy_forms_tags %}
 
-
 {% block content %}
-    <div class="card p-3">
-        
-        <h1> Liste des locataires </h1>
-        <div class="container-flex">
-            <table class="table table-sm">
+     
+    <div class="card mt-3 p-3">
+        <h1>Liste des locataires </h1>
+        <!-- listing class="container-fluid" -->
+        <table class="table table-sm">
+            <thead>
                 <tr>
                     <th>Intitule</th>
                     <th>NIU</th>
@@ -22,30 +22,32 @@
                     <th>Date CNI</th>
                     <th>Action</th>
                 </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
                 {% for score in locatairesList %}
-                    <tr>
-                        {% if form.instance.id == score.id %}
-                            {% include 'baux/saveLocataire.html' %}
-                        {% else %}
-                            <td>{{ score.Intitule }} </td>
-                            <td>{{ score.NIU }}</td>
-                            <td>{{ score.Nom_Prenom_Representant }}</td>
-                            <td>{{ score.Num_Cni}}</td>
-                            <td>{{ score.Date_delivrance_cni }}</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item primary" href="{% url 'baux:locataire_update' score.id %}"><i class="bx bx-edit-alt me-1"></i>Modifier</a>
-                                        <a href="{% url 'baux:locataire_delete' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal"><i class="bx bx-trash me-1"></i>Supprimer</a>
-                                    </div>
+                <tr>
+                    {% if form.instance.id == score.id %}
+                        {% include 'baux/saveLocataire.html' %}
+                    {% else %}
+                        <td>{{ score.Intitule }} </td>
+                        <td>{{ score.NIU }}</td>
+                        <td>{{ score.Nom_Prenom_Representant }}</td>
+                        <td>{{ score.Num_Cni}}</td>
+                        <td>{{ score.Date_delivrance_cni }}</td>
+                        <td class="rounded-end-bottom">
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                <div class="dropdown-menu">
+                                    <button formnovalidate class="btn d-flex btn-primary dropdown-item"  name="edit" value="{{ score.id }}"><i class="bx bx-edit-alt me-1"></i> Edit</button>
+                                    <button formnovalidate class="btn d-flex btn-success dropdown-item"  name="delete" value="{{ score.id }}"><i class="bx bx-trash me-1"></i> Delete</button>
                                 </div>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    <div>
 
 {% endblock %}

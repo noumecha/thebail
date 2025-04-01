@@ -10,24 +10,58 @@
 
 {% block content %}
     <div class="card p-3">
-        <h1>
-            {% if is_update %} 
-                Mise à jour de la localisation : "{{ form.instance }}" 
-            {% else %}  
-                Enregistrement d'une localisation
-            {% endif %}
-        </h1>
+        <h1>Enregistrement d'une localisation </h1>
 
         <!-- enregistrement -->
 
         <div>
-            <form method="post" action="{% if is_update %}{% url 'baux:localisation_update' form.instance.id %}{% else %}{% url 'baux:localisation' %}{% endif %}">
-                {#% csrf_token %#}
+            <form method="post" action="{% url 'baux:localisation' %}">
+                {% csrf_token %}
+
+                <!-- enregistrement -->
+                {% if not form.instance.id %}
 
                 {% include 'baux/saveLocalisation.html' %}
+
+                {% endif %}
 
             </form>
 
         </div>
     </div>
+    <div class="card mt-3 p-3">
+        <!-- listing -->
+        <div class="container-fluid">
+            <table class="table table-sm">
+                <tr>
+                    <th>Region</th>
+                    <th>Departement </th>
+                    <th>Arrondissement</th>
+                    <th>Quartier</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for score in localisationList %}
+                   <tr>
+                        {% if form.instance.id == score.id %}
+                        {% include 'baux/saveLocalisation.html' %}
+                        {% else %}
+                            <td>{{ score.arrondissement.departement.Region}} </td>
+                            <td>{{ score.arrondissement.departement }}</td>
+                            <td>{{ score.arrondissement }}</td>
+                            <td>{{ score.Quartier }}</td>
+
+                            <td>
+                                <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
+                                <button formnovalidate class="btn btn-success" name="delete" value="{{ score.id }}">Delete</button>
+                            </td>
+                        {% endif %}
+                     </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+    </div>
+
 {% endblock %}

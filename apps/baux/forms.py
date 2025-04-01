@@ -9,26 +9,13 @@ class LocatairesForm(forms.ModelForm):
     class Meta:
         model = Locataires
 
-        fields = (
-            'Intitule',
-            'NIU',
-            'scan_niu',
-            'Nom_Prenom_Representant',
-            'scan_cni',
-            'Peut_payer',
-            'Num_Cni',
-            'Date_delivrance_cni',
-            'Type_personne',
-            'Observation'
-        )
+        fields = ('Intitule','NIU','Nom_Prenom_Representant','Peut_payer','Num_Cni','Date_delivrance_cni','Type_personne','Observation')
         labels = {
             "Intitule": " Autorité signataire",
             "NIU": "NIU(idientifiant unique DGI)",
             "Nom_Prenom_Representant": " Nom et prenoms du Representant" ,
             "Num_Cni": " Numero carte d'identité nationnale",
-            'scan_niu' : "scan du NIU",
             "Date_delivrance_cni" :"date de delivrance CNI" ,
-            'scan_cni' : "scan de la CNI",
             "Type_personne": "Type de personne",
             "Observation": "Observation" ,
             "Peut_payer" : "Peut payer",
@@ -49,10 +36,8 @@ class LocatairesForm(forms.ModelForm):
                         Column(FloatingField("Intitule"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Peut_payer"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("scan_niu"), css_class='form-group col-md-6 mb'),
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),  
                         Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("scan_cni"), css_class='form-group col-md-6 mb'),
                         Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0'),  
                         css_class='form-row' 
@@ -66,9 +51,7 @@ class LocatairesForm(forms.ModelForm):
         )
         self.fields['Observation'].required = False
         self.helper.form_tag = False
-        #self.fields["scan_niu"].required = True
         self.fields['NIU'].required = False
-        #self.fields["scan_cni"].required = True
         self.fields['Num_Cni'].required = False
         self.fields['Date_delivrance_cni'].required = False
           
@@ -421,9 +404,10 @@ class ImmeublesForm(forms.ModelForm):
 class AccessoiresForm(forms.ModelForm):
     class Meta:
         model = Accessoires
-        fields = ('Libelle',)
+        fields = ('Libelle', 'Quantite')
         labels = {
             'Libelle': "Nom accessoires",
+            'Quantite': "Quantité",
         }
     def __init__(self, *args, **kwargs):
         super(AccessoiresForm, self).__init__(*args, **kwargs)
@@ -433,9 +417,9 @@ class AccessoiresForm(forms.ModelForm):
                 Fieldset(
                     "Accessoires",
                     Row(
-                        Column(FloatingField("Libelle"), css_class='form-group col-md-6 mb-0'),
-                        #Column(FloatingField("Quantite"), css_class='form-group col-md-4 mb-0'),
-                        Column(Submit("save-accessoire","Ajouter",css_class="d-grid gap-2 col-md-6 mx-auto btn btn-primary mb-3")),
+                        Column(FloatingField("Libelle"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Quantite"), css_class='form-group col-md-4 mb-0'),
+                        Column(Submit("save-accessoire","Ajouter",css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3")),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -551,13 +535,13 @@ class AvenantsForm(forms.ModelForm):
             "Signataire",
             "Date_Signature",
             "Date_Debut",
-            "Ref_Avenant", 
-            'BanqueAv', 
-            'RIBAv',
+            "Ref_Avenant",
             "Periodicite_Reglement",
             "Montant_TTC_Mensuel",
             "Montant_Charges_Mensuel",
             "Montant_Nap_Mensuel",
+            "Banque",
+            "Compte_Bancaire",
             "Type_location",
             "Nom_CF",
             "Date_visa_CF",
@@ -574,12 +558,12 @@ class AvenantsForm(forms.ModelForm):
             "Montant_TTC_Mensuel" : "Entrez le montant TCC mensuel",
             "Montant_Charges_Mensuel" : "Entrez le montant des charges mensuelles",
             "Montant_Nap_Mensuel" : "Entrez le Net A payer",
+            "Banque" : "Entrez le nom de la banque",
+            "Compte_Bancaire " : "Entrez le numero du compte bancaire",
             "Type_location" : "Selectionner le type de location",
             "Nom_CF" : "Entrez le nom du controlleur financier",
             "Date_visa_CF" : "Selectionner la date de visa du Controlleur financier",
             "Etat" : "Selectionner l'Etat",
-            "BanqueAv":" LIBELLE DE LA BANQUE",
-            "RIBAv":"RIB",  
             "observation" : "Observation",
         }
         widgets = {
@@ -625,8 +609,8 @@ class AvenantsForm(forms.ModelForm):
                 Fieldset(
                     "Eléments de règelement",
                     Row(
-                        Column(FloatingField("BanqueAv"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("RIBAv"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Compte_Bancaire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_TTC_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),

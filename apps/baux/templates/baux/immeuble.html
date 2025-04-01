@@ -10,27 +10,27 @@
 
 {% block content %}
     <div class="card p-3">
-        <h1>
-            {% if is_update %} 
-                Mise à jour de l'immeuble "{{ form.instance }}" 
-            {% else %}  
-                Enregistrement d'un immeuble
-            {% endif %}
-        </h1>
+        <h1>Enregistrement d'un immeuble</h1>
 
         <!-- enregistrement -->
 
         <div class="">
-            <form method="post" action="{% if is_update %}{% url 'baux:immeuble_update' form.instance.id %}{% else %}{% url 'baux:immeuble' %}{% endif %}" enctype="multipart/form-data">
+            <form method="post" action="{% url 'baux:immeuble' %}" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                {% crispy form %}
-                    {% if not accessoire_form.instance.id %}    
-                        {% crispy accessoire_form %}
-                        <ul id="accesoires-list">
-                        </ul>
-                    {% endif %}
-                <input type="submit" name="save-immeuble" value="Enregistrer" class="btn btn-primary d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" id="submit-id-save-immeuble">
+                {% if not form.instance.id %}
+
+                    {% crispy form %}
+
+                        {% if not accessoire_form.instance.id %}    
+                            {% crispy accessoire_form %}
+                            <ul id="accesoires-list">
+
+                            </ul>
+                        {% endif %}
+                    <input type="submit" name="save-immeuble" value="Enregistrer" class="btn btn-primary d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" id="submit-id-save-immeuble">
+
+                {% endif %}
 
                 {% if form.errors %}
                     <div class="alert alert-danger">
