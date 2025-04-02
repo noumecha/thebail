@@ -3,8 +3,14 @@ from django.views.generic import TemplateView, CreateView, DeleteView, UpdateVie
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from web_project import TemplateLayout
+from django.template.loader import get_template
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
 from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from weasyprint import HTML
+import tempfile
+import os
 
 # Create your views here.
 def index (request):
@@ -270,6 +276,24 @@ class ContratView(TemplateView):
             context["form"] = contrat_form
             return self.render_to_response(context)
 
+    def print_contrat(request, pk):
+        # fetch content from db and load template context
+        contrat = get_object_or_404(Contrats, pk=pk)
+        template = get_template("baux/docs/contrat_doc.html")
+        context = {"contrat" : contrat}
+        html_string = template.render(context)
+        #  
+        with tempfile.NamedTemporaryFile(delete=False) as temp_pdf:
+            temp_pdf_path = temp_pdf.name # Store path berofre closing
+            HTML(string=html_string).write_pdf(temp_pdf_path) # Generating the pdf file
+        with open(temp_pdf_path, "rb") as pdf_file:
+            response = HttpResponse(pdf_file.read(), content_type="application/pdf")
+            response["Content-Disposition"] = f'attachment; filename="contrat_{contrat.Ref_contrat}.pdf"'
+        os.remove(temp_pdf_path)
+        return response
+        
+
+# Non-Mandatement Class :
 class Non_MandatementView(TemplateView):
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))

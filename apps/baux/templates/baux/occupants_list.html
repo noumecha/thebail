@@ -31,8 +31,19 @@
                             <td>{{ score.Matricule }}</td>
                             <td>{{ score.Telephone }}</td>
                             <td>
-                                <button formnovalidate class="btn btn-primary" name="edit" value="{{ score.id }}">Edit</button>
-                                <button formnovalidate class="btn btn-success" name="delete" value="{{ score.id }}">Delete</button>
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item primary" href="#">
+                                        <i class="bx bx-edit-alt me-1"></i>Modifier
+                                      </a>
+                                      <a href="#" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
+                                        <i class="bx bx-trash me-1"></i>Supprimer
+                                      </a>
+                                    </div>
+                                </div>
                             </td>
                         {% endif %}
                     </tr>

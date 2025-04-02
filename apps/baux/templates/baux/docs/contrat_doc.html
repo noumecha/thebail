@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed {{content_layout_class}}" data-assets-path="{% static '/' %}" data-base-url="{{url}}" data-framework="django" data-template="vertical-menu-free">
+    <head>
+        <title>contrat</title>
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="description" content="{% get_theme_variables 'template_description' %}" />
+        <meta name="keywords" content="{% get_theme_variables 'template_keyword' %}" />
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}" />
+    </head>
+    <body>
+        <!-- header information -->
+        <div class="container mt-3">
+            <div class="row d-flex flex-row">
+                <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                    <h5 class="text-center text-uppercase">
+                        republique du cameroun
+                    </h5>
+                    <h6 class="text-capitalize">
+                        paix - travail - patrie
+                    </h6>
+                    <h6>
+                        *******
+                    </h6>
+                    <h5 class="text-uppercase">
+                        ministères des finances
+                    </h5>
+                    <h6>
+                        *******
+                    </h6>
+                    <h5 class="text-uppercase">
+                        secretariat général
+                    </h5>
+                    <h6>
+                        *******
+                    </h6>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                    <h5 class="text-uppercase">
+                        republic of cameroon
+                    </h5>
+                    <h6 class="text-capitalize">
+                        peace - work - fatherland
+                    </h6>
+                    <h6>
+                        *******
+                    </h6>
+                    <h5 class="text-uppercase">
+                        ministry of finance
+                    </h5>
+                    <h6>
+                        *******
+                    </h6>
+                    <h5 class="text-uppercase">
+                        general secretary
+                    </h5>
+                    <h6>
+                        *******
+                    </h6>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12 bg-secondary">
+                    <h1 class="text-center text-uppercase">
+                        fiche de collecte
+                    </h1>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12">
+                    <h4 class="text-center text-uppercase">
+                        collectte d'informations sur les contrats de logements administratifs
+                    </h4>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-lg-8 col-md-8">
+                    <h4 class="text-uppercase">
+                        agent de collecte : ______________________________________
+                    </h4>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h4 class="text-uppercase">
+                        date de collecte : ___ / ___ / {% now "Y" %}
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- first section immeuble informations -->
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-lg-12 p-0 col-md-12 bg-secondary">
+                    <h3 class="text-left m-0 p-0 text-uppercase">
+                        Section 1.- informations sur l'immeuble
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 bg-secondary">
+                    <h4 class="text-uppercase">I. Identification </h4>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    a. - Désignation du bien
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    |__________________________________________________________________________|
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    b. - Type de construction
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <input type="checkbox"> immeuble non bâti <input type="checkbox"> Villa <input type="checkbox"> Etage R+: _____________
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    c. - Caractéristiques
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <ul>
+                                        <li>
+                                            Date de construction : ____ / ___ / ___ 
+                                        </li>
+                                        <li>
+                                            Superficie Louée : |______|
+                                        </li>
+                                        <li>
+                                            Nombre total de pièce : |____________|
+                                        </li>
+                                        <li>
+                                            Norme cadastrale : |___________________|
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    d. - Type de location
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <input type="checkbox"> Bureau <input type="checkbox"> Domicile 
+                                    <input type="checkbox"> Domanial <input type="checkbox"> Conventionné 
+                                    <input type="checkbox"> Sic
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 bg-secondary">
+                    <h4 class="text-uppercase">I. Identification </h4>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    a. - Désignation du bien
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    |__________________________________________________________________________|
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    b. - Type de construction
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <input type="checkbox"> immeuble non bâti <input type="checkbox"> Villa <input type="checkbox"> Etage R+: _____________
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    c. - Caractéristiques
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <ul>
+                                        <li>
+                                            Date de construction : ____ / ___ / ___ 
+                                        </li>
+                                        <li>
+                                            Superficie Louée : |______|
+                                        </li>
+                                        <li>
+                                            Nombre total de pièce : |____________|
+                                        </li>
+                                        <li>
+                                            Norme cadastrale : |___________________|
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    d. - Type de location
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <input type="checkbox"> Bureau <input type="checkbox"> Domicile 
+                                    <input type="checkbox"> Domanial <input type="checkbox"> Conventionné 
+                                    <input type="checkbox"> Sic
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 bg-secondary">
+                    <h4 class="text-uppercase">I. Identification </h4>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    a. - Désignation du bien
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    |__________________________________________________________________________|
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    b. - Type de construction
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <input type="checkbox"> immeuble non bâti <input type="checkbox"> Villa <input type="checkbox"> Etage R+: _____________
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    c. - Caractéristiques
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <ul>
+                                        <li>
+                                            Date de construction : ____ / ___ / ___ 
+                                        </li>
+                                        <li>
+                                            Superficie Louée : |______|
+                                        </li>
+                                        <li>
+                                            Nombre total de pièce : |____________|
+                                        </li>
+                                        <li>
+                                            Norme cadastrale : |___________________|
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-2 p-3 border-dark col-lg-4 col-md-4">
+                                    d. - Type de location
+                                </td>
+                                <td class="border border-2 p-3 border-dark col-lg-8 col-md-8">
+                                    <input type="checkbox"> Bureau <input type="checkbox"> Domicile 
+                                    <input type="checkbox"> Domanial <input type="checkbox"> Conventionné 
+                                    <input type="checkbox"> Sic
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
