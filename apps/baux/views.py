@@ -8,8 +8,10 @@ from .forms import LocatairesForm,AccessoiresForm, BailleursForm,LocalisationFor
 from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
+from django.http import FileResponse
 from weasyprint import HTML
 import tempfile
+import io
 import os
 
 # Create your views here.
@@ -136,7 +138,7 @@ class BailleurView(TemplateView):
             context["form"] = bailleur_form
             return self.render_to_response(context)
 
-    """def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         context = {}
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         form = BailleursForm()
@@ -162,7 +164,7 @@ class BailleurView(TemplateView):
                 BailleursList = Bailleurs.objects.get(id=pk)
                 form = BailleursForm(instance=BailleursList)
         context['form'] = form
-        return render(request, 'baux/bailleur_list.html', context)"""
+        return render(request, 'baux/bailleur_list.html', context)
 
 class ImmeubleView(TemplateView):
     #predefined functiion
@@ -277,7 +279,7 @@ class ContratView(TemplateView):
             return self.render_to_response(context)
 
     def print_contrat(request, pk):
-        # fetch content from db and load template context
+        """# fetch content from db and load template context
         contrat = get_object_or_404(Contrats, pk=pk)
         template = get_template("baux/docs/contrat_doc.html")
         context = {"contrat" : contrat}
@@ -290,7 +292,14 @@ class ContratView(TemplateView):
             response = HttpResponse(pdf_file.read(), content_type="application/pdf")
             response["Content-Disposition"] = f'attachment; filename="contrat_{contrat.Ref_contrat}.pdf"'
         os.remove(temp_pdf_path)
-        return response
+        return response"""
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer)
+        p.drawString(100, 100, "Hello World. Django print")
+        p.showPage()
+        p.save()
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename="test.pdf")
         
 
 # Non-Mandatement Class :
