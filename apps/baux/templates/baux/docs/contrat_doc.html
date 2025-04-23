@@ -30,7 +30,7 @@
                     MINISTERE DES DOMAINES DU CADASTRE ET DES AFFAIRES FONCIERES
                 </h3>
                 <h3 class="">
-                    CONTRAT DE LOCATION D'IMMEUBLE N° [NUMERO CONTRAT ICI] {{ contrat.id }}
+                    CONTRAT DE LOCATION D'IMMEUBLE N° {{ contrat.immeuble }}
                 </h3>
             </div>
             <div class="row d-flex flex-column">
@@ -38,7 +38,7 @@
                    Entre les sousignés 
                 </p>
                 <p class="text-left">
-                    Monsieur [nom propriétaire], propriétaire à <b>[addresse propriétaire]</b>, Départemnent [nom du département], Domicilié à 
+                    Monsieur  {{ contrat.bailleur }}, propriétaire à <b>[addresse propriétaire]</b>, Départemnent [nom du département], Domicilié à 
                     <b>[domicille propriétaire]</b> d'une part.
                 </p>
                 <p style="text-align: justify !important">

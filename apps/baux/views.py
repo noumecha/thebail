@@ -4,6 +4,7 @@ from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from web_project import TemplateLayout
 from django.template.loader import get_template
+from django.template.loader import render_to_string
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
 from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from reportlab.pdfgen import canvas
@@ -13,6 +14,7 @@ from weasyprint import HTML
 import tempfile
 import io
 import os
+import xhtml2pdf.pisa as pisa
 
 # Create your views here.
 def index (request):
@@ -279,27 +281,16 @@ class ContratView(TemplateView):
             return self.render_to_response(context)
 
     def print_contrat(request, pk):
-        """# fetch content from db and load template context
+        # fetch content from db and load template context
         contrat = get_object_or_404(Contrats, pk=pk)
-        template = get_template("baux/docs/contrat_doc.html")
         context = {"contrat" : contrat}
-        html_string = template.render(context)
-        #  
-        with tempfile.NamedTemporaryFile(delete=False) as temp_pdf:
-            temp_pdf_path = temp_pdf.name # Store path berofre closing
-            HTML(string=html_string).write_pdf(temp_pdf_path) # Generating the pdf file
-        with open(temp_pdf_path, "rb") as pdf_file:
-            response = HttpResponse(pdf_file.read(), content_type="application/pdf")
-            response["Content-Disposition"] = f'attachment; filename="contrat_{contrat.Ref_contrat}.pdf"'
-        os.remove(temp_pdf_path)
-        return response"""
-        buffer = io.BytesIO()
-        p = canvas.Canvas(buffer)
-        p.drawString(100, 100, "Hello World. Django print")
-        p.showPage()
-        p.save()
-        buffer.seek(0)
-        return FileResponse(buffer, as_attachment=True, filename="test.pdf")
+        html = render_to_string("baux/docs/contrat_doc.html", context)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="f"contrat_{contrat.Ref_contrat}".pdf"'
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Error generating PDF', status=500)
+        return response
         
 
 # Non-Mandatement Class :
