@@ -15,6 +15,7 @@ import tempfile
 import io
 import os
 import xhtml2pdf.pisa as pisa
+from formtools.wizard.views import SessionWizardView
 
 # Create your views here.
 def index (request):
@@ -83,6 +84,31 @@ class LocalisationView(TemplateView):
                 form = LocalisationForm(instance=localisationList)
         context['form'] = form
         return render(request, "baux/localisation.html",context)
+        
+FORMS = [
+    ("step1", LocatairesForm),
+    ("step2", AccessoiresForm),
+    ("step3", BailleursForm),
+]
+
+TEMPLATES = {
+    "step1": "baux/step1.html",
+    "step2": "baux/step2.html",
+    "step3": "baux/step3.html",
+}
+class CollecteView(SessionWizardView):
+    def get_template_names(self):
+        print("current step :", TEMPLATES[0])
+        return [TEMPLATES[self.steps.current]]
+    
+    def done(self, form_list, **kwargs):
+        # Combine form data here
+        data = {}
+        for form in form_list:
+            data.update(form.cleaned_data)
+        # Example: Save to database or perform processing
+        print(data)
+        return render(self.request, 'form/done.html', {'data': data})
 
 class LocataireView(TemplateView):
     #predefined functiion
@@ -339,4 +365,3 @@ class StatsView(TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["datas"] = []
         return context
-    

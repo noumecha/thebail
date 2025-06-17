@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
-from .views import HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from .views import CollecteView,HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from .forms import LocatairesForm,AccessoiresForm, BailleursForm
 
 app_name = 'baux'
 urlpatterns = [
@@ -39,5 +40,7 @@ urlpatterns = [
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
     # Statistiques : 
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
+    # collecte : 
+    path('collecte/', CollecteView.as_view([LocatairesForm,AccessoiresForm, BailleursForm]), name='collecte'),
 
 ]
