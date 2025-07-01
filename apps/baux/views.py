@@ -84,7 +84,8 @@ class LocalisationView(TemplateView):
                 form = LocalisationForm(instance=localisationList)
         context['form'] = form
         return render(request, "baux/localisation.html",context)
-        
+
+# for multi-step-form for collecting data        
 FORMS = [
     ("step1", LocatairesForm),
     ("step2", AccessoiresForm),
@@ -92,14 +93,19 @@ FORMS = [
 ]
 
 TEMPLATES = {
-    "step1": "baux/step1.html",
-    "step2": "baux/step2.html",
-    "step3": "baux/step3.html",
+    "0": "baux/step1.html",
+    "1": "baux/step2.html",
+    "2": "baux/step3.html",
 }
 class CollecteView(SessionWizardView):
     def get_template_names(self):
-        print("current step :", TEMPLATES[0])
         return [TEMPLATES[self.steps.current]]
+
+    def get_context_data(self, form, **kwargs):
+        context = super().get_context_data(form, **kwargs)
+        context = TemplateLayout.init(self, context)
+        return context
+
     
     def done(self, form_list, **kwargs):
         # Combine form data here
@@ -108,8 +114,9 @@ class CollecteView(SessionWizardView):
             data.update(form.cleaned_data)
         # Example: Save to database or perform processing
         print(data)
-        return render(self.request, 'form/done.html', {'data': data})
+        return render(self.request, 'baux/done.html', {'data': data})
 
+# locataire 
 class LocataireView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
