@@ -14,13 +14,8 @@
         <div > <!-- class="container-fluid" -->
             <table class="table table-sm">
                 <tr>
-                    <th>Reference contrat</th>
-                    <th>Date de signature </th>
-                    <th>Date du Contrat </th>
-                    <th>Bailleur</th>
-                    <th>Locataire</th>
-                    <th>Article loué</th>
-                    <th>Loyer mensuel TTC </th>
+                    <th>ID</th>
+                    <th>Libellé</th>
                     <th>Action</th>
                 </tr>
                  
@@ -45,12 +40,6 @@
                                   </a>
                                   <a href="{% url 'baux:contrat_delete' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
                                     <i class="bx bx-trash me-1"></i>Supprimer
-                                  </a>
-                                  <a href="{% url 'baux:contrat_update' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
-                                    <i class="bx bx-trash me-1"></i>activé
-                                  </a>
-                                  <a href="{% url 'baux:contrat_update' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
-                                    <i class="bx bx-trash me-1"></i>resilié
                                   </a>
                                   <a href="{% url 'baux:contrat_print' score.id %}" class="dropdown-item">
                                     <i class="bx bx-printer me-1"></i>Imprimer

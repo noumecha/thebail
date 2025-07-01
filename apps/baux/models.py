@@ -91,6 +91,17 @@ STATUT_PAY = (
     ('Soumis à l\'impot', 'Soumis à l\'impot'),
     ('Revisitable à la hausse', 'Revisitable à la hausse'),
 )
+NATURE_CONTRAT = (
+    ('Contrat initial', 'Contrat initial'),
+    ('Avenant', 'Avenant')
+)
+DEVISES = (
+    ('XAF', 'XAF'),
+    ('EUR', 'EUR'),
+    ('USD', 'USD'),
+    ('XOF', 'XOF'),
+    ('YEN', 'YEN')
+)
 
 class Exercice(models.Model):
     annee = models.IntegerField(unique=True)
@@ -298,28 +309,35 @@ class Banques(models.Model):
         else:
             return f" {self.sigle} "
 
+# type contrat model
+class TypeContrat(models.Model):
+    Libelle = models.CharField(max_length=500)
+    # return text
+    def __str__(self):
+        return f"Contrat {self.Libelle}"
+
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
     Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
     Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name= "immeuble")
-    #Immeubles =  models.ManyToManyField(Immeubles, blank=True)
+    TypeContrat = models.ForeignKey(TypeContrat, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
     Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "beneficiaire")
     Duree_Contrat = models.CharField(max_length=10, null=False)
     Signataire = models.CharField(max_length=50, null=False)
+    #FonctionSignataire = models.CharField(max_length=50, null=False)
+    Devise = models.CharField(choices=DEVISES, max_length=1, null=True)
     Date_Signature = models.DateField(null=True)
     Date_Debut = models.DateField(null=True)
     Ref_contrat = models.CharField(max_length=50, null=True)
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True) 
-    #Montant_TTC_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Montant_Taxe_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    #Banque = models.CharField(max_length=50, null=True)
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
     RIB = models.CharField(max_length=26, null=True)
-    #Imposable = models.CharField(max_length=255, choices=STATUT_PAY, null=True)
-    Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True) 
-    #Nom_CF = models.CharField(max_length=50, null=True)
-    #Date_visa_CF = models.DateField(null=True)
+    statut_contrat = models.CharField(max_length=26, null=True, default="actif") # actif or resilié
+    nature_contrat = models.CharField(max_length=255, choices=NATURE_CONTRAT, null=True)
+    Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True)
     Etat = models.BooleanField(null=True, blank=True)
     observation = models.CharField(max_length=200)
     Date_creation = models.DateTimeField(auto_now_add=True)

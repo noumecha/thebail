@@ -17,6 +17,7 @@ urlpatterns = [
     #path("contrat/add/", views.contrat, name='contrat'),
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
+    path("contrat/types/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_types'),
     #path("contrat/print/<int:pk>/", ContratView.as_view(template_name="baux/docs/contrat_doc.html"), name='contrat_print'),
     path("contrat/print/<int:pk>/", ContratView.print_contrat, name='contrat_print'),
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
@@ -41,6 +42,6 @@ urlpatterns = [
     # Statistiques : 
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
     # collecte : 
-    path('collecte/', CollecteView.as_view([LocatairesForm,AccessoiresForm, BailleursForm]), name='collecte'),
+    path('collecte/add/', CollecteView.as_view([LocatairesForm,AccessoiresForm, BailleursForm]), name='collecte'),
 
 ]

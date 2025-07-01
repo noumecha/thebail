@@ -433,12 +433,16 @@ class ContratsForm(forms.ModelForm):
     class Meta:
         model = Contrats
 
-        fields = ( 'Bailleur', 'Locataire','Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat','Periodicite_Reglement', 
-                'Administration_beneficiaire', 'Montant_Charges_Mensuel','Visa_controlleur','Montant_Nap_Mensuel', 'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable' )
+        fields = ( 'Bailleur', 'Locataire','Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
+            'Periodicite_Reglement','Administration_beneficiaire', 'Montant_Charges_Mensuel','Visa_controlleur','Montant_Nap_Mensuel',
+            'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable', 'statut_contrat', 'TypeContrat', 'nature_contrat'
+            'Montant_Taxe_Mensuel', 'Devise'
+        )
         labels = {
             "Bailleur": "Bailleur ",  
             "Locataire": "Locataire",  
             "Immeubles": "Imeubles Loués",
+            "TypeContrat" : "Type du Contrat",
             "Administration_beneficiaire" : "Administration bénéficiaire",  
             "Duree_Contrat":" Durée du Contrat", 
             "Signataire":" Autorité Signataire du contrat",
@@ -449,7 +453,11 @@ class ContratsForm(forms.ModelForm):
             "Montant_Charges_Mensuel":" Montant des Charges Mensuel",
             "Montant_Nap_Mensuel":"Montant LOYER Mensuel",  
             "Banque":" LIBELLE DE LA BANQUE",
-            "RIB":"RIB",  
+            "RIB":"RIB",
+            "statut_contrat":"Statut du contrat",
+            "nature_contrat" : "Nature du Contrat",
+            "Devise" : "Devise",
+            "Montant_taxe_mensuel" : "Montant des taxes mensuelles",
             "Type_location":"Type de location",
             "observation" : 'Observation',
             'Soumis_impot' : 'Soumis à l\'impôt',
