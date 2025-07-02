@@ -142,7 +142,8 @@ class Bailleurs(models.Model):
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Bailleur N° {self.id} : {self.Nom_prenom} "
+        name = self.Nom_prenom if self.Nom_prenom else self.Raison_social
+        return f"Bailleur N° {self.id} : {name}"
 
 class Locataires(models.Model):
     Intitule = models.CharField(max_length=50)
@@ -285,7 +286,7 @@ class Ayant_droits (models.Model):
 class Accessoires(models.Model):
     Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name='Immeubles')
     Libelle = models.CharField(max_length=255, blank=True, null=True)
-    Quantite = models.IntegerField()
+    Quantite = models.IntegerField(blank=True, null=True)
 
 class Banques(models.Model):
     codeBanque = models.CharField(max_length=255, blank=True, null=True)
@@ -310,8 +311,10 @@ class Banques(models.Model):
             return f" {self.sigle} "
 
 # type contrat model
-class TypeContrat(models.Model):
-    Libelle = models.CharField(max_length=500)
+class TypeContrats(models.Model):
+    libelle = models.CharField(max_length=500)
+    description = models.TextField(blank=True, null=True)
+
     # return text
     def __str__(self):
         return f"Contrat {self.Libelle}"
@@ -320,18 +323,19 @@ class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
     Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
     Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name= "immeuble")
-    TypeContrat = models.ForeignKey(TypeContrat, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
+    TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
     Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "beneficiaire")
     Duree_Contrat = models.CharField(max_length=10, null=False)
     Signataire = models.CharField(max_length=50, null=False)
     #FonctionSignataire = models.CharField(max_length=50, null=False)
-    Devise = models.CharField(choices=DEVISES, max_length=1, null=True)
+    Devise = models.CharField(choices=DEVISES, max_length=5, null=True)
     Date_Signature = models.DateField(null=True)
     Date_Debut = models.DateField(null=True)
     Ref_contrat = models.CharField(max_length=50, null=True)
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True) 
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Taxe_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Rabattement = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
     RIB = models.CharField(max_length=26, null=True)
@@ -360,8 +364,8 @@ class Avenants (models.Model):
     Montant_TTC_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Banque = models.CharField(max_length=50)
-    Compte_Bancaire = models.CharField(max_length=50)
+    Banque = models.CharField(max_length=50, null=True, blank=True)
+    Compte_Bancaire = models.CharField(max_length=50, null=True, blank=True)
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True) 
     Nom_CF = models.CharField(max_length=50)
     Date_visa_CF = models.DateField(null=True)

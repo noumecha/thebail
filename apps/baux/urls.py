@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import CollecteView,HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from .views import TypeContratView,CollecteView,HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm
 
 app_name = 'baux'
@@ -9,15 +9,17 @@ urlpatterns = [
     #path("bailleur/add/", views.bailleur, name='bailleur'),
     path("bailleur/add/", BailleurView.as_view(template_name="baux/bailleur.html"), name='bailleur'),
     path("bailleur/list/", BailleurView.as_view(template_name="baux/bailleur_list.html"), name='bailleur_list'),
+    path('bailleur-form/', views.bailleur_form_view, name='bailleur_form'), # for modal purpose
     #path("immeuble/add/", views.immeuble, name='immeuble'),
     path("immeuble/add/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble'),
     path("immeuble/list/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
+    path('immeuble-form/', views.immeuble_form_view, name='immeuble_form'), # for modal purpose
     #path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     #path("contrat/add/", views.contrat, name='contrat'),
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
-    path("contrat/types/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_types'),
+    path("contrat/types/", TypeContratView.as_view(template_name="baux/type_contrat_list.html"), name='type_contrat_list'),
     #path("contrat/print/<int:pk>/", ContratView.as_view(template_name="baux/docs/contrat_doc.html"), name='contrat_print'),
     path("contrat/print/<int:pk>/", ContratView.print_contrat, name='contrat_print'),
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),

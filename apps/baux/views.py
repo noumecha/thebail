@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView, CreateView, DeleteView, UpdateView, ListView
+from django.views.generic import TemplateView, CreateView, DeleteView, UpdateView, ListView, View
+from django.views.decorators.http import require_POST
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from web_project import TemplateLayout
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.template.loader import render_to_string
-from .forms import LocatairesForm,AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
+from .forms import LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
+from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.http import FileResponse
@@ -201,6 +203,25 @@ class BailleurView(TemplateView):
         context['form'] = form
         return render(request, 'baux/bailleur_list.html', context)
 
+# for modal purpose        
+def bailleur_form_view(request):
+    if request.method == "POST":
+        form = BailleursForm(request.POST)
+        if form.is_valid():
+            bailleur = form.save()
+            return JsonResponse({
+                'success': True,
+                'id': bailleur.id,
+                'text': str(bailleur)
+            })
+        else:
+            html = render_to_string('baux/partials/bailleur_modal_form.html', {'form': form}, request=request)
+            return JsonResponse({'success': False, 'html': html})
+    else:
+        form = BailleursForm()
+        html = render_to_string('baux/partials/bailleur_modal_form.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
+
 class ImmeubleView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
@@ -230,36 +251,26 @@ class ImmeubleView(TemplateView):
             context["form"] = immeuble_form
             context["accessoire_form"] = accessoire_form
             return self.render_to_response(context)
-
-    """def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        
+# for modal purpose        
+def immeuble_form_view(request):
+    if request.method == "POST":
+        form = ImmeublesForm(request.POST)
+        if form.is_valid():
+            immeuble = form.save()
+            return JsonResponse({
+                'success': True,
+                'id': immeuble.id,
+                'text': str(immeuble)
+            })
+        else:
+            html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)
+            return JsonResponse({'success': False, 'html': html})
+    else:
         form = ImmeublesForm()
-        immeubleList = Immeubles.objects.all()
-        context['immeubleList'] = immeubleList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = ImmeublesForm(request.POST)
-                else:
-                    immeubleList = Immeubles.objects.get(id=pk)
-                    form = ImmeublesForm(request.POST, instance=immeubleList)
-                if form.is_valid():
-                    form.save()
-                form = ImmeublesForm()
-                accesoire_form = AccessoiresForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                immeubleList = Immeubles.objects.get(id=pk)
-                immeubleList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                immeubleList = Immeubles.objects.get(id=pk)
-                form = ImmeublesForm(instance=immeubleList)
-        context['form'] = form
-        return render(request, 'baux/immeuble.html', context)"""
-
+        html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
+    
 #Contrat Class : 
 class ContratUpdateView(UpdateView):
     model = Contrats
@@ -281,7 +292,38 @@ class ContratDeleteView(DeleteView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["form"] = ContratsForm()
         return context
+    
+# for adding contrat type
+class TypeContratView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["typeContratList"] = TypeContrats.objects.all()
+        pk = kwargs.get('pk', None)
+        if pk:
+            type_contrat = get_object_or_404(TypeContrats, pk=pk)
+            form = TypeContratsForm(instance=type_contrat)
+        else:
+            form = TypeContratsForm()
+        context["form"] = form
+        context["is_update"] = pk is not None
+        return context
 
+    def post(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        if pk:
+            type_contrat = get_object_or_404(TypeContrats, pk=pk)
+            type_contrat_form = TypeContratsForm(request.POST, instance=type_contrat)
+        else:
+            type_contrat_form = TypeContratsForm(request.POST)
+
+        if type_contrat_form.is_valid():
+            type_contrat_form.save()
+            return redirect('baux:type_contrat_list')
+        else:
+            context = self.get_context_data(pk=pk)
+            context["form"] = type_contrat_form
+            return self.render_to_response(context)
+    
 class ContratView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):

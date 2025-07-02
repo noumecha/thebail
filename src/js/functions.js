@@ -21,7 +21,7 @@ $(document).ready(function () {
     }
   });
   // bailleur
-  $('#id_Type_personne').on('input', function () {
+  $(document).on('input', '#id_Type_personne', function () {
     var type_personne = $(this).val();
     console.log('type_personne:', type_personne);
     $('.bailleur_nom_prenom').show();
@@ -76,7 +76,7 @@ $(document).ready(function () {
     }
   });
   // bailleur change identification type (CNI or PASSEPORT)
-  $('#id_Type_id_bailleur').on('input', function () {
+  $(document).on('input', '#id_Type_id_bailleur', function () {
     var type_id_bailleur = $(this).val();
     console.log('type_id_bailleur:', type_id_bailleur);
     $('.bailleur_num_cni').hide();

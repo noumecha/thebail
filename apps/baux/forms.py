@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Accessoires, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
+from .models import Accessoires, Locataires,TypeContrats, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
+from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field
 
@@ -428,6 +429,30 @@ class AccessoiresForm(forms.ModelForm):
             ),
         )
 
+# contrats forms 
+class TypeContratsForm(forms.ModelForm):
+    class Meta:
+        model = TypeContrats
+
+        fields = ('libelle', 'description')
+        labels = {
+            'libelle': "Type de contrat",
+            'description': "Description du type de contrat",
+        }
+        widgets = {
+          'description': forms.Textarea(attrs={'rows':20, 'cols':10}),
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super(TypeContratsForm, self).__init__(*args, **kwargs)
+        self.helper =  FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column(FloatingField("libelle"), css_class='form-group col-md-12 mb-0'),
+                Column(FloatingField("description"), css_class='form-group col-md-12 mb-0'),
+                css_class="form-row",
+            ),
+        )
 
 class ContratsForm(forms.ModelForm):
     class Meta:
@@ -435,8 +460,8 @@ class ContratsForm(forms.ModelForm):
 
         fields = ( 'Bailleur', 'Locataire','Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
             'Periodicite_Reglement','Administration_beneficiaire', 'Montant_Charges_Mensuel','Visa_controlleur','Montant_Nap_Mensuel',
-            'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable', 'statut_contrat', 'TypeContrat', 'nature_contrat'
-            'Montant_Taxe_Mensuel', 'Devise'
+            'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable', 'statut_contrat', 'TypeContrat', 'nature_contrat',
+            'Montant_Taxe_Mensuel', 'Devise', 'Rabattement'
         )
         labels = {
             "Bailleur": "Bailleur ",  
@@ -457,7 +482,8 @@ class ContratsForm(forms.ModelForm):
             "statut_contrat":"Statut du contrat",
             "nature_contrat" : "Nature du Contrat",
             "Devise" : "Devise",
-            "Montant_taxe_mensuel" : "Montant des taxes mensuelles",
+            "Montant_Taxe_Mensuel" : "Montant des taxes mensuelles",
+            "Rabattement" : "Rabattement",
             "Type_location":"Type de location",
             "observation" : 'Observation',
             'Soumis_impot' : 'Soumis à l\'impôt',
@@ -481,15 +507,41 @@ class ContratsForm(forms.ModelForm):
                 Fieldset(
                     "Caractéristiques du contrat",
                     Row(
+                        Column(FloatingField("TypeContrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("nature_contrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_contrat"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_Debut"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Duree_Contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Immeubles"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(
+                            # FloatingField("Immeubles"),
+                            HTML("""
+                                <label for="id_Immeubles">Ajouter un Immeuble</label>
+                                <div class="d-flex align-items-center">
+                                    {{ form.Immeubles }}
+                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addImmeubleModal">
+                                        + Ajouter
+                                    </button>
+                                </div>
+                            """),
+                            css_class='form-group col-md-12 mb-3'
+                        ),
                         Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Bailleur"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ref_contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(
+                            # FloatingField("Bailleur"), 
+                            HTML(""" 
+                                <label for="id_Bailleur">Ajouter un bailleur</label>
+                                <div class="d-flex align-items-center">
+                                    {{ form.Bailleur }}
+                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addBailleurModal">
+                                        + Ajouter
+                                    </button>
+                                </div>
+                            """),
+                            css_class='form-group col-md-6 mb-2'
+                        ),
                         Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
@@ -501,11 +553,11 @@ class ContratsForm(forms.ModelForm):
                 Fieldset(
                     "Eléments financiers",
                     Row(
-                        Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("RIB"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Nap_Mensuel"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Taxe_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Devise"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Rabattement"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             Field('Soumis_impot'),
                             css_class='form-group col-md-2 mb-0 pt-3'
@@ -518,6 +570,9 @@ class ContratsForm(forms.ModelForm):
                             Field('Visa_controlleur'),
                             css_class='form-group col-md-2 mb-0 pt-3'
                         ),
+                        Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("RIB"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
                     ),
                     css_class="line__text border p-2 pt-4"
                 ),

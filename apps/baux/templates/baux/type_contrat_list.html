@@ -1,0 +1,97 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Contrat{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="card mt-3 p-3">
+        <div class="card-header">
+          <div class="row">
+              <div class="col-md-12 col-lg-6">
+                  <h5 class="">Listes des types de contrats</h5>
+                  <p class="text-sm">
+                    Ajouter, Supprimer, Mettre à jour des types de contrats 
+                  </p>
+              </div>
+              <div class="col-md-12 col-lg-6 text-end">
+                  <button
+                    type="button"
+                    class="btn btn-lg btn-dark btn-primary text-white"
+                    data-bs-toggle="modal"
+                    id="add-button"
+                    data-bs-target="#create-typecontrat-modal"
+                  >
+                    <i class="menu-icon tf-icons bx bx-file"></i> Ajouter
+                  </button>
+              </div>
+          </div>
+        </div>
+        <div > 
+            <table class="table table-sm">
+                <tr>
+                    <th>Libellé</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                {% for type in typeContratList %}
+                  <tr>
+                    {% if form.instance.id == score.id %}
+                      {% include 'baux/saveContrat.html' %}
+                    {% else %}
+                        <td>{{ type.Libelle }}</td>
+                        <td>{{ type.Description }}</td>
+                        <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item primary" href="{% url 'baux:type_contrat_list' score.id %}">
+                                <i class="bx bx-edit-alt me-1"></i>Modifier
+                              </a>
+                              <a href="{% url 'baux:type_contrat_list' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
+                                <i class="bx bx-trash me-1"></i>Supprimer
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+                    {% endif %}
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="3" class="text-center">Aucun type de contrat trouvé.</td>
+                  </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="create-typecontrat-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog">
+        <div class="modal-content p-0">
+          <form id="typeContratForm">
+            {% csrf_token %}
+            <div class="modal-header">
+            <h5 class="modal-title">Ajouter un type de contrat</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="typecontrat-form-content">Chargement...</div>
+            </div>
+            <div class="modal-footer flex-row-reverse">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+            </div>
+            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="{% load 'static/js/type_contrat.js' %}"></script>
+
+{% endblock %}
