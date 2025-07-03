@@ -12,7 +12,6 @@ from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.http import FileResponse
-from weasyprint import HTML
 import tempfile
 import io
 import os
