@@ -5,6 +5,14 @@ $(function() {
         console.log('nature_contrat :', nature_contrat);
     });
 
+    // get strucutre base on the adminstiration value
+    $(document).on('change', '#id_administration_beneficiaire', function () {
+        structreInput = $('#id_structure');
+        $.get('/structures/', function(data) {
+            console.log(data);
+        })
+    })
+
     // immeuble 
     initAjaxModal("#addImmeubleModal", "#immeuble-form-content", "#immeubleForm",  "/immeuble-form/", "#id_Immeubles")
     // bailleur

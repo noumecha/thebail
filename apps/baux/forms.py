@@ -458,17 +458,18 @@ class ContratsForm(forms.ModelForm):
     class Meta:
         model = Contrats
 
-        fields = ( 'Bailleur', 'Locataire','Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
+        fields = ( 'Bailleur', 'Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
             'Periodicite_Reglement','Administration_beneficiaire', 'Montant_Charges_Mensuel','Visa_controlleur','Montant_Nap_Mensuel',
             'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable', 'statut_contrat', 'TypeContrat', 'nature_contrat',
-            'Montant_Taxe_Mensuel', 'Devise', 'Rabattement'
+            'Montant_Taxe_Mensuel', 'Devise', 'Rabattement', 'Structure', #Locataire
         )
         labels = {
             "Bailleur": "Bailleur ",  
-            "Locataire": "Locataire",  
+            #"Locataire": "Locataire",  
             "Immeubles": "Imeubles Loués",
             "TypeContrat" : "Type du Contrat",
-            "Administration_beneficiaire" : "Administration bénéficiaire",  
+            "Administration_beneficiaire" : "Locataire",
+            "Structure" : "Structure",  
             "Duree_Contrat":" Durée du Contrat", 
             "Signataire":" Autorité Signataire du contrat",
             "Date_Signature":" Date de Signature du contrat",  
@@ -527,7 +528,9 @@ class ContratsForm(forms.ModelForm):
                             """),
                             css_class='form-group col-md-12 mb-3'
                         ),
-                        Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Structure"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             # FloatingField("Bailleur"), 
@@ -542,7 +545,6 @@ class ContratsForm(forms.ModelForm):
                             """),
                             css_class='form-group col-md-6 mb-2'
                         ),
-                        Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("statut_contrat"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),

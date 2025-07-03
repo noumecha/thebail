@@ -23,6 +23,7 @@ urlpatterns = [
     path("contrat/update/<int:pk>/", TypeContratView.as_view(template_name="baux/type_contrat_list.html"), name='type_contrat_update'),
     path("contrat/delete/<int:pk>/", TypeContratView.as_view(template_name="baux/type_contrat_list.html"), name='type_contrat_delete'),
     path("contrat/types/form/", views.typecontrat_form_view, name='type_contrat_form'),  # for modal purpose
+    path("/structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration
     #path("contrat/print/<int:pk>/", ContratView.as_view(template_name="baux/docs/contrat_doc.html"), name='contrat_print'),
     path("contrat/print/<int:pk>/", ContratView.print_contrat, name='contrat_print'),
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),

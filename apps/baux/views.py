@@ -8,7 +8,7 @@ from web_project import TemplateLayout
 from django.template.loader import get_template, render_to_string
 from django.template.loader import render_to_string
 from .forms import LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
+from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.http import FileResponse
@@ -270,7 +270,16 @@ def immeuble_form_view(request):
         form = ImmeublesForm()
         html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
-    
+
+# filtering structure base on administration
+def get_structures(request):
+    if request.method == 'GET':
+        administration_id = request.GET.get('administration_id')
+        structures = Structures.objects.filter(Administration_id=administration_id)
+        structure_list = [{'id': structure.id, 'text': structure.LibelleFr} for structure in structures]
+        return JsonResponse(structure_list, safe=False)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 #Contrat Class : 
 class ContratUpdateView(UpdateView):
     model = Contrats
@@ -377,6 +386,7 @@ class ContratView(TemplateView):
         # fetch content from db and load template context
         contrat = get_object_or_404(Contrats, pk=pk)
         context = {"contrat" : contrat}
+        print(context['contrat'])
         html = render_to_string("baux/docs/contrat_doc.html", context)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="f"contrat_{contrat.Ref_contrat}".pdf"'

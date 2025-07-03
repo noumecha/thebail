@@ -173,7 +173,14 @@ class Administrations (models.Model):
     code = models.CharField(max_length=2, null=True)
 
     def __str__(self):
-        return f"Administration : {self.AbreviationFr} "
+        return f"{self.code} - {self.AbreviationFr} "
+
+class Structures (models.Model):
+    LibelleFr = models.CharField(max_length=50)
+    Administration = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=False, related_name="administration")
+
+    def __str__(self):
+        return f"Structure : {self.AbreviationFr} "
 
 class Normes (models.Model):
     DesignationFr = models.CharField(max_length=50)
@@ -329,10 +336,11 @@ class TypeContrats(models.Model):
 
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
-    Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
+    #Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
     Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name= "immeuble")
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
     Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "beneficiaire")
+    Structure = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "structure")
     Duree_Contrat = models.CharField(max_length=10, null=False)
     Signataire = models.CharField(max_length=50, null=False)
     #FonctionSignataire = models.CharField(max_length=50, null=False)
