@@ -39,25 +39,27 @@
                 </tr>
                 {% for type in typeContratList %}
                   <tr>
-                    {% if form.instance.id == score.id %}
-                      {% include 'baux/saveContrat.html' %}
-                    {% else %}
-                        <td>{{ type.Libelle }}</td>
-                        <td>{{ type.Description }}</td>
-                        <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item primary" href="{% url 'baux:type_contrat_list' score.id %}">
-                                <i class="bx bx-edit-alt me-1"></i>Modifier
-                              </a>
-                              <a href="{% url 'baux:type_contrat_list' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
-                                <i class="bx bx-trash me-1"></i>Supprimer
-                              </a>
-                            </div>
-                          </div>
-                        </td>
-                    {% endif %}
+                    <td>{{ type.libelle }}</td>
+                    <td>
+                      {% if type.description %}
+                        {{ type.description }}
+                      {% else %}
+                        -
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="dropdown">
+                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item primary" href="{% url 'baux:type_contrat_update' type.id %}">
+                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                          </a>
+                          <a href="{% url 'baux:type_contrat_delete' type.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
+                            <i class="bx bx-trash me-1"></i>Supprimer
+                          </a>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
                 {% empty %}
                   <tr>
@@ -74,8 +76,8 @@
           <form id="typeContratForm">
             {% csrf_token %}
             <div class="modal-header">
-            <h5 class="modal-title">Ajouter un type de contrat</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              <h5 class="modal-title">Ajouter un type de contrat</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div id="typecontrat-form-content">Chargement...</div>
@@ -92,6 +94,4 @@
         </div>
       </div>
     </div>
-    <script src="{% load 'static/js/type_contrat.js' %}"></script>
-
 {% endblock %}

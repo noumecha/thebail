@@ -46,11 +46,13 @@
                                   <a href="{% url 'baux:contrat_delete' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
                                     <i class="bx bx-trash me-1"></i>Supprimer
                                   </a>
-                                  <a href="{% url 'baux:contrat_update' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
-                                    <i class="bx bx-trash me-1"></i>activé
+                                  <a href="{% url 'baux:contrat_update' score.id %}" 
+                                    class="dropdown-item {% if score.statut_contrat == "a" %}disabled{% endif %}" data-toggle="modal" data-target="#exampleModal">
+                                    <i class="bx bx-save me-1"></i>Activé
                                   </a>
-                                  <a href="{% url 'baux:contrat_update' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
-                                    <i class="bx bx-trash me-1"></i>resilié
+                                  <a href="{% url 'baux:contrat_update' score.id %}" 
+                                    class="dropdown-item {% if score.statut_contrat == "r" %}disabled{% endif %}" data-toggle="modal" data-target="#exampleModal">
+                                    <i class="bx bx-trash me-1"></i>Resilié
                                   </a>
                                   <a href="{% url 'baux:contrat_print' score.id %}" class="dropdown-item">
                                     <i class="bx bx-printer me-1"></i>Imprimer

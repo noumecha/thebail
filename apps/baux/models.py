@@ -47,6 +47,13 @@ PERIODICITE_LOYER = (
         (str(Semestriel), '3 - Semestriellement'),
         (str(Annuel), '4 - Annuellement'),
     )
+ACTIF = 'A'
+RESILIE = 'R'
+STATUT_CONTRAT = (
+    ('', 'Choisir le statut du contrat'),
+    (str(ACTIF), '1 - Actif'),
+    (str(RESILIE), '2 - Résilié'),
+)
 
 M= 'MANDATE'
 N = 'NON_MANDATE'
@@ -317,7 +324,8 @@ class TypeContrats(models.Model):
 
     # return text
     def __str__(self):
-        return f"Contrat {self.Libelle}"
+        libelle = self.libelle.upper()
+        return f"Contrat {libelle}"
 
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
@@ -339,7 +347,7 @@ class Contrats (models.Model):
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
     RIB = models.CharField(max_length=26, null=True)
-    statut_contrat = models.CharField(max_length=26, null=True, default="actif") # actif or resilié
+    statut_contrat = models.CharField(choices=STATUT_CONTRAT, max_length=1, null=True)
     nature_contrat = models.CharField(max_length=255, choices=NATURE_CONTRAT, null=True)
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True)
     Etat = models.BooleanField(null=True, blank=True)

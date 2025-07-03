@@ -1,50 +1,34 @@
 $(function () {
+    console.log('Type contrat JS loaded');
     const modal = new bootstrap.Modal($('#create-typecontrat-modal')[0]);
     const formContainer = $('#typecontrat-form-content');
-    const form = $('#typeContratForm');
     const successAlert = $('#modal-form-alert-success');
     const errorAlert = $('#modal-form-alert-errors');
 
-    // Charger formulaire (création ou update)
-    $(document).on('click', '[data-action="open-typecontrat-modal"]', function () {
-        const url = $(this).data('url');
-
-        $.get(url, function (data) {
-            formContainer.html(data);
-            modal.show();
+    // load form with data
+    $(document).on('click', '[data-bs-target="#create-typecontrat-modal"]', function () {
+        $.get("/contrat/types/form/", function (data) {
+            formContainer.html(data.html);
         });
     });
-
-    // Soumettre le formulaire (create/update)
-    form.on('submit', function (e) {
+    // submit the form
+    $(document).on('submit', '#typeContratForm', function (e) {
         e.preventDefault();
-
-        const actionUrl = form.find('form').attr('action') || "{% url 'type_contrat_create_form' %}";
-        const formData = form.find('form').serialize();
-
+        const form = $(this);
+        const formData = form.serialize();
+        // send ajax request
         $.ajax({
-            url: actionUrl,
+            url: "/contrat/types/form/",
             type: 'POST',
             data: formData,
             success: function (data) {
                 if (data.success) {
-                    location.reload(); // Ou mettre à jour le DOM via JS
+                    window.location.reload();
+                    modal.hide();
+                    successAlert.removeClass('d-none').text(data.message);
                 } else {
-                    formContainer.html(data.html);
+                    console.log("error happen", data);
                 }
-            }
-        });
-    });
-
-    // Supprimer
-    $(document).on('click', '.delete-typecontrat', function () {
-        if (!confirm("Voulez-vous vraiment supprimer ce type de contrat ?")) return;
-
-        const url = $(this).data('url');
-
-        $.post(url, {'csrfmiddlewaretoken': '{{ csrf_token }}'}, function (data) {
-            if (data.success) {
-                location.reload(); // Ou retirer la ligne du DOM
             }
         });
     });

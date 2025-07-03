@@ -543,6 +543,7 @@ class ContratsForm(forms.ModelForm):
                             css_class='form-group col-md-6 mb-2'
                         ),
                         Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("statut_contrat"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"

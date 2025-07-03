@@ -1,5 +1,4 @@
 $(function() {
-    console.log("contrat js loading...")
     // display and undisplay field base on nature field value
     $(document).on('change', '#id_nature_contrat', function () {
         var nature_contrat = $(this).val();

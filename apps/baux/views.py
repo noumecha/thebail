@@ -323,6 +323,24 @@ class TypeContratView(TemplateView):
             context = self.get_context_data(pk=pk)
             context["form"] = type_contrat_form
             return self.render_to_response(context)
+
+def typecontrat_form_view(request):
+    if request.method == "POST":
+        form = TypeContratsForm(request.POST)
+        if form.is_valid():
+            typecontrat = form.save()
+            return JsonResponse({
+                'success': True,
+                'id': typecontrat.id,
+                'text': str(typecontrat)
+            })
+        else:
+            html = render_to_string('baux/partials/type_contrat_form.html', {'form': form}, request=request)
+            return JsonResponse({'success': False, 'html': html})
+    else:
+        form = TypeContratsForm()
+        html = render_to_string('baux/partials/type_contrat_form.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
     
 class ContratView(TemplateView):
     #predefined functiion
