@@ -1,20 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView, CreateView, DeleteView, UpdateView, ListView, View
-from django.views.decorators.http import require_POST
-from django.views.generic.edit import FormView
+from django.views.generic import TemplateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from web_project import TemplateLayout
-from django.template.loader import get_template, render_to_string
+from django.template.loader import render_to_string
 from django.template.loader import render_to_string
 from .forms import LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures
-from reportlab.pdfgen import canvas
+from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures
 from django.http import HttpResponse
-from django.http import FileResponse
-import tempfile
-import io
-import os
 import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
 
