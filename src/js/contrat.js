@@ -6,11 +6,34 @@ $(function() {
     });
 
     // get strucutre base on the adminstiration value
-    $(document).on('change', '#id_administration_beneficiaire', function () {
-        structreInput = $('#id_structure');
-        $.get('/structures/', function(data) {
-            console.log(data);
-        })
+    $('#id_Administration_beneficiaire').select2();
+    $('#id_Structure').select2({
+        placeholder : "Selectionnez une structure",
+        allowClear: true,
+    })
+    $(document).on('change', '#id_Administration_beneficiaire', function () {
+        let adminId = $(this).val();
+        console.log('Administration ID:', adminId);
+        $('#id_Structure').empty().trigger('change');
+        if (adminId) {
+            $.ajax({
+                url: '/structures/',
+                data: {
+                    "administration_id" : adminId
+                },
+                success: function(data) {
+                    $('#id_Structure').append('<option value="">Selectionnez une structure</option>');
+                    data.forEach(function(item) {
+                        let newOption = new Option(item.text, item.id, false, false);
+                        $('#id_Structure').append(newOption);
+                    });
+                    $('#id_Structure').trigger('change');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching structures:', error);
+                }
+            });
+        }
     })
 
     // immeuble 
@@ -20,7 +43,7 @@ $(function() {
 
     // modularize code : 
     function initAjaxModal(modalId, formnContainerId, formId, fetchUrl, selectItemId = null) {
-        const modal = new bootstrap.Modal($(modalId)[0]);
+        const modal = $(modalId);
         const formContainer = $(formnContainerId);
         const selectContainer = $(selectItemId);
 

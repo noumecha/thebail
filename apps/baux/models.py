@@ -180,7 +180,7 @@ class Structures (models.Model):
     Administration = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=False, related_name="administration")
 
     def __str__(self):
-        return f"Structure : {self.AbreviationFr} "
+        return f"Structure : {self.LibelleFr} "
 
 class Normes (models.Model):
     DesignationFr = models.CharField(max_length=50)

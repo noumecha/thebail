@@ -528,8 +528,8 @@ class ContratsForm(forms.ModelForm):
                             """),
                             css_class='form-group col-md-12 mb-3'
                         ),
-                        Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Structure"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Structure"), css_class='form-group col-md-12 mb-0'),
                         #Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
                         Column(

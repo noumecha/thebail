@@ -6,7 +6,7 @@ from web_project import TemplateLayout
 from django.template.loader import render_to_string
 from django.template.loader import render_to_string
 from .forms import LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures
+from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
 from django.http import HttpResponse
 import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
@@ -267,9 +267,15 @@ def immeuble_form_view(request):
 def get_structures(request):
     if request.method == 'GET':
         administration_id = request.GET.get('administration_id')
-        structures = Structures.objects.filter(Administration_id=administration_id)
-        structure_list = [{'id': structure.id, 'text': structure.LibelleFr} for structure in structures]
-        return JsonResponse(structure_list, safe=False)
+        if not administration_id:
+            return JsonResponse({'error': 'Aucun locataire selectionné'}, status=400)
+        try:
+            administration_id = int(administration_id)
+            structures = Structures.objects.filter(Administration=administration_id)
+            structure_list = [{'id': structure.id, 'text': structure.LibelleFr} for structure in structures]
+            return JsonResponse(structure_list, safe=False)
+        except (ValueError, Administrations.DoesNotExist):
+            return JsonResponse({'error': 'ID du locataire incorrect'}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 #Contrat Class : 

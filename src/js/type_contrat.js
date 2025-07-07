@@ -1,6 +1,5 @@
 $(function () {
-    console.log('Type contrat JS loaded');
-    const modal = new bootstrap.Modal($('#create-typecontrat-modal')[0]);
+    const modal = $('#create-typecontrat-modal');
     const formContainer = $('#typecontrat-form-content');
     const successAlert = $('#modal-form-alert-success');
     const errorAlert = $('#modal-form-alert-errors');
