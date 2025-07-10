@@ -173,7 +173,7 @@ class Administrations (models.Model):
     code = models.CharField(max_length=2, null=True)
 
     def __str__(self):
-        return f"{self.code} - {self.AbreviationFr} "
+        return f"locataire/{self.LibelleFr}"
 
 class Structures (models.Model):
     LibelleFr = models.CharField(max_length=50)
@@ -245,12 +245,11 @@ class Immeubles (models.Model):
     Date_Construction = models.DateField(null=True)
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
     Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
-    Type_mur = models.CharField(choices=TYPE_MUR, max_length=255, null=True)
+    Type_mur = models.CharField(blank=True, choices=TYPE_MUR, max_length=255, null=True)
     Couleur = models.CharField(max_length=255,null=True,blank=True)
-    Nombre_de_pieces = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Nombre_d_etage = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Emprise_au_sol = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Nombre_de_pieces = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+    Nombre_d_etage = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+    Emprise_au_sol = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
     Coordonee_gps_latitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Coordonee_gps_longitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Coordonee_gps_altitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
@@ -258,7 +257,7 @@ class Immeubles (models.Model):
     Adresse = models.CharField(max_length=50,null=True)
     Description = models.TextField(blank = True,null= True)
     Localisation = models.ForeignKey(Localisation, on_delete=models.CASCADE, null=True, related_name="localisation")
-    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme")
+    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
     
@@ -341,6 +340,7 @@ class Contrats (models.Model):
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
     Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "beneficiaire")
     Structure = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "structure")
+    Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Duree_Contrat = models.CharField(max_length=10, null=False)
     Signataire = models.CharField(max_length=50, null=False)
     #FonctionSignataire = models.CharField(max_length=50, null=False)
@@ -367,7 +367,7 @@ class Contrats (models.Model):
     Visa_controlleur = models.BooleanField(null=True, blank=True)
     
     def __str__(self):
-        return f" Contrat : {self.Ref_contrat}  entre : {self.Bailleur} et  {self.Locataire} " 
+        return f" Contrat : {self.Ref_contrat}  entre : {self.Bailleur} et  {self.Administration_beneficiaire} " 
 
 class Avenants (models.Model):
     contrat = models.ForeignKey(Contrats, on_delete=models.CASCADE, null=False, related_name= "contrat")

@@ -48,10 +48,12 @@
                 </div>
                 <div class="modal-body">
                     <div id="immeuble-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-succes"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error"></div>
                 </div>
-                <!--div class="modal-footer">
+                <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                </div-->
+                </div>
             </form>
             </div>
         </div>
@@ -64,7 +66,7 @@
                 {% csrf_token %}
                 <div class="modal-header">
                     <h5 class="modal-title" id="addBailleurModalLabel">Ajouter un bailleur</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss></button>
                 </div>
                 <div class="modal-body">
                     <div id="bailleur-form-content">Chargement...</div>

@@ -13,7 +13,6 @@ $(function() {
     })
     $(document).on('change', '#id_Administration_beneficiaire', function () {
         let adminId = $(this).val();
-        console.log('Administration ID:', adminId);
         $('#id_Structure').empty().trigger('change');
         if (adminId) {
             $.ajax({
@@ -37,9 +36,9 @@ $(function() {
     })
 
     // immeuble 
-    initAjaxModal("#addImmeubleModal", "#immeuble-form-content", "#immeubleForm",  "/immeuble-form/", "#id_Immeubles")
+    initAjaxModal("#addImmeubleModal", "#immeuble-form-content", "#immeubleForm",  "/immeuble-partial-form/", "#id_Immeubles")
     // bailleur
-    initAjaxModal("#addBailleurModal", "#bailleur-form-content", "#bailleurForm",  "/bailleur-form/", "#id_Bailleur")
+    initAjaxModal("#addBailleurModal", "#bailleur-form-content", "#bailleurForm",  "/bailleur-partial-form/", "#id_Bailleur")
 
     // modularize code : 
     function initAjaxModal(modalId, formnContainerId, formId, fetchUrl, selectItemId = null) {
@@ -82,13 +81,35 @@ $(function() {
                                 selected: true
                             })
                         );
+                        setMessage(data.message, '#form-success');
                         modal.hide();
-                    } else {
-                        formContainer.html(data.html);
+                        $('.modal-backdrop').remove(); // remove backdrop
+                        formContainer.empty(); // clear the form content
+                    } else {                        
+                        errors = Array.from(Object.entries(data.errors), ([key, value]) => ({
+                            key, value
+                        }))
+                        setMessage(errors, '#form-error');
                     }
                 }
             });
         });
+    }
+
+    // set the success message after form submission is successful
+    function setMessage(msg, id) {
+        const msgBlock = $(id);
+        msgBlock.stop(true, true).empty();
+        if (Array.isArray(msg)) {
+            const list = $('<ul></ul>');
+            msg.forEach((m) => list.append($('<li></li>').text(m.key + ': ' + m.value)));
+            msgBlock.append(list);
+        } else {
+            msgBlock.append($('<p class="text-center mb-0"></p>').text(msg));
+        }
+
+        msgBlock.fadeIn().css('display', 'block');
+        setTimeout(() => msgBlock.fadeOut(), 7000);
     }
 
 })

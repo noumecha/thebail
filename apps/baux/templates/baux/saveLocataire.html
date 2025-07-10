@@ -1,44 +1,5 @@
 {% load crispy_forms_tags %}
-
-{% crispy form%}
-
-<button class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" name="save" value="{{ score.id }}">Enregistrer</button>
-
-
-<!-- 
-
-  'Intitule','NIU','Nom_Prenom_Representant','Num_Cni','Date_delivrance_cni','Type_personne','Observation'
-  <div class="form-group row">
-       <div class="col-md-4">
-         {{ form.Intitule|as_crispy_field }}
-       </div>
-      <div class="col-md-4">
-            {{ form.NIU|as_crispy_field }}
-      </div>
-      <div class="col-md-4">
-      {{ form.Nom_Prenom_Representant|as_crispy_field }}
-     </div>
-  </div>
-    <div class="form-group row">
-       <div class="col-md-4">
-         {{ form.Num_Cni|as_crispy_field }}
-       </div>
-      <div class="col-md-4">
-            {{ form.Date_delivrance_cni|as_crispy_field }}
-      </div>
-      <div class="col-md-4">
-      {{ form.Type_personne|as_crispy_field }}
-     </div>
-  </div>
-
-   <div class="row mt-1 mb-3"> {{ form.Observation|as_crispy_field }}</div>
-  
-
-   ---
-
-   {% crispy form%}
-
-<button class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" name="save" value="{{ score.id }}">Enregistrer</button>
-
-
- -->
+{% crispy form %}
+<button class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" name="save" value="{{ score.id }}">
+  Enregistrer
+</button>

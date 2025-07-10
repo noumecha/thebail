@@ -114,7 +114,6 @@ class CollecteView(SessionWizardView):
 class LocataireView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
-        #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["locatairesList"] = Locataires.objects.all()
         context["form"] = LocatairesForm()
@@ -196,7 +195,7 @@ class BailleurView(TemplateView):
         return render(request, 'baux/bailleur_list.html', context)
 
 # for modal purpose        
-def bailleur_form_view(request):
+def bailleur_partial_form_view(request):
     if request.method == "POST":
         form = BailleursForm(request.POST)
         if form.is_valid():
@@ -245,19 +244,20 @@ class ImmeubleView(TemplateView):
             return self.render_to_response(context)
         
 # for modal purpose        
-def immeuble_form_view(request):
+def immeuble_partial_form_view(request):
     if request.method == "POST":
         form = ImmeublesForm(request.POST)
         if form.is_valid():
             immeuble = form.save()
             return JsonResponse({
                 'success': True,
+                'message': "Immeuble ajouté avec succès",
                 'id': immeuble.id,
                 'text': str(immeuble)
             })
         else:
             html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)
-            return JsonResponse({'success': False, 'html': html})
+            return JsonResponse({'success': False, 'html': html, 'errors': form.errors})
     else:
         form = ImmeublesForm()
         html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)

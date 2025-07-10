@@ -56,6 +56,7 @@ class LocatairesForm(forms.ModelForm):
         self.fields['Num_Cni'].required = False
         self.fields['Date_delivrance_cni'].required = False
           
+# bailleurs form
 class BailleursForm(forms.ModelForm):
 
     class Meta:
@@ -116,6 +117,39 @@ class BailleursForm(forms.ModelForm):
             "Date_delivrance_PassePort_representant" : forms.TextInput(attrs={'type': 'date'}),
         }
 
+    def partial_form(self):
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_tag = False # remove form tags in the modal
+        self.helper.disable_csrf = True # we use default csrf token in the template
+        self.helper.layout = Layout(
+            Row(
+                Fieldset(
+                    "Informations Bailleur",
+                    Row(
+                        Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
+                        Column(FloatingField("Date_creationEnt"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
+                        Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
+                        Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Reference_doc_identification"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Registre_commerce"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
+                        Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_type_id'),  
+                        Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
+                        Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_cni'),
+                        Column(FloatingField("NumPassePort"), css_class='form-group col-md-6 mb-0 bailleur_num_passeport'),
+                        Column(FloatingField("Date_delivrance_PassePort"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_passeport'),
+                        css_class="form-row",
+                    ),
+                    css_class="line__text border p-2 pt-4",
+                ),
+                css_class="p-3 pt-0" 
+            )
+        )
+        return self.helper
+
     def __init__(self, *args, **kwargs):
         super(BailleursForm, self).__init__(*args, **kwargs)   
         self.helper =  FormHelper()
@@ -173,6 +207,7 @@ class BailleursForm(forms.ModelForm):
         self.fields['Adresse_representant'].required = False;self.fields['Type_id_representant'].required = False
 
 
+# localisation form
 class LocalisationForm(forms.ModelForm):
     class Meta:
         model = Localisation
@@ -213,6 +248,7 @@ class LocalisationForm(forms.ModelForm):
         )
         self.helper.form_tag = False;self.fields['Observation'].required = False
 
+# occupants form
 class OccupantsForm(forms.ModelForm):
     class Meta:
         model = Occupants
@@ -281,13 +317,14 @@ class OccupantsForm(forms.ModelForm):
         )
         self.helper.form_tag = False
 
+# immeubles form
 class ImmeublesForm(forms.ModelForm):
     class Meta:
         model = Immeubles
 
         fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF","Couleur",'Element_immeuble',
                    "Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
-                   "Coordonee_gps_Position","Adresse","Type_mur","Description","Localisation","Norme","Nombre_de_pieces","Nombre_d_etage","Superficie_louer","Emprise_au_sol")
+                   "Coordonee_gps_Position","Adresse","Type_mur","Description","Localisation","Norme","Nombre_de_pieces","Nombre_d_etage","Emprise_au_sol")
         labels = {
             "Designation": " Désignation du Bien",
             "Reference_TF": " reference titre foncier (TF)",
@@ -302,7 +339,6 @@ class ImmeublesForm(forms.ModelForm):
             "Couleur" : "Ajouter la couleur",
             "Nombre_de_pieces" : "Nombre total de pieces",
             "Nombre_d_etage" : "Nombre total d'étages",
-            "Superficie_louer" : "Superficie louée",
             "Emprise_au_sol" : "Emprise au sol",
             "Coordonee_gps_latitude" : "Coordonne GPS 1 ",
             "Coordonee_gps_longitude": "Coordonne GPS 2 ",
@@ -319,6 +355,55 @@ class ImmeublesForm(forms.ModelForm):
           'Description' : forms.Textarea(attrs={'rows':4, 'cols':10}),
         }
 
+    def partial_form(self):
+        helper = FormHelper()
+        helper.form_method = 'post'
+        helper.form_tag = False # remove form tags in the modal
+        helper.disable_csrf = True # we use default csrf token in the template
+        helper.layout = Layout(
+            Row(
+                Fieldset(
+                        "Caractéristiques du batiment",
+                        Row(
+                            Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),            
+                            Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),
+                            css_class='form-row'
+                        ),
+                        css_class="line__text border p-2 pt-4"
+                    ),
+                    css_class="p-3 pt-0"
+            ),
+            Row (
+                Fieldset(
+                    "Eléments Fonciers",
+                    Row(
+                        Column(FloatingField("Reference_TF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Superficie"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),   
+                        Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row' 
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0"
+            ),
+            Row(
+                Fieldset(
+                    "Position Géographique",
+                    Row(
+                        Column(FloatingField("Localisation"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row'
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0"
+            ),
+        )
+        return helper
+
     def __init__(self, *args, **kwargs):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
@@ -331,8 +416,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),            
                         Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),              
                         Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-6 mb-0'),               
-                        Column(FloatingField("Nombre_d_etage"), css_class='form-group col-md-6 mb-0'),               
-                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Nombre_d_etage"), css_class='form-group col-md-6 mb-0'),             
                         Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
                         Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
                         Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
@@ -401,7 +485,7 @@ class ImmeublesForm(forms.ModelForm):
         self.fields['Coordonee_gps_longitude'].required = False; self.fields['Coordonee_gps_altitude'].required = False        
         self.fields['Date_Construction'].required = False;self.fields['Coordonee_gps_Position'].required = False   
 
-
+# accessoires forms
 class AccessoiresForm(forms.ModelForm):
     class Meta:
         model = Accessoires
@@ -461,12 +545,13 @@ class ContratsForm(forms.ModelForm):
         fields = ( 'Bailleur', 'Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
             'Periodicite_Reglement','Administration_beneficiaire', 'Montant_Charges_Mensuel','Visa_controlleur','Montant_Nap_Mensuel',
             'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable', 'statut_contrat', 'TypeContrat', 'nature_contrat',
-            'Montant_Taxe_Mensuel', 'Devise', 'Rabattement', 'Structure', #Locataire
+            "Superficie_louer", 'Montant_Taxe_Mensuel', 'Devise', 'Rabattement', 'Structure', #Locataire
         )
         labels = {
             "Bailleur": "Bailleur ",  
             #"Locataire": "Locataire",  
             "Immeubles": "Imeubles Loués",
+            "Superficie_louer" : "Superficie louée",
             "TypeContrat" : "Type du Contrat",
             "Administration_beneficiaire" : "Locataire",
             "Structure" : "Structure",  
@@ -514,7 +599,8 @@ class ContratsForm(forms.ModelForm):
                         Column(FloatingField("Date_Debut"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Duree_Contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),               
+                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             # FloatingField("Immeubles"),
                             HTML("""
