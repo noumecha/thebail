@@ -60,6 +60,11 @@
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
         </li>
+        <li class="menu-item {% if '/immeuble/recensement/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:immeuble_recensement' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Rencensements</div>
+          </a>
+        </li>
       </ul>
     </li>
     <!-- Bailleur -->

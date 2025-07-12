@@ -243,6 +243,13 @@ class ImmeubleView(TemplateView):
             context["accessoire_form"] = accessoire_form
             return self.render_to_response(context)
         
+class RecensementView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['immeubleList'] = Immeubles.objects.all()
+        context["form"] = ImmeublesForm()
+        return context
+    
 # for modal purpose        
 def immeuble_partial_form_view(request):
     if request.method == "POST":

@@ -235,34 +235,43 @@ class Localisation (models.Model):
         return f" {self.arrondissement.departement.Region}/{self.arrondissement.departement}/{self.arrondissement}/{self.Quartier} "
 
 class Immeubles (models.Model):
+    Localisation = models.ForeignKey(Localisation, on_delete=models.CASCADE, null=True, related_name="localisation")
     Designation = models.CharField(max_length=50)
+    Coordonee_gps_latitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Coordonee_gps_longitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Coordonee_gps_altitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Coordonee_gps_Position = models.CharField(choices=POSITION_GPS, max_length=1, null=True) 
+    Adresse = models.CharField(max_length=50,null=True)
+    Date_Construction = models.DateField(null=True)
+    Nombre_de_pieces = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+    Nombre_d_etage = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
     Reference_TF = models.CharField(max_length=50,null=True)
     Nom_prenom_proprietaireTF = models.CharField(max_length=50,null=True)
     Element_immeuble = models.CharField(max_length=50,null=True,blank=True)
     #Accessoires = models.CharField(max_length=50,null=True,blank=True)
     Date_signatureTF = models.DateField(null=True)
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Date_Construction = models.DateField(null=True)
-    Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
-    Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
-    Type_mur = models.CharField(blank=True, choices=TYPE_MUR, max_length=255, null=True)
-    Couleur = models.CharField(max_length=255,null=True,blank=True)
-    Nombre_de_pieces = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
-    Nombre_d_etage = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
-    Emprise_au_sol = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
-    Coordonee_gps_latitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Coordonee_gps_longitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Coordonee_gps_altitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Coordonee_gps_Position = models.CharField(choices=POSITION_GPS, max_length=1, null=True) 
-    Adresse = models.CharField(max_length=50,null=True)
-    Description = models.TextField(blank = True,null= True)
-    Localisation = models.ForeignKey(Localisation, on_delete=models.CASCADE, null=True, related_name="localisation")
-    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
-    Date_creation = models.DateTimeField(auto_now_add=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f" {self.Designation}/{self.Localisation} "
+
+class Recensement(models.Model):
+    Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
+    Numero = models.IntegerField(default=1)
+    Date_creation = models.DateTimeField(auto_now_add=True)
+    # immeuble informations that can be changed 
+    Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
+    Description = models.TextField(blank = True,null= True)
+    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
+    Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
+    Type_mur = models.CharField(blank=True, choices=TYPE_MUR, max_length=255, null=True)
+    Couleur = models.CharField(max_length=255,null=True,blank=True)
+    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
+    Emprise_au_sol = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+
+    def __str__(self):
+        return f"Recensement - {self.Immeuble} - du {self.Date_creation.strftime('%d/%m/%Y')}"
 
 class Occupants (models.Model):
     Administration_tutelle = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "tutelle")
