@@ -234,6 +234,7 @@ class Localisation (models.Model):
     def __str__(self):
         return f" {self.arrondissement.departement.Region}/{self.arrondissement.departement}/{self.arrondissement}/{self.Quartier} "
 
+# immeubles model
 class Immeubles (models.Model):
     Localisation = models.ForeignKey(Localisation, on_delete=models.CASCADE, null=True, related_name="localisation")
     Designation = models.CharField(max_length=50)
@@ -255,7 +256,8 @@ class Immeubles (models.Model):
     def __str__(self):
         return f" {self.Designation}/{self.Localisation} "
 
-class Recensement(models.Model):
+# Recensements model
+class Recensements(models.Model):
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
     Numero = models.IntegerField(default=1)
     Date_creation = models.DateTimeField(auto_now_add=True)
@@ -342,6 +344,7 @@ class TypeContrats(models.Model):
         libelle = self.libelle.upper()
         return f"Contrat {libelle}"
 
+# Contrats model
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
     #Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")

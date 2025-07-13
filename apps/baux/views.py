@@ -5,8 +5,8 @@ from django.http import JsonResponse
 from web_project import TemplateLayout
 from django.template.loader import render_to_string
 from django.template.loader import render_to_string
-from .forms import LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-from .models import Accessoires,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
+from .forms import RecensementsForm, LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
+from .models import Accessoires, Recensements,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
 from django.http import HttpResponse
 import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
@@ -213,6 +213,7 @@ def bailleur_partial_form_view(request):
         html = render_to_string('baux/partials/bailleur_modal_form.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
 
+# immeuble views
 class ImmeubleView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
@@ -244,12 +245,47 @@ class ImmeubleView(TemplateView):
             return self.render_to_response(context)
         
 class RecensementView(TemplateView):
+
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context['immeubleList'] = Immeubles.objects.all()
-        context["form"] = ImmeublesForm()
+        context['recensements'] = Recensements.objects.all()
+        context["form"] = RecensementsForm()
         return context
     
+    def post(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        if pk:
+            recensement = get_object_or_404(Recensements, pk=pk)
+            recensement_form = RecensementsForm(request.POST, instance=recensement)
+        else:
+            recensement_form = RecensementsForm(request.POST)
+
+        if recensement_form.is_valid():
+            recensement_form.save()
+            return redirect('baux:immeuble_recensement')
+        else:
+            context = self.get_context_data(pk=pk)
+            context["form"] = recensement_form
+            return self.render_to_response(context)
+
+def recensement_form_view(request):
+    if request.method == "POST":
+        form = RecensementsForm(request.POST)
+        if form.is_valid():
+            recensement = form.save()
+            return JsonResponse({
+                'success': True,
+                'id': recensement.id,
+                'text': str(recensement)
+            })
+        else:
+            html = render_to_string('baux/partials/recensement_form.html', {'form': form}, request=request)
+            return JsonResponse({'success': False, 'html': html})
+    else:
+        form = RecensementsForm()
+        html = render_to_string('baux/partials/recensement_form.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
+
 # for modal purpose        
 def immeuble_partial_form_view(request):
     if request.method == "POST":
@@ -270,6 +306,7 @@ def immeuble_partial_form_view(request):
         html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
 
+# Contrat Class and views : 
 # filtering structure base on administration
 def get_structures(request):
     if request.method == 'GET':
@@ -285,7 +322,6 @@ def get_structures(request):
             return JsonResponse({'error': 'ID du locataire incorrect'}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-#Contrat Class : 
 class ContratUpdateView(UpdateView):
     model = Contrats
     form_class = ContratsForm
@@ -401,7 +437,7 @@ class ContratView(TemplateView):
         return response
         
 
-# Non-Mandatement Class :
+# Non-Mandatement Class and views :
 class Non_MandatementView(TemplateView):
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))

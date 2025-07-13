@@ -6,7 +6,10 @@ $(function() {
     });
 
     // get strucutre base on the adminstiration value
-    $('#id_Administration_beneficiaire').select2();
+    $('#id_Administration_beneficiaire').select2({
+        placeholder: "Selectionnez une administration",
+        allowClear: true,
+    });
     $('#id_Structure').select2({
         placeholder : "Selectionnez une structure",
         allowClear: true,

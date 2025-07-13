@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Recensement, Accessoires, Locataires,TypeContrats, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
+from .models import Recensements, Accessoires, Locataires,TypeContrats, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
@@ -319,9 +319,9 @@ class OccupantsForm(forms.ModelForm):
         self.helper.form_tag = False
 
 # recensement form
-class RecensementForm(forms.ModelForm):
+class RecensementsForm(forms.ModelForm):
     class Meta:
-        model = Recensement
+        model = Recensements
 
         fields = (
             "Type_immeuble", "Type_construction", "Type_mur", "Couleur", "Emprise_au_sol", "Description", "Norme", "Immeuble"
@@ -342,65 +342,49 @@ class RecensementForm(forms.ModelForm):
           'Description' : forms.Textarea(attrs={'rows':4, 'cols':10}),
         }
 
-        def __init__(self, *args, **kwargs):
-            super(ImmeublesForm, self).__init__(*args, **kwargs)
-            self.helper =  FormHelper()
-            self.helper.layout = Layout(
-                Row(
-                    Fieldset(
-                        "Informations sur l'immeuble",
-                        Row(
-                            Column(FloatingField("Immeuble"), css_class='form-group col-md-12 mb-0'),
-                            Column(FloatingField("Description", css_class="form-group col-md-12 mb-0 mt-1")),
-                            css_class='form-row'
-                        ),
-                        css_class="line__text border p-2 pt-4"
+    def __init__(self, *args, **kwargs):
+        super(RecensementsForm, self).__init__(*args, **kwargs)
+        self.helper =  FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Fieldset(
+                    "Informations sur l'immeuble",
+                    Row(
+                        Column(FloatingField("Immeuble"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Description", css_class="form-group col-md-12 mb-0 mt-1")),
+                        css_class='form-row'
                     ),
-                    css_class="p-3 pt-0"
+                    css_class="line__text border p-2 pt-4"
                 ),
-                Row(
-                    Fieldset(
-                        "Caractéristiques du batiment",
-                        Row(
-                            Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),             
-                            Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
-                            Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
-                            Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
-                            Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
-                            css_class='form-row'
-                        ),
-                        css_class="line__text border p-2 pt-4"
+                css_class="p-3 pt-0"
+            ),
+            Row(
+                Fieldset(
+                    "Caractéristiques du batiment",
+                    Row(
+                        Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
+                        Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
+                        Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),
+                        css_class='form-row'
                     ),
-                    css_class="p-3 pt-0"
+                    css_class="line__text border p-2 pt-4"
                 ),
-                Row (
-                    Fieldset(
-                        "Eléments Fonciers",
-                        Row(
-                            Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),   
-                            css_class='form-row' 
-                        ),
-                        css_class="line__text border p-2 pt-4"
-                    ),
-                    css_class="p-3 pt-0"
-                ),
-                Submit(
-                    "save-recensement",
-                    "Enregistrer",
-                    css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
-                )
-            )
-            self.helper.form_tag = False;self.fields['Coordonee_gps_latitude'].required = False   
-            self.fields['Description'].required = False   
+                css_class="p-3 pt-0"
+            ),
+        )
+        self.fields['Description'].required = False   
 
 # immeubles form
 class ImmeublesForm(forms.ModelForm):
     class Meta:
         model = Immeubles
 
-        fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF","Couleur",'Element_immeuble',
-                   "Superficie","Date_Construction","Type_immeuble","Type_construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
-                   "Coordonee_gps_Position","Adresse","Type_mur","Description","Localisation","Norme","Nombre_de_pieces","Nombre_d_etage","Emprise_au_sol")
+        fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",'Element_immeuble',
+                   "Superficie","Date_Construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
+                   "Coordonee_gps_Position","Adresse","Localisation","Nombre_de_pieces","Nombre_d_etage")
         labels = {
             "Designation": " Désignation du Bien",
             "Reference_TF": " reference titre foncier (TF)",

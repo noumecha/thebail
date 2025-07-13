@@ -13,7 +13,8 @@ urlpatterns = [
     #path("immeuble/add/", views.immeuble, name='immeuble'),
     path("immeuble/add/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble'),
     path("immeuble/list/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
-    path("immeuble/recensement/", views.RecensementView.as_view(template_name="baux/immeuble_recensement.html"), name='immeuble_recensement'),
+    path("immeuble/recensements/", views.RecensementView.as_view(template_name="baux/immeuble_recensement.html"), name='immeuble_recensement'),
+    path("immeuble/recensements/form/", views.recensement_form_view, name='recensement_form'),
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     #path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
