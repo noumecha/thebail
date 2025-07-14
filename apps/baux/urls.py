@@ -15,6 +15,8 @@ urlpatterns = [
     path("immeuble/list/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
     path("immeuble/recensements/", views.RecensementView.as_view(template_name="baux/immeuble_recensement.html"), name='immeuble_recensement'),
     path("immeuble/recensements/form/", views.recensement_form_view, name='recensement_form'),
+    path("immeuble/recensements/update/<int:pk>", views.recensement_form_view, name='recensement_update'),
+    path("immeuble/recensements/delete/<int:pk>", views.recensement_delete_view, name='recensement_delete'),
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     #path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),

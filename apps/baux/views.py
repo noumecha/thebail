@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+from django.contrib import messages
 from web_project import TemplateLayout
 from django.template.loader import render_to_string
 from django.template.loader import render_to_string
@@ -245,7 +246,6 @@ class ImmeubleView(TemplateView):
             return self.render_to_response(context)
         
 class RecensementView(TemplateView):
-
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context['recensements'] = Recensements.objects.all()
@@ -261,30 +261,37 @@ class RecensementView(TemplateView):
             recensement_form = RecensementsForm(request.POST)
 
         if recensement_form.is_valid():
-            recensement_form.save()
-            return redirect('baux:immeuble_recensement')
+            recensement = recensement_form.save()
+            return JsonResponse({
+                'success': True,
+                'message' : 'Recensement enregistré avec succès'
+            })
+            #return redirect('baux:immeuble_recensement')
         else:
             context = self.get_context_data(pk=pk)
             context["form"] = recensement_form
             return self.render_to_response(context)
+    
+# manage deletion 
+def recensement_delete_view(request, pk):
+    try:
+        recensement = get_object_or_404(Recensements, pk=pk)
+        recensement.delete()
+        messages.success(request, "Recensement supprimé avec succès!")
+        return redirect('baux:immeuble_recensement')
+    except Recensements.DoesNotExist:
+        messages.success(request, "Recensement non trouvé !")
+        return redirect('baux:immeuble_recensement')
 
-def recensement_form_view(request):
-    if request.method == "POST":
-        form = RecensementsForm(request.POST)
-        if form.is_valid():
-            recensement = form.save()
-            return JsonResponse({
-                'success': True,
-                'id': recensement.id,
-                'text': str(recensement)
-            })
-        else:
-            html = render_to_string('baux/partials/recensement_form.html', {'form': form}, request=request)
-            return JsonResponse({'success': False, 'html': html})
+# load update and create form
+def recensement_form_view(request, pk=None):
+    if pk:
+        recensement = get_object_or_404(Recensements, pk=pk) if pk else None
+        form = RecensementsForm(instance=recensement)
     else:
         form = RecensementsForm()
-        html = render_to_string('baux/partials/recensement_form.html', {'form': form}, request=request)
-        return JsonResponse({'html': html})
+    html = render_to_string('baux/partials/recensement_form.html', {'form': form}, request=request)
+    return JsonResponse({'success': True, 'html': html})
 
 # for modal purpose        
 def immeuble_partial_form_view(request):

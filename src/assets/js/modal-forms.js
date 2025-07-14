@@ -1,34 +1,56 @@
 $(function () {
 
-    // initialize modals
-    loadModal('#create-recensement-modal', '#recensement-form-content', '/immeuble/recensements/form/');
-    submitForm('#recensementForm', '/immeuble/recensements/form/')
+    // initialize modals for recensement
+    loadModal('#create-recensement-modal', '#recensement-form-content', '/immeuble/recensements/') // for create or update
+    submitForm('#recensementForm', '/immeuble/recensements/', '#recensement-table') // save to db
+    
+    // show sucess messge or error message 
+    showMessage()
 
     // function to set select2 on element of type select
-    function setSelect2(selector, placeholder) {
+    function setSelect2(selector, placeholder, modalId) {
         if($(selector).is('select')) {
             $(selector).select2({
                 placeholder: placeholder,
                 allowClear: true,
+                dropdownParent: $(modalId),
             });
         }
     }
 
     // function to load modal content
-    function loadModal(modalId, formContainer, fetchUrl) {
+    function loadModal(modalId, formContainer, url) {
         const formContent = $(formContainer);
-
         // Open modal and load form
         $(document).on('click', `[data-bs-target="${modalId}"]`, function () {
-            $.get(fetchUrl, function (data) {
+            action = $(this).data('action')
+            const id = $(this).data('id')
+            url = action === "update" ? url + "update/" + id : url + "form" 
+            $.get(url, function (data) {
                 formContent.html(data.html);
-                //setSelect2('#id_Immeuble', 'Selectionnez un immeuble');
+                setSelect2('#id_Immeuble', 'Selectionnez un immeuble', modalId);
             });
+            url = ""
         });
     }
 
+    // function to fecth data
+    function fetchDatas(url, containerId) {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (data) {
+                if (data.success) {
+                    $(containerId).html(data.html);
+                } else {
+                    console.error("Error occurred while fetching data : ", data);
+                }
+            },
+        })
+    }
+
     // function to handle form submission
-    function submitForm(formId, fetchUrl) {
+    function submitForm(formId, url, containerId) {
         $(document).on('submit', formId, function (e) {
             e.preventDefault();
             const form = $(this);
@@ -36,17 +58,17 @@ $(function () {
 
             // Send AJAX request
             $.ajax({
-                url: fetchUrl,
+                url: url,
                 type: 'POST',
                 data: formData,
                 success: function (data) {
                     if (data.success) {
-                        window.location.reload();
-                        modal.hide();
-                        showAlertMessage(data.message, '#form-success');
+                        showAlertMessage(data.message, '#form-success')
+                        form.closest('form')[0].reset()
+                        fetchDatas(url, containerId)
                     } else {
-                        console.error("Error occurred : ", data);
-                        showAlertMessage(data, '#form-error');
+                        console.error("Error occurred : ", data)
+                        showAlertMessage(data, '#form-error')
                     }
                 }
             });
@@ -66,6 +88,13 @@ $(function () {
         }
 
         msgBlock.fadeIn().css('display', 'block');
-        setTimeout(() => msgBlock.fadeOut(), 7000);
+        setTimeout(() => msgBlock.fadeOut(), 5000);
+    }
+
+    // show message 
+    function showMessage() {
+        container = $("#message-show")
+        container.fadeIn().css('display', 'block');
+        setTimeout(() => container.fadeOut(), 5000);
     }
 });

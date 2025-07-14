@@ -23,6 +23,7 @@
                         type="button"
                         class="btn btn-lg btn-dark btn-primary text-white"
                         data-bs-toggle="modal"
+                        data-action = "create"
                         id="add-button"
                         data-bs-target="#create-recensement-modal"
                     >
@@ -30,49 +31,19 @@
                     </button>
                 </div>
             </div>
+            <div class="row">
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="alert alert-success col-12 text-center" style="display:none;" id="message-show">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
 
-        <div class="container-flex">
-            
-            <table class="table table-sm">
-                <tr>
-                    <th>Immeuble</th>
-                    <th>Numero</th>
-                    <th>Date Creation</th>
-                    <th>Type Immeuble</th>
-                    <th>Type Mur</th>
-                    <th>Action</th>
-                </tr>
-                {% for recensement in recensements %}
-                    <tr>
-                        <td>{{ recensement.Immeuble }} </td>
-                        <td>{{ recensement.Numero }}</td>
-                        <td>{{ recensement.Date_creation }}</td>
-                        <td>{{ recensement.Type_immeuble }}</td>
-                        <td>{{ recensement.Type_mur }}</td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item primary" href="#">
-                                        <i class="bx bx-edit-alt me-1"></i>Modifier
-                                    </a>
-                                    <a href="#" class="dropdown-item btn-success" data-toggle="modal" 
-                                        data-target="#delete-recensement-modal">
-                                        <i class="bx bx-trash me-1"></i>Supprimer
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="6" class="text-center">Aucun recensement trouvé.</td>
-                    </tr>
-                {% endfor %}
-            </table>
+        <div class="container-flex" id="recensement-table">
+            {% include 'baux/partials/immeuble_recensement_partial.html' with recensements=recensements %}
         </div>
     </div>
     <!-- create or update recensement -->
@@ -92,30 +63,7 @@
                     </div>
                     <div class="modal-footer flex-row-reverse">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- delete recensement -->
-    <div class="modal fade" id="delete-recensement-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
-        <div class="modal-dialog">
-            <div class="modal-content p-0">
-                <form id="deleteRecesnementForm">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <h5 class="modal-title">Suppression d'un recensement</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            Voulez vous vraiment supprimer ce recensement ?
-                        </div>
-                    </div>
-                    <div class="modal-footer flex-row-reverse">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                        <button type="submit" id="saveBtn" class="btn btn-primary">Enregistrer</button>
                     </div>
                 </form>
             </div>
