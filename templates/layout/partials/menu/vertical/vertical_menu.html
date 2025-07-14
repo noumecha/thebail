@@ -50,12 +50,7 @@
         <div class="text-truncate" data-i18n="Form Elements">Immeuble</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if '/immeuble/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:immeuble' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
-          </a>
-        </li>
-        <li class="menu-item {% if '/immeuble/list/' == request.path %}active{% endif %}">
+        <li class="menu-item {% if '/immeuble/immeubles/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:immeuble_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>

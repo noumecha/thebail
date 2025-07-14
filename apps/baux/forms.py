@@ -525,11 +525,6 @@ class ImmeublesForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0"
             ),
-            Submit(
-                "save-immeuble",
-                "Enregistrer",
-                css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
-            )
         )
         self.helper.form_tag = False;self.fields['Coordonee_gps_latitude'].required = False
         self.fields['Coordonee_gps_longitude'].required = False; self.fields['Coordonee_gps_altitude'].required = False        
@@ -588,6 +583,7 @@ class TypeContratsForm(forms.ModelForm):
             ),
         )
 
+# contrats forms
 class ContratsForm(forms.ModelForm):
     class Meta:
         model = Contrats
@@ -603,7 +599,7 @@ class ContratsForm(forms.ModelForm):
             "Immeubles": "Imeubles Loués",
             "Superficie_louer" : "Superficie louée",
             "TypeContrat" : "Type du Contrat",
-            "Administration_beneficiaire" : "Locataire",
+            "Administration_beneficiaire" : "Locataire / Administration",
             "Structure" : "Structure",  
             "Duree_Contrat":" Durée du Contrat", 
             "Signataire":" Autorité Signataire du contrat",
@@ -728,6 +724,7 @@ class ContratsForm(forms.ModelForm):
         )
         self.fields['observation'].required = False
 
+# avenants forms
 class AvenantsForm(forms.ModelForm):
     class Meta:
         model = Avenants
@@ -833,6 +830,7 @@ class AvenantsForm(forms.ModelForm):
         )
         self.fields['observation'].required = False
 
+# non-mandatement forms
 class Non_MandatementForm(forms.ModelForm):
     class Meta:
         model = Non_Mandatement

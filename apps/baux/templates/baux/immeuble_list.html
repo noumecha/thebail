@@ -11,48 +11,73 @@
 {% block content %}
     <div class="card p-3">
         
-        <h1>Listes des immeubles enregistrés</h1>
+        <div class="card-header">
+            <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-md-12 col-lg-6">
+                    <h3 class="">Listes des immeubles enregistrés</h3>
+                    <p class="text-sm">
+                        Gérer les immeubles
+                    </p>
+                </div>
+                <div class="col-md-12 col-lg-6 text-end">
+                    <button
+                        type="button"
+                        class="btn btn-lg btn-dark btn-primary text-white"
+                        data-bs-toggle="modal"
+                        data-action = "create"
+                        id="add-button"
+                        data-bs-target="#create-immeuble-modal"
+                    >
+                        <i class="menu-icon tf-icons bx bx-file"></i> Ajouter
+                    </button>
+                </div>
+            </div>
+            <form action="" class="row mt-3" id="immeuble-search-form">
+                <div class="col-md-12 col-lg-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Rechercher un immeuble" name="searchFilter" id="searchFilter">
+                        <button class="btn btn-outline-primary" type="button" id="clearSearch">
+                            <i class="bx bx-x"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="alert alert-success col-12 text-center mt-3" style="display:none;" id="message-show">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
 
-        <div class="container-flex">
-            
-            <table class="table table-sm">
-                <tr>
-                    <th>Designation</th>
-                    <th>proprietaire </th>
-                    <th>Reference Fonciere</th>
-                    <th>Type</th>
-                    <th>localisation</th>
-                    <th>Action</th>
-                </tr>
-                {% for score in immeubleList %}
-                <tr>
-                        {% if form.instance.id == score.id %}
-                        {% include 'baux/saveimmeuble.html' %}
-                        {% else %}
-                            <td>{{ score.Designation}} </td>
-                            <td>{{ score.Nom_prenom_proprietaireTF }}</td>
-                            <td>{{ score.Reference_TF }}</td>
-                            <td>{{ score.Norme }}</td>
-                            <td>{{ score.Localisation }}</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                      <a class="dropdown-item primary" href="#">
-                                        <i class="bx bx-edit-alt me-1"></i>Modifier
-                                      </a>
-                                      <a href="#" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
-                                        <i class="bx bx-trash me-1"></i>Supprimer
-                                      </a>
-                                    </div>
-                                </div>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
+        <div class="container-flex" id="immeuble-table-container">
+        </div>
+    </div>
+    <!-- create or update immeuble -->
+    <div class="modal fade" id="create-immeuble-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content p-0">
+                <form id="immeuble-form">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title">Enregistrement des informations sur un immeuble</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="immeuble-form-container">Chargement...</div>    
+                        <div class="alert alert-success" style="display: none;" id="form-success"></div>
+                        <div class="alert alert-danger" style="display: none;" id="form-error"></div>
+                        <input type="hidden" value="" name="id" id="update-id">
+                    </div>
+                    <div class="modal-footer flex-row-reverse">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" id="save-btn" class="btn">...</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

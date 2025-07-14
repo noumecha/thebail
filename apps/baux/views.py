@@ -11,6 +11,7 @@ from .models import Accessoires, Recensements,TypeContrats, Locataires, Bailleur
 from django.http import HttpResponse
 import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
+from django.db.models import Q
 
 # Create your views here.
 def index (request):
@@ -227,7 +228,6 @@ class ImmeubleView(TemplateView):
     
     def post(self, request, *args, **kwargs):
         immeuble_form = ImmeublesForm(request.POST)
-        accessoire_form = AccessoiresForm()
         if immeuble_form.is_valid():
             immeuble_form.save()
             accessoires_data = request.POST.getlist('accessoires_data')
@@ -238,62 +238,72 @@ class ImmeubleView(TemplateView):
                     Quantite=quantite,
                     Immeuble=Immeubles.objects.get(id=immeuble_form.instance.id)
                 )
-            return redirect('baux:immeuble_list')
-        else:
-            context = self.get_context_data()
-            context["form"] = immeuble_form
-            context["accessoire_form"] = accessoire_form
-            return self.render_to_response(context)
-        
-class RecensementView(TemplateView):
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context['recensements'] = Recensements.objects.all()
-        context["form"] = RecensementsForm()
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        pk = kwargs.get('pk', None)
-        if pk:
-            recensement = get_object_or_404(Recensements, pk=pk)
-            recensement_form = RecensementsForm(request.POST, instance=recensement)
-        else:
-            recensement_form = RecensementsForm(request.POST)
-
-        if recensement_form.is_valid():
-            recensement = recensement_form.save()
             return JsonResponse({
                 'success': True,
-                'message' : 'Recensement enregistré avec succès'
+                'message' : 'Immeuble enregistré avec succès'
             })
-            #return redirect('baux:immeuble_recensement')
         else:
-            context = self.get_context_data(pk=pk)
-            context["form"] = recensement_form
-            return self.render_to_response(context)
-    
-# manage deletion 
-def recensement_delete_view(request, pk):
-    try:
-        recensement = get_object_or_404(Recensements, pk=pk)
-        recensement.delete()
-        messages.success(request, "Recensement supprimé avec succès!")
-        return redirect('baux:immeuble_recensement')
-    except Recensements.DoesNotExist:
-        messages.success(request, "Recensement non trouvé !")
-        return redirect('baux:immeuble_recensement')
+            return JsonResponse({
+                'success': False,
+                'message' : f"Erreur lors de l\'enregistrement de l'immeuble : {str(immeuble_form.errors)}",
+            })
 
-# load update and create form
-def recensement_form_view(request, pk=None):
+def get_immeubles(request):
+    if request.method == 'GET':
+        query = request.GET.get('searchFilter', '').strip()
+        immeubles = Immeubles.objects.filter()
+        # applying filters 
+        if query:
+            immeubles = immeubles.filter( 
+                Q(Designation__icontains=query)
+            )
+        datas = render_to_string(
+            'baux/partials/immeubles_partial.html',
+            {'immeubles': immeubles}, 
+            request=request
+        )
+        return JsonResponse({'success': True, 'html': datas})
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+
+def update_immeuble(request, **kwargs):
+    pk = kwargs.get('pk', None)
     if pk:
-        recensement = get_object_or_404(Recensements, pk=pk) if pk else None
-        form = RecensementsForm(instance=recensement)
+        immeuble = get_object_or_404(Immeubles, pk=pk)
+        immeuble_form = ImmeublesForm(request.POST, instance=immeuble)
+        if immeuble_form.is_valid():
+            immeuble = immeuble_form.save()
+            return JsonResponse({
+                'success': True,
+                'message' : 'Immeuble mis à jour avec succès'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message' : f"Erreur lors de la mise à jour de l'immeuble : {str(immeuble_form.errors)}",
+            })
     else:
-        form = RecensementsForm()
-    html = render_to_string('baux/partials/recensement_form.html', {'form': form}, request=request)
+        return JsonResponse({'success': False, 'message': 'Immeuble non trouvé'}, status=404)
+
+def delete_immeuble(request, pk):
+    try:
+        immeuble = get_object_or_404(Immeubles, pk=pk)
+        immeuble.delete()
+        messages.success(request, "Immeuble supprimé avec succès!")
+        return redirect('baux:immeuble_list')
+    except Immeubles.DoesNotExist:
+        messages.success(request, "Immeuble non trouvé !")
+        return redirect('baux:immeuble_list')
+
+def immeuble_form_view(request, pk=None):
+    if pk:
+        immeuble = get_object_or_404(Immeubles, pk=pk) if pk else None
+        form = ImmeublesForm(instance=immeuble)
+    else:
+        form = ImmeublesForm()
+    html = render_to_string('baux/forms/immeuble_form.html', {'form': form}, request=request)
     return JsonResponse({'success': True, 'html': html})
 
-# for modal purpose        
+# for modal purpose : when create immeuble inside a contrat
 def immeuble_partial_form_view(request):
     if request.method == "POST":
         form = ImmeublesForm(request.POST)
@@ -312,6 +322,92 @@ def immeuble_partial_form_view(request):
         form = ImmeublesForm()
         html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
+
+# recensements views        
+class RecensementView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context['recensements'] = Recensements.objects.all()
+        context["form"] = RecensementsForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        recensement_form = RecensementsForm(request.POST)
+        if recensement_form.is_valid():
+            recensement = recensement_form.save(commit=False)
+            immeuble = recensement.Immeuble
+            last_number = Recensements.objects.filter(Immeuble=immeuble).count()
+            recensement.Numero = last_number + 1
+            recensement_form.save()
+            return JsonResponse({
+                'success': True,
+                'message' : 'Recensement enregistré avec succès'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message' : f"Erreur lors de l\'enregistrement du recensement : {str(recensement_form.errors)}",
+            })
+
+# update recensements
+def update_recensements(request, **kwargs):
+        pk = kwargs.get('pk', None)
+        if pk:
+            recensement = get_object_or_404(Recensements, pk=pk)
+            recensement_form = RecensementsForm(request.POST, instance=recensement)
+            if recensement_form.is_valid():
+                recensement = recensement_form.save()
+                return JsonResponse({
+                    'success': True,
+                    'message' : 'Recensement mis à jour avec succès'
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message' : f"Erreur lors de la mise à jour du recensement : {str(recensement_form.errors)}",
+                })
+        else:
+            return JsonResponse({'success': False, 'message': 'Recensement non trouvé'}, status=404)
+
+# getting recensement datas
+def get_recensements(request, **kwargs):
+    if request.method == 'GET':
+        query = request.GET.get('searchFilter', '').strip()
+        recensements = Recensements.objects.filter()
+        # applying filters 
+        if query:
+            recensements = recensements.filter( 
+                Q(Immeuble__Designation__icontains=query) |
+                Q(Type_immeuble__icontains=query) |
+                Q(Type_mur__icontains=query)
+            )
+        datas = render_to_string(
+            'baux/partials/immeuble_recensement_partial.html',
+            {'recensements': recensements}, 
+            request=request
+        )
+        return JsonResponse({'success': True, 'html': datas})
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+
+# manage deletion 
+def recensement_delete_view(request, pk):
+    try:
+        recensement = get_object_or_404(Recensements, pk=pk)
+        recensement.delete()
+        messages.success(request, "Recensement supprimé avec succès!")
+        return redirect('baux:immeuble_recensement')
+    except Recensements.DoesNotExist:
+        messages.success(request, "Recensement non trouvé !")
+        return redirect('baux:immeuble_recensement')
+
+def recensement_form_view(request, pk=None):
+    if pk:
+        recensement = get_object_or_404(Recensements, pk=pk) if pk else None
+        form = RecensementsForm(instance=recensement)
+    else:
+        form = RecensementsForm()
+    html = render_to_string('baux/partials/recensement_form.html', {'form': form}, request=request)
+    return JsonResponse({'success': True, 'html': html})
 
 # Contrat Class and views : 
 # filtering structure base on administration

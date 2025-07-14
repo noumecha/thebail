@@ -1,19 +1,19 @@
 <table class="table table-sm">
     <tr>
-        <th>Immeuble</th>
-        <th>Numero</th>
-        <th>Date Creation</th>
-        <th>Type Immeuble</th>
-        <th>Type Mur</th>
+        <th>Designation</th>
+        <th>proprietaire </th>
+        <th>Reference Fonciere</th>
+        <th>Type</th>
+        <th>localisation</th>
         <th>Action</th>
     </tr>
-    {% for recensement in recensements %}
-        <tr data-id="{{ recensement.id }}">
-            <td>{{ recensement.Immeuble }} </td>
-            <td>{{ recensement.Numero }}</td>
-            <td>{{ recensement.Date_creation }}</td>
-            <td>{{ recensement.Type_immeuble }}</td>
-            <td>{{ recensement.Type_mur }}</td>
+    {% for immeuble in immeubles %}
+        <tr data-id="{{ immeuble.id }}">
+            <td>{{ immeuble.Designation}} </td>
+            <td>{{ immeuble.Nom_prenom_proprietaireTF }}</td>
+            <td>{{ immeuble.Reference_TF }}</td>
+            <td>{{ immeuble.Norme }}</td>
+            <td>{{ immeuble.Localisation }}</td>
             <td>
                 <div class="dropdown">
                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -23,36 +23,36 @@
                         <a 
                             class="dropdown-item primary" 
                             href="#"
-                            data-bs-target="#create-recensement-modal"
+                            data-bs-target="#create-immeuble-modal"
                             data-bs-toggle="modal"
                             data-action = "update"
-                            data-id="{{ recensement.id }}"
+                            data-id="{{ immeuble.id }}"
                         >
                             <i class="bx bx-edit-alt me-1"></i>Modifier
                         </a>
                         <a href="#" 
-                            class="dropdown-item btn-success delete-recensement"
-                            data-bs-target="#delete-recensement-modal-{{ recensement.id }}"
+                            class="dropdown-item btn-success delete-immeuble"
+                            data-bs-target="#delete-immeuble-modal-{{ immeuble.id }}"
                             data-bs-toggle="modal"
                         >
                             <i class="bx bx-trash me-1"></i>Supprimer
                         </a>
                     </div>
-                    <!-- delete recensement -->
-                    <div class="modal fade" id="delete-recensement-modal-{{ recensement.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                    <!-- delete immeuble -->
+                    <div class="modal fade" id="delete-immeuble-modal-{{ immeuble.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog">
                             <div class="modal-content p-0">
-                                <form action="{% url 'baux:recensement_delete' recensement.id %}" method="post" id="delete-recensement-form">
+                                <form action="{% url 'baux:immeuble_delete' immeuble.id %}" method="post" id="delete-immeuble-form">
                                     {% csrf_token %}
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Suppression d'un recensement</h5>
+                                        <h5 class="modal-title">Suppression d'un immeuble</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div id="modal-content-message">
-                                            Voulez vous vraiment supprimer : {{ recensement }} ?
+                                            Voulez vous vraiment supprimer : {{ immeuble }} ?
                                         </div>
-                                        <input type="hidden" value="{{ recensement.id }}" name="id" id="delete-recensement-input-id">
+                                        <input type="hidden" value="{{ immeuble.id }}" name="id" id="delete-immeuble-input-id">
                                     </div>
                                     <div class="modal-footer flex-row-reverse">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -67,7 +67,7 @@
         </tr>
     {% empty %}
         <tr>
-            <td colspan="6" class="text-center">Aucun recensement trouvé.</td>
+            <td colspan="6" class="text-center">Aucun immeuble trouvé.</td>
         </tr>
     {% endfor %}
 </table>

@@ -11,11 +11,11 @@
 {% block content %}
     <div class="card p-3">
         <div class="card-header">
-            <div class="row">
+            <div class="row d-flex justify-content-between align-items-center">
                 <div class="col-md-12 col-lg-6">
                     <h3 class="">Historique de recensement des immeubles</h3>
                     <p class="text-sm">
-                        Gérere les recensements des informations sur les immeubles
+                        Gérer les recensements des informations sur les immeubles
                     </p>
                 </div>
                 <div class="col-md-12 col-lg-6 text-end">
@@ -31,10 +31,20 @@
                     </button>
                 </div>
             </div>
+            <form action="" class="row mt-3" id="recensement-search-form">
+                <div class="col-md-12 col-lg-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Rechercher un recensement" name="searchFilter" id="searchFilter">
+                        <button class="btn btn-outline-primary" type="button" id="clearSearch">
+                            <i class="bx bx-x"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
             <div class="row">
                 {% if messages %}
                     {% for msg in messages %}
-                        <div class="alert alert-success col-12 text-center" style="display:none;" id="message-show">
+                        <div class="alert alert-success col-12 text-center mt-3" style="display:none;" id="message-show">
                             {{ msg }}
                         </div>
                     {% endfor %}
@@ -42,8 +52,7 @@
             </div>
         </div>
 
-        <div class="container-flex" id="recensement-table">
-            {% include 'baux/partials/immeuble_recensement_partial.html' with recensements=recensements %}
+        <div class="container-flex" id="recensement-table-container">
         </div>
     </div>
     <!-- create or update recensement -->
@@ -60,10 +69,11 @@
                         <div id="recensement-form-content">Chargement...</div>    
                         <div class="alert alert-success" style="display: none;" id="form-success"></div>
                         <div class="alert alert-danger" style="display: none;" id="form-error"></div>
+                        <input type="hidden" value="" name="id" id="update-id">
                     </div>
                     <div class="modal-footer flex-row-reverse">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" id="saveBtn" class="btn btn-primary">Enregistrer</button>
+                        <button type="submit" id="save-btn" class="btn">...</button>
                     </div>
                 </form>
             </div>

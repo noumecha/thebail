@@ -6,14 +6,14 @@ from django import forms
 MORAL = 1
 PHYSIQUE = 2
 TYPE_PERSONNE = (
-        ('', 'Choose who you are'),
+        ('', 'Choisir le type de personne'),
         (str(MORAL), '1 - Personne Morale'),
         (str(PHYSIQUE), '2 - Personne Physique'),
     )
 BATI=1
 NON_BATI= 2
 TYPE_IMMEUBLE = (
-        ('', 'Choose type of building'),
+        ('', 'Choisir le type d\'immeuble'),
         (str(BATI), '1 - Immeuble Bati'),
         (str(NON_BATI), '2 - Immeuble Non-Bati'),
     )   
@@ -22,7 +22,7 @@ Sud ='S'
 Ouest ='O'
 Est='E'
 POSITION_GPS = (
-        ('', 'Choose position for GPS'),
+        ('', 'Choisir la possition GPS'),
         (str(Nord), 'N - Nord'),
         (str(Sud), 'S - Sud'),
         (str(Ouest), 'O - Ouest'),
@@ -31,7 +31,7 @@ POSITION_GPS = (
 LB=1
 LP= 2
 TYPE_LOCATION = (
-        ('', 'Choose type of location'),
+        ('', 'Chisir le type de location'),
         (str(LB), '1 - Location Pour Bureaux'),
         (str(LP), '2 - Location pour logement'),
      )  
@@ -173,7 +173,7 @@ class Administrations (models.Model):
     code = models.CharField(max_length=2, null=True)
 
     def __str__(self):
-        return f"locataire/{self.LibelleFr}"
+        return f"{self.LibelleFr}"
 
 class Structures (models.Model):
     LibelleFr = models.CharField(max_length=50)
@@ -256,17 +256,20 @@ class Immeubles (models.Model):
     def __str__(self):
         return f" {self.Designation}/{self.Localisation} "
 
+    def nombre_de_recensements(self):
+        return self.immeuble_recensement.count()
+
 # Recensements model
 class Recensements(models.Model):
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
-    Numero = models.IntegerField(default=1)
+    Numero = models.IntegerField()
     Date_creation = models.DateTimeField(auto_now_add=True)
     # immeuble informations that can be changed 
     Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
     Description = models.TextField(blank = True,null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
-    Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=1, null=True)
+    Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=255, null=True)
     Type_mur = models.CharField(blank=True, choices=TYPE_MUR, max_length=255, null=True)
     Couleur = models.CharField(max_length=255,null=True,blank=True)
     Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
