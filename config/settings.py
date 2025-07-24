@@ -72,7 +72,7 @@ INSTALLED_APPS = [
     "apps.baux",
     "crispy_forms",
     "crispy_bootstrap5",
-    'bootstrap5',
+    #'bootstrap5',
     #"crispy_bootstrap4",
     'formtools',
     'django_select2'

@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.contrib import messages
 from web_project import TemplateLayout
 from django.template.loader import render_to_string
-from django.template.loader import render_to_string
 from .forms import RecensementsForm, LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
 from .models import Accessoires, Recensements,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
 from django.http import HttpResponse
