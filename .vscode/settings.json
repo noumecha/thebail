@@ -81,4 +81,6 @@
   "eslint.format.enable": true,
   // Extension: npm
   "npm.packageManager": "yarn",
+  "python-envs.pythonProjects": [],
+  "python-envs.defaultEnvManager": "ms-python.python:system",
 }

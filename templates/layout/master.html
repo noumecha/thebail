@@ -43,9 +43,12 @@
     <!--Vendors Javascript-->
     {% block vendor_js %} {% endblock vendor_js %}
 
-    <!--Page Javascript-->
+    <!--Page Javascript--> <!-- generic js loading -->
     {% block page_js %} {% endblock page_js %}
 
+    <!-- extra js code -->
+    {% block extra_js %}
+    {% endblock %}
   </body>
 
 </html>

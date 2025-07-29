@@ -111,45 +111,89 @@ class CollecteView(SessionWizardView):
         print(data)
         return render(self.request, 'baux/done.html', {'data': data})
 
-# locataire 
+# locataires views
 class LocataireView(TemplateView):
-    #predefined functiion
+    #predefined function
     def get_context_data(self, **kwargs):
+        #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["locatairesList"] = Locataires.objects.all()
+        context["LocatairesList"] = Locataires.objects.all()
         context["form"] = LocatairesForm()
         return context
-    
-    def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        #context["locatairesList"] = Locataires.objects.all()
-        form = LocatairesForm()
-        locatairesList = Locataires.objects.all()
-        context['locatairesList'] = locatairesList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = LocatairesForm(request.POST)
-                else:
-                    locatairesList = Locataires.objects.get(id=pk)
-                    form = LocatairesForm(request.POST, instance=locatairesList)
-                form.save()
-                form = LocatairesForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                locatairesList = Locataires.objects.get(id=pk)
-                locatairesList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                locatairesList = Locataires.objects.get(id=pk)
-                form = LocatairesForm(instance=locatairesList)
-        context['form'] = form
-        return render(request, 'baux/locataire.html', context)
 
+    def post(self, request, *args, **kwargs):
+        locataire_form = LocatairesForm(request.POST)
+        if locataire_form.is_valid():
+            locataire_form.save()
+            return JsonResponse({
+                'success': True,
+                'message' : 'Locataire enregistré avec succès'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message' : f"Erreur lors de l\'enregistrement du locataire : {str(locataire_form.errors)}",
+            })
+    
+def locataire_form_view(request, pk=None):
+    if pk:
+        locataire = get_object_or_404(Locataires, pk=pk) if pk else None
+        form = LocatairesForm(instance=locataire)
+    else:
+        form = LocatairesForm()
+    html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
+    return JsonResponse({'success': True, 'html': html})
+
+def get_locataires(request):
+    if request.method == 'GET':
+        query = request.GET.get('searchLocataire', '').strip()
+        locataires = Locataires.objects.filter()
+        # applying filters 
+        if query:
+            locataires = locataires.filter( 
+                Q(Intitule__icontains=query) |
+                Q(Nom_Prenom_Representant__icontains=query)
+            )
+        datas = render_to_string(
+            'baux/partials/locataires_partial.html',
+            {'locataires': locataires}, 
+            request=request
+        )
+        return JsonResponse({'success': True, 'html': datas})
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+
+def update_locataire(request, **kwargs):
+    pk = kwargs.get('pk', None)
+    if pk:
+        locataire = get_object_or_404(Locataires, pk=pk)
+        locataire_form = LocatairesForm(request.POST, instance=locataire)
+        if locataire_form.is_valid():
+            locataire = locataire_form.save()
+            return JsonResponse({
+                'success': True,
+                'message' : 'Locataire mis à jour avec succès'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message' : f"Erreur lors de la mise à jour du locataire : {str(locataire_form.errors)}",
+            })
+    else:
+        return JsonResponse({'success': False, 'message': 'Locataire non trouvé'}, status=404)
+
+def delete_locataire(request, pk):
+    try:
+        locataire = get_object_or_404(Locataires, pk=pk)
+        locataire.delete()
+        messages.success(request, "/ocataire supprimé avec succès!")
+        return redirect('baux:locataire_list')
+    except Locataires.DoesNotExist:
+        messages.success(request, "Locataire non trouvé !")
+        return redirect('baux:locataire_list')
+
+# all bailleur views management 
 class BailleurView(TemplateView):
-    #predefined functiion
+    #predefined function
     def get_context_data(self, **kwargs):
         #A function to init the global layout. It is defined in web_project/__init__.py file
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
@@ -161,41 +205,17 @@ class BailleurView(TemplateView):
         bailleur_form = BailleursForm(request.POST)
         if bailleur_form.is_valid():
             bailleur_form.save()
-            return redirect('baux:bailleur_list')
+            return JsonResponse({
+                'success': True,
+                'message' : 'Bailleur enregistré avec succès'
+            })
         else:
-            context = self.get_context_data()
-            context["form"] = bailleur_form
-            return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = BailleursForm()
-        BailleursList = Bailleurs.objects.all()
-        context['BailleursList'] = BailleursList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = BailleursForm(request.POST)
-                else:
-                    BailleursList = Bailleurs.objects.get(id=pk)
-                    form = BailleursForm(request.POST, instance=BailleursList)
-                if form.is_valid():
-                    form.save()
-                form = BailleursForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                BailleursList = Bailleurs.objects.get(id=pk)
-                BailleursList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                BailleursList = Bailleurs.objects.get(id=pk)
-                form = BailleursForm(instance=BailleursList)
-        context['form'] = form
-        return render(request, 'baux/bailleur_list.html', context)
-
-# for modal purpose        
+            return JsonResponse({
+                'success': False,
+                'message' : f"Erreur lors de l\'enregistrement du bailleur : {str(bailleur_form.errors)}",
+            })
+        
+# for loading bailleur form in contrat form
 def bailleur_partial_form_view(request):
     if request.method == "POST":
         form = BailleursForm(request.POST)
@@ -207,12 +227,68 @@ def bailleur_partial_form_view(request):
                 'text': str(bailleur)
             })
         else:
-            html = render_to_string('baux/partials/bailleur_modal_form.html', {'form': form}, request=request)
+            html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
             return JsonResponse({'success': False, 'html': html})
     else:
         form = BailleursForm()
-        html = render_to_string('baux/partials/bailleur_modal_form.html', {'form': form}, request=request)
+        html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
+    
+def bailleur_form_view(request, pk=None):
+    if pk:
+        bailleur = get_object_or_404(Bailleurs, pk=pk) if pk else None
+        form = BailleursForm(instance=bailleur)
+    else:
+        form = BailleursForm()
+    html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
+    return JsonResponse({'success': True, 'html': html})
+
+def get_bailleurs(request):
+    if request.method == 'GET':
+        query = request.GET.get('searchBailleur', '').strip()
+        bailleurs = Bailleurs.objects.filter()
+        # applying filters 
+        if query:
+            bailleurs = bailleurs.filter( 
+                Q(Nom_prenom__icontains=query) |
+                Q(Raison_social__icontains=query)
+            )
+        datas = render_to_string(
+            'baux/partials/bailleurs_partial.html',
+            {'bailleurs': bailleurs}, 
+            request=request
+        )
+        return JsonResponse({'success': True, 'html': datas})
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+
+def update_bailleur(request, **kwargs):
+    pk = kwargs.get('pk', None)
+    if pk:
+        bailleur = get_object_or_404(Bailleurs, pk=pk)
+        bailleur_form = BailleursForm(request.POST, instance=bailleur)
+        if bailleur_form.is_valid():
+            bailleur = bailleur_form.save()
+            return JsonResponse({
+                'success': True,
+                'message' : 'Bailleur mis à jour avec succès'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message' : f"Erreur lors de la mise à jour du bailleur : {str(bailleur_form.errors)}",
+            })
+    else:
+        return JsonResponse({'success': False, 'message': 'Bailleur non trouvé'}, status=404)
+
+def delete_bailleur(request, pk):
+    try:
+        bailleur = get_object_or_404(Bailleurs, pk=pk)
+        bailleur.delete()
+        messages.success(request, "Bailleur supprimé avec succès!")
+        return redirect('baux:bailleur_list')
+    except Bailleurs.DoesNotExist:
+        messages.success(request, "Bailleur non trouvé !")
+        return redirect('baux:bailleur_list')
 
 # immeuble views
 class ImmeubleView(TemplateView):

@@ -69,12 +69,7 @@
         <div class="text-truncate" data-i18n="Form Elements">Bailleur</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if '/bailleur/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:bailleur' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
-          </a>
-        </li>
-        <li class="menu-item {% if '/bailleur/list/' == request.path %}active{% endif %}">
+        <li class="menu-item {% if 'bailleur/bailleurs/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:bailleur_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
@@ -88,12 +83,7 @@
         <div class="text-truncate" data-i18n="Form Elements">Locataire</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if '/locataire/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:locataire' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
-          </a>
-        </li>
-        <li class="menu-item {% if '/locataire/list/' == request.path %}active{% endif %}">
+        <li class="menu-item {% if '/locataire/locataires/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:locataire_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes des locataires</div>
           </a>
