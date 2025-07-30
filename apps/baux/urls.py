@@ -4,25 +4,28 @@ from .views import TypeContratView,CollecteView,HomeView,ConsultationView, Locat
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm
 
 app_name = 'baux'
+# crud urls helper 
+def get_crud_urls(view_class, prefix, name):
+    """ Helper function to generate CRUD URLs for a view class """
+    #name = view_class.model._meta.model_name
+    return [
+        path(f"{prefix}/", view_class.as_view(template_name=view_class.list_template), name=f'{name}_list'),
+        path(f"{prefix}/all/", view_class.as_view(), {'action': 'list'}, name=f'get_{name}s'),
+        path(f"{prefix}/form/", view_class.as_view(), {'action': 'form'}, name=f'{name}_form'),
+        path(f"{prefix}/edit/<int:pk>", view_class.as_view(), {'action': 'form'}, name=f'{name}_update'),
+        path(f"{prefix}/update/<int:pk>", view_class.as_view(), {'action': 'update'}, name=f'{name}_update'),
+        path(f"{prefix}/delete/<int:pk>", view_class.as_view(), {'action': 'delete'}, name=f'{name}_delete'),
+    ]
+
+# urls
 urlpatterns = [
+    *get_crud_urls(LocataireView, "locataire/locataires", "locataire"),
+    *get_crud_urls(BailleurView, "bailleur/bailleurs", "bailleur"),
+    # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     # bailleur routes 
-    path("bailleur/bailleurs/", BailleurView.as_view(template_name="baux/bailleur_list.html"), name='bailleur_list'),
-    path("bailleur/bailleurs/all/", views.get_bailleurs, name='get_bailleurs'),
-    path("bailleur/bailleurs/edit/<int:pk>", views.bailleur_form_view, name='bailleur_update'),
-    path("bailleur/bailleurs/form/", views.bailleur_form_view, name='bailleur_form'),
-    path("bailleur/bailleurs/update/<int:pk>", views.update_bailleur, name='bailleur_update'),
-    path("bailleur/bailleurs/delete/<int:pk>", views.delete_bailleur, name='bailleur_delete'),
     path('bailleur-partial-form/', views.bailleur_partial_form_view, name='bailleur_partial_form'),
     # locataire routes
-    #path("locataire/add/", LocataireView.as_view(template_name="baux/locataire.html"), name='locataire'),
-    #path("locataire/list/", LocataireView.as_view(template_name="baux/locataire_list.html"), name='locataire_list'),
-    path("locataire/locataires/", LocataireView.as_view(template_name="baux/locataire_list.html"), name='locataire_list'),
-    path("locataire/locataires/all/", views.get_locataires, name='get_locataires'),
-    path("locataire/locataires/edit/<int:pk>", views.locataire_form_view, name='locataire_update'),
-    path("locataire/locataires/form/", views.locataire_form_view, name='locataire_form'),
-    path("locataire/locataires/update/<int:pk>", views.update_locataire, name='locataire_update'),
-    path("locataire/locataires/delete/<int:pk>", views.delete_locataire, name='locataire_delete'),
     #path('locataire-partial-form/', views._partial_form_view, name='locataire_partial_form'),
     # immeuble routes
     path("immeuble/immeubles/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
@@ -70,5 +73,4 @@ urlpatterns = [
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
     # collecte : 
     path('collecte/add/', CollecteView.as_view([LocatairesForm,AccessoiresForm, BailleursForm]), name='collecte'),
-
 ]

@@ -12,6 +12,127 @@ import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
 from django.db.models import Q
 
+#generic view for basic operation 
+class BaseCRUDView(TemplateView):
+    model = None
+    form_class = None
+    list_template = None
+    list_route = None
+    partial_template = None
+    form_template = 'baux/partials/form_template.html'
+    context_object_name = 'objects'
+    search_fields = []
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context[self.context_object_name] = self.model.objects.all()
+        context["form"] = self.form_class
+        return context
+    
+    def get_queryset(self, search_query=None):
+        queryset = self.model.objects.all()
+        if search_query and self.search_fields:
+            q_objects = Q()
+            for field in self.search_fields:
+                q_objects |= Q(**{f"{field}__icontains": search_query})
+            queryset = queryset.filter(q_objects)
+        return queryset
+    
+    def get_form_view(self, request, pk=None):
+        instance = get_object_or_404(self.model, pk=pk) if pk else None
+        form = self.form_class(instance=instance)
+        html = render_to_string(self.form_template, {'form': form}, request=request)
+        return JsonResponse({'success': True, 'html':html})
+    
+    def get_list_data(self, request):
+        search_query = request.GET.get('search', '').strip()
+        objects = self.get_queryset(search_query)
+        html = render_to_string(self.partial_template, {self.context_object_name: objects}, request=request)
+        return JsonResponse({'success':True, 'html':html})
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            obj = form.save()
+            return JsonResponse({
+                'success': True,
+                'message': f'{self.model._meta.verbose_name} enregistré avec succès',
+                'data': {
+                    'id' : obj.id,
+                    'text': str(obj)
+                }
+            })
+        html = render_to_string(self.form_template, {'form': form}, request=request)
+        return JsonResponse({
+            'success': False,
+            'message': f'Erreur lors de l\'enregistrement',
+            'html' : html
+        })
+    
+    def update(self, request, **kwargs):
+        pk = kwargs.get('pk')
+        if not pk:
+            return JsonResponse({'success': False, 'message': 'Objet non trouvé'}, status=404)
+        instance = get_object_or_404(self.model, pk=pk)
+        form = self.form_class(request.POST, instance=instance)
+        if form.is_valid():
+            obj = form.save()
+            return JsonResponse({
+                'success' : True,
+                'message': f'{self.model._meta.verbose_name} mis à jour avec succès'
+            })
+        html = render_to_string(self.form_template, {'form' : form}, request=request)
+        return JsonResponse({
+            'success' : False,
+            'messages': f"Erreur lors de la mise à jour",
+            'html' : html
+        })
+    
+    def delete(self, request, pk):
+        try:
+            obj = get_object_or_404(self.model, pk=pk)
+            obj.delete()
+            messages.success(request, f"{self.model._meta.verbose_name} supprimé avec succès!")
+            return redirect(f'baux:{self.list_route}')
+        except Locataires.DoesNotExist:
+            messages.success(request, f"{self.model._meta.verbose_name} non trouvé !")
+            return redirect(f'baux:{self.list_route}')
+    
+    def partial_form_view(self, request):
+        if request.method == 'POST':
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                obj = form.save()
+                return JsonResponse({
+                    'success' : True,
+                    'id' : obj.id,
+                    'text': str(obj)
+                })
+            html = render_to_string(self.form_template, {'form': form}, request=request)
+            return JsonResponse({
+                'success': False, 
+                'html': html
+            })
+        else:
+            form = self.form_class()
+            html = render_to_string(self.form_template, {'form': form}, request=request)
+            return JsonResponse({'html': html})
+
+    def dispatch(self, request, *args, **kwargs):
+        action = kwargs.pop('action', None)
+        if action == 'list':
+            return self.get_list_data(request)
+        elif action == 'form':
+            return self.get_form_view(request, kwargs.get('pk'))
+        elif action == 'update':
+            return self.update(request, **kwargs)
+        elif action == 'delete':
+            return self.delete(request, kwargs.get('pk'))
+        elif action == 'partial_form':
+            return self.partial_form_view(request)
+        return super().dispatch(request, *args, **kwargs)
+        
+
 # Create your views here.
 def index (request):
     return render(request, "baux/index.html")
@@ -112,108 +233,24 @@ class CollecteView(SessionWizardView):
         return render(self.request, 'baux/done.html', {'data': data})
 
 # locataires views
-class LocataireView(TemplateView):
-    #predefined function
-    def get_context_data(self, **kwargs):
-        #A function to init the global layout. It is defined in web_project/__init__.py file
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["LocatairesList"] = Locataires.objects.all()
-        context["form"] = LocatairesForm()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        locataire_form = LocatairesForm(request.POST)
-        if locataire_form.is_valid():
-            locataire_form.save()
-            return JsonResponse({
-                'success': True,
-                'message' : 'Locataire enregistré avec succès'
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'message' : f"Erreur lors de l\'enregistrement du locataire : {str(locataire_form.errors)}",
-            })
-    
-def locataire_form_view(request, pk=None):
-    if pk:
-        locataire = get_object_or_404(Locataires, pk=pk) if pk else None
-        form = LocatairesForm(instance=locataire)
-    else:
-        form = LocatairesForm()
-    html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
-    return JsonResponse({'success': True, 'html': html})
-
-def get_locataires(request):
-    if request.method == 'GET':
-        query = request.GET.get('searchLocataire', '').strip()
-        locataires = Locataires.objects.filter()
-        # applying filters 
-        if query:
-            locataires = locataires.filter( 
-                Q(Intitule__icontains=query) |
-                Q(Nom_Prenom_Representant__icontains=query)
-            )
-        datas = render_to_string(
-            'baux/partials/locataires_partial.html',
-            {'locataires': locataires}, 
-            request=request
-        )
-        return JsonResponse({'success': True, 'html': datas})
-    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
-
-def update_locataire(request, **kwargs):
-    pk = kwargs.get('pk', None)
-    if pk:
-        locataire = get_object_or_404(Locataires, pk=pk)
-        locataire_form = LocatairesForm(request.POST, instance=locataire)
-        if locataire_form.is_valid():
-            locataire = locataire_form.save()
-            return JsonResponse({
-                'success': True,
-                'message' : 'Locataire mis à jour avec succès'
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'message' : f"Erreur lors de la mise à jour du locataire : {str(locataire_form.errors)}",
-            })
-    else:
-        return JsonResponse({'success': False, 'message': 'Locataire non trouvé'}, status=404)
-
-def delete_locataire(request, pk):
-    try:
-        locataire = get_object_or_404(Locataires, pk=pk)
-        locataire.delete()
-        messages.success(request, "/ocataire supprimé avec succès!")
-        return redirect('baux:locataire_list')
-    except Locataires.DoesNotExist:
-        messages.success(request, "Locataire non trouvé !")
-        return redirect('baux:locataire_list')
+class LocataireView(BaseCRUDView):
+    model = Locataires
+    form_class = LocatairesForm
+    list_route = 'locataire_list'
+    list_template = "baux/locataire_list.html"
+    partial_template = "baux/partials/locataires_partial.html"
+    context_object_name = 'locataires'
+    search_fields = ['Intitule', 'Nom_Prenom_Representant']
 
 # all bailleur views management 
-class BailleurView(TemplateView):
-    #predefined function
-    def get_context_data(self, **kwargs):
-        #A function to init the global layout. It is defined in web_project/__init__.py file
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["BailleursList"] = Bailleurs.objects.all()
-        context["form"] = BailleursForm()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        bailleur_form = BailleursForm(request.POST)
-        if bailleur_form.is_valid():
-            bailleur_form.save()
-            return JsonResponse({
-                'success': True,
-                'message' : 'Bailleur enregistré avec succès'
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'message' : f"Erreur lors de l\'enregistrement du bailleur : {str(bailleur_form.errors)}",
-            })
+class BailleurView(BaseCRUDView):
+    model = Bailleurs
+    form_class = BailleursForm
+    list_route = 'bailleur_list'
+    list_template = 'baux/bailleur_list.html'
+    partial_template = 'baux/partials/bailleurs_partial.html'
+    context_object_name = 'bailleurs'
+    search_fields = ['Nom_prenom', 'Raison_social']
         
 # for loading bailleur form in contrat form
 def bailleur_partial_form_view(request):
@@ -234,62 +271,6 @@ def bailleur_partial_form_view(request):
         html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
     
-def bailleur_form_view(request, pk=None):
-    if pk:
-        bailleur = get_object_or_404(Bailleurs, pk=pk) if pk else None
-        form = BailleursForm(instance=bailleur)
-    else:
-        form = BailleursForm()
-    html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
-    return JsonResponse({'success': True, 'html': html})
-
-def get_bailleurs(request):
-    if request.method == 'GET':
-        query = request.GET.get('searchBailleur', '').strip()
-        bailleurs = Bailleurs.objects.filter()
-        # applying filters 
-        if query:
-            bailleurs = bailleurs.filter( 
-                Q(Nom_prenom__icontains=query) |
-                Q(Raison_social__icontains=query)
-            )
-        datas = render_to_string(
-            'baux/partials/bailleurs_partial.html',
-            {'bailleurs': bailleurs}, 
-            request=request
-        )
-        return JsonResponse({'success': True, 'html': datas})
-    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
-
-def update_bailleur(request, **kwargs):
-    pk = kwargs.get('pk', None)
-    if pk:
-        bailleur = get_object_or_404(Bailleurs, pk=pk)
-        bailleur_form = BailleursForm(request.POST, instance=bailleur)
-        if bailleur_form.is_valid():
-            bailleur = bailleur_form.save()
-            return JsonResponse({
-                'success': True,
-                'message' : 'Bailleur mis à jour avec succès'
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'message' : f"Erreur lors de la mise à jour du bailleur : {str(bailleur_form.errors)}",
-            })
-    else:
-        return JsonResponse({'success': False, 'message': 'Bailleur non trouvé'}, status=404)
-
-def delete_bailleur(request, pk):
-    try:
-        bailleur = get_object_or_404(Bailleurs, pk=pk)
-        bailleur.delete()
-        messages.success(request, "Bailleur supprimé avec succès!")
-        return redirect('baux:bailleur_list')
-    except Bailleurs.DoesNotExist:
-        messages.success(request, "Bailleur non trouvé !")
-        return redirect('baux:bailleur_list')
-
 # immeuble views
 class ImmeubleView(TemplateView):
     #predefined functiion
