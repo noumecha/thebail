@@ -21,26 +21,14 @@ def get_crud_urls(view_class, prefix, name):
 urlpatterns = [
     *get_crud_urls(LocataireView, "locataire/locataires", "locataire"),
     *get_crud_urls(BailleurView, "bailleur/bailleurs", "bailleur"),
+    *get_crud_urls(ImmeubleView, "immeuble/immeubles", "immeuble"),
+    *get_crud_urls(views.RecensementView, "immeuble/recensements", "recensement"),
     # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     # bailleur routes 
     path('bailleur-partial-form/', views.bailleur_partial_form_view, name='bailleur_partial_form'),
     # locataire routes
     #path('locataire-partial-form/', views._partial_form_view, name='locataire_partial_form'),
-    # immeuble routes
-    path("immeuble/immeubles/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
-    path("immeuble/immeubles/all/", views.get_immeubles, name='get_recensements'), # getting all recensements
-    path("immeuble/immeubles/update/<int:pk>", views.update_immeuble, name='immeuble_update'), # update immeuble
-    path("immeuble/immeubles/delete/<int:pk>", views.delete_immeuble, name='immeuble_delete'), # delete immeuble
-    path("immeuble/immeubles/form/", views.immeuble_form_view, name='immeuble_form'), # load form for modal purpose
-    path("immeuble/immeubles/edit/<int:pk>", views.immeuble_form_view, name='immeuble_update'), # getting immeuble form for update
-    # managing recensements
-    path("immeuble/recensements/", views.RecensementView.as_view(template_name="baux/immeuble_recensement.html"), name='immeuble_recensement'),
-    path("immeuble/recensements/all/", views.get_recensements, name='get_recensements'), # getting all recensements
-    path("immeuble/recensements/form/", views.recensement_form_view, name='recensement_form'), # load form
-    path("immeuble/recensements/edit/<int:pk>", views.recensement_form_view, name='recensement_update'), # gettins recensement form for update
-    path("immeuble/recensements/update/<int:pk>", views.update_recensements, name='update_recensement'), # update recensement properly
-    path("immeuble/recensements/delete/<int:pk>", views.recensement_delete_view, name='recensement_delete'), # delete recensement
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     #path("contrat/add/", views.contrat, name='contrat'),
