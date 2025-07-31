@@ -12,6 +12,7 @@ import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 #generic view for basic operation 
 class BaseCRUDView(TemplateView):
@@ -23,6 +24,7 @@ class BaseCRUDView(TemplateView):
     form_template = 'baux/partials/form_template.html'
     context_object_name = 'objects'
     search_fields = []
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
@@ -39,12 +41,38 @@ class BaseCRUDView(TemplateView):
             queryset = queryset.filter(q_objects).order_by('-Date_creation')
         return queryset
     
-    def get_form_view(self, request, pk=None):
+    """def get_form_view(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk) if pk else None
         form = self.form_class(instance=instance)
         html = render_to_string(self.form_template, {'form': form}, request=request)
-        return JsonResponse({'success': True, 'html':html})
+        return JsonResponse({'success': True, 'html':html})"""
     
+    def get_list_data(self, request):
+        search_query = request.GET.get('search', '').strip()
+        page_number = request.GET.get('page', 1)
+        
+        queryset = self.get_queryset(search_query)
+        paginator = Paginator(queryset, self.paginate_by)
+        page_obj = paginator.get_page(page_number)
+        
+        html = render_to_string(
+            self.partial_template, 
+            {
+                self.context_object_name: page_obj,
+                'page_obj': page_obj,
+                'paginator': paginator
+            }, 
+            request=request
+        )
+        return JsonResponse({
+            'success': True, 
+            'html': html,
+            'has_next': page_obj.has_next(),
+            'has_previous': page_obj.has_previous(),
+            'current_page': page_obj.number,
+            'total_pages': paginator.num_pages
+        })
+
     def get_list_data(self, request):
         search_query = request.GET.get('search', '').strip()
         objects = self.get_queryset(search_query)

@@ -281,6 +281,10 @@ class Bailleurs(models.Model):
     NIU = models.CharField(max_length=14, null=True, blank=True)
     Registre_commerce = models.CharField(max_length=100, null=True, blank=True)
     Raison_social = models.CharField(max_length=100, null=True, blank=True)
+    Regime_contribuable = models.CharField(max_length=100, null=True, blank=True)
+    Code_centre = models.CharField(max_length=100, null=True, blank=True)
+    Raison_social_abr = models.CharField(max_length=100, null=True, blank=True)
+    Code_commune = models.CharField(max_length=100, null=True, blank=True)
     Date_creationEnt = models.DateField(null=True, blank=True)
     Nationalite_bailleur = CountryField(blank=True, null=True, blank_label="(Choisir la nationalité)")
     # image fields for saving some stuff
@@ -335,7 +339,7 @@ class Administrations (models.Model):
 class Structures (models.Model):
     LibelleFr = models.CharField(max_length=50)
     Administration = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=False, related_name="administration")
-    CodeFr = models.CharField(max_length=50)
+    CodeFr = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f"Chapitre : {self.LibelleFr} "
@@ -425,6 +429,7 @@ class Recensements(models.Model):
     # immeuble informations that can be changed 
     Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
     Description = models.TextField(blank = True,null= True)
+    Etat = models.TextField(blank = True,null= True)
     Agent_recenseur = models.TextField(blank = True,null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
