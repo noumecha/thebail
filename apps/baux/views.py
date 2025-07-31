@@ -153,60 +153,25 @@ class HomeView(TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         return context
 
-class OccupantsView(TemplateView):
-    #predefined functiion
-    def get_context_data(self, **kwargs):
-        #A function to init the global layout. It is defined in web_project/__init__.py file
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["OccupantsList"] = Occupants.objects.all()
-        context["form"] = OccupantsForm()
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        occupants_form = OccupantsForm(request.POST)
-        if occupants_form.is_valid():
-            occupants_form.save()
-            return redirect('baux:occupants_list')
-        else:
-            context = self.get_context_data()
-            context["form"] = occupants_form
-            return self.render_to_response(context)
+#occupant view
+class OccupantsView(BaseCRUDView):
+    model = Occupants
+    form_class = OccupantsForm
+    list_route = 'occupant_list'
+    list_template = 'baux/occupant_list.html'
+    partial_template = 'baux/partials/occupants_partial.html'
+    context_object_name = 'occupants'
+    search_fields = ['Nom_Prenom','Matricule']
 
-class LocalisationView(TemplateView):
-    #predefined functiion
-    def get_context_data(self, **kwargs):
-        #A function to init the global layout. It is defined in web_project/__init__.py file
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["localisationList"] = Localisation.objects.all()
-        context["form"] = LocalisationForm()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        context = {}
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        form = LocalisationForm()
-        localisationList = Localisation.objects.all()
-        context['localisationList'] = localisationList
-        if request.method == 'POST':
-            if 'save' in request.POST:
-                pk = request.POST.get('save')
-                if not pk:
-                    form = LocalisationForm(request.POST)
-                else:
-                    localisationList = Localisation.objects.get(id=pk)
-                    form = LocalisationForm(request.POST, instance=localisationList)
-                form.save()
-                form = LocalisationForm()
-            elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                localisationList = Localisation.objects.get(id=pk)
-                localisationList.delete()
-            elif 'edit' in request.POST:
-                pk = request.POST.get('edit')
-                localisationList = Localisation.objects.get(id=pk)
-                form = LocalisationForm(instance=localisationList)
-        context['form'] = form
-        return render(request, "baux/localisation.html",context)
+#locatlisation view
+class LocalisationView(BaseCRUDView):
+    model = Localisation
+    form_class = LocalisationForm
+    list_route = 'localisation_list'
+    list_template = 'baux/localisation_list.html'
+    partial_template = 'baux/partials/localisations_partial.html'
+    context_object_name = 'localisations'
+    search_fields = ['Quartier','region__Libelle','departement__LibelleFR','arrondissement__LibelleFR','pays__LibelleFR']
 
 # for multi-step-form for collecting data        
 FORMS = [
@@ -450,39 +415,23 @@ class ContratView(TemplateView):
         
 
 # Non-Mandatement Class and views :
-class Non_MandatementView(TemplateView):
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["NonMandatementList"] = Non_Mandatement.objects.all()
-        context["form"] = Non_MandatementForm()
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        non_mandatement_form = Non_MandatementForm(request.POST)
-        if non_mandatement_form.is_valid():
-            non_mandatement_form.save()
-            return redirect('baux:non_mandatement_list')
-        else:
-            context = self.get_context_data()
-            context["form"] = non_mandatement_form
-            return self.render_to_response(context)
+class Non_MandatementView(BaseCRUDView):
+    model = Non_Mandatement
+    form_class = Non_MandatementForm
+    list_route = 'non_mandatement_list'
+    list_template = 'baux/non_mandatement_list.html'
+    partial_template = 'baux/partials/non_mandatements_partial.html'
+    context_object_name = 'non_mandatements'
+    search_fields = ['Avenant__Ref_Avenant']
 
-class AvenantsView(TemplateView):
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["avenantsList"] = Avenants.objects.all()
-        context["form"] = AvenantsForm()
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        avenants_form = AvenantsForm(request.POST)
-        if avenants_form.is_valid():
-            avenants_form.save()
-            return redirect('baux:avenant_list')
-        else:
-            context = self.get_context_data()
-            context["form"] = avenants_form
-            return self.render_to_response(context)
+class AvenantsView(BaseCRUDView):
+    model = Avenants
+    form_class = AvenantsForm
+    list_route = 'avenant_list'
+    list_template = 'baux/avenant_list.html'
+    partial_template = 'baux/partials/avenants_partial.html'
+    context_object_name = 'avenants'
+    search_fields = ['Ref_Avenant']
 
 class ConsultationView(TemplateView):
     def get_context_data(self, **kwargs):

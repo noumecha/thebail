@@ -1,0 +1,77 @@
+<table class="table table-sm">
+    <tr>
+        <th>Contrat</th>
+        <th>Ref Avenant </th>
+        <th>Duree Contrat </th>
+        <th>Signataire</th>
+        <th>Date Signature</th>
+        <th>Date Debut</th>
+        <th>Nom CF</th>
+        <th>Action</th>
+    </tr>
+    {% for avenant in avenants %}
+        <tr data-id="{{ avenant.id }}">
+            <td>{{ avenant.contrat }} </td>
+            <td>{{ avenant.Ref_Avenant}}</td>
+            <td>{{ avenant.Duree_Contrat }}</td>
+            <td>{{ avenant.Signataire }}</td>
+            <td>{{ avenant.Date_Signature }}</td>
+            <td>{{ avenant.Date_Debut }}</td>
+            <td>{{ avenant.Nom_CF }}</td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a 
+                            class="dropdown-item primary" 
+                            href="#"
+                            data-bs-target="#create-avenant-modal"
+                            data-bs-toggle="modal"
+                            data-action = "update"
+                            data-id="{{ avenant.id }}"
+                        >
+                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                        </a>
+                        <a href="#" 
+                            class="dropdown-item btn-success delete-avenant"
+                            data-bs-target="#delete-avenant-modal-{{ avenant.id }}"
+                            data-bs-toggle="modal"
+                        >
+                            <i class="bx bx-trash me-1"></i>Supprimer
+                        </a>
+                    </div>
+                    <!-- delete avenant -->
+                    <div class="modal fade" id="delete-avenant-modal-{{ avenant.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content p-0">
+                                <form action="{% url 'baux:avenant_delete' avenant.id %}" method="post" id="delete-avenant-form">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Suppression d'un avenant</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modal-content-message">
+                                            Voulez vous vraiment supprimer : {{ avenant }} ?
+                                        </div>
+                                        <input type="hidden" value="{{ avenant.id }}" name="id" id="delete-avenant-input-id">
+                                    </div>
+                                    <div class="modal-footer flex-row-reverse">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">Aucun avenant trouvé.</td>
+        </tr>
+    {% endfor %}
+</table>

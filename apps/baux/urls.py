@@ -23,6 +23,10 @@ urlpatterns = [
     *get_crud_urls(BailleurView, "bailleur/bailleurs", "bailleur"),
     *get_crud_urls(ImmeubleView, "immeuble/immeubles", "immeuble"),
     *get_crud_urls(views.RecensementView, "immeuble/recensements", "recensement"),
+    *get_crud_urls(Non_MandatementView, "non_mandatement/non_mandatements", "non_mandatement"),
+    *get_crud_urls(LocalisationView, "localisation/localisations", "localisation"),
+    *get_crud_urls(OccupantsView, "occupant/occupants", "occupant"),
+    *get_crud_urls(AvenantsView, "avenant/avenants", "avenant"),
     # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     # bailleur routes 
@@ -43,18 +47,6 @@ urlpatterns = [
     path("contrat/print/<int:pk>/", ContratView.print_contrat, name='contrat_print'),
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
     path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
-    #path("localisation/add/", views.localisation, name='localisation'),
-    path("localisation/add/", LocalisationView.as_view(template_name="baux/localisation.html"), name='localisation'),
-    path("localisation/list/", LocalisationView.as_view(template_name="baux/localisation_list.html"), name='localisation_list'),
-    #routes for occupants
-    path("occupants/add/", OccupantsView.as_view(template_name="baux/occupants.html"), name='occupants'),
-    path("occupants/list/", OccupantsView.as_view(template_name="baux/occupants_list.html"), name='occupants_list'),
-    # dossier reglements : 
-    path("non_mandatement/add/", Non_MandatementView.as_view(template_name="baux/non_mandatement.html"), name='non_mandatement'),
-    path("non_mandatement/list/", Non_MandatementView.as_view(template_name="baux/non_mandatement_list.html"), name='non_mandatement_list'),
-    # avenants : 
-    path("avenant/add/", AvenantsView.as_view(template_name="baux/avenant.html"), name='avenant'),
-    path("avenant/list/", AvenantsView.as_view(template_name="baux/avenant_list.html"), name='avenant_list'),
     # consultation : 
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
     # Statistiques : 

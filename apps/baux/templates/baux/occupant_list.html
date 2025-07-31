@@ -3,7 +3,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Liste des localisations{% endblock %}
+{% block title %}Liste des occupants{% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -14,9 +14,9 @@
         <div class="card-header">
             <div class="row d-flex justify-content-between align-items-center">
                 <div class="col-md-12 col-lg-6">
-                    <h3 class="">Listes des localisations enregistrés</h3>
+                    <h3 class="">Listes des occupants enregistrés</h3>
                     <p class="text-sm">
-                        Gérer les localisations
+                        Gérer les occupants
                     </p>
                 </div>
                 <div class="col-md-12 col-lg-6 text-end">
@@ -26,16 +26,16 @@
                         data-bs-toggle="modal"
                         data-action = "create"
                         id="add-button"
-                        data-bs-target="#create-localisation-modal"
+                        data-bs-target="#create-occupant-modal"
                     >
                         <i class="menu-icon tf-icons bx bx-file"></i> Ajouter
                     </button>
                 </div>
             </div>
-            <form action="" class="row mt-3" id="localisation-search-form">
+            <form action="" class="row mt-3" id="occupant-search-form">
                 <div class="col-md-12 col-lg-12">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Rechercher un localisation" name="search" id="search">
+                        <input type="text" class="form-control" placeholder="Rechercher un occupant" name="search" id="search">
                         <button class="btn btn-outline-primary" type="button" id="clearSearch">
                             <i class="bx bx-x"></i>
                         </button>
@@ -53,21 +53,21 @@
             </div>
         </div>
 
-        <div class="container-flex" id="localisation-table-container">
+        <div class="container-flex" id="occupant-table-container">
         </div>
     </div>
-    <!-- create or update localisation -->
-    <div class="modal fade" id="create-localisation-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+    <!-- create or update occupant -->
+    <div class="modal fade" id="create-occupant-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog modal-lg">
             <div class="modal-content p-0">
-                <form id="localisation-form">
+                <form id="occupant-form">
                     {% csrf_token %}
                     <div class="modal-header">
-                        <h5 class="modal-title">Enregistrement des informations sur une localisation</h5>
+                        <h5 class="modal-title">Enregistrement des informations sur un occupant</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="localisation-form-container">Chargement...</div>    
+                        <div id="occupant-form-container">Chargement...</div>    
                         <div class="alert alert-success" style="display: none;" id="form-success"></div>
                         <div class="alert alert-danger" style="display: none;" id="form-error"></div>
                         <input type="hidden" value="" name="id" id="update-id">
@@ -83,5 +83,5 @@
 
 {% endblock %}
 {% block extra_js %}
-    <script src="{% static 'js/localisation.js' %}"></script>
+    <script src="{% static 'js/occupant.js' %}"></script>
 {% endblock %}

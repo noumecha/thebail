@@ -1,0 +1,77 @@
+<table class="table table-sm">
+    <tr>
+        <th>Contrat</th>
+        <th>Référence facture </th>
+        <th>Date signature </th>
+        <th>Date de debut</th>
+        <th>Date de fin</th>
+        <th>Montant NAP</th>
+        <th>Etat </th>
+        <th>Action</th>
+    </tr>
+    {% for non_mandatement in non_mandatements %}
+        <tr data-id="{{ non_mandatement.id }}">
+            <td>{{ non_mandatement.Contrat }} </td>
+            <td>{{ non_mandatement.Ref_facture}}</td>
+            <td>{{ non_mandatement.Date_signature }}</td>
+            <td>{{ non_mandatement.Date_Effet_debut }}</td>
+            <td>{{ non_mandatement.Date_Effet_fin }}</td>
+            <td>{{ non_mandatement.Montant_Nap }}</td>
+            <td>{{ non_mandatement.Etat }}</td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a 
+                            class="dropdown-item primary" 
+                            href="#"
+                            data-bs-target="#create-non_mandatement-modal"
+                            data-bs-toggle="modal"
+                            data-action = "update"
+                            data-id="{{ non_mandatement.id }}"
+                        >
+                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                        </a>
+                        <a href="#" 
+                            class="dropdown-item btn-success delete-non_mandatement"
+                            data-bs-target="#delete-non_mandatement-modal-{{ non_mandatement.id }}"
+                            data-bs-toggle="modal"
+                        >
+                            <i class="bx bx-trash me-1"></i>Supprimer
+                        </a>
+                    </div>
+                    <!-- delete non_mandatement -->
+                    <div class="modal fade" id="delete-non_mandatement-modal-{{ non_mandatement.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content p-0">
+                                <form action="{% url 'baux:non_mandatement_delete' non_mandatement.id %}" method="post" id="delete-non_mandatement-form">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Suppression d'un non_mandatement</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modal-content-message">
+                                            Voulez vous vraiment supprimer : {{ non_mandatement }} ?
+                                        </div>
+                                        <input type="hidden" value="{{ non_mandatement.id }}" name="id" id="delete-non_mandatement-input-id">
+                                    </div>
+                                    <div class="modal-footer flex-row-reverse">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="8" class="text-center">Aucun mandatement trouvé.</td>
+        </tr>
+    {% endfor %}
+</table>

@@ -823,10 +823,6 @@ class AvenantsForm(forms.ModelForm):
             FloatingField(
                 "observation",
             ),
-            Submit(
-                "save",
-                "Enregistrer",
-            ),
         )
         self.fields['observation'].required = False
 
@@ -915,11 +911,6 @@ class Non_MandatementForm(forms.ModelForm):
             FloatingField(
                 "Observation",
             ),
-            Submit(
-                "save",
-                "Enregistrer",
-                css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
-            )
         )
         self.fields['Observation'].required = False
         

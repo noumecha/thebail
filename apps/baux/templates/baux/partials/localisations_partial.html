@@ -1,0 +1,71 @@
+<table class="table table-sm">
+    <tr>
+        <th>Region</th>
+        <th>Departement </th>
+        <th>Arrondissement</th>
+        <th>Quartier</th>
+        <th>Action</th>
+    </tr>
+    {% for localisation in localisations %}
+        <tr data-id="{{ localisation.id }}">
+            <td>{{ localisation.arrondissement.departement.Region}} </td>
+            <td>{{ localisation.arrondissement.departement }}</td>
+            <td>{{ localisation.arrondissement }}</td>
+            <td>{{ localisation.Quartier }}</td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a 
+                            class="dropdown-item primary" 
+                            href="#"
+                            data-bs-target="#create-localisation-modal"
+                            data-bs-toggle="modal"
+                            data-action = "update"
+                            data-id="{{ localisation.id }}"
+                        >
+                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                        </a>
+                        <a href="#" 
+                            class="dropdown-item btn-success delete-localisation"
+                            data-bs-target="#delete-localisation-modal-{{ localisation.id }}"
+                            data-bs-toggle="modal"
+                        >
+                            <i class="bx bx-trash me-1"></i>Supprimer
+                        </a>
+                    </div>
+                    <!-- delete localisation -->
+                    <div class="modal fade" id="delete-localisation-modal-{{ localisation.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content p-0">
+                                <form action="{% url 'baux:localisation_delete' localisation.id %}" method="post" id="delete-localisation-form">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Suppression d'un localisation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modal-content-message">
+                                            Voulez vous vraiment supprimer : {{ localisation }} ?
+                                        </div>
+                                        <input type="hidden" value="{{ localisation.id }}" name="id" id="delete-localisation-input-id">
+                                    </div>
+                                    <div class="modal-footer flex-row-reverse">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Aucun localisation trouvé.</td>
+        </tr>
+    {% endfor %}
+</table>            

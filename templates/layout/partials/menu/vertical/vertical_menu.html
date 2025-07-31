@@ -135,12 +135,7 @@
         <div class="text-truncate" data-i18n="Form Elements">Localisation</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if '/localisation/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:localisation' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
-          </a>
-        </li>
-        <li class="menu-item {% if '/localisation/list/' == request.path %}active{% endif %}">
+        <li class="menu-item {% if '/localisation/localisations/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:localisation_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
@@ -154,13 +149,8 @@
         <div class="text-truncate" data-i18n="Form Elements">Occupants</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if '/occupants/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:occupants' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
-          </a>
-        </li>
-        <li class="menu-item {% if '/occupants/list/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:occupants_list' %}" class="menu-link">
+        <li class="menu-item {% if '/occupant/occupants/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:occupant_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
         </li>
@@ -173,12 +163,7 @@
         <div class="text-truncate" data-i18n="Form Elements">Avenants</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if '/avenant/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:avenant' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
-          </a>
-        </li>
-        <li class="menu-item {% if '/avenant/list/' == request.path %}active{% endif %}">
+        <li class="menu-item {% if '/avenant/avenants/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:avenant_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
@@ -192,12 +177,7 @@
         <div class="text-truncate" data-i18n="Form Elements">Non mandatement</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if '/non_mandatement/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:non_mandatement' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Ajouter</div>
-          </a>
-        </li>
-        <li class="menu-item {% if '/non_mandatement/list/' == request.path %}active{% endif %}">
+        <li class="menu-item {% if '/non_mandatement/non_mandatements/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:non_mandatement_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Listes</div>
           </a>
