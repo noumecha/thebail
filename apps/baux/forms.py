@@ -63,59 +63,62 @@ class BailleursForm(forms.ModelForm):
     class Meta:
         model = Bailleurs
 
-        fields = ( 'Nom_prenom',
+        fields = ( 
+                'Nom_prenom',
                 'NIU',
                 'Registre_commerce',
-                'Num_Cni',
-                'Date_delivrance_cni',
                 'Type_personne',
                 'Raison_social',
-                'Reference_doc_identification',
                 'Date_creationEnt',
-                'NumPassePort',
-                'Date_delivrance_PassePort',
                 'Nom_Prenom_Representant',
                 'Telephone',
                 'Adresse',
                 'Type_id_bailleur',
-                'Num_Cni_representant',
-                'Date_delivrance_cni_representant',
                 'Type_id_representant',
-                'NumPassePort_representant',
-                'Date_delivrance_PassePort_representant',
                 'Telephone_representant',
                 'Adresse_representant',
+                # new field 
+                'Document_identification',
+                'Date_delivrance_doc',
+                'Date_expiration_doc',
+                'Num_doc',
+                'Document_identification_rep',
+                'Num_doc_representant',
+                'Date_delivrance_doc_representant',
+                'Date_expiration_doc_representant',
+                'Nationalite_bailleur',
             )
         labels = {
             "Nom_prenom": " intitulé ou  Nom et prenoms",
             "NIU": "NIU(idientifiant unique DGI)",
-            "Reference_doc_identification" : "Reference du document d'identification",
             "Registre_commerce": "Registre du commerce",
             "Nom_Prenom_Representant": " Nom et prenoms du Representant" ,
             "Raison_social" : "Raison social",
             "Date_creationEnt" : "Date de création",
-            "Num_Cni": " Numero CNI",
-            "Date_delivrance_cni" :"date de delivrance CNI" ,
             "Type_personne": "Type de personne",
-            "NumPassePort": " N° passeport",
-            "Date_delivrance_PassePort" :"date de delivrance" ,
             "Telephone": "N° Télephone" ,
             "Adresse": "Adresse ou boite postal" ,
-            "Num_Cni_representant" : "Numero de CNI du Representant" ,
-            "Date_delivrance_cni_representant" : "Date de delivrance CNI Representant" ,
             "Type_id_bailleur" : "Type Identification du bailleur" ,
             "Type_id_representant" : "Type Identification Representant" ,
-            "NumPassePort_representant" : "Numero de passeport du Representant" ,
-            "Date_delivrance_PassePort_representant" : "Date de delivrance PassePort de Representant" ,
             "Telephone_representant" : "N° Télephone du Representant",
             "Adresse_representant" : "Adresse du Representant",
+            # new fields
+            "Document_identification" : "Fichier du document",
+            "Date_delivrance_doc" : "Date délivrance du document d'identification",
+            "Date_expiration_doc" : "Date expiration du docuemnt d'identification",
+            "Num_doc" : "Numero du document d'identification",
+            "Document_identification_rep" : "Fichier du document d'idenfication du représentant",
+            "Num_doc_representant" : "Numeor docuemnt d'identification du représentant",
+            "Date_delivrance_doc_representant" : "Date délivrance document d'identification représentant",
+            "Date_expiration_doc_representant" : "Date expiration du document d'identification représentant",
+            "Nationalite_bailleur" : "Nationalité du bailleur"
         }
         widgets = {
-            'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Date_delivrance_doc'  :  forms.TextInput(attrs={'type': 'date'}),
+            "Date_expiration_doc" : forms.TextInput(attrs={'type': 'date'}),
             'Date_creationEnt'  :  forms.TextInput(attrs={'type': 'date'}),
-            'Date_delivrance_PassePort'  :  forms.TextInput(attrs={'type': 'date'}),
-            "Date_delivrance_cni_representant" : forms.TextInput(attrs={'type': 'date'}),
-            "Date_delivrance_PassePort_representant" : forms.TextInput(attrs={'type': 'date'}),
+            "Date_delivrance_doc_representant" : forms.TextInput(attrs={'type': 'date'}),
+            "Date_expiration_doc_representant" : forms.TextInput(attrs={'type': 'date'}),
         }
 
     def partial_form(self):
@@ -130,6 +133,7 @@ class BailleursForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0 bailleur_type_personne'),   
                         Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
+                        Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_creationEnt"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
                         Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
@@ -138,10 +142,10 @@ class BailleursForm(forms.ModelForm):
                         Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_type_id'),  
-                        Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
-                        Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_cni'),
-                        Column(FloatingField("NumPassePort"), css_class='form-group col-md-6 mb-0 bailleur_num_passeport'),
-                        Column(FloatingField("Date_delivrance_PassePort"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_passeport'),
+                        Column(FloatingField("Document_identification"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Num_doc"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
+                        Column(FloatingField("Date_delivrance_doc"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_expiration_doc"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -161,6 +165,7 @@ class BailleursForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0 bailleur_type_personne'),   
                         Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
+                        Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_creationEnt"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
                         Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
@@ -168,11 +173,11 @@ class BailleursForm(forms.ModelForm):
                         Column(FloatingField("Registre_commerce"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
                         Column(FloatingField("Adresse"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_type_id'),  
-                        Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
-                        Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_cni'),
-                        Column(FloatingField("NumPassePort"), css_class='form-group col-md-6 mb-0 bailleur_num_passeport'),
-                        Column(FloatingField("Date_delivrance_PassePort"), css_class='form-group col-md-6 mb-0 bailleur_date_deliv_passeport'),
+                        Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0'),  
+                        Column(FloatingField("Document_identification"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Num_doc"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_delivrance_doc"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_expiration_doc"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -184,11 +189,11 @@ class BailleursForm(forms.ModelForm):
                     "Informations Representant",
                     Row(
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_id_representant"), css_class='form-group col-md-6 mb-0 representant_type_id'),    
-                        Column(FloatingField("Num_Cni_representant"), css_class='form-group col-md-6 mb-0 representant_num_cni'),
-                        Column(FloatingField("Date_delivrance_cni_representant"), css_class='form-group col-md-6 mb-0 representant_date_deliv_cni'),
-                        Column(FloatingField("NumPassePort_representant"), css_class='form-group col-md-6 mb-0 representant_num_passeport'),
-                        Column(FloatingField("Date_delivrance_PassePort_representant"), css_class='form-group col-md-6 mb-0 representant_date_deliv_passeport'),            
+                        Column(FloatingField("Type_id_representant"), css_class='form-group col-md-6 mb-0 representant_type_id'),
+                        Column(FloatingField("Document_identification_rep"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Num_doc_representant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_delivrance_doc_representant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_expiration_doc_representant"), css_class='form-group col-md-6 mb-0'),            
                         Column(FloatingField("Telephone_representant"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Adresse_representant"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
@@ -200,11 +205,10 @@ class BailleursForm(forms.ModelForm):
         )
         self.helper.form_tag = False;self.fields['NIU'].required = False
         self.fields['Registre_commerce'].required = False; self.fields['Nom_Prenom_Representant'].required = False        
-        self.fields['Num_Cni'].required = False;self.fields['Date_delivrance_cni'].required = False 
-        self.fields['NumPassePort'].required = False;self.fields['Date_delivrance_PassePort'].required = False 
-        self.fields['Num_Cni_representant'].required = False;self.fields['Date_delivrance_cni_representant'].required = False
-        self.fields['NumPassePort_representant'].required = False;self.fields['Date_delivrance_PassePort_representant'].required = False
-        self.fields['Telephone_representant'].required = False
+        self.fields['Num_doc'].required = False;self.fields['Date_delivrance_doc'].required = False 
+        self.fields['Date_expiration_doc'].required = False;self.fields['Date_delivrance_doc_representant'].required = False
+        self.fields['Date_expiration_doc_representant'].required = False
+        self.fields['Num_doc_representant'].required = False;self.fields['Telephone_representant'].required = False
         self.fields['Adresse_representant'].required = False;self.fields['Type_id_representant'].required = False
 
 
@@ -324,7 +328,8 @@ class RecensementsForm(forms.ModelForm):
         model = Recensements
 
         fields = (
-            "Type_immeuble", "Type_construction", "Type_mur", "Couleur", "Emprise_au_sol", "Description", "Norme", "Immeuble"
+            "Agent_recenseur", "Type_immeuble", "Type_construction", "Type_mur", 
+            "Couleur", "Emprise_au_sol", "Description", "Norme", "Immeuble"
         )
 
         labels = {
@@ -336,6 +341,7 @@ class RecensementsForm(forms.ModelForm):
             "Description" : "Autres informations",
             "Norme" : "Norme de l'immeuble (Cadastre)",
             "Immeuble"  : "Immeuble",
+            "Agent_recenseur" : "Nom Agent recenseur"
         }
 
         widgets = {
@@ -346,6 +352,17 @@ class RecensementsForm(forms.ModelForm):
         super(RecensementsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
+            Row(
+                Fieldset(
+                    "Informations sur le recenseur",
+                    Row(
+                        Column(FloatingField("Agent_recenseur"), css_class='form-group col-md-12 mb-0'),
+                        css_class='form-row'
+                    ),
+                    css_class="line__text border p-2 pt-4"
+                ),
+                css_class="p-3 pt-0"
+            ),
             Row(
                 Fieldset(
                     "Informations sur l'immeuble",
@@ -590,7 +607,7 @@ class ContratsForm(forms.ModelForm):
 
         fields = ( 'Bailleur', 'Immeubles', 'Duree_Contrat', 'Signataire','Date_Signature', 'Date_Debut','Ref_contrat',
             'Periodicite_Reglement','Administration_beneficiaire', 'Montant_Charges_Mensuel','Visa_controlleur','Montant_Nap_Mensuel',
-            'Banque', 'RIB', 'Type_location','observation','Soumis_impot','Revisitable', 'statut_contrat', 'TypeContrat', 'nature_contrat',
+            'Banque', 'RIB', 'Document_RIB', 'Type_location','observation','Soumis_impot','Revisitable', 'statut_contrat', 'TypeContrat', 'nature_contrat',
             "Superficie_louer", 'Montant_Taxe_Mensuel', 'Devise', 'Rabattement', 'Structure', #Locataire
         )
         labels = {
@@ -599,8 +616,8 @@ class ContratsForm(forms.ModelForm):
             "Immeubles": "Imeubles Loués",
             "Superficie_louer" : "Superficie louée",
             "TypeContrat" : "Type du Contrat",
-            "Administration_beneficiaire" : "Locataire / Administration",
-            "Structure" : "Structure",  
+            "Administration_beneficiaire" : "Section / Administration",
+            "Structure" : "Chapitre", # Structure  
             "Duree_Contrat":" Durée du Contrat", 
             "Signataire":" Autorité Signataire du contrat",
             "Date_Signature":" Date de Signature du contrat",  
@@ -611,6 +628,7 @@ class ContratsForm(forms.ModelForm):
             "Montant_Nap_Mensuel":"Montant LOYER Mensuel",  
             "Banque":" LIBELLE DE LA BANQUE",
             "RIB":"RIB",
+            "Document_RIB" : "Document RIB",
             "statut_contrat":"Statut du contrat",
             "nature_contrat" : "Nature du Contrat",
             "Devise" : "Devise",
@@ -707,6 +725,7 @@ class ContratsForm(forms.ModelForm):
                         ),
                         Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("RIB"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Document_RIB"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
                     ),
                     css_class="line__text border p-2 pt-4"

@@ -60,7 +60,7 @@
     <div class="modal fade" id="create-avenant-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog modal-lg">
             <div class="modal-content p-0">
-                <form id="avenant-form">
+                <form id="avenant-form" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-header">
                         <h5 class="modal-title">Enregistrement des informations sur un avenant</h5>

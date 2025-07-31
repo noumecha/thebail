@@ -75,7 +75,10 @@ INSTALLED_APPS = [
     #'bootstrap5',
     #"crispy_bootstrap4",
     'formtools',
-    'django_select2'
+    'django_select2',
+    # 
+    'django_countries',
+    'djmoney',
 ]
 
 MIDDLEWARE = [
@@ -193,6 +196,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 THEME_LAYOUT_DIR = THEME_LAYOUT_DIR
 THEME_VARIABLES = THEME_VARIABLES
+
+# saving file 
+# --------------------------------------------------------------------
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 
 

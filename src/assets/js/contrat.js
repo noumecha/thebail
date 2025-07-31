@@ -7,11 +7,19 @@ $(function() {
 
     // get strucutre base on the adminstiration value
     $('#id_Administration_beneficiaire').select2({
-        placeholder: "Selectionnez une administration",
+        placeholder: "Selectionnez une Section",
         allowClear: true,
     });
     $('#id_Structure').select2({
-        placeholder : "Selectionnez une structure",
+        placeholder : "Selectionnez un Chapitre",
+        allowClear: true,
+    })
+    $('#id_Bailleur').select2({
+        placeholder : "Selectionnez un Bailleur",
+        allowClear: true,
+    })
+    $('#id_Immeubles').select2({
+        placeholder : "Selectionnez un immeuble",
         allowClear: true,
     })
     $(document).on('change', '#id_Administration_beneficiaire', function () {

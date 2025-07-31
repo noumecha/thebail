@@ -17,7 +17,7 @@
                 Enregistrement d'un contrat de bail administratif 
             {% endif %}
         </h1>
-        <form method="post" action="{% if is_update %}{% url 'baux:contrat_update' form.instance.id %}{% else %}{% url 'baux:contrat' %}{% endif %}">
+        <form method="post" enctype="multipart/form-data" action="{% if is_update %}{% url 'baux:contrat_update' form.instance.id %}{% else %}{% url 'baux:contrat' %}{% endif %}">
             {#% if not form.instance.id %#}
 
             {% crispy form %}
@@ -38,9 +38,9 @@
     </div>
     <!-- immeuble modal -->
     <div class="modal fade" id="addImmeubleModal" tabindex="-1" aria-labelledby="addImmeubleModalLabel">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-            <form id="immeubleForm">
+            <form id="immeubleForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header">
                 <h5 class="modal-title" id="addImmeubleModalLabel">Ajouter un immeuble</h5>
@@ -60,9 +60,9 @@
     </div>
     <!-- bailleur modal -->
     <div class="modal fade" id="addBailleurModal" tabindex="-1" aria-labelledby="addBailleurModalLabel">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-            <form id="bailleurForm">
+            <form id="bailleurForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header">
                     <h5 class="modal-title" id="addBailleurModalLabel">Ajouter un bailleur</h5>

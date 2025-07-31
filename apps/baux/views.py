@@ -10,6 +10,7 @@ from .models import Accessoires, Recensements,TypeContrats, Locataires, Bailleur
 from django.http import HttpResponse
 import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
+from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 
 #generic view for basic operation 
@@ -35,7 +36,7 @@ class BaseCRUDView(TemplateView):
             q_objects = Q()
             for field in self.search_fields:
                 q_objects |= Q(**{f"{field}__icontains": search_query})
-            queryset = queryset.filter(q_objects)
+            queryset = queryset.filter(q_objects).order_by('-Date_creation')
         return queryset
     
     def get_form_view(self, request, pk=None):
@@ -51,7 +52,7 @@ class BaseCRUDView(TemplateView):
         return JsonResponse({'success':True, 'html':html})
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             if self.form_class == RecensementsForm:
                 recensement = form.save(commit=False)
@@ -185,7 +186,11 @@ TEMPLATES = {
     "1": "baux/step2.html",
     "2": "baux/step3.html",
 }
+
+temp_storage = FileSystemStorage(location='/tmp/wizard_files') # Choose an appropriate temporary directory
 class CollecteView(SessionWizardView):
+    file_storage = temp_storage 
+
     def get_template_names(self):
         return [TEMPLATES[self.steps.current]]
 
@@ -390,7 +395,7 @@ class ContratView(TemplateView):
             contrat = get_object_or_404(Contrats, pk=pk)
             contrat_form = ContratsForm(request.POST, instance=contrat)
         else:
-            contrat_form = ContratsForm(request.POST)
+            contrat_form = ContratsForm(request.POST, request.FILES)
 
         if contrat_form.is_valid():
             contrat_form.save()

@@ -1,5 +1,8 @@
 from django.db import models
 from django import forms
+from apps.baux.validators import rib_validator
+from django_countries.fields import CountryField
+from djmoney.models.fields import MoneyField
 
 # Create your models here.
 
@@ -103,11 +106,165 @@ NATURE_CONTRAT = (
     ('Avenant', 'Avenant')
 )
 DEVISES = (
-    ('XAF', 'XAF'),
-    ('EUR', 'EUR'),
-    ('USD', 'USD'),
-    ('XOF', 'XOF'),
-    ('YEN', 'YEN')
+    ("USD", "(USD) United States Dollar"),
+    ("EUR", "(EUR) Euro"),
+    ("JPY", "(JPY) Japanese Yen"),
+    ("GBP", "(GBP) British Pound Sterling"),
+    ("AUD", "(AUD) Australian Dollar"),
+    ("CAD", "(CAD) Canadian Dollar"),
+    ("CHF", "(CHF) Swiss Franc"),
+    ("CNY", "(CNY) Chinese Yuan"),
+    ("SEK", "(SEK) Swedish Krona"),
+    ("NZD", "(NZD) New Zealand Dollar"),
+    ("MXN", "(MXN) Mexican Peso"),
+    ("SGD", "(SGD) Singapore Dollar"),
+    ("HKD", "(HKD) Hong Kong Dollar"),
+    ("NOK", "(NOK) Norwegian Krone"),
+    ("KRW", "(KRW) South Korean Won"),
+    ("TRY", "(TRY) Turkish Lira"),
+    ("RUB", "(RUB) Russian Ruble"),
+    ("INR", "(INR) Indian Rupee"),
+    ("BRL", "(BRL) Brazilian Real"),
+    ("ZAR", "(ZAR) South African Rand"),
+    ("AED", "(AED) United Arab Emirates Dirham"),
+    ("AFN", "(AFN) Afghan Afghani"),
+    ("ALL", "(ALL) Albanian Lek"),
+    ("AMD", "(AMD) Armenian Dram"),
+    ("ANG", "(ANG) Netherlands Antillean Guilder"),
+    ("AOA", "(AOA) Angolan Kwanza"),
+    ("ARS", "(ARS) Argentine Peso"),
+    ("AWG", "(AWG) Aruban Florin"),
+    ("AZN", "(AZN) Azerbaijani Manat"),
+    ("BAM", "(BAM) Bosnia-Herzegovina Convertible Mark"),
+    ("BBD", "(BBD) Barbadian Dollar"),
+    ("BDT", "(BDT) Bangladeshi Taka"),
+    ("BGN", "(BGN) Bulgarian Lev"),
+    ("BHD", "(BHD) Bahraini Dinar"),
+    ("BIF", "(BIF) Burundian Franc"),
+    ("BMD", "(BMD) Bermudan Dollar"),
+    ("BND", "(BND) Brunei Dollar"),
+    ("BOB", "(BOB) Bolivian Boliviano"),
+    ("BSD", "(BSD) Bahamian Dollar"),
+    ("BTN", "(BTN) Bhutanese Ngultrum"),
+    ("BWP", "(BWP) Botswanan Pula"),
+    ("BYN", "(BYN) Belarusian Ruble"),
+    ("BZD", "(BZD) Belize Dollar"),
+    ("CDF", "(CDF) Congolese Franc"),
+    ("CLP", "(CLP) Chilean Peso"),
+    ("COP", "(COP) Colombian Peso"),
+    ("CRC", "(CRC) Costa Rican Colón"),
+    ("CUP", "(CUP) Cuban Peso"),
+    ("CVE", "(CVE) Cape Verdean Escudo"),
+    ("CZK", "(CZK) Czech Republic Koruna"),
+    ("DJF", "(DJF) Djiboutian Franc"),
+    ("DKK", "(DKK) Danish Krone"),
+    ("DOP", "(DOP) Dominican Peso"),
+    ("DZD", "(DZD) Algerian Dinar"),
+    ("EGP", "(EGP) Egyptian Pound"),
+    ("ERN", "(ERN) Eritrean Nakfa"),
+    ("ETB", "(ETB) Ethiopian Birr"),
+    ("FJD", "(FJD) Fijian Dollar"),
+    ("FKP", "(FKP) Falkland Islands Pound"),
+    ("GEL", "(GEL) Georgian Lari"),
+    ("GGP", "(GGP) Guernsey Pound"),
+    ("GHS", "(GHS) Ghanaian Cedi"),
+    ("GIP", "(GIP) Gibraltar Pound"),
+    ("GMD", "(GMD) Gambian Dalasi"),
+    ("GNF", "(GNF) Guinean Franc"),
+    ("GTQ", "(GTQ) Guatemalan Quetzal"),
+    ("GYD", "(GYD) Guyanaese Dollar"),
+    ("HNL", "(HNL) Honduran Lempira"),
+    ("HRK", "(HRK) Croatian Kuna"),
+    ("HTG", "(HTG) Haitian Gourde"),
+    ("HUF", "(HUF) Hungarian Forint"),
+    ("IDR", "(IDR) Indonesian Rupiah"),
+    ("ILS", "(ILS) Israeli New Sheqel"),
+    ("IMP", "(IMP) Manx pound"),
+    ("IQD", "(IQD) Iraqi Dinar"),
+    ("IRR", "(IRR) Iranian Rial"),
+    ("ISK", "(ISK) Icelandic Króna"),
+    ("JEP", "(JEP) Jersey Pound"),
+    ("JMD", "(JMD) Jamaican Dollar"),
+    ("JOD", "(JOD) Jordanian Dinar"),
+    ("KES", "(KES) Kenyan Shilling"),
+    ("KGS", "(KGS) Kyrgystani Som"),
+    ("KHR", "(KHR) Cambodian Riel"),
+    ("KMF", "(KMF) Comorian Franc"),
+    ("KPW", "(KPW) North Korean Won"),
+    ("KWD", "(KWD) Kuwaiti Dinar"),
+    ("KYD", "(KYD) Cayman Islands Dollar"),
+    ("KZT", "(KZT) Kazakhstani Tenge"),
+    ("LAK", "(LAK) Laotian Kip"),
+    ("LBP", "(LBP) Lebanese Pound"),
+    ("LKR", "(LKR) Sri Lankan Rupee"),
+    ("LRD", "(LRD) Liberian Dollar"),
+    ("LSL", "(LSL) Lesotho Loti"),
+    ("LYD", "(LYD) Libyan Dinar"),
+    ("MAD", "(MAD) Moroccan Dirham"),
+    ("MDL", "(MDL) Moldovan Leu"),
+    ("MGA", "(MGA) Malagasy Ariary"),
+    ("MKD", "(MKD) Macedonian Denar"),
+    ("MMK", "(MMK) Myanma Kyat"),
+    ("MNT", "(MNT) Mongolian Tugrik"),
+    ("MOP", "(MOP) Macanese Pataca"),
+    ("MRU", "(MRU) Mauritanian Ouguiya"),
+    ("MUR", "(MUR) Mauritian Rupee"),
+    ("MVR", "(MVR) Maldivian Rufiyaa"),
+    ("MWK", "(MWK) Malawian Kwacha"),
+    ("MYR", "(MYR) Malaysian Ringgit"),
+    ("MZN", "(MZN) Mozambican Metical"),
+    ("NAD", "(NAD) Namibian Dollar"),
+    ("NGN", "(NGN) Nigerian Naira"),
+    ("NIO", "(NIO) Nicaraguan Córdoba"),
+    ("NPR", "(NPR) Nepalese Rupee"),
+    ("OMR", "(OMR) Omani Rial"),
+    ("PAB", "(PAB) Panamanian Balboa"),
+    ("PEN", "(PEN) Peruvian Nuevo Sol"),
+    ("PGK", "(PGK) Papua New Guinean Kina"),
+    ("PHP", "(PHP) Philippine Peso"),
+    ("PKR", "(PKR) Pakistani Rupee"),
+    ("PLN", "(PLN) Polish Zloty"),
+    ("PYG", "(PYG) Paraguayan Guarani"),
+    ("QAR", "(QAR) Qatari Rial"),
+    ("RON", "(RON) Romanian Leu"),
+    ("RSD", "(RSD) Serbian Dinar"),
+    ("RWF", "(RWF) Rwandan Franc"),
+    ("SAR", "(SAR) Saudi Riyal"),
+    ("SBD", "(SBD) Solomon Islands Dollar"),
+    ("SCR", "(SCR) Seychellois Rupee"),
+    ("SDG", "(SDG) Sudanese Pound"),
+    ("SHP", "(SHP) Saint Helena Pound"),
+    ("SLL", "(SLL) Sierra Leonean Leone"),
+    ("SOS", "(SOS) Somali Shilling"),
+    ("SRD", "(SRD) Surinamese Dollar"),
+    ("SSP", "(SSP) South Sudanese Pound"),
+    ("STN", "(STN) São Tomé and Príncipe Dobra"),
+    ("SYP", "(SYP) Syrian Pound"),
+    ("SZL", "(SZL) Swazi Lilangeni"),
+    ("THB", "(THB) Thai Baht"),
+    ("TJS", "(TJS) Tajikistani Somoni"),
+    ("TMT", "(TMT) Turkmenistani Manat"),
+    ("TND", "(TND) Tunisian Dinar"),
+    ("TOP", "(TOP) Tongan Paʻanga"),
+    ("TTD", "(TTD) Trinidad and Tobago Dollar"),
+    ("TWD", "(TWD) New Taiwan Dollar"),
+    ("TZS", "(TZS) Tanzanian Shilling"),
+    ("UAH", "(UAH) Ukrainian Hryvnia"),
+    ("UGX", "(UGX) Ugandan Shilling"),
+    ("UYU", "(UYU) Uruguayan Peso"),
+    ("UZS", "(UZS) Uzbekistan Som"),
+    ("VES", "(VES) Venezuelan Bolívar"),
+    ("VND", "(VND) Vietnamese Dong"),
+    ("VUV", "(VUV) Vanuatu Vatu"),
+    ("WST", "(WST) Samoan Tala"),
+    ("XAF", "(XAF) CFA Franc BEAC"),
+    ("XCD", "(XCD) East Caribbean Dollar"),
+    ("XDR", "(XDR) Special Drawing Rights"),
+    ("XOF", "(XOF) CFA Franc BCEAO"),
+    ("XPF", "(XPF) CFP Franc"),
+    ("YER", "(YER) Yemeni Rial"),
+    ("ZMW", "(ZMW) Zambian Kwacha"),
+    ("ZWL", "(ZWL) Zimbabwean Dollar"),
 )
 
 class Exercice(models.Model):
@@ -121,28 +278,28 @@ class Exercice(models.Model):
 
 class Bailleurs(models.Model):
     Nom_prenom = models.CharField(max_length=50, null=True, blank=True)
-    NIU = models.CharField(max_length=20, null=True)
-    Reference_doc_identification = models.CharField(max_length=20, null=True, blank=True)
+    NIU = models.CharField(max_length=14, null=True, blank=True)
     Registre_commerce = models.CharField(max_length=100, null=True, blank=True)
     Raison_social = models.CharField(max_length=100, null=True, blank=True)
     Date_creationEnt = models.DateField(null=True, blank=True)
-    Num_Cni = models.CharField(max_length=50, null=True, blank=True)
-    Num_Cni_representant = models.CharField(max_length=50, null=True, blank=True)
+    Nationalite_bailleur = CountryField(blank=True, null=True, blank_label="(Choisir la nationalité)")
     # image fields for saving some stuff
-    #Scan_cni = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=None, null=True)
-    Date_delivrance_cni = models.DateField(null=True, blank=True)
-    Date_delivrance_cni_representant = models.DateField(null=True, blank=True)
-    Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
     Type_id_bailleur = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True, blank=True)
-    Type_id_representant = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True,blank=True)
-    NumPassePort = models.CharField(max_length=50, null=True)
-    NumPassePort_representant = models.CharField(max_length=50, null=True, blank=True)
-    Date_delivrance_PassePort = models.DateField(null=True)
-    Date_delivrance_PassePort_representant = models.DateField(null=True, blank=True)
-    Nom_Prenom_Representant = models.CharField(max_length=50, null=True, blank=True)
+    Document_identification = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
+    Date_delivrance_doc = models.DateField(null=True, blank=True)
+    Date_expiration_doc = models.DateField(null=True, blank=True)
+    Num_doc = models.CharField(max_length=50, null=True)
     Telephone = models.CharField(max_length=20, null=True)
-    Telephone_representant = models.CharField(max_length=20, null=True, blank=True)
     Adresse = models.CharField(max_length=50, null=True)
+    Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
+    # representant datas
+    Type_id_representant = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True,blank=True)
+    Document_identification_rep = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
+    Num_doc_representant = models.CharField(max_length=50, null=True, blank=True)
+    Date_delivrance_doc_representant = models.DateField(null=True, blank=True)
+    Date_expiration_doc_representant = models.DateField(null=True, blank=True)
+    Nom_Prenom_Representant = models.CharField(max_length=50, null=True, blank=True)
+    Telephone_representant = models.CharField(max_length=20, null=True, blank=True)
     Adresse_representant = models.CharField(max_length=50, null=True, blank=True)
     Observation = models.TextField(blank = True, null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
@@ -150,11 +307,11 @@ class Bailleurs(models.Model):
 
     def __str__(self):
         name = self.Nom_prenom if self.Nom_prenom else self.Raison_social
-        return f"Bailleur N° {self.id} : {name}"
+        return f"{name}"
 
 class Locataires(models.Model):
     Intitule = models.CharField(max_length=50)
-    NIU = models.CharField(max_length=20, null=True)
+    NIU = models.CharField(max_length=14, null=True, blank=True)
     Nom_Prenom_Representant = models.CharField(max_length=100, null=True)
     Num_Cni = models.CharField(max_length=50, null=True)
     Date_delivrance_cni = models.DateField(null=True)
@@ -178,9 +335,10 @@ class Administrations (models.Model):
 class Structures (models.Model):
     LibelleFr = models.CharField(max_length=50)
     Administration = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=False, related_name="administration")
+    CodeFr = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"Structure : {self.LibelleFr} "
+        return f"Chapitre : {self.LibelleFr} "
 
 class Normes (models.Model):
     DesignationFr = models.CharField(max_length=50)
@@ -252,6 +410,7 @@ class Immeubles (models.Model):
     #Accessoires = models.CharField(max_length=50,null=True,blank=True)
     Date_signatureTF = models.DateField(null=True)
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Date_creation = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return f" {self.Designation}/{self.Localisation} "
@@ -263,10 +422,10 @@ class Immeubles (models.Model):
 class Recensements(models.Model):
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
     Numero = models.IntegerField()
-    Date_creation = models.DateTimeField(auto_now_add=True)
     # immeuble informations that can be changed 
     Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
     Description = models.TextField(blank = True,null= True)
+    Agent_recenseur = models.TextField(blank = True,null= True)
     Date_creation = models.DateTimeField(auto_now_add=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=255, null=True)
@@ -369,7 +528,8 @@ class Contrats (models.Model):
     Rabattement = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
-    RIB = models.CharField(max_length=26, null=True)
+    RIB = models.CharField(max_length=26, null=True, validators=[rib_validator])
+    Document_RIB = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     statut_contrat = models.CharField(choices=STATUT_CONTRAT, max_length=1, null=True)
     nature_contrat = models.CharField(max_length=255, choices=NATURE_CONTRAT, null=True)
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True)
