@@ -39,7 +39,7 @@ class BaseCRUDView(TemplateView):
             for field in self.search_fields:
                 q_objects |= Q(**{f"{field}__icontains": search_query})
             queryset = queryset.filter(q_objects).order_by('-Date_creation')
-        return queryset
+        return queryset[:5]  # Limit to 50 results for performance
     
     """def get_form_view(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk) if pk else None
