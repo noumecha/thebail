@@ -306,7 +306,7 @@ class Bailleurs(models.Model):
     Telephone_representant = models.CharField(max_length=20, null=True, blank=True)
     Adresse_representant = models.CharField(max_length=50, null=True, blank=True)
     Observation = models.TextField(blank = True, null= True)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -322,7 +322,7 @@ class Locataires(models.Model):
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=2, null=False)
     Peut_payer = models.CharField(choices=PEUT_PAYER, max_length=255, null=True)
     Observation = models.TextField(blank = True,null= True)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -332,6 +332,8 @@ class Administrations (models.Model):
     LibelleFr = models.CharField(max_length=50)
     AbreviationFr = models.CharField(max_length=20, null=True)
     code = models.CharField(max_length=2, null=True)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.LibelleFr}"
@@ -340,6 +342,8 @@ class Structures (models.Model):
     LibelleFr = models.CharField(max_length=50)
     Administration = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=False, related_name="administration")
     CodeFr = models.CharField(max_length=50, null=True, blank=True)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Chapitre : {self.LibelleFr} "
@@ -411,10 +415,11 @@ class Immeubles (models.Model):
     Reference_TF = models.CharField(max_length=50,null=True)
     Nom_prenom_proprietaireTF = models.CharField(max_length=50,null=True)
     Element_immeuble = models.CharField(max_length=50,null=True,blank=True)
-    #Accessoires = models.CharField(max_length=50,null=True,blank=True)
+    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
     Date_signatureTF = models.DateField(null=True)
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f" {self.Designation}/{self.Localisation} "
@@ -431,13 +436,13 @@ class Recensements(models.Model):
     Description = models.TextField(blank = True,null= True)
     Etat = models.TextField(blank = True,null= True)
     Agent_recenseur = models.TextField(blank = True,null= True)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=255, null=True)
     Type_mur = models.CharField(blank=True, choices=TYPE_MUR, max_length=255, null=True)
     Couleur = models.CharField(max_length=255,null=True,blank=True)
-    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
     Emprise_au_sol = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+    
 
     def __str__(self):
         return f"Recensement - {self.Immeuble} - du {self.Date_creation.strftime('%d/%m/%Y')}"
@@ -456,7 +461,7 @@ class Occupants (models.Model):
     NumPassePort = models.CharField(max_length=50,null=True)
     Date_Delivrance_PassePort = models.CharField(max_length=50,null=True)
     Date_Signature_acte_juridique = models.CharField(max_length=50,null=True)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -468,10 +473,8 @@ class Ayant_droits (models.Model):
     Date_delivrance_cni = models.DateField(null=True)
     Reference_juridique = models.CharField(max_length=50)
     Observation = models.CharField(max_length=200, null=True)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
-    """ Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=False, related_name= "bailleur")
-    """
     Bailleur = models.ManyToManyField(Bailleurs, blank=True)
 
 class Accessoires(models.Model):
@@ -505,6 +508,8 @@ class Banques(models.Model):
 class TypeContrats(models.Model):
     libelle = models.CharField(max_length=500)
     description = models.TextField(blank=True, null=True)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
 
     # return text
     def __str__(self):
@@ -540,7 +545,7 @@ class Contrats (models.Model):
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True)
     Etat = models.BooleanField(null=True, blank=True)
     observation = models.CharField(max_length=200)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
     Soumis_impot = models.BooleanField(null=True, blank=True)
     Revisitable = models.BooleanField(null=True, blank=True)
@@ -567,7 +572,7 @@ class Avenants (models.Model):
     Date_visa_CF = models.DateField(null=True)
     Etat = models.BooleanField(null=True, blank=True)
     observation = models.CharField(max_length=200)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -589,7 +594,7 @@ class Non_Mandatement (models.Model):
     Montant_reglé = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Etat = models.CharField(choices=TYPE_DOSSIER, max_length=12, null=True) 
     Observation = models.TextField(blank=True, null=True)
-    Date_creation = models.DateTimeField(auto_now_add=True)
+    Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 
   

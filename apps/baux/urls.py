@@ -1,9 +1,11 @@
 from django.urls import path
 from . import views
-from .views import TypeContratView,CollecteView,HomeView,ConsultationView, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from django.contrib import admin
+from .views import TypeContratView,CollecteView,HomeView,ConsultationView, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm
 
 app_name = 'baux'
+
 # crud urls helper 
 def get_crud_urls(view_class, prefix, name):
     """ Helper function to generate CRUD URLs for a view class """
@@ -35,7 +37,10 @@ urlpatterns = [
     #path('locataire-partial-form/', views._partial_form_view, name='locataire_partial_form'),
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
-    #path("contrat/add/", views.contrat, name='contrat'),
+    # autocomplet on contrat form
+    path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
+    path('admin/autocomplete/', AdminAutocomplete.as_view(), name='admins_autocomplete'),
+    # contrat urls
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
     path("contrat/types/", TypeContratView.as_view(template_name="baux/type_contrat_list.html"), name='type_contrat_list'),

@@ -79,6 +79,11 @@ INSTALLED_APPS = [
     # 
     'django_countries',
     'djmoney',
+    # autoreload on dev mode
+    "django_browser_reload",
+    # autocomplete features
+    'dal',
+    'dal_select2',
 ]
 
 MIDDLEWARE = [
@@ -91,6 +96,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # autoreload on dev mode
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"

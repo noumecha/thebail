@@ -13,6 +13,7 @@ from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 from django.core.paginator import Paginator
+from dal import autocomplete
 
 #generic view for basic operation 
 class BaseCRUDView(TemplateView):
@@ -33,26 +34,25 @@ class BaseCRUDView(TemplateView):
         return context
     
     def get_queryset(self, search_query=None):
-        queryset = self.model.objects.all()
+        queryset = self.model.objects.all().order_by('-Date_creation')
         if search_query and self.search_fields:
             q_objects = Q()
             for field in self.search_fields:
                 q_objects |= Q(**{f"{field}__icontains": search_query})
             queryset = queryset.filter(q_objects).order_by('-Date_creation')
-        return queryset[:5]  # Limit to 50 results for performance
+        return queryset[:100]
     
-    """def get_form_view(self, request, pk=None):
+    def get_form_view(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk) if pk else None
         form = self.form_class(instance=instance)
         html = render_to_string(self.form_template, {'form': form}, request=request)
-        return JsonResponse({'success': True, 'html':html})"""
+        return JsonResponse({'success': True, 'html':html})
     
     def get_list_data(self, request):
         search_query = request.GET.get('search', '').strip()
-        page_number = request.GET.get('page', 1)
-        
         queryset = self.get_queryset(search_query)
-        paginator = Paginator(queryset, self.paginate_by)
+        paginator = Paginator(queryset, 25)
+        page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
         
         html = render_to_string(
@@ -73,11 +73,11 @@ class BaseCRUDView(TemplateView):
             'total_pages': paginator.num_pages
         })
 
-    def get_list_data(self, request):
+    """def get_list_data(self, request):
         search_query = request.GET.get('search', '').strip()
         objects = self.get_queryset(search_query)
         html = render_to_string(self.partial_template, {self.context_object_name: objects}, request=request)
-        return JsonResponse({'success':True, 'html':html})
+        return JsonResponse({'success':True, 'html':html})"""
     
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
@@ -317,6 +317,21 @@ class RecensementView(BaseCRUDView):
     search_fields = ['Immeuble__Designation','Type_immeuble','Type_mur']
 
 # Contrat Class and views : 
+# autopcomplete task in partialing form 
+class StructureAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Structures.objects.all()
+        if self.q:
+            qs = qs.filter(LibelleFr__icontains=self.q)
+        return qs
+
+class AdminAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Administrations.objects.all()
+        if self.q:
+            qs = qs.filter(LibelleFr__icontains=self.q)
+        return qs
+    
 # filtering structure base on administration
 def get_structures(request):
     if request.method == 'GET':
@@ -325,7 +340,7 @@ def get_structures(request):
             return JsonResponse({'error': 'Aucun locataire selectionné'}, status=400)
         try:
             administration_id = int(administration_id)
-            structures = Structures.objects.filter(Administration=administration_id)
+            structures = Structures.objects.filter(Administration=administration_id)[:20]  # Limit to 20 results for performance
             structure_list = [{'id': structure.id, 'text': structure.LibelleFr} for structure in structures]
             return JsonResponse(structure_list, safe=False)
         except (ValueError, Administrations.DoesNotExist):

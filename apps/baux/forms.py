@@ -5,6 +5,7 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field
+from dal import autocomplete
 
 # locataires forms
 class LocatairesForm(forms.ModelForm):
@@ -24,8 +25,8 @@ class LocatairesForm(forms.ModelForm):
         }
         
         widgets = {
-          'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
-          'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
+            'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
         }
     def __init__(self, *args, **kwargs):
         super(LocatairesForm, self).__init__(*args, **kwargs)
@@ -329,7 +330,7 @@ class RecensementsForm(forms.ModelForm):
 
         fields = (
             "Agent_recenseur", "Type_immeuble", "Type_construction", "Type_mur", 
-            "Couleur", "Emprise_au_sol", "Description", "Norme", "Immeuble"
+            "Couleur", "Emprise_au_sol", "Description", "Immeuble"
         )
 
         labels = {
@@ -339,7 +340,6 @@ class RecensementsForm(forms.ModelForm):
             "Couleur" : "Ajouter la couleur",
             "Emprise_au_sol" : "Emprise au sol",
             "Description" : "Autres informations",
-            "Norme" : "Norme de l'immeuble (Cadastre)",
             "Immeuble"  : "Immeuble",
             "Agent_recenseur" : "Nom Agent recenseur"
         }
@@ -383,7 +383,6 @@ class RecensementsForm(forms.ModelForm):
                         Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
                         Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
                         Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
-                        Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
@@ -401,7 +400,7 @@ class ImmeublesForm(forms.ModelForm):
 
         fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",'Element_immeuble',
                    "Superficie","Date_Construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
-                   "Coordonee_gps_Position","Adresse","Localisation","Nombre_de_pieces","Nombre_d_etage")
+                   "Coordonee_gps_Position","Adresse","Localisation","Nombre_de_pieces","Nombre_d_etage", "Norme",)
         labels = {
             "Designation": " Désignation du Bien",
             "Reference_TF": " reference titre foncier (TF)",
@@ -410,6 +409,7 @@ class ImmeublesForm(forms.ModelForm):
             "Date_signatureTF" : "Date de signature du TF",
             "Superficie" : "superficie du TF",
             "Date_Construction" : "date de construction",
+            "Norme" : "Norme de Cadastrale",
             #"Type_immeuble" : "Type immeuble ",
             #"Type_construction" : "Type de construction",
             #"Type_mur" : "Type de Mur",
@@ -443,7 +443,8 @@ class ImmeublesForm(forms.ModelForm):
                         "Caractéristiques du batiment",
                         Row(
                             Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),            
+                            Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),          
+                            Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),  
                             #Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),
                             css_class='form-row'
                         ),
@@ -491,10 +492,11 @@ class ImmeublesForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'), 
+                        Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Nombre_d_etage"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Element_immeuble"), css_class='form-group col-md-12 mb-0'),               
-                        Column(FloatingField("Accessoires"), css_class='form-group col-md-12 mb-0'),
+                        #Column(FloatingField("Accessoires"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -641,13 +643,15 @@ class ContratsForm(forms.ModelForm):
             'Visa_controlleur' : 'Visa du controlleur',
         }
         widgets = {
-          'observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
-          #'Immeubles' : forms.SelectMultiple(attrs={'class':'select2'}),
-          'Date_Debut'  : forms.TextInput(attrs={'type': 'date'}),
-          'Date_Signature'  : forms.TextInput(attrs={'type': 'date'}),
-          'Soumis_impot' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-          'Revisitable' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-          'Visa_controlleur' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
+            #'Immeubles' : forms.SelectMultiple(attrs={'class':'select2'}),
+            'Date_Debut'  : forms.TextInput(attrs={'type': 'date'}),
+            'Date_Signature'  : forms.TextInput(attrs={'type': 'date'}),
+            'Soumis_impot' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'Revisitable' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'Visa_controlleur' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'Structure': autocomplete.ModelSelect2(url='baux:structure_autocomplete'),
+            'Administration_beneficiaire': autocomplete.ModelSelect2(url='baux:admins_autocomplete'),
         }
     def __init__(self, *args, **kwargs):
         super(ContratsForm, self).__init__(*args, **kwargs)
