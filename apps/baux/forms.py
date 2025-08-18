@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Recensements, Accessoires, Locataires,TypeContrats, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
+from .models import Recensements, Accessoires, Structures, Administrations, Locataires,TypeContrats, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
@@ -652,9 +652,13 @@ class ContratsForm(forms.ModelForm):
             'Visa_controlleur' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'Structure': autocomplete.ModelSelect2(url='baux:structure_autocomplete'),
             'Administration_beneficiaire': autocomplete.ModelSelect2(url='baux:admins_autocomplete'),
+            'Bailleur': autocomplete.ModelSelect2(url='baux:bailleur_autocomplete'),
         }
     def __init__(self, *args, **kwargs):
         super(ContratsForm, self).__init__(*args, **kwargs)
+        # Prevent preloading millions of rows
+        self.fields['Administration_beneficiaire'].queryset = Administrations.objects.none()
+        self.fields['Structure'].queryset = Structures.objects.none()
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
@@ -670,7 +674,6 @@ class ContratsForm(forms.ModelForm):
                         Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),               
                         Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),
                         Column(
-                            # FloatingField("Immeubles"),
                             HTML("""
                                 <label for="id_Immeubles">Ajouter un Immeuble</label>
                                 <div class="d-flex align-items-center">
@@ -684,10 +687,8 @@ class ContratsForm(forms.ModelForm):
                         ),
                         Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-12 mb-0'),
                         Column(FloatingField("Structure"), css_class='form-group col-md-12 mb-0'),
-                        #Column(FloatingField("Locataire"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Bailleur"), css_class='form-group col-md-12 mb-0'),
                         Column(
-                            # FloatingField("Bailleur"), 
                             HTML(""" 
                                 <label for="id_Bailleur">Ajouter un bailleur</label>
                                 <div class="d-flex align-items-center">
@@ -697,8 +698,9 @@ class ContratsForm(forms.ModelForm):
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-6 mb-2'
+                            css_class='form-group col-md-12 mb-2'
                         ),
+                        Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("statut_contrat"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),

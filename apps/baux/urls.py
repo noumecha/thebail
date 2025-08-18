@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib import admin
-from .views import TypeContratView,CollecteView,HomeView,ConsultationView, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from .views import TypeContratView,CollecteView,HomeView,ConsultationView, BailleurAutocomplete, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm
 
 app_name = 'baux'
@@ -40,6 +40,7 @@ urlpatterns = [
     # autocomplet on contrat form
     path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
     path('admin/autocomplete/', AdminAutocomplete.as_view(), name='admins_autocomplete'),
+    path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
     # contrat urls
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),

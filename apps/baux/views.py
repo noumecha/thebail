@@ -323,14 +323,21 @@ class StructureAutocomplete(autocomplete.Select2QuerySetView):
         qs = Structures.objects.all()
         if self.q:
             qs = qs.filter(LibelleFr__icontains=self.q)
-        return qs
+        return qs[:50]
 
 class AdminAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Administrations.objects.all()
         if self.q:
             qs = qs.filter(LibelleFr__icontains=self.q)
-        return qs
+        return qs[:50]
+    
+class BailleurAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Bailleurs.objects.all()
+        if self.q:
+            qs = qs.filter(NIU__icontains=self.q)
+        return qs[:50]
     
 # filtering structure base on administration
 def get_structures(request):
