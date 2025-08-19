@@ -39,7 +39,7 @@ urlpatterns = [
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     # autocomplet on contrat form
     path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
-    path('admin/autocomplete/', AdminAutocomplete.as_view(), name='admins_autocomplete'),
+    path('admins-beneficiaire/autocomplete/', AdminAutocomplete.as_view(), name='administration_beneficiaire_autocomplete'),
     path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
     # contrat urls
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),

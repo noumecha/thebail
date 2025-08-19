@@ -13,11 +13,11 @@ $(function() {
     $('#id_Structure').select2({
         placeholder : "Selectionnez un Chapitre",
         allowClear: true,
-    })*/
+    })
     $('#id_Bailleur').select2({
         placeholder : "Selectionnez un Bailleur",
         allowClear: true,
-    })
+    })*/
     $('#id_Immeubles').select2({
         placeholder : "Selectionnez un immeuble",
         allowClear: true,

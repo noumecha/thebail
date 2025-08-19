@@ -613,8 +613,7 @@ class ContratsForm(forms.ModelForm):
             "Superficie_louer", 'Montant_Taxe_Mensuel', 'Devise', 'Rabattement', 'Structure', #Locataire
         )
         labels = {
-            "Bailleur": "Bailleur ",  
-            #"Locataire": "Locataire",  
+            "Bailleur": "Bailleur",  
             "Immeubles": "Imeubles Loués",
             "Superficie_louer" : "Superficie louée",
             "TypeContrat" : "Type du Contrat",
@@ -644,14 +643,13 @@ class ContratsForm(forms.ModelForm):
         }
         widgets = {
             'observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
-            #'Immeubles' : forms.SelectMultiple(attrs={'class':'select2'}),
             'Date_Debut'  : forms.TextInput(attrs={'type': 'date'}),
             'Date_Signature'  : forms.TextInput(attrs={'type': 'date'}),
             'Soumis_impot' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'Revisitable' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'Visa_controlleur' : forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'Structure': autocomplete.ModelSelect2(url='baux:structure_autocomplete'),
-            'Administration_beneficiaire': autocomplete.ModelSelect2(url='baux:admins_autocomplete'),
+            'Administration_beneficiaire': autocomplete.ModelSelect2(url='baux:administration_beneficiaire_autocomplete'),
             'Bailleur': autocomplete.ModelSelect2(url='baux:bailleur_autocomplete'),
         }
     def __init__(self, *args, **kwargs):
@@ -659,6 +657,7 @@ class ContratsForm(forms.ModelForm):
         # Prevent preloading millions of rows
         self.fields['Administration_beneficiaire'].queryset = Administrations.objects.none()
         self.fields['Structure'].queryset = Structures.objects.none()
+        self.fields['Bailleur'].queryset = Bailleurs.objects.none()
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
@@ -675,7 +674,7 @@ class ContratsForm(forms.ModelForm):
                         Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
-                                <label for="id_Immeubles">Ajouter un Immeuble</label>
+                                <label for="id_Immeubles">Selectionner un immeuble</label>
                                 <div class="d-flex align-items-center">
                                     {{ form.Immeubles }}
                                     <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addImmeubleModal">
@@ -687,18 +686,15 @@ class ContratsForm(forms.ModelForm):
                         ),
                         Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-12 mb-0'),
                         Column(FloatingField("Structure"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Bailleur"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Bailleur"), css_class='form-group col-md-9 mb-0'),
                         Column(
-                            HTML(""" 
-                                <label for="id_Bailleur">Ajouter un bailleur</label>
-                                <div class="d-flex align-items-center">
-                                    {{ form.Bailleur }}
-                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addBailleurModal">
-                                        + Ajouter
-                                    </button>
-                                </div>
-                            """),
-                            css_class='form-group col-md-12 mb-2'
+                            HTML("""
+                                <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addBailleurModal">
+                                    + Ajouter
+                                </button>
+                            """
+                            ),
+                            css_class='form-group col-md-3 mb-0'
                         ),
                         Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("statut_contrat"), css_class='form-group col-md-6 mb-0'),
@@ -741,11 +737,14 @@ class ContratsForm(forms.ModelForm):
             FloatingField(
                 "observation",
             ),
-            Submit(
-                "save",
-                "Enregistrer",
-                css_class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3"
-            )
+            Column(
+                Submit(
+                    "save",
+                    "Enregistrer",
+                    css_class="btn btn-lg btn-outline-primary"
+                ),
+                css_class='form-group col-md-6 col-lg-6 mb-0'
+            ),
         )
         self.fields['observation'].required = False
 

@@ -310,7 +310,7 @@ class Bailleurs(models.Model):
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        name = self.Nom_prenom if self.Nom_prenom else self.Raison_social
+        name = self.Raison_social
         return f"{name}"
 
 class Locataires(models.Model):

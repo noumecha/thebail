@@ -50,6 +50,10 @@ ENVIRONMENT = os.environ.get("DJANGO_ENVIRONMENT", default="local")
 # Application definition
 
 INSTALLED_APPS = [
+    # autocomplete features
+    'dal',
+    'dal_select2',
+    # 
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -81,9 +85,6 @@ INSTALLED_APPS = [
     'djmoney',
     # autoreload on dev mode
     "django_browser_reload",
-    # autocomplete features
-    'dal',
-    'dal_select2',
 ]
 
 MIDDLEWARE = [

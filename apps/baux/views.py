@@ -336,7 +336,7 @@ class BailleurAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Bailleurs.objects.all()
         if self.q:
-            qs = qs.filter(NIU__icontains=self.q)
+            qs = qs.filter(Raison_social__icontains=self.q)
         return qs[:50]
     
 # filtering structure base on administration
