@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Recensements, Accessoires, Structures, Administrations, Locataires,TypeContrats, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
+from .models import TypeConstructions, Recensements, Accessoires, Structures, Administrations, Locataires,TypeContrats, Bailleurs,Localisation,Arrondissemements,Pays,Normes,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
@@ -329,18 +329,19 @@ class RecensementsForm(forms.ModelForm):
         model = Recensements
 
         fields = (
-            "Agent_recenseur", "Type_immeuble", "Type_construction", "Type_mur", 
-            "Couleur", "Emprise_au_sol", "Description", "Immeuble"
+            "Agent_recenseur", "Type_immeuble", "Construction", "Type_mur", 
+            "Couleur", "Emprise_au_sol", "Description", "Immeuble", "Situation_de_la_batisse"
         )
 
         labels = {
             "Type_immeuble" : "Type immeuble ",
-            "Type_construction" : "Type de construction",
+            "Construction" : "Type de construction",
             "Type_mur" : "Type de Mur",
             "Couleur" : "Ajouter la couleur",
             "Emprise_au_sol" : "Emprise au sol",
             "Description" : "Autres informations",
             "Immeuble"  : "Immeuble",
+            "Situation_de_la_batisse" : "Etat de la batisse",
             "Agent_recenseur" : "Nom Agent recenseur"
         }
 
@@ -379,11 +380,12 @@ class RecensementsForm(forms.ModelForm):
                 Fieldset(
                     "Caractéristiques du batiment",
                     Row(
-                        Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Construction"), css_class='form-group col-md-6 mb-0'),             
                         Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
                         Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
                         Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
                         Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -393,6 +395,31 @@ class RecensementsForm(forms.ModelForm):
         )
         self.fields['Description'].required = False   
 
+# type immeuble form
+class TypeConstructionsForm(forms.ModelForm):
+    class Meta:
+        model = TypeConstructions
+
+        fields = ('libelle', 'description')
+        labels = {
+            'libelle': "Type d'immeuble",
+            'description': "Description du type d'immeuble",
+        }
+        widgets = {
+          'description': forms.Textarea(attrs={'rows':20, 'cols':10}),
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super(TypeConstructionsForm, self).__init__(*args, **kwargs)
+        self.helper =  FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column(FloatingField("libelle"), css_class='form-group col-md-12 mb-0'),
+                Column(FloatingField("description"), css_class='form-group col-md-12 mb-0'),
+                css_class="form-row",
+            ),
+        )
+
 # immeubles form
 class ImmeublesForm(forms.ModelForm):
     class Meta:
@@ -400,7 +427,7 @@ class ImmeublesForm(forms.ModelForm):
 
         fields = ( "Designation","Reference_TF","Nom_prenom_proprietaireTF","Date_signatureTF",'Element_immeuble',
                    "Superficie","Date_Construction","Coordonee_gps_latitude","Coordonee_gps_longitude","Coordonee_gps_altitude",
-                   "Coordonee_gps_Position","Adresse","Localisation","Nombre_de_pieces","Nombre_d_etage", "Norme",)
+                   "Coordonee_gps_Position","Adresse","Localisation","Nombre_de_pieces","Nombre_d_etage", "Norme","Superficie_louer")
         labels = {
             "Designation": " Désignation du Bien",
             "Reference_TF": " reference titre foncier (TF)",
@@ -408,6 +435,7 @@ class ImmeublesForm(forms.ModelForm):
             "Nom_prenom_proprietaireTF" : "Nom du priopritaire TF",
             "Date_signatureTF" : "Date de signature du TF",
             "Superficie" : "superficie du TF",
+            "Superficie_louer" : "Superficie louée",
             "Date_Construction" : "date de construction",
             "Norme" : "Norme de Cadastrale",
             #"Type_immeuble" : "Type immeuble ",
@@ -509,6 +537,7 @@ class ImmeublesForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Reference_TF"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Superficie"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),
                         #Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),   
                         Column(FloatingField("Nom_prenom_proprietaireTF"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_signatureTF"), css_class='form-group col-md-6 mb-0'),

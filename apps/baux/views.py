@@ -5,8 +5,8 @@ from django.http import JsonResponse
 from django.contrib import messages
 from web_project import TemplateLayout
 from django.template.loader import render_to_string
-from .forms import RecensementsForm, LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-from .models import Accessoires, Recensements,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
+from .forms import TypeConstructionsForm, RecensementsForm, LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
+from .models import TypeConstructions, Accessoires, Recensements,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
 from django.http import HttpResponse
 import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
@@ -191,6 +191,16 @@ class OccupantsView(BaseCRUDView):
     partial_template = 'baux/partials/occupants_partial.html'
     context_object_name = 'occupants'
     search_fields = ['Nom_Prenom','Matricule']
+
+#occupant view
+class TypeConstructionsView(BaseCRUDView):
+    model = TypeConstructions
+    form_class = TypeConstructionsForm
+    list_route = 'typeconstruction_list'
+    list_template = 'baux/typeconstruction_list.html'
+    partial_template = 'baux/partials/typeconstruction_partial.html'
+    context_object_name = 'typeconstructions'
+    search_fields = ['description','libelle']
 
 #locatlisation view
 class LocalisationView(BaseCRUDView):

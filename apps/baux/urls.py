@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib import admin
-from .views import TypeContratView,CollecteView,HomeView,ConsultationView, BailleurAutocomplete, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from .views import TypeConstructionsView, TypeContratView,CollecteView,HomeView,ConsultationView, BailleurAutocomplete, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm
 
 app_name = 'baux'
@@ -25,6 +25,7 @@ urlpatterns = [
     *get_crud_urls(BailleurView, "bailleur/bailleurs", "bailleur"),
     *get_crud_urls(ImmeubleView, "immeuble/immeubles", "immeuble"),
     *get_crud_urls(views.RecensementView, "immeuble/recensements", "recensement"),
+    *get_crud_urls(TypeConstructionsView, "typeconstruction/typeconstructions", "typeconstruction"),
     *get_crud_urls(Non_MandatementView, "non_mandatement/non_mandatements", "non_mandatement"),
     *get_crud_urls(LocalisationView, "localisation/localisations", "localisation"),
     *get_crud_urls(OccupantsView, "occupant/occupants", "occupant"),

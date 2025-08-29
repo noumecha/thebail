@@ -31,12 +31,30 @@ POSITION_GPS = (
         (str(Ouest), 'O - Ouest'),
         (str(Est), 'E - EST'),
     )
+STATUT_BATISSE = (
+    ('', 'Choisir le statut de la batisse'),
+    (str(1), '1 - Bâtisse occupée'),
+    (str(2), '2 - Bâtisse non-occupée'),
+    (str(3), '3 - Bâtisse en bon état'),
+    (str(4), '4 - Bâtisse délabrée et non habitable'),
+    (str(5), '5 - Bâtisse délabrée mais habitable'),
+    (str(6), '6 - Bâtisse inexistante'),
+)
+
 LB=1
 LP= 2
+DI= 3
+DA=4
+CO=5
+SI=6
 TYPE_LOCATION = (
         ('', 'Chisir le type de location'),
         (str(LB), '1 - Location Pour Bureaux'),
         (str(LP), '2 - Location pour logement'),
+        (str(DI), '3 - Domicile'),
+        (str(DA), '4 - Domanial'),
+        (str(CO), '5 - Conventionné'),
+        (str(SI), '6 - Sic'),
      )  
 
 Mensuel='M'
@@ -396,6 +414,8 @@ class Localisation (models.Model):
     departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="loca_departement")
     arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="loca_arrondissement")
     pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="etranger")
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f" {self.arrondissement.departement.Region}/{self.arrondissement.departement}/{self.arrondissement}/{self.Quartier} "
@@ -420,6 +440,8 @@ class Immeubles (models.Model):
     Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
+    # new fields 
+    Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     
     def __str__(self):
         return f" {self.Designation}/{self.Localisation} "
@@ -427,12 +449,24 @@ class Immeubles (models.Model):
     def nombre_de_recensements(self):
         return self.immeuble_recensement.count()
 
+# type construction model
+class TypeConstructions(models.Model):
+    libelle = models.CharField(max_length=500)
+    description = models.TextField(blank=True, null=True)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
+
+    # return text
+    def __str__(self):
+        libelle = self.libelle.upper()
+        return f"{libelle}"
+
 # Recensements model
 class Recensements(models.Model):
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
     Numero = models.IntegerField()
     # immeuble informations that can be changed 
-    Type_construction = models.CharField(choices=TYPE_CONSTRUCTION, max_length=255, null=True)
+    Construction = models.ForeignKey(TypeConstructions, on_delete=models.CASCADE, null=True, related_name="construction")
     Description = models.TextField(blank = True,null= True)
     Etat = models.TextField(blank = True,null= True)
     Agent_recenseur = models.TextField(blank = True,null= True)
@@ -442,6 +476,8 @@ class Recensements(models.Model):
     Type_mur = models.CharField(blank=True, choices=TYPE_MUR, max_length=255, null=True)
     Couleur = models.CharField(max_length=255,null=True,blank=True)
     Emprise_au_sol = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+    # new fieds
+    Situation_de_la_batisse = models.CharField(choices=STATUT_BATISSE, max_length=1, null=True)
     
 
     def __str__(self):
