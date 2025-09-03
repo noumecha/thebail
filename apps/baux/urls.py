@@ -33,6 +33,7 @@ urlpatterns = [
     *get_crud_urls(LocalisationView, "localisation/localisations", "localisation"),
     *get_crud_urls(OccupantsView, "occupant/occupants", "occupant"),
     *get_crud_urls(AvenantsView, "avenant/avenants", "avenant"),
+    *get_crud_urls(views.TypeContratView, "typecontrat/typecontrats", "typecontrat"),
     # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     # bailleur routes 
@@ -41,22 +42,17 @@ urlpatterns = [
     #path('locataire-partial-form/', views._partial_form_view, name='locataire_partial_form'),
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
-    # autocomplet on contrat form
+    # autocomplete on contrat form
     path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
     path('admins-beneficiaire/autocomplete/', AdminAutocomplete.as_view(), name='administration_beneficiaire_autocomplete'),
-    path('bailleur/autocomplete/', autocomplete.Select2QuerySetView.as_view(model=Bailleurs), name='bailleur_autocomplete'), #BailleurAutocomplete.as_view()
+    path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
     # contrat urls
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
-    path("contrat/types/", TypeContratView.as_view(template_name="baux/type_contrat_list.html"), name='type_contrat_list'),
-    path("contrat/update/<int:pk>/", TypeContratView.as_view(template_name="baux/type_contrat_list.html"), name='type_contrat_update'),
-    path("contrat/delete/<int:pk>/", TypeContratView.as_view(template_name="baux/type_contrat_list.html"), name='type_contrat_delete'),
-    path("contrat/types/form/", views.typecontrat_form_view, name='type_contrat_form'),  # for modal purpose
-    path("structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration <int:administration_id>
-    #path("contrat/print/<int:pk>/", ContratView.as_view(template_name="baux/docs/contrat_doc.html"), name='contrat_print'),
     path("contrat/print/<int:pk>/", ContratView.print_contrat, name='contrat_print'),
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
     path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
+    path("structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration <int:administration_id>
     # consultation : 
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
     # Statistiques : 

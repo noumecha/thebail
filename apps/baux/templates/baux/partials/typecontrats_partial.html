@@ -3,10 +3,10 @@
         <th>Libellé</th>
         <th>Description</th>
     </tr>
-    {% for typeconstruction in typeconstructions %}
-        <tr data-id="{{ typeconstruction.id }}">
-            <td>{{ typeconstruction.libelle }}</td>
-            <td>{{ typeconstruction.description }}</td>
+    {% for typecontrat in typecontrats %}
+        <tr data-id="{{ typecontrat.id }}">
+            <td>{{ typecontrat.libelle }}</td>
+            <td>{{ typecontrat.description }}</td>
             <td>
                 <div class="dropdown">
                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -16,36 +16,36 @@
                         <a 
                             class="dropdown-item primary" 
                             href="#"
-                            data-bs-target="#create-typeconstruction-modal"
+                            data-bs-target="#create-typecontrat-modal"
                             data-bs-toggle="modal"
                             data-action = "update"
-                            data-id="{{ typeconstruction.id }}"
+                            data-id="{{ typecontrat.id }}"
                         >
                             <i class="bx bx-edit-alt me-1"></i>Modifier
                         </a>
                         <a href="#" 
-                            class="dropdown-item btn-success delete-typeconstruction"
-                            data-bs-target="#delete-typeconstruction-modal-{{ typeconstruction.id }}"
+                            class="dropdown-item btn-success delete-typecontrat"
+                            data-bs-target="#delete-typecontrat-modal-{{ typecontrat.id }}"
                             data-bs-toggle="modal"
                         >
                             <i class="bx bx-trash me-1"></i>Supprimer
                         </a>
                     </div>
-                    <!-- delete typeconstruction -->
-                    <div class="modal fade" id="delete-typeconstruction-modal-{{ typeconstruction.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                    <!-- delete typecontrat -->
+                    <div class="modal fade" id="delete-typecontrat-modal-{{ typecontrat.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog">
                             <div class="modal-content p-0">
-                                <form action="{% url 'baux:typeconstruction_delete' typeconstruction.id %}" method="post" id="delete-typeconstruction-form">
+                                <form action="{% url 'baux:typecontrat_delete' typecontrat.id %}" method="post" id="delete-typecontrat-form">
                                     {% csrf_token %}
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Suppression d'un type de construction</h5>
+                                        <h5 class="modal-title">Suppression d'un type de contrat</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div id="modal-content-message">
-                                            Voulez vous vraiment supprimer : {{ typeconstruction }} ?
+                                            Voulez vous vraiment supprimer : {{ typecontrat }} ?
                                         </div>
-                                        <input type="hidden" value="{{ typeconstruction.id }}" name="id" id="delete-typeconstruction-input-id">
+                                        <input type="hidden" value="{{ typecontrat.id }}" name="id" id="delete-typecontrat-input-id">
                                     </div>
                                     <div class="modal-footer flex-row-reverse">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

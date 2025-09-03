@@ -333,7 +333,6 @@ class StructureAutocomplete(autocomplete.Select2QuerySetView):
         qs = Structures.objects.all()
         if self.q:
             qs = qs.filter(LibelleFr__icontains=self.q)
-        print(qs)
         return qs
 
 class AdminAutocomplete(autocomplete.Select2QuerySetView):
@@ -364,76 +363,16 @@ def get_structures(request):
         except (ValueError, Administrations.DoesNotExist):
             return JsonResponse({'error': 'ID du locataire incorrect'}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=400)
-
-class ContratUpdateView(UpdateView):
-    model = Contrats
-    form_class = ContratsForm
-    template_name = 'baux/contrat.html'
-    success_url = reverse_lazy('baux:contrat_list')
-
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["form"] = self.get_form()
-        return context
-
-class ContratDeleteView(DeleteView):
-    model = Contrats
-    template_name = 'baux/contrat_delete.html'
-    success_url = reverse_lazy('baux:contrat_list')
-
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["form"] = ContratsForm()
-        return context
     
 # for adding contrat type
-class TypeContratView(TemplateView):
-    def get_context_data(self, **kwargs):
-        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["typeContratList"] = TypeContrats.objects.all()
-        pk = kwargs.get('pk', None)
-        if pk:
-            type_contrat = get_object_or_404(TypeContrats, pk=pk)
-            form = TypeContratsForm(instance=type_contrat)
-        else:
-            form = TypeContratsForm()
-        context["form"] = form
-        context["is_update"] = pk is not None
-        return context
-
-    def post(self, request, *args, **kwargs):
-        pk = kwargs.get('pk', None)
-        if pk:
-            type_contrat = get_object_or_404(TypeContrats, pk=pk)
-            type_contrat_form = TypeContratsForm(request.POST, instance=type_contrat)
-        else:
-            type_contrat_form = TypeContratsForm(request.POST)
-
-        if type_contrat_form.is_valid():
-            type_contrat_form.save()
-            return redirect('baux:type_contrat_list')
-        else:
-            context = self.get_context_data(pk=pk)
-            context["form"] = type_contrat_form
-            return self.render_to_response(context)
-
-def typecontrat_form_view(request):
-    if request.method == "POST":
-        form = TypeContratsForm(request.POST)
-        if form.is_valid():
-            typecontrat = form.save()
-            return JsonResponse({
-                'success': True,
-                'id': typecontrat.id,
-                'text': str(typecontrat)
-            })
-        else:
-            html = render_to_string('baux/partials/type_contrat_form.html', {'form': form}, request=request)
-            return JsonResponse({'success': False, 'html': html})
-    else:
-        form = TypeContratsForm()
-        html = render_to_string('baux/partials/type_contrat_form.html', {'form': form}, request=request)
-        return JsonResponse({'html': html})
+class TypeContratView(BaseCRUDView):
+    model = TypeContrats
+    form_class = TypeContratsForm
+    list_route = 'typecontrat_list'
+    list_template = 'baux/typecontrat_list.html'
+    partial_template = 'baux/partials/typecontrats_partial.html'
+    context_object_name = 'typecontrats'
+    search_fields = ['libelle', 'description']
     
 class ContratView(TemplateView):
     #predefined functiion
@@ -478,7 +417,27 @@ class ContratView(TemplateView):
         if pisa_status.err:
             return HttpResponse('Error generating PDF', status=500)
         return response
-        
+
+class ContratUpdateView(UpdateView):
+    model = Contrats
+    form_class = ContratsForm
+    template_name = 'baux/contrat.html'
+    success_url = reverse_lazy('baux:contrat_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = self.get_form()
+        return context
+
+class ContratDeleteView(DeleteView):
+    model = Contrats
+    template_name = 'baux/contrat_delete.html'
+    success_url = reverse_lazy('baux:contrat_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = ContratsForm()
+        return context
 
 # Non-Mandatement Class and views :
 class Non_MandatementView(BaseCRUDView):

@@ -588,8 +588,7 @@ class Contrats (models.Model):
     Visa_controlleur = models.BooleanField(null=True, blank=True)
     
     def __str__(self):
-        return f" Contrat N° {self.Ref_contrat}" 
-        # entre : {self.Bailleur} et  {self.Administration_beneficiaire} 
+        return f" Contrat N° {self.Ref_contrat} entre : {self.Bailleur} et  {self.Administration_beneficiaire}"  
 
 class Avenants (models.Model):
     contrat = models.ForeignKey(Contrats, on_delete=models.CASCADE, null=False, related_name= "contrat")

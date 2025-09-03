@@ -688,6 +688,43 @@ class ContratsForm(forms.ModelForm):
         self.fields['Administration_beneficiaire'].queryset = Administrations.objects.none()
         self.fields['Structure'].queryset = Structures.objects.none()
         self.fields['Bailleur'].queryset = Bailleurs.objects.none()
+        # Si l'instance a déjà une valeur (form update)
+        if self.instance.pk:
+            if self.instance.Administration_beneficiaire:
+                self.fields['Administration_beneficiaire'].queryset = Administrations.objects.filter(
+                    pk=self.instance.Administration_beneficiaire.pk
+                )
+            if self.instance.Structure:
+                self.fields['Structure'].queryset = Structures.objects.filter(
+                    pk=self.instance.Structure.pk
+                )
+            if self.instance.Bailleur:
+                self.fields['Bailleur'].queryset = Bailleurs.objects.filter(
+                    pk=self.instance.Bailleur.pk
+                )
+
+        # Si c’est un POST : recharger avec l’ID choisi
+        if 'Administration_beneficiaire' in self.data:
+            try:
+                admin_id = int(self.data.get('Administration_beneficiaire'))
+                self.fields['Administration_beneficiaire'].queryset = Administrations.objects.filter(pk=admin_id)
+            except (ValueError, TypeError):
+                pass
+
+        if 'Structure' in self.data:
+            try:
+                structure_id = int(self.data.get('Structure'))
+                self.fields['Structure'].queryset = Structures.objects.filter(pk=structure_id)
+            except (ValueError, TypeError):
+                pass
+
+        if 'Bailleur' in self.data:
+            try:
+                bailleur_id = int(self.data.get('Bailleur'))
+                self.fields['Bailleur'].queryset = Bailleurs.objects.filter(pk=bailleur_id)
+            except (ValueError, TypeError):
+                pass
+        # 
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
