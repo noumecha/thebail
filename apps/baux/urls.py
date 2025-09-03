@@ -3,6 +3,9 @@ from . import views
 from django.contrib import admin
 from .views import TypeConstructionsView, TypeContratView,CollecteView,HomeView,ConsultationView, BailleurAutocomplete, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm
+from .models import Bailleurs
+from dal import autocomplete
+from django.urls import re_path as url
 
 app_name = 'baux'
 
@@ -41,7 +44,7 @@ urlpatterns = [
     # autocomplet on contrat form
     path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
     path('admins-beneficiaire/autocomplete/', AdminAutocomplete.as_view(), name='administration_beneficiaire_autocomplete'),
-    path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
+    path('bailleur/autocomplete/', autocomplete.Select2QuerySetView.as_view(model=Bailleurs), name='bailleur_autocomplete'), #BailleurAutocomplete.as_view()
     # contrat urls
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),

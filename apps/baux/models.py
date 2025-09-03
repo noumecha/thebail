@@ -558,7 +558,7 @@ class Contrats (models.Model):
     #Locataire = models.ForeignKey(Locataires, on_delete=models.CASCADE, null=True, related_name= "locataire")
     Immeubles = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name= "immeuble")
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
-    Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "administration_beneficiaire")
+    Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "administration_beneficiaire", blank=True)
     Structure = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "structure")
     Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Duree_Contrat = models.CharField(max_length=10, null=False)
@@ -574,7 +574,7 @@ class Contrats (models.Model):
     Rabattement = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
-    RIB = models.CharField(max_length=26, null=True, validators=[rib_validator])
+    RIB = models.CharField(max_length=26, null=True) # , validators=[rib_validator]
     Document_RIB = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     statut_contrat = models.CharField(choices=STATUT_CONTRAT, max_length=1, null=True)
     nature_contrat = models.CharField(max_length=255, choices=NATURE_CONTRAT, null=True)
@@ -588,7 +588,8 @@ class Contrats (models.Model):
     Visa_controlleur = models.BooleanField(null=True, blank=True)
     
     def __str__(self):
-        return f" Contrat : {self.Ref_contrat}  entre : {self.Bailleur} et  {self.Administration_beneficiaire} " 
+        return f" Contrat N° {self.Ref_contrat}" 
+        # entre : {self.Bailleur} et  {self.Administration_beneficiaire} 
 
 class Avenants (models.Model):
     contrat = models.ForeignKey(Contrats, on_delete=models.CASCADE, null=False, related_name= "contrat")

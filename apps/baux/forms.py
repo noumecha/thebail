@@ -472,7 +472,8 @@ class ImmeublesForm(forms.ModelForm):
                         Row(
                             Column(FloatingField("Designation"), css_class='form-group col-md-6 mb-0'),
                             Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'),          
-                            Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),  
+                            Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),
                             #Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),
                             css_class='form-row'
                         ),
