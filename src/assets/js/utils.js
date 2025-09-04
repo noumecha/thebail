@@ -121,3 +121,30 @@ function showMessage() {
     container.fadeIn().css('display', 'block');
     setTimeout(() => container.fadeOut(), 5000);
 }
+
+// function to toogle visibility and required attribute of fields in form base on another field value
+function setVisible(mainSelector, targetSelector = null, valueToShow = null) {
+    // on change
+    if (mainSelector) {
+        $(document).on('change', mainSelector, function() {
+            const selectedValue = $(this).val();
+            if (selectedValue === valueToShow) {
+                $(targetSelector).closest('.form-group').show();
+                $(targetSelector).prop('required', true);
+            } else {
+                $(targetSelector).closest('.form-group').hide();
+                $(targetSelector).prop('required', false);
+                $(targetSelector).val('').trigger('change');
+            }
+        });
+        // trigger change to set initial state
+        $(mainSelector).trigger('change');
+    } else {
+        // hide all required field that are in a form-group that is hidden
+        $('form').find(':input').each(function () {
+            if (!$(this).is(':visible')) {
+                $(this).prop('required', false);
+            }
+        });
+    }
+}

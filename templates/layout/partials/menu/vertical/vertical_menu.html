@@ -60,6 +60,16 @@
             <div class="text-truncate" data-i18n="Basic Inputs">Rencensements</div>
           </a>
         </li>
+         <li class="menu-item {% if '/revetementint/revetementints/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:revetementint_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Revetements Intérieures</div>
+          </a>
+        </li>
+         <li class="menu-item {% if '/revetementext/revetementexts/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:revetementext_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Revetements Extérieures</div>
+          </a>
+        </li>
         <li class="menu-item {% if '/typeconstruction/typeconstructions/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:typeconstruction_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Type de construction</div>

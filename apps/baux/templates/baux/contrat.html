@@ -34,7 +34,7 @@
     <!-- immeuble modal -->
     <div class="modal fade" id="addImmeubleModal" tabindex="-1" aria-labelledby="addImmeubleModalLabel">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content bg-light">
             <form id="immeubleForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header">
@@ -56,7 +56,7 @@
     <!-- bailleur modal -->
     <div class="modal fade" id="addBailleurModal" tabindex="-1" aria-labelledby="addBailleurModalLabel">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content bg-light">
             <form id="bailleurForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header">
@@ -73,6 +73,26 @@
             </div>
         </div>
     </div>
+    <!-- construction modal 
+    <div class="modal fade" id="addConstructionModal" tabindex="-1" aria-labelledby="addConstructionModalLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+            <form id="constructionForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addConstructionModalLabel">Ajouter un type de construction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="construction-form-content">Chargement...</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>-->
 
 
 {% endblock %}

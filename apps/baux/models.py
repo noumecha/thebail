@@ -48,14 +48,21 @@ DA=4
 CO=5
 SI=6
 TYPE_LOCATION = (
-        ('', 'Chisir le type de location'),
-        (str(LB), '1 - Location Pour Bureaux'),
-        (str(LP), '2 - Location pour logement'),
-        (str(DI), '3 - Domicile'),
-        (str(DA), '4 - Domanial'),
-        (str(CO), '5 - Conventionné'),
-        (str(SI), '6 - Sic'),
-     )  
+    ('', 'Chisir le type de location'),
+    (str(LB), '1 - Location Pour Bureaux'),
+    (str(LP), '2 - Location pour logement'),
+    (str(DI), '3 - Domicile'),
+    (str(DA), '4 - Domanial'),
+    (str(CO), '5 - Conventionné'),
+    (str(SI), '6 - Sic'),
+)  
+
+EX = 1
+NA = 2
+TYPE_LOCALISATION = (
+    (str(EX), '1 - Extérieure'),
+    (str(NA), '2 - National'),
+) 
 
 Mensuel='M'
 trimestriel='T'
@@ -364,7 +371,7 @@ class Structures (models.Model):
     Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Chapitre : {self.LibelleFr} "
+        return f"{self.LibelleFr}"
 
 class Normes (models.Model):
     DesignationFr = models.CharField(max_length=50)
@@ -408,46 +415,24 @@ class Arrondissemements (models.Model):
         return f" {self.AbreviationFr} "
 
 class Localisation (models.Model):
-    Quartier = models.CharField(max_length=50,null=True)
+    Quartier = models.CharField(max_length=50,null=True, blank=True)
     Observation = models.TextField(blank = True,null= True)
-    region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=True, related_name="loca_region")
-    departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="loca_departement")
-    arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="loca_arrondissement")
-    pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="etranger")
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f" {self.arrondissement.departement.Region}/{self.arrondissement.departement}/{self.arrondissement}/{self.Quartier} "
-
-# immeubles model
-class Immeubles (models.Model):
-    Localisation = models.ForeignKey(Localisation, on_delete=models.CASCADE, null=True, related_name="localisation")
-    Designation = models.CharField(max_length=50)
-    Coordonee_gps_latitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Coordonee_gps_longitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Coordonee_gps_altitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Coordonee_gps_Position = models.CharField(choices=POSITION_GPS, max_length=1, null=True) 
-    Adresse = models.CharField(max_length=50,null=True)
-    Date_Construction = models.DateField(null=True)
-    Nombre_de_pieces = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
-    Nombre_d_etage = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
-    Reference_TF = models.CharField(max_length=50,null=True)
-    Nom_prenom_proprietaireTF = models.CharField(max_length=50,null=True)
-    Element_immeuble = models.CharField(max_length=50,null=True,blank=True)
-    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
-    Date_signatureTF = models.DateField(null=True)
-    Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=True, related_name="loca_region", blank=True)
+    departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="loca_departement", blank=True)
+    arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="loca_arrondissement", blank=True)
+    pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="etranger", blank=True)
     Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
     # new fields 
-    Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    
-    def __str__(self):
-        return f" {self.Designation}/{self.Localisation} "
+    Type_localisation = models.CharField(choices=TYPE_LOCALISATION, max_length=1, default=NA)
+    Ville = models.CharField(max_length=50,null=True, blank=True)
+    Rue = models.CharField(max_length=50,null=True, blank=True)
 
-    def nombre_de_recensements(self):
-        return self.immeuble_recensement.count()
+    def __str__(self):
+        if self.Type_localisation == '1':
+            return f" {self.pays}/{self.Ville}/{self.Rue} "
+        else:
+            return f" {self.arrondissement.departement.Region}/{self.arrondissement.departement}/{self.arrondissement}/{self.Quartier} "
 
 # type construction model
 class TypeConstructions(models.Model):
@@ -460,13 +445,98 @@ class TypeConstructions(models.Model):
     def __str__(self):
         libelle = self.libelle.upper()
         return f"{libelle}"
+    
+# type RevetementInt model
+class RevetementInts(models.Model):
+    libelle = models.CharField(max_length=500)
+    description = models.TextField(blank=True, null=True)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
+
+    # return text
+    def __str__(self):
+        libelle = self.libelle.upper()
+        return f"{libelle}"
+
+# type RevetementExt model
+class RevetementExts(models.Model):
+    libelle = models.CharField(max_length=500)
+    description = models.TextField(blank=True, null=True)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
+
+    # return text
+    def __str__(self):
+        libelle = self.libelle.upper()
+        return f"{libelle}"
+
+# Element de description pour un immeuble ex : garage, jardin, piscine etc
+class ElementDeDescription(models.Model):
+    libelle = models.CharField(max_length=500)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
+
+    # return text
+    def __str__(self):
+        libelle = self.libelle.upper()
+        return f"{libelle}"""
+
+# Immeuble Element -- association table between Immeubles and ElementDeDescription
+class ImmeubleElement(models.Model):
+    immeuble = models.ForeignKey("Immeubles", on_delete=models.CASCADE, related_name="immeuble_elements")
+    element = models.ForeignKey("ElementDeDescription", on_delete=models.CASCADE, related_name="element_immeubles")
+    nombre = models.PositiveIntegerField(default=1)  # nombre d’éléments dans l’immeuble
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("immeuble", "element")  # éviter les doublons
+
+    def __str__(self):
+        return f"{self.immeuble.Designation} - {self.element.libelle} ({self.nombre})"
+
+# immeubles model
+class Immeubles (models.Model):
+    Localisation = models.ForeignKey(Localisation, on_delete=models.CASCADE, null=True, related_name="localisation")
+    Designation = models.CharField(max_length=50)
+    Coordonee_gps_latitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Coordonee_gps_longitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Coordonee_gps_altitude = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Coordonee_gps_Position = models.CharField(choices=POSITION_GPS, max_length=1, null=True) 
+    #Adresse = models.CharField(max_length=50,null=True)
+    Date_Construction = models.DateField(null=True)
+    Nombre_de_pieces = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+    Nombre_d_etage = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
+    Reference_TF = models.CharField(max_length=50,null=True)
+    Nom_prenom_proprietaireTF = models.CharField(max_length=50,null=True)
+    #Element_immeuble = models.CharField(max_length=50,null=True,blank=True)
+    Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
+    Date_signatureTF = models.DateField(null=True)
+    Superficie = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
+    # new fields 
+    Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    Construction = models.ForeignKey(TypeConstructions, on_delete=models.CASCADE, null=True, related_name="construction")
+    Situation_de_la_batisse = models.CharField(choices=STATUT_BATISSE, max_length=1, null=True)
+    Revetement_interieure = models.ForeignKey(RevetementInts, on_delete=models.CASCADE, null=True, related_name="revetement_interieure")
+    Revetement_exterieure = models.ForeignKey(RevetementExts, on_delete=models.CASCADE, null=True, related_name="revetement_exterieure")
+    observation = models.CharField(max_length=200, null=True, blank=True)
+    # many to many relationship with ElementDeDescription through ImmeubleElement
+    elements = models.ManyToManyField(ElementDeDescription, through="ImmeubleElement")
+    
+    def __str__(self):
+        return f" {self.Designation}/{self.Localisation} "
+
+    def nombre_de_recensements(self):
+        return self.immeuble_recensement.count()
 
 # Recensements model
 class Recensements(models.Model):
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
     Numero = models.IntegerField()
     # immeuble informations that can be changed 
-    Construction = models.ForeignKey(TypeConstructions, on_delete=models.CASCADE, null=True, related_name="construction")
+    # Construction = models.ForeignKey(TypeConstructions, on_delete=models.CASCADE, null=True, related_name="construction")
     Description = models.TextField(blank = True,null= True)
     Etat = models.TextField(blank = True,null= True)
     Agent_recenseur = models.TextField(blank = True,null= True)
@@ -477,7 +547,7 @@ class Recensements(models.Model):
     Couleur = models.CharField(max_length=255,null=True,blank=True)
     Emprise_au_sol = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
     # new fieds
-    Situation_de_la_batisse = models.CharField(choices=STATUT_BATISSE, max_length=1, null=True)
+    #Situation_de_la_batisse = models.CharField(choices=STATUT_BATISSE, max_length=1, null=True)
     
 
     def __str__(self):
@@ -560,7 +630,7 @@ class Contrats (models.Model):
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
     Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "administration_beneficiaire", blank=True)
     Structure = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "structure")
-    Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
+    #Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Duree_Contrat = models.CharField(max_length=10, null=False)
     Signataire = models.CharField(max_length=50, null=False)
     #FonctionSignataire = models.CharField(max_length=50, null=False)
@@ -574,7 +644,7 @@ class Contrats (models.Model):
     Rabattement = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Nap_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="banques")
-    RIB = models.CharField(max_length=26, null=True) # , validators=[rib_validator]
+    RIB = models.CharField(max_length=26, null=True)#,validators=[rib_validator]
     Document_RIB = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     statut_contrat = models.CharField(choices=STATUT_CONTRAT, max_length=1, null=True)
     nature_contrat = models.CharField(max_length=255, choices=NATURE_CONTRAT, null=True)

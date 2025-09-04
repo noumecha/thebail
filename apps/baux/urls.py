@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib import admin
 from .views import TypeConstructionsView, TypeContratView,CollecteView,HomeView,ConsultationView, BailleurAutocomplete, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from .views import *
 from .forms import LocatairesForm,AccessoiresForm, BailleursForm
 from .models import Bailleurs
 from dal import autocomplete
@@ -34,6 +35,9 @@ urlpatterns = [
     *get_crud_urls(OccupantsView, "occupant/occupants", "occupant"),
     *get_crud_urls(AvenantsView, "avenant/avenants", "avenant"),
     *get_crud_urls(views.TypeContratView, "typecontrat/typecontrats", "typecontrat"),
+    # revetements urls
+    *get_crud_urls(RevetementIntsView, "revetementint/revetementints", "revetementint"),
+    *get_crud_urls(RevetementExtsView, "revetementext/revetementexts", "revetementext"),
     # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     # bailleur routes 

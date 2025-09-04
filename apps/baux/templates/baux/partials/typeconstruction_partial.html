@@ -2,11 +2,12 @@
     <tr>
         <th>Libellé</th>
         <th>Description</th>
+        <th>Action</th>
     </tr>
     {% for typeconstruction in typeconstructions %}
         <tr data-id="{{ typeconstruction.id }}">
-            <td>{{ typeconstruction.libelle }}</td>
-            <td>{{ typeconstruction.description }}</td>
+            <td>{{ typeconstruction.libelle|default:"-" }}</td>
+            <td>{{ typeconstruction.description|default:"-" }}</td>
             <td>
                 <div class="dropdown">
                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">

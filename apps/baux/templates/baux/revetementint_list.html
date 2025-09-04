@@ -3,7 +3,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Liste des immeubles{% endblock %}
+{% block title %}Ajouter des revetement intérieure{% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -14,9 +14,9 @@
         <div class="card-header">
             <div class="row d-flex justify-content-between align-items-center">
                 <div class="col-md-12 col-lg-6">
-                    <h3 class="">Listes des immeubles enregistrés</h3>
+                    <h3 class="">Listes des types de construction enregistrés</h3>
                     <p class="text-sm">
-                        Gérer les immeubles
+                        Gérer les types de construction
                     </p>
                 </div>
                 <div class="col-md-12 col-lg-6 text-end">
@@ -26,16 +26,16 @@
                         data-bs-toggle="modal"
                         data-action = "create"
                         id="add-button"
-                        data-bs-target="#create-immeuble-modal"
+                        data-bs-target="#create-revetementint-modal"
                     >
                         <i class="menu-icon tf-icons bx bx-file"></i> Ajouter
                     </button>
                 </div>
             </div>
-            <form action="" class="row mt-3" id="immeuble-search-form">
+            <form action="" class="row mt-3" id="revetementint-search-form">
                 <div class="col-md-12 col-lg-12">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Rechercher un immeuble" name="search" id="search">
+                        <input type="text" class="form-control" placeholder="Rechercher un revetement intérieure" name="search" id="search">
                         <button class="btn btn-outline-primary" type="button" id="clearSearch">
                             <i class="bx bx-x"></i>
                         </button>
@@ -53,21 +53,21 @@
             </div>
         </div>
 
-        <div class="container-flex" id="immeuble-table-container">
+        <div class="container-flex" id="revetementint-table-container">
         </div>
     </div>
-    <!-- create or update immeuble -->
-    <div class="modal fade" id="create-immeuble-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+    <!-- create or update revetementint -->
+    <div class="modal fade" id="create-revetementint-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content p-0 bg-light">
-                <form id="immeuble-form" enctype="multipart/form-data">
+            <div class="modal-content p-0">
+                <form id="revetementint-form" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-header">
-                        <h5 class="modal-title">Enregistrement des informations sur un immeuble</h5>
+                        <h5 class="modal-title">Enregistrement des informations sur un Type construction</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="immeuble-form-container">Chargement...</div>    
+                        <div id="revetementint-form-container">Chargement...</div>    
                         <div class="alert alert-success" style="display: none;" id="form-success"></div>
                         <div class="alert alert-danger" style="display: none;" id="form-error"></div>
                         <input type="hidden" value="" name="id" id="update-id">
@@ -80,28 +80,8 @@
             </div>
         </div>
     </div>
-    <!-- construction modal -->
-    <div class="modal fade" id="addConstructionModal" tabindex="-1" aria-labelledby="addConstructionModalLabel">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content bg-light">
-            <form id="constructionForm" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addConstructionModalLabel">Ajouter un type de construction</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="construction-form-content">Chargement...</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
 
 {% endblock %}
 {% block extra_js %}
-    <script src="{% static 'js/immeuble.js' %}"></script>
+    <script src="{% static 'js/revetementint.js' %}"></script>
 {% endblock %}

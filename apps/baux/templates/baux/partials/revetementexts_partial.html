@@ -1,23 +1,13 @@
 <table class="table table-sm">
     <tr>
-        <th>Pays</th>
-        <th>Region</th>
-        <th>Ville</th>
-        <th>Departement </th>
-        <th>Arrondissement</th>
-        <th>Quartier</th>
-        <th>Rue</th>
+        <th>Libellé</th>
+        <th>Description</th>
         <th>Action</th>
     </tr>
-    {% for localisation in localisations %}
-        <tr data-id="{{ localisation.id }}">
-            <td>{{ localisation.pays|default:"-" }} </td>
-            <td>{{ localisation.arrondissement.departement.Region|default:"-" }} </td>
-            <td>{{ localisation.Ville|default:"-" }} </td>
-            <td>{{ localisation.arrondissement.departement|default:"-" }}</td>
-            <td>{{ localisation.arrondissement|default:"-" }}</td>
-            <td>{{ localisation.Quartier|default:"-" }}</td>
-            <td>{{ localisation.Rue|default:"-" }}</td>
+    {% for revetementext in revetementexts %}
+        <tr data-id="{{ revetementext.id }}">
+            <td>{{ revetementext.libelle|default:"-" }}</td>
+            <td>{{ revetementext.description|default:"-" }}</td>
             <td>
                 <div class="dropdown">
                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -27,36 +17,36 @@
                         <a 
                             class="dropdown-item primary" 
                             href="#"
-                            data-bs-target="#create-localisation-modal"
+                            data-bs-target="#create-revetementext-modal"
                             data-bs-toggle="modal"
                             data-action = "update"
-                            data-id="{{ localisation.id }}"
+                            data-id="{{ revetementext.id }}"
                         >
                             <i class="bx bx-edit-alt me-1"></i>Modifier
                         </a>
                         <a href="#" 
-                            class="dropdown-item btn-success delete-localisation"
-                            data-bs-target="#delete-localisation-modal-{{ localisation.id }}"
+                            class="dropdown-item btn-success delete-revetementext"
+                            data-bs-target="#delete-revetementext-modal-{{ revetementext.id }}"
                             data-bs-toggle="modal"
                         >
                             <i class="bx bx-trash me-1"></i>Supprimer
                         </a>
                     </div>
-                    <!-- delete localisation -->
-                    <div class="modal fade" id="delete-localisation-modal-{{ localisation.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                    <!-- delete revetementext -->
+                    <div class="modal fade" id="delete-revetementext-modal-{{ revetementext.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog">
                             <div class="modal-content p-0">
-                                <form action="{% url 'baux:localisation_delete' localisation.id %}" method="post" id="delete-localisation-form">
+                                <form action="{% url 'baux:revetementext_delete' revetementext.id %}" method="post" id="delete-revetementext-form">
                                     {% csrf_token %}
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Suppression d'un localisation</h5>
+                                        <h5 class="modal-title">Suppression d'un revetement extérieure</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div id="modal-content-message">
-                                            Voulez vous vraiment supprimer : {{ localisation }} ?
+                                            Voulez vous vraiment supprimer : {{ revetementext }} ?
                                         </div>
-                                        <input type="hidden" value="{{ localisation.id }}" name="id" id="delete-localisation-input-id">
+                                        <input type="hidden" value="{{ revetementext.id }}" name="id" id="delete-revetementext-input-id">
                                     </div>
                                     <div class="modal-footer flex-row-reverse">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -71,7 +61,7 @@
         </tr>
     {% empty %}
         <tr>
-            <td colspan="7" class="text-center">Aucun localisation trouvé.</td>
+            <td colspan="5" class="text-center">Aucun revetement extérieure trouvé.</td>
         </tr>
     {% endfor %}
-</table>            
+</table>

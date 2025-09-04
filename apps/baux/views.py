@@ -5,8 +5,10 @@ from django.http import JsonResponse
 from django.contrib import messages
 from web_project import TemplateLayout
 from django.template.loader import render_to_string
-from .forms import TypeConstructionsForm, RecensementsForm, LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-from .models import TypeConstructions, Accessoires, Recensements,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
+#from .forms import TypeConstructionsForm, RecensementsForm, LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
+#from .models import TypeConstructions, Accessoires, Recensements,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
+from .models import *
+from .forms import *
 from django.http import HttpResponse
 import xhtml2pdf.pisa as pisa
 from formtools.wizard.views import SessionWizardView
@@ -19,6 +21,7 @@ from dal import autocomplete
 class BaseCRUDView(TemplateView):
     model = None
     form_class = None
+    formset_class = None
     list_template = None
     list_route = None
     partial_template = None
@@ -73,21 +76,20 @@ class BaseCRUDView(TemplateView):
             'total_pages': paginator.num_pages
         })
 
-    """def get_list_data(self, request):
-        search_query = request.GET.get('search', '').strip()
-        objects = self.get_queryset(search_query)
-        html = render_to_string(self.partial_template, {self.context_object_name: objects}, request=request)
-        return JsonResponse({'success':True, 'html':html})"""
-    
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
-        if form.is_valid():
+        formset = self.formset_class(request.POST)#if self.formset_class else None
+        if form.is_valid() and (formset.is_valid() if formset else True):
             if self.form_class == RecensementsForm:
                 recensement = form.save(commit=False)
                 immeuble = recensement.Immeuble
                 last_number = Recensements.objects.filter(Immeuble=immeuble).count()
                 recensement.Numero = last_number + 1
                 obj = form.save()
+            elif self.formset_class:
+                obj = form.save()
+                formset.instance = obj
+                formset.save()
             else:
                 obj = form.save()
             return JsonResponse({
@@ -98,7 +100,7 @@ class BaseCRUDView(TemplateView):
                     'text': str(obj)
                 }
             })
-        html = render_to_string(self.form_template, {'form': form}, request=request)
+        html = render_to_string(self.form_template, {'form': form, "formset": formset}, request=request)
         return JsonResponse({
             'success': False,
             'message': f'Erreur lors de l\'enregistrement',
@@ -111,13 +113,16 @@ class BaseCRUDView(TemplateView):
             return JsonResponse({'success': False, 'message': 'Objet non trouvé'}, status=404)
         instance = get_object_or_404(self.model, pk=pk)
         form = self.form_class(request.POST, instance=instance)
-        if form.is_valid():
+        formset = self.formset_class(request.POST, instance=instance)#if self.formset_class else None
+        if form.is_valid() and (formset.is_valid() if formset else True):
             obj = form.save()
+            formset.instance = obj
+            formset.save()
             return JsonResponse({
                 'success' : True,
                 'message': f'{self.model._meta.verbose_name} mis à jour avec succès'
             })
-        html = render_to_string(self.form_template, {'form' : form}, request=request)
+        html = render_to_string(self.form_template, {'form' : form, "formset": formset}, request=request)
         return JsonResponse({
             'success' : False,
             'messages': f"Erreur lors de la mise à jour",
@@ -285,11 +290,31 @@ def bailleur_partial_form_view(request):
         form = BailleursForm()
         html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
-    
+
+# revetements views
+class RevetementExtsView(BaseCRUDView):
+    model = RevetementExts
+    form_class = RevetementExtsForm
+    list_route = 'revetementext_list'
+    list_template = 'baux/revetementext_list.html'
+    partial_template = 'baux/partials/revetementexts_partial.html'
+    context_object_name = 'revetementexts'
+    search_fields = ['libelle']
+
+class RevetementIntsView(BaseCRUDView):
+    model = RevetementInts
+    form_class = RevetementIntsForm
+    list_route = 'revetementint_list'
+    list_template = 'baux/revetementint_list.html'
+    partial_template = 'baux/partials/revetementints_partial.html'
+    context_object_name = 'revetementints'
+    search_fields = ['libelle']
+
 # immeuble views
 class ImmeubleView(BaseCRUDView):
     model = Immeubles
     form_class = ImmeublesForm
+    formset_class = ImmeubleElementFormSet
     list_route = 'immeuble_list'
     list_template = 'baux/immeuble_list.html'
     partial_template = 'baux/partials/immeubles_partial.html'
@@ -378,7 +403,7 @@ class ContratView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["contratList"] = Contrats.objects.all()
+        context["contratList"] = Contrats.objects.all().order_by('-Date_creation')
         pk = kwargs.get('pk', None)
         if pk:
             contrat = get_object_or_404(Contrats, pk=pk)
