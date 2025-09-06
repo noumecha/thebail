@@ -39,6 +39,8 @@ urlpatterns = [
     *get_crud_urls(RevetementIntsView, "revetementint/revetementints", "revetementint"),
     *get_crud_urls(RevetementExtsView, "revetementext/revetementexts", "revetementext"),
     # 
+    *get_crud_urls(ElementDeDescriptionView, "elementdescription/elementdescriptions", "elementdescription"),
+    # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     # bailleur routes 
     path('bailleur-partial-form/', views.bailleur_partial_form_view, name='bailleur_partial_form'),

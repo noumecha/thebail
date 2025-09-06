@@ -60,6 +60,11 @@
             <div class="text-truncate" data-i18n="Basic Inputs">Rencensements</div>
           </a>
         </li>
+        <li class="menu-item {% if '/elementdescription/elementdescriptions/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:elementdescription_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Eléments de batisse</div>
+          </a>
+        </li>
          <li class="menu-item {% if '/revetementint/revetementints/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:revetementint_list' %}" class="menu-link">
             <div class="text-truncate" data-i18n="Basic Inputs">Revetements Intérieures</div>

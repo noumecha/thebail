@@ -67,4 +67,10 @@ $(function () {
 
     // show sucess messge or error message 
     showMessage()
+
+    // set visibility on modal load initialization
+    $('#create-immeuble-modal').on('shown.bs.modal', function () {
+        setVisible('#id_Type_localisation', '#id_Ville, #id_Rue', '1') // 1 - Extérieure
+        setVisible('#id_Type_localisation', '#id_region, #id_departement, #id_arrondissement, #id_Quartier', '2') // 2 - National
+    });
 })

@@ -78,18 +78,13 @@ class BaseCRUDView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
-        formset = self.formset_class(request.POST)#if self.formset_class else None
-        if form.is_valid() and (formset.is_valid() if formset else True):
+        if form.is_valid():
             if self.form_class == RecensementsForm:
                 recensement = form.save(commit=False)
                 immeuble = recensement.Immeuble
                 last_number = Recensements.objects.filter(Immeuble=immeuble).count()
                 recensement.Numero = last_number + 1
                 obj = form.save()
-            elif self.formset_class:
-                obj = form.save()
-                formset.instance = obj
-                formset.save()
             else:
                 obj = form.save()
             return JsonResponse({
@@ -100,7 +95,7 @@ class BaseCRUDView(TemplateView):
                     'text': str(obj)
                 }
             })
-        html = render_to_string(self.form_template, {'form': form, "formset": formset}, request=request)
+        html = render_to_string(self.form_template, {'form': form}, request=request)
         return JsonResponse({
             'success': False,
             'message': f'Erreur lors de l\'enregistrement',
@@ -249,8 +244,18 @@ class CollecteView(SessionWizardView):
         for form in form_list:
             data.update(form.cleaned_data)
         # Example: Save to database or perform processing
-        print(data)
+        #print(data)
         return render(self.request, 'baux/done.html', {'data': data})
+
+# Element de description
+class ElementDeDescriptionView(BaseCRUDView):
+    model = ElementDeDescription
+    form_class = ElementDeDescriptionForm
+    list_route = 'elementdescription_list'
+    list_template = 'baux/elementdescription_list.html'
+    partial_template = 'baux/partials/elementdescriptions_partial.html'
+    context_object_name = 'elementdescriptions'
+    search_fields = ['libelle']
 
 # locataires views
 class LocataireView(BaseCRUDView):
@@ -314,7 +319,6 @@ class RevetementIntsView(BaseCRUDView):
 class ImmeubleView(BaseCRUDView):
     model = Immeubles
     form_class = ImmeublesForm
-    formset_class = ImmeubleElementFormSet
     list_route = 'immeuble_list'
     list_template = 'baux/immeuble_list.html'
     partial_template = 'baux/partials/immeubles_partial.html'
