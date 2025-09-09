@@ -5,8 +5,6 @@ from django.http import JsonResponse
 from django.contrib import messages
 from web_project import TemplateLayout
 from django.template.loader import render_to_string
-#from .forms import TypeConstructionsForm, RecensementsForm, LocatairesForm,TypeContratsForm, AccessoiresForm, BailleursForm,LocalisationForm,ImmeublesForm,ContratsForm,OccupantsForm,Non_MandatementForm,AvenantsForm
-#from .models import TypeConstructions, Accessoires, Recensements,TypeContrats, Locataires, Bailleurs,Localisation,Immeubles,Contrats,Occupants,Non_Mandatement,Avenants, Structures, Administrations
 from .models import *
 from .forms import *
 from django.http import HttpResponse
@@ -48,7 +46,14 @@ class BaseCRUDView(TemplateView):
     def get_form_view(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk) if pk else None
         form = self.form_class(instance=instance)
-        html = render_to_string(self.form_template, {'form': form}, request=request)
+        formsets = {
+            name: formset_class(instance=instance)
+            for name, formset_class in getattr(self, "formsets_classes", {}).items()
+        }
+        html = render_to_string(self.form_template, {
+            'form': form,
+            "formsets": formsets
+        }, request=request)
         return JsonResponse({'success': True, 'html':html})
     
     def get_list_data(self, request):
@@ -87,6 +92,20 @@ class BaseCRUDView(TemplateView):
                 obj = form.save()
             else:
                 obj = form.save()
+                formsets_valid = True
+                for name, formset_class in getattr(self, "formsets_classes", {}).items():
+                    formset = formset_class(request.POST, instance=obj)
+                    if formset.is_valid():
+                        formset.save()
+                    else:
+                        formsets_valid = False
+
+                if formsets_valid:
+                    return JsonResponse({
+                        'success': True,
+                        'message': f'{self.model._meta.verbose_name} enregistré avec succès',
+                        'data': {'id': obj.id, 'text': str(obj)}
+                    })
             return JsonResponse({
                 'success': True,
                 'message': f'{self.model._meta.verbose_name} enregistré avec succès',
@@ -95,10 +114,12 @@ class BaseCRUDView(TemplateView):
                     'text': str(obj)
                 }
             })
+        # error case
         html = render_to_string(self.form_template, {'form': form}, request=request)
         return JsonResponse({
             'success': False,
             'message': f'Erreur lors de l\'enregistrement',
+            'errors' : form.errors,
             'html' : html
         })
     
@@ -108,16 +129,27 @@ class BaseCRUDView(TemplateView):
             return JsonResponse({'success': False, 'message': 'Objet non trouvé'}, status=404)
         instance = get_object_or_404(self.model, pk=pk)
         form = self.form_class(request.POST, instance=instance)
-        formset = self.formset_class(request.POST, instance=instance)#if self.formset_class else None
-        if form.is_valid() and (formset.is_valid() if formset else True):
+        if form.is_valid():
             obj = form.save()
-            formset.instance = obj
-            formset.save()
+            formsets_valid = True
+            for name, formset_class in getattr(self, "formsets_classes", {}).items():
+                formset = formset_class(request.POST, instance=obj)
+                if formset.is_valid():
+                    formset.save()
+                else:
+                    formsets_valid = False
+            if formsets_valid:
+                return JsonResponse({
+                    'success': True,
+                    'message': f'{self.model._meta.verbose_name} enregistré avec succès',
+                    'data': {'id': obj.id, 'text': str(obj)}
+                })
             return JsonResponse({
                 'success' : True,
                 'message': f'{self.model._meta.verbose_name} mis à jour avec succès'
             })
-        html = render_to_string(self.form_template, {'form' : form, "formset": formset}, request=request)
+        # error case
+        html = render_to_string(self.form_template, {'form' : form}, request=request)#, "formset": formset
         return JsonResponse({
             'success' : False,
             'messages': f"Erreur lors de la mise à jour",
@@ -212,41 +244,6 @@ class LocalisationView(BaseCRUDView):
     context_object_name = 'localisations'
     search_fields = ['Quartier','region__Libelle','departement__LibelleFR','arrondissement__LibelleFR','pays__LibelleFR']
 
-# for multi-step-form for collecting data        
-FORMS = [
-    ("step1", LocatairesForm),
-    ("step2", AccessoiresForm),
-    ("step3", BailleursForm),
-]
-
-TEMPLATES = {
-    "0": "baux/step1.html",
-    "1": "baux/step2.html",
-    "2": "baux/step3.html",
-}
-
-temp_storage = FileSystemStorage(location='/tmp/wizard_files') # Choose an appropriate temporary directory
-class CollecteView(SessionWizardView):
-    file_storage = temp_storage 
-
-    def get_template_names(self):
-        return [TEMPLATES[self.steps.current]]
-
-    def get_context_data(self, form, **kwargs):
-        context = super().get_context_data(form, **kwargs)
-        context = TemplateLayout.init(self, context)
-        return context
-
-    
-    def done(self, form_list, **kwargs):
-        # Combine form data here
-        data = {}
-        for form in form_list:
-            data.update(form.cleaned_data)
-        # Example: Save to database or perform processing
-        #print(data)
-        return render(self.request, 'baux/done.html', {'data': data})
-
 # Element de description
 class ElementDeDescriptionView(BaseCRUDView):
     model = ElementDeDescription
@@ -255,6 +252,16 @@ class ElementDeDescriptionView(BaseCRUDView):
     list_template = 'baux/elementdescription_list.html'
     partial_template = 'baux/partials/elementdescriptions_partial.html'
     context_object_name = 'elementdescriptions'
+    search_fields = ['libelle']
+
+# Pieces jointes views
+class PieceView(BaseCRUDView):
+    model = Pieces
+    form_class = PiecesForm
+    list_route = 'piece_list'
+    list_template = 'baux/piece_list.html'
+    partial_template = 'baux/partials/pieces_partial.html'
+    context_object_name = 'pieces'
     search_fields = ['libelle']
 
 # locataires views
@@ -276,6 +283,10 @@ class BailleurView(BaseCRUDView):
     partial_template = 'baux/partials/bailleurs_partial.html'
     context_object_name = 'bailleurs'
     search_fields = ['Nom_prenom', 'Raison_social']
+    formsets_classes = {
+        "ayants_droits_formset": AyantDroitsFormSet,
+        "non_mandatements_formset": NonMandatementFormSet,
+    }
         
 # for loading bailleur form in contrat form
 def bailleur_partial_form_view(request):
@@ -324,6 +335,11 @@ class ImmeubleView(BaseCRUDView):
     partial_template = 'baux/partials/immeubles_partial.html'
     context_object_name = 'immeubles'
     search_fields = ['Designation']
+    # Ajout des formsets spécifiques à cette vue
+    formsets_classes = {
+        "occupants_residence_formset": OccupantsFormSet,
+        "occupants_bureau_formset": OccupantBureauxFormSet
+    }
 
 # for modal purpose : when create immeuble inside a contrat
 def immeuble_partial_form_view(request):
@@ -357,6 +373,13 @@ class RecensementView(BaseCRUDView):
 
 # Contrat Class and views : 
 # autopcomplete task in partialing form 
+class ServiceAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Structures.objects.all()
+        if self.q:
+            qs = qs.filter(libelle__icontains=self.q)
+        return qs
+    
 class StructureAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Structures.objects.all()
@@ -403,6 +426,44 @@ class TypeContratView(BaseCRUDView):
     context_object_name = 'typecontrats'
     search_fields = ['libelle', 'description']
     
+
+# collecte view
+class CollecteView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["collecteList"] = Collectes.objects.all().order_by('-Date_creation')
+        pk = kwargs.get('pk', None)
+        if pk:
+            collecte = get_object_or_404(Collectes, pk=pk)
+            form = CollectesForm(instance=collecte)
+        else:
+            form = CollectesForm()
+        context['formsets'] = {
+            "avenants_formset": AvenantsFormSet,
+            "immeubles_formset": ImmeublesFormSet,
+            "bailleurs_formset": BailleursFormSet,
+        }
+        context["form"] = form
+        context["is_update"] = pk is not None
+        return context
+
+    def post(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        if pk:
+            collecte = get_object_or_404(Contrats, pk=pk)
+            collecte_form = CollectesForm(request.POST, instance=collecte)
+        else:
+            collecte_form = CollectesForm(request.POST, request.FILES)
+
+        if collecte_form.is_valid():
+            collecte_form.save()
+            return redirect('baux:collecte_list')
+        else:
+            context = self.get_context_data(pk=pk)
+            context["form"] = collecte_form
+            return self.render_to_response(context)
+
+# contrat view 
 class ContratView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):
@@ -438,7 +499,6 @@ class ContratView(TemplateView):
         # fetch content from db and load template context
         contrat = get_object_or_404(Contrats, pk=pk)
         context = {"contrat" : contrat}
-        print(context['contrat'])
         html = render_to_string("baux/docs/contrat_doc.html", context)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="f"contrat_{contrat.Ref_contrat}".pdf"'
@@ -471,7 +531,7 @@ class ContratDeleteView(DeleteView):
 # Non-Mandatement Class and views :
 class Non_MandatementView(BaseCRUDView):
     model = Non_Mandatement
-    form_class = Non_MandatementForm
+    form_class = NonMandatementForm
     list_route = 'non_mandatement_list'
     list_template = 'baux/non_mandatement_list.html'
     partial_template = 'baux/partials/non_mandatements_partial.html'

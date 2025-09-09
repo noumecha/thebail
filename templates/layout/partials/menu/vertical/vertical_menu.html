@@ -119,7 +119,17 @@
       <ul class="menu-sub">
         <li class="menu-item {% if '/collecte/add/' == request.path %}active{% endif %}">
           <a href="{% url 'baux:collecte' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Fiche de collecte</div>
+            <div class="text-truncate" data-i18n="Basic Inputs">Remplissage</div>
+          </a>
+        </li>
+        <li class="menu-item {% if '/collecte/list/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:collecte' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Listes des fiches</div>
+          </a>
+        </li>
+        <li class="menu-item {% if '/piece/pieces/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:piece_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Pièces à collecter</div>
           </a>
         </li>
       </ul>

@@ -1,11 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib import admin
-from .views import TypeConstructionsView, TypeContratView,CollecteView,HomeView,ConsultationView, BailleurAutocomplete, StructureAutocomplete, AdminAutocomplete, LocataireView,StatsView, BailleurView, LocalisationView, ContratView, ImmeubleView, OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
 from .views import *
-from .forms import LocatairesForm,AccessoiresForm, BailleursForm
-from .models import Bailleurs
-from dal import autocomplete
 from django.urls import re_path as url
 
 app_name = 'baux'
@@ -40,6 +36,7 @@ urlpatterns = [
     *get_crud_urls(RevetementExtsView, "revetementext/revetementexts", "revetementext"),
     # 
     *get_crud_urls(ElementDeDescriptionView, "elementdescription/elementdescriptions", "elementdescription"),
+    *get_crud_urls(PieceView, "piece/pieces", "piece"),
     # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     # bailleur routes 
@@ -49,6 +46,7 @@ urlpatterns = [
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     # autocomplete on contrat form
+    path( "service/autocomplete/", ServiceAutocomplete.as_view(), name="service_autocomplete",),
     path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
     path('admins-beneficiaire/autocomplete/', AdminAutocomplete.as_view(), name='administration_beneficiaire_autocomplete'),
     path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
@@ -64,5 +62,9 @@ urlpatterns = [
     # Statistiques : 
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
     # collecte : 
-    path('collecte/add/', CollecteView.as_view([LocatairesForm,AccessoiresForm, BailleursForm]), name='collecte'),
+    path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
+    path("collecte/list/", CollecteView.as_view(template_name="baux/collecte_list.html"), name='collecte_list'),
+    #path("collecte/print/<int:pk>/", ContratView.print_contrat, name='collecte_print'),
+    #path("collecte/delete/<int:pk>/", ContratDeleteView.as_view(), name='collecte_delete'),
+    #path("collecte/update/<int:pk>/", ContratView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
 ]

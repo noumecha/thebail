@@ -94,6 +94,7 @@ function submitForm(formId, url, fetchUrl) {
                 } else {
                     console.error("Error occurred on submit : ", data.message)
                     showAlertMessage(data.message, '#form-error')
+                    showAlertMessage(data.errors, '#form-error')
                 }
             }
         });
@@ -128,6 +129,7 @@ function setVisible(mainSelector, targetSelector = null, valueToShow = null) {
     if (mainSelector) {
         $(document).on('change', mainSelector, function() {
             const selectedValue = $(this).val();
+            //console.log("Selected value: ", selectedValue);
             if (selectedValue === valueToShow) {
                 $(targetSelector).closest('.form-group').show();
                 $(targetSelector).prop('required', true);
@@ -137,8 +139,6 @@ function setVisible(mainSelector, targetSelector = null, valueToShow = null) {
                 $(targetSelector).val('').trigger('change');
             }
         });
-        // trigger change to set initial state
-        $(mainSelector).trigger('change');
     } else {
         // hide all required field that are in a form-group that is hidden
         $('form').find(':input').each(function () {
@@ -147,4 +147,20 @@ function setVisible(mainSelector, targetSelector = null, valueToShow = null) {
             }
         });
     }
+    
+}
+
+// toggle element visibility base on some slect element
+function toogleFormset(selectElement, value = null, formsetToShow, formsetToHide) {
+    $(document).on('change', selectElement, function() {
+        const selectedValue = $(this).val();
+        //console.log("Selected value: ", selectedValue);
+        if (selectedValue === value) {
+            $(formsetToShow).show();
+            $(formsetToHide).hide();
+        } else {
+            $(formsetToShow).hide();
+            $(formsetToHide).show();
+        }
+    });
 }

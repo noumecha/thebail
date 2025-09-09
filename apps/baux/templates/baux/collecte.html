@@ -1,0 +1,49 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Collecte{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="card p-3">
+
+        <h2>
+            {% if is_update %} 
+                Mise à jour du contrat "{{ form.instance }}" 
+            {% else %}  
+                Collecte d'informations sur les contrats de logements administratifs
+            {% endif %}
+        </h2>
+        <form method="post" enctype="multipart/form-data" action="{% if is_update %}{% url 'baux:collecte_update' form.instance.id %}{% else %}{% url 'baux:collecte' %}{% endif %}">
+
+            <h4 class="bg-gray text-white p-2 mt-2 mb-2">SECTION 1. INFORMTAIONS CONTRACTUELLES</h4>
+            {% crispy form %}
+            {{ form.media }}
+
+            <h4 class="bg-gray text-white p-2 mt-2 mb-2">AVENANTS</h4>
+            {{ formsets.avenants_formset }}
+
+            <h4 class="bg-gray text-white p-2 mt-2 mb-2">SECTION 2. INFORMTAIONS SUR L'IMMEUBLE</h4>
+            {{ formsets_classes.immeubles_formset.management_form }}
+
+            <h4 class="bg-gray text-white p-2 mt-2 mb-2">BAILLEURS</h4>
+            {{ formsets_classes.bailleurs_formset.management_form }}
+
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field , errors in form.errors.items %}
+                            <li>{{ field }} : {{ errors|striptags }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </form>
+
+    </div>
+{% endblock %}
