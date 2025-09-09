@@ -438,11 +438,22 @@ class CollecteView(TemplateView):
             form = CollectesForm(instance=collecte)
         else:
             form = CollectesForm()
-        context['formsets'] = {
-            "avenants_formset": AvenantsFormSet,
-            "immeubles_formset": ImmeublesFormSet,
-            "bailleurs_formset": BailleursFormSet,
-        }
+        context['avenants_formset'] = AvenantsFormSet(prefix="avenants")
+        context['immeubles_formset'] = ImmeublesFormSet(prefix="immeubles")
+        context['bailleurs_formset'] = BailleursFormSet(prefix="bailleurs")
+        context['ayants_droits_formset'] = AyantDroitsFormSet(prefix="ayants_droits")
+        context['occupants_residence_formset'] = OccupantsFormSet(prefix="occupants_residence")
+        context['occupants_bureau_formset'] = OccupantBureauxFormSet(prefix="occupants_bureau")
+        context['non_mandatements_formset'] = NonMandatementFormSet(prefix="non_mandatements")
+        """context['formsets'] = {
+            "avenants_formset": AvenantsFormSet(),
+            "immeubles_formset": ImmeublesFormSet(),
+            "bailleurs_formset": BailleursFormSet(),
+            "ayants_droits_formset": AyantDroitsFormSet(),
+            "occupants_residence_formset": OccupantsFormSet(),
+            "occupants_bureau_formset": OccupantBureauxFormSet(),
+            "non_mandatements_formset": NonMandatementFormSet(),
+        }"""
         context["form"] = form
         context["is_update"] = pk is not None
         return context

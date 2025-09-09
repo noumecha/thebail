@@ -19,18 +19,31 @@
         </h2>
         <form method="post" enctype="multipart/form-data" action="{% if is_update %}{% url 'baux:collecte_update' form.instance.id %}{% else %}{% url 'baux:collecte' %}{% endif %}">
 
+            <!-- section informations contrat -->
             <h4 class="bg-gray text-white p-2 mt-2 mb-2">SECTION 1. INFORMTAIONS CONTRACTUELLES</h4>
             {% crispy form %}
             {{ form.media }}
 
             <h4 class="bg-gray text-white p-2 mt-2 mb-2">AVENANTS</h4>
-            {{ formsets.avenants_formset }}
+            {% include "baux/formset_template.html" with formset=avenants_formset %}
 
+            <!-- section immeuble -->
             <h4 class="bg-gray text-white p-2 mt-2 mb-2">SECTION 2. INFORMTAIONS SUR L'IMMEUBLE</h4>
-            {{ formsets_classes.immeubles_formset.management_form }}
+            {% include "baux/formset_template.html" with formset=immeubles_formset %}
+            <h5 class="text-uppercase bg-secondary-subtle"> V. Occupants Actuels de L'IMMEUBLE </h5>
+            {% include "baux/formset_template.html" with formset=occupants_residence_formset %}
 
+            {% include "baux/formset_template.html" with formset=occupants_bureau_formset %}
+
+            <!-- section bailleur -->
             <h4 class="bg-gray text-white p-2 mt-2 mb-2">BAILLEURS</h4>
-            {{ formsets_classes.bailleurs_formset.management_form }}
+            {% include "baux/formset_template.html" with formset=bailleurs_formset %}
+
+            <h5 class="mt-3">Ayants droits du bailleur</h5>
+            {% include "baux/formset_template.html" with formset=ayants_droits_formset %}
+
+            <h5 class="mt-3">Non mandatements</h5>
+            {% include "baux/formset_template.html" with formset=non_mandatements_formset %}
 
             <button type="submit" class="btn btn-primary">Enregistrer</button>
 

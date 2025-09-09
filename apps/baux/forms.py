@@ -9,6 +9,16 @@ from dal import autocomplete
 from crispy_forms.layout import LayoutObject, HTML
 from django.template.loader import render_to_string
 
+# extedns crispy form capabilities 
+class Formset(LayoutObject):
+    def __init__(self, formset_name_in_context, template="baux/formset_template.html"):
+        self.formset_name_in_context = formset_name_in_context
+        self.template = template
+
+    def render(self, form, context, template_pack=None, **kwargs):
+        formset = context[self.formset_name_in_context]
+        return render_to_string(self.template, {'formset': formset})
+
 # locataires forms
 class LocatairesForm(forms.ModelForm):
     class Meta:
@@ -196,10 +206,10 @@ class BailleursForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0",
             ),
-            Row(
+            """Row(
                 Fieldset(
                     "Ayants Droits du Bailleurs",
-                    Formset("ayants_droits_formset"),
+                    #Formset("ayants_droits_formset"),
                     css_class="bg-white line__text border p-2 pt-4"
                 )
             ),
@@ -209,7 +219,7 @@ class BailleursForm(forms.ModelForm):
                     Formset("non_mandatements_formset"),
                     css_class="bg-white line__text border p-2 pt-4"
                 )
-            ),
+            ),"""
         )
         self.helper.form_tag = False;self.fields['NIU'].required = False
         self.fields['Registre_commerce'].required = False; self.fields['Nom_Prenom_Representant'].required = False        
@@ -750,6 +760,14 @@ class CollectesForm(forms.ModelForm):
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # informations sur le contrat
+            # title of the section
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Identification</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
             Row(
                 Fieldset(
                     "Identifications",
@@ -758,16 +776,24 @@ class CollectesForm(forms.ModelForm):
                         Column(FloatingField("Agent_de_collecte"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Matricule_agent_de_collecte"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_de_collecte"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("TypeContrat"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("TypeContrat"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row"
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
+            # title of the section
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Elements juridiques</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
             Row(
                 Fieldset(
-                    "Elements juridiques",
+                    "Contrat Initial",
                     Row(
                         Column(FloatingField("Numero_contrat"), css_class='form-group col-md-12 mb-0'),
                         Column(FloatingField("Date_signature_contrat"), css_class='form-group col-md-6 mb-0'),
@@ -795,30 +821,6 @@ class CollectesForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0"
             ),
-            # informations sur l'immeuble
-            Row(
-                Fieldset(
-                    "Informations sur l'immeuble",
-                    Row(
-                        #Formset("immeubles_formset"),
-                        css_class="form-row"
-                    ),
-                    css_class="bg-white line__text border p-2 pt-4"
-                ),
-                css_class="p-3 pt-0"
-            ),
-            # informations sur le bailleur
-            Row(
-                Fieldset(
-                    "Bailleur",
-                    Row(
-                        #Formset("bailleurs_formset"),
-                        css_class="form-row"
-                    ),
-                    css_class="bg-white line__text border p-2 pt-4"
-                ),
-                css_class="p-3 pt-0"
-            ),
             # Pièces collectées
             Row(
                 Fieldset(
@@ -831,18 +833,8 @@ class CollectesForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0"
             ),
-        ) 
-
-# extedns crispy form capabilities 
-class Formset(LayoutObject):
-    template = "formset_template.html"
-
-    def __init__(self, formset_name_in_context, *args, **kwargs):
-        self.formset_name_in_context = formset_name_in_context
-
-    def render(self, form, form_style, context, **kwargs):
-        formset = context[self.formset_name_in_context]
-        return render_to_string(self.template, {'formset': formset})
+        )
+        self.helper.form_tag = False
 
 # immeubles form
 class ImmeublesForm(forms.ModelForm):
@@ -913,7 +905,7 @@ class ImmeublesForm(forms.ModelForm):
         helper.layout = Layout(
             Row(
                 Fieldset(
-                        "Identification",
+                        "I. Identification",
                         Row(
                             Column(FloatingField("Designation"), css_class='form-group col-md-12 mb-0'),
                             Column(FloatingField("Construction"), css_class='form-group col-md-6 mb-0'),
@@ -931,7 +923,7 @@ class ImmeublesForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Localisation",
+                    "II. Localisation",
                     Row(
                         #Column(FloatingField("Localisation"), css_class='form-group col-md-12 mb-0'),
                         Column(FloatingField("Type_localisation"), css_class='form-group col-md-6 mb-0'),
@@ -954,7 +946,7 @@ class ImmeublesForm(forms.ModelForm):
             ),
             Row (
                 Fieldset(
-                    "Etat physique du batiment",
+                    "III. Etat physique du batiment",
                     Row(
                         Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-12 mb-0'),
                         Column(FloatingField("Revetement_interieure"), css_class='form-group col-md-6 mb-0'),
@@ -968,7 +960,7 @@ class ImmeublesForm(forms.ModelForm):
             ),
             Row (
                 Fieldset(
-                    "Description de la batisse",
+                    "IV. Description de la batisse",
                     Row(
                         Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row' 
@@ -977,10 +969,10 @@ class ImmeublesForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0"
             ),
-            Row(
+            """Row(
                 Fieldset(
                     "Occupants Pour résidence",
-                    Formset("occupants_residence_formset"),
+                    Formset(OccupantsFormSet("occupants_formset")),
                     css_class="bg-white line__text border p-2 pt-4"
                 )
             ),
@@ -990,7 +982,7 @@ class ImmeublesForm(forms.ModelForm):
                     Formset("occupants_bureau_formset"),
                     css_class="bg-white line__text border p-2 pt-4"
                 )
-            )
+            )"""
         )
         return helper
 
@@ -1026,6 +1018,14 @@ class ImmeublesForm(forms.ModelForm):
             )
         self.helper =  FormHelper()
         self.helper.layout = Layout(
+            # title of the section
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Identification</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
             Row(
                 Fieldset(
                     "Identification",
@@ -1042,6 +1042,14 @@ class ImmeublesForm(forms.ModelForm):
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
+            ),
+            # title of the section
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Localisation</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
             ),
             Row(
                 Fieldset(
@@ -1062,6 +1070,14 @@ class ImmeublesForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0"
             ),
+            # title of the section
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. Etat physique du batiment</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
             Row (
                 Fieldset(
                     "Etat physique du batiment",
@@ -1077,6 +1093,13 @@ class ImmeublesForm(forms.ModelForm):
                 css_class="p-3 pt-0"
             ),
             # Dynamic section
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. Description de la batisse</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
             Row(
                 Fieldset(
                     "Description de la batisse",
@@ -1501,29 +1524,29 @@ class AyantDroitsForm(forms.ModelForm):
             "Date_prise_effet_certificat_non_effet"  :  forms.TextInput(attrs={'type': 'date'}),
         }
 
-        def __init__(self, *args, **kwargs):
-            super(NonMandatementForm, self).__init__(*args, **kwargs)
-            self.helper = FormHelper()
-            self.helper.layout = Layout(
-                Row(
-                    Fieldset(
-                        "Ayants Droits du Bailleurs",
-                        Row(
-                            Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Contact"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Reference_Grosse"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_prise_effet_grosse"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Reference_certificat_non_effet"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_prise_effet_certificat_non_effet"), css_class='form-group col-md-6 mb-0'),
-                            css_class="form-row",
-                        ),
-                        css_class="line__text border p-2 pt-4"
+    def __init__(self, *args, **kwargs):
+        super(AyantDroitsForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Fieldset(
+                    "Ayants Droits du Bailleurs",
+                    Row(
+                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Contact"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Reference_Grosse"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_prise_effet_grosse"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Reference_certificat_non_effet"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_prise_effet_certificat_non_effet"), css_class='form-group col-md-6 mb-0'),
+                        css_class="form-row",
                     ),
-                    css_class="p-3 pt-0",
+                    css_class="line__text border p-2 pt-4"
                 ),
-            )
+                css_class="p-3 pt-0",
+            ),
+        )
 
-# collectes formset 
+# collectes formset
 AvenantsFormSet = inlineformset_factory(
     Collectes, Avenants, form=AvenantsForm,
     extra=1, can_delete=True
