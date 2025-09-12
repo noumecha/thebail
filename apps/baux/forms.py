@@ -160,7 +160,7 @@ class BailleursForm(forms.ModelForm):
                     css_class="line__text border p-2 pt-4",
                 ),
                 css_class="p-3 pt-0" 
-            )
+            ),
         )
         return self.helper
 
@@ -168,7 +168,14 @@ class BailleursForm(forms.ModelForm):
         super(BailleursForm, self).__init__(*args, **kwargs)   
         self.helper =  FormHelper()
         self.helper.layout = Layout(
-           Row(
+            Row(
+                Column(
+                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>a- Identification</h5>"),
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class="p-3 pt-0"
+            ),
+            Row(
                 Fieldset(
                     "Identification",
                     Row(
@@ -192,6 +199,12 @@ class BailleursForm(forms.ModelForm):
                 css_class="p-3 pt-0" 
             ),
             Row(
+                Column(
+                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>b- Références bancaires</h5>"),
+                    css_class='form-group col-md-12 mb-0'
+                ),
+            ),
+            Row(
                 Fieldset(
                     "Références bancaires",
                     Row(
@@ -207,13 +220,6 @@ class BailleursForm(forms.ModelForm):
                 css_class="p-3 pt-0",
             ),
             """Row(
-                Fieldset(
-                    "Ayants Droits du Bailleurs",
-                    #Formset("ayants_droits_formset"),
-                    css_class="bg-white line__text border p-2 pt-4"
-                )
-            ),
-            Row(
                 Fieldset(
                     "Attestation de non mandatement (Non-Encore payé)",
                     Formset("non_mandatements_formset"),
@@ -760,6 +766,13 @@ class CollectesForm(forms.ModelForm):
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # informations sur le contrat
+            Row(
+                Column(
+                    HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 1. INFORMATIONS CONTRACTUELLES</h4>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
             # title of the section
             Row(
                 Column(
@@ -783,7 +796,7 @@ class CollectesForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0"
             ),
-            # title of the section
+            # Element juridiques section
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Elements juridiques</h5>"), 
@@ -792,6 +805,12 @@ class CollectesForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
+                # title of subsection
+                Column(
+                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>a- Contrat Initial</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                # content
                 Fieldset(
                     "Contrat Initial",
                     Row(
@@ -810,18 +829,102 @@ class CollectesForm(forms.ModelForm):
             ),
             Row(
                 Fieldset(
-                    "Avenants liés au contrat initilal",
+                    "Existence d'avenant / visa budgétaire",
                     Row(
                         Column(FloatingField("Existance_avenant"), css_class='form-group col-md-12 mb-0'),
                         Column(FloatingField("Existance_visa_budgetaire"), css_class='form-group col-md-12 mb-0'),
-                        #Formset("avenants_formset"),
+                        Column(
+                            HTML("<h5 class='text-bold fw bg-secondary-subtle'>b- Avenants liés au Contrat Initial</h5>"), 
+                            css_class='form-group col-md-12 mb-0'
+                        ),
+                        Formset("avenants_formset"),
                         css_class="form-row"
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
+            Row(
+                Column(
+                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>c- Périodicité de règlement selon le contrat</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-12 mb-0'),
+                css_class="p-3 pt-0"
+            ),
+            # Bailleur section 
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. bailleur</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
+            Row(
+                Formset("bailleurs_formset"),
+                css_class="p-3 pt-0"
+            ),
+            Row(
+                Column(
+                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>c- Ayants Droits du Bailleurs</h5>"),
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                Formset("ayants_droits_formset"),
+                css_class="p-3 pt-0"
+            ),
+            # Non-Mandatement section
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. attestion de non-mandatement (non-encore payé)</h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
+            Row(
+                Formset("non_mandatements_formset"),
+                css_class="p-3 pt-0"
+            ),
+            # Immeuble Section
+            Row(
+                Column(
+                    HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 2. INFORMATIONS SUR L'IMMEUBLE</h4>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
+            Row(
+                Formset("immeubles_formset"),
+                css_class="p-3 pt-0"
+            ),
+            Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
+            #Row(
+            #    Fieldset(
+            #        "Occupants Pour résidence",
+            #        Formset(OccupantsFormSet("occupants_formset")),
+            #        css_class="bg-white line__text border p-2 pt-4"
+            #    )
+            #),
+            #Row(
+            #    Fieldset(
+            #        "Occupants Pour bureaux",
+            #        Formset("occupants_bureau_formset"),
+            #        css_class="bg-white line__text border p-2 pt-4"
+            #    )
+            #),
             # Pièces collectées
+            Row(
+                Column(
+                    HTML("<h4 class='text-uppercase bg-gray text-white p-2 mt-2 mb-2'>SECTION 3. pièces collectées</h4>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
             Row(
                 Fieldset(
                     "Pieces Collectées",
@@ -831,7 +934,15 @@ class CollectesForm(forms.ModelForm):
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
-                css_class="p-3 pt-0"
+                css_class="p-3 pt-2"
+            ),
+            Column(
+                Submit(
+                    "save",
+                    "Enregistrer",
+                    css_class="btn btn-lg btn-outline-primary"
+                ),
+                css_class='form-group col-md-6 col-lg-6 mb-0'
             ),
         )
         self.helper.form_tag = False
@@ -1111,6 +1222,28 @@ class ImmeublesForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0"
             ),
+            # Occupant section
+            """Row(
+                Column(
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
+                    css_class='form-group col-md-12 mb-0'
+                ),
+                css_class='form-row'
+            ),
+            Row(
+                Fieldset(
+                    "Occupants Pour résidence",
+                    Formset(OccupantsFormSet("occupants_formset")),
+                    css_class="bg-white line__text border p-2 pt-4"
+                )
+            ),
+            Row(
+                Fieldset(
+                    "Occupants Pour bureaux",
+                    Formset("occupants_bureau_formset"),
+                    css_class="bg-white line__text border p-2 pt-4"
+                )
+            )"""
         )     
         self.fields['Date_Construction'].required = False;   
 
