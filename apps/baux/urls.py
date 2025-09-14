@@ -39,6 +39,8 @@ urlpatterns = [
     *get_crud_urls(PieceView, "piece/pieces", "piece"),
     # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
+    # type contrant partial 
+    path('type-contrat-partial-form/', views.typecontrat_partial_form_view, name='type_contrat_partial_form'),
     # bailleur routes 
     path('bailleur-partial-form/', views.bailleur_partial_form_view, name='bailleur_partial_form'),
     # locataire routes

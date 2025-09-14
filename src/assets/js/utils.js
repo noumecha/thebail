@@ -9,6 +9,72 @@ function setSelect2(selector, placeholder, modalId) {
     }
 }
 
+// set the success message after form submission is successful
+function setMessage(msg, id) {
+    const msgBlock = $(id);
+    msgBlock.stop(true, true).empty();
+    if (Array.isArray(msg)) {
+        const list = $('<ul></ul>');
+        msg.forEach((m) => list.append($('<li></li>').text(m.key + ': ' + m.value)));
+        msgBlock.append(list);
+    } else {
+        msgBlock.append($('<p class="text-center mb-0"></p>').text(msg));
+    }
+    msgBlock.fadeIn().css('display', 'block');
+    setTimeout(() => msgBlock.fadeOut(), 7000);
+}
+
+// form modal form inside another form
+function ajaxModal(modalId, formnContainerId, formId, fetchUrl, selectItemId = null) {
+    const modal = $(modalId);
+    const formContainer = $(formnContainerId);
+    const selectContainer = $(selectItemId);
+    // Ouvrir le modal et charger le formulaire
+    $(document).on('click', '[data-bs-target="'+modalId+'"]', function () {
+        $.get(fetchUrl, function (data) {
+            formContainer.html(data.html);
+        });
+    });
+    // Gérer la soumission AJAX du formulaire
+    $(document).on('submit', `${formId}`, function (e) {
+        e.preventDefault();
+        const form = $(this);
+        const formData = form.serialize();
+        // delete mask field that'are required but not visible
+        $(form).find(':input').each(function () {
+            if (!$(this).is(':visible')) {
+                $(this).prop('required', false);
+            }
+        });
+        // send ajax request
+        $.ajax({
+            url: fetchUrl,
+            type: 'POST',
+            data: formData,
+            success: function (data) {
+                if (data.success) {
+                    selectContainer.append(
+                        $('<option>', {
+                            value: data.id,
+                            text: data.text,
+                            selected: true
+                        })
+                    );
+                    setMessage(data.message, '#form-success');
+                    modal.hide();
+                    $('.modal-backdrop').remove(); // remove backdrop
+                    formContainer.empty(); // clear the form content
+                } else {                        
+                    errors = Array.from(Object.entries(data.errors), ([key, value]) => ({
+                        key, value
+                    }))
+                    setMessage(errors, '#form-error');
+                }
+            }
+        });
+    });
+}
+
 // function to load modal content
 function loadModal(modalId, formContainer, url) {
     const formContent = $(formContainer);

@@ -306,6 +306,24 @@ def bailleur_partial_form_view(request):
         form = BailleursForm()
         html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
+    
+def typecontrat_partial_form_view(request):
+    if request.method == "POST":
+        form = TypeContratsForm(request.POST)
+        if form.is_valid():
+            typecontrat = form.save()
+            return JsonResponse({
+                'success': True,
+                'id': typecontrat.id,
+                'text': str(typecontrat)
+            })
+        else:
+            html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
+            return JsonResponse({'success': False, 'html': html})
+    else:
+        form = TypeContratsForm()
+        html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
 
 # revetements views
 class RevetementExtsView(BaseCRUDView):

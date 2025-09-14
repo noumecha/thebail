@@ -6,4 +6,8 @@ $(function () {
     // toggle occupants visibility 
     toogleFormset("#id_Type_location", "2", '#batiment_occ_residence-0', '#batiment_occ_bureaux-0')
     toogleFormset("#id_Type_location", "1", '#batiment_occ_bureaux-0', '#batiment_occ_residence-0')
+
+    /****  for inside form modal ***/
+    // typecontrat
+    ajaxModal("#addTypeContratModal", "#typecontrat-form-content", "#typecontratForm", "/type-contrat-partial-form/", "#id_TypeContrat")
 })

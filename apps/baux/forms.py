@@ -142,9 +142,9 @@ class BailleursForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Type_personne"), css_class='form-group col-md-12 mb-0 bailleur_type_personne'),   
                         Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
-                        Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
                         Column(FloatingField("Maticule"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
@@ -152,7 +152,7 @@ class BailleursForm(forms.ModelForm):
                         Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
                         Column(FloatingField("Num_doc"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
                         Column(FloatingField("Date_delivrance_doc"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Document_identification"), css_class='form-group col-md-6 mb-0 bailleur_type_id'),  
+                        Column(FloatingField("Document_identification"), css_class='form-group col-md-12 mb-0 bailleur_type_id'),  
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone_representant"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
                         css_class="form-row",
@@ -179,9 +179,9 @@ class BailleursForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Type_personne"), css_class='form-group col-md-12 mb-0 bailleur_type_personne'),   
                         Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
-                        Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
                         Column(FloatingField("Maticule"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
@@ -189,7 +189,7 @@ class BailleursForm(forms.ModelForm):
                         Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
                         Column(FloatingField("Num_doc"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
                         Column(FloatingField("Date_delivrance_doc"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Document_identification"), css_class='form-group col-md-6 mb-0 bailleur_type_id'),  
+                        Column(FloatingField("Document_identification"), css_class='form-group col-md-12 mb-0 bailleur_type_id'),  
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone_representant"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
                         css_class="form-row",
@@ -398,16 +398,6 @@ class OccupantBureauxForm(forms.ModelForm):
         )
         self.helper.form_tag = False
 
-# occupants formset
-OccupantsFormSet = inlineformset_factory(
-    Immeubles, Occupants, form=OccupantsForm,
-    extra=1, can_delete=True
-)
-
-OccupantBureauxFormSet = inlineformset_factory(
-    Immeubles, OccupantBureaux, form=OccupantBureauxForm,
-    extra=1, max_num=1, can_delete=True
-)
 
 # recensement form
 class RecensementsForm(forms.ModelForm):
@@ -790,6 +780,18 @@ class CollectesForm(forms.ModelForm):
                         Column(FloatingField("Matricule_agent_de_collecte"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_de_collecte"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("TypeContrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(
+                            HTML("""
+                                <label for="id_TypeContrat">Selectionner un type de contrat</label>
+                                <div class="d-flex align-items-center">
+                                    {{ form.TypeContrat }}
+                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addTypeContratModal">
+                                        + Ajouter
+                                    </button>
+                                </div>
+                            """),
+                            css_class='form-group col-md-12 mb-3'
+                        ),
                         css_class="form-row"
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -838,6 +840,7 @@ class CollectesForm(forms.ModelForm):
                             css_class='form-group col-md-12 mb-0'
                         ),
                         Formset("avenants_formset"),
+                        Column(FloatingField("observation"), css_class='form-group col-md-12 mb-0'),
                         css_class="form-row"
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -896,27 +899,21 @@ class CollectesForm(forms.ModelForm):
                 Formset("immeubles_formset"),
                 css_class="p-3 pt-0"
             ),
+            #Row(
+            #    Column(
+            #        HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
+            #        css_class='form-group col-md-12 mb-0'
+            #    ),
+            #    css_class='form-row'
+            #),
             Row(
-                Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
-                    css_class='form-group col-md-12 mb-0'
-                ),
-                css_class='form-row'
+                Formset("occupants_residence_formset"),
+                css_class="p-3 pt-0"
             ),
-            #Row(
-            #    Fieldset(
-            #        "Occupants Pour résidence",
-            #        Formset(OccupantsFormSet("occupants_formset")),
-            #        css_class="bg-white line__text border p-2 pt-4"
-            #    )
-            #),
-            #Row(
-            #    Fieldset(
-            #        "Occupants Pour bureaux",
-            #        Formset("occupants_bureau_formset"),
-            #        css_class="bg-white line__text border p-2 pt-4"
-            #    )
-            #),
+            Row(
+                Formset("occupants_bureau_formset"),
+                css_class="p-3 pt-0"
+            ),
             # Pièces collectées
             Row(
                 Column(
@@ -1045,10 +1042,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("departement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("arrondissement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Quartier"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps_latitude"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps_longitude"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps_altitude"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps_Position"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Coordonee_gps"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -1174,7 +1168,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("departement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("arrondissement"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Quartier"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Coordonee_gps"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -1223,27 +1217,27 @@ class ImmeublesForm(forms.ModelForm):
                 css_class="p-3 pt-0"
             ),
             # Occupant section
-            """Row(
+            Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
                     css_class='form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
-            Row(
-                Fieldset(
-                    "Occupants Pour résidence",
-                    Formset(OccupantsFormSet("occupants_formset")),
-                    css_class="bg-white line__text border p-2 pt-4"
-                )
-            ),
-            Row(
-                Fieldset(
-                    "Occupants Pour bureaux",
-                    Formset("occupants_bureau_formset"),
-                    css_class="bg-white line__text border p-2 pt-4"
-                )
-            )"""
+            #Row(
+            #    Fieldset(
+            #        "Occupants Pour résidence",
+            #        Formset("occupants_residence_formset"),
+            #        css_class="bg-white line__text border p-2 pt-4"
+            #    )
+            #),
+            #Row(
+            #    Fieldset(
+            #        "Occupants Pour bureaux",
+            #        Formset("occupants_bureau_formset"),
+            #        css_class="bg-white line__text border p-2 pt-4"
+            #    )
+            #)
         )     
         self.fields['Date_Construction'].required = False;   
 
@@ -1515,7 +1509,7 @@ class AvenantsForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Ref_Avenant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_Avenant"), css_class='form-group col-md-12 mb-0'),
                         Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_effet"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
@@ -1704,4 +1698,15 @@ NonMandatementFormSet = inlineformset_factory(
 AyantDroitsFormSet = inlineformset_factory(
     Bailleurs, Ayant_droits, form=AyantDroitsForm,
     extra=1, can_delete=True
+)
+
+# occupants formset
+OccupantsFormSet = inlineformset_factory(
+    Immeubles, Occupants, form=OccupantsForm,
+    extra=1, can_delete=True
+)
+
+OccupantBureauxFormSet = inlineformset_factory(
+    Immeubles, OccupantBureaux, form=OccupantBureauxForm,
+    extra=1, max_num=1, can_delete=True
 )

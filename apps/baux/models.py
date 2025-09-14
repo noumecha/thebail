@@ -557,7 +557,7 @@ class Immeubles (models.Model):
     departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="immeuble_departement", blank=True)
     arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="immeuble_arrondissement", blank=True)
     Quartier = models.CharField(max_length=50,null=True, blank=True)
-    Coordonee_gps = models.DecimalField(null=True, max_digits=50, decimal_places=0, default=0)
+    Coordonee_gps = models.CharField(max_length=200, null=True, blank=True)
     # etat physique du batiment
     Situation_de_la_batisse = models.CharField(choices=STATUT_BATISSE, max_length=1, null=True)
     Revetement_interieure = models.ForeignKey(RevetementInts, on_delete=models.CASCADE, null=True, related_name="revetement_interieure")
