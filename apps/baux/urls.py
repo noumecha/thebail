@@ -1,55 +1,72 @@
 from django.urls import path
 from . import views
-from .views import HomeView,AvenantsDeleteView,LocataireDeleteView, ConsultationView,LocalisationDeleteView, BailleurDeleteView, OccupantsDeleteView, LocataireView,StatsView,Non_MandatementDeleteView,  BailleurView, AvenantsDeleteView, LocalisationView, ContratView, ImmeubleView, ImmeubleDeleteView,OccupantsView,Non_MandatementView,AvenantsView,ContratDeleteView,ContratUpdateView
+from django.contrib import admin
+from .views import *
+from django.urls import re_path as url
 
 app_name = 'baux'
+
+# crud urls helper 
+def get_crud_urls(view_class, prefix, name):
+    """ Helper function to generate CRUD URLs for a view class """
+    #name = view_class.model._meta.model_name
+    return [
+        path(f"{prefix}/", view_class.as_view(template_name=view_class.list_template), name=f'{name}_list'),
+        path(f"{prefix}/all/", view_class.as_view(), {'action': 'list'}, name=f'get_{name}s'),
+        path(f"{prefix}/form/", view_class.as_view(), {'action': 'form'}, name=f'{name}_form'),
+        path(f"{prefix}/edit/<int:pk>", view_class.as_view(), {'action': 'form'}, name=f'{name}_update'),
+        path(f"{prefix}/update/<int:pk>", view_class.as_view(), {'action': 'update'}, name=f'{name}_update'),
+        path(f"{prefix}/delete/<int:pk>", view_class.as_view(), {'action': 'delete'}, name=f'{name}_delete'),
+    ]
+
+# urls
 urlpatterns = [
+    *get_crud_urls(LocataireView, "locataire/locataires", "locataire"),
+    *get_crud_urls(BailleurView, "bailleur/bailleurs", "bailleur"),
+    *get_crud_urls(ImmeubleView, "immeuble/immeubles", "immeuble"),
+    *get_crud_urls(views.RecensementView, "immeuble/recensements", "recensement"),
+    *get_crud_urls(TypeConstructionsView, "typeconstruction/typeconstructions", "typeconstruction"),
+    *get_crud_urls(Non_MandatementView, "non_mandatement/non_mandatements", "non_mandatement"),
+    *get_crud_urls(LocalisationView, "localisation/localisations", "localisation"),
+    *get_crud_urls(OccupantsView, "occupant/occupants", "occupant"),
+    *get_crud_urls(AvenantsView, "avenant/avenants", "avenant"),
+    *get_crud_urls(views.TypeContratView, "typecontrat/typecontrats", "typecontrat"),
+    # revetements urls
+    *get_crud_urls(RevetementIntsView, "revetementint/revetementints", "revetementint"),
+    *get_crud_urls(RevetementExtsView, "revetementext/revetementexts", "revetementext"),
+    # 
+    *get_crud_urls(ElementDeDescriptionView, "elementdescription/elementdescriptions", "elementdescription"),
+    *get_crud_urls(PieceView, "piece/pieces", "piece"),
+    # 
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
-    #path("bailleur/add/", views.bailleur, name='bailleur'),
-    path("bailleur/add/", BailleurView.as_view(template_name="baux/bailleur.html"), name='bailleur'),
-    path("bailleur/list/", BailleurView.as_view(template_name="baux/bailleur_list.html"), name='bailleur_list'),
-    path("bailleur/delete/<int:pk>/", BailleurDeleteView.as_view(), name='bailleur_delete'),
-    path("bailleur/update/<int:pk>/", BailleurView.as_view(template_name="baux/bailleur.html"), name='bailleur_update'),
-    #path("immeuble/add/", views.immeuble, name='immeuble'),
-    path("immeuble/add/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble'),
-    path("immeuble/list/", ImmeubleView.as_view(template_name="baux/immeuble_list.html"), name='immeuble_list'),
-    path("immeuble/delete/<int:pk>/", ImmeubleDeleteView.as_view(), name='immeuble_delete'),
-    path("immeuble/update/<int:pk>/", ImmeubleView.as_view(template_name="baux/immeuble.html"), name='immeuble_update'),
-    #path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
+    # type contrant partial 
+    path('type-contrat-partial-form/', views.typecontrat_partial_form_view, name='type_contrat_partial_form'),
+    # bailleur routes 
+    path('bailleur-partial-form/', views.bailleur_partial_form_view, name='bailleur_partial_form'),
+    # locataire routes
+    #path('locataire-partial-form/', views._partial_form_view, name='locataire_partial_form'),
+    path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
-    #path("contrat/add/", views.contrat, name='contrat'),
+    # autocomplete on contrat form
+    path( "service/autocomplete/", ServiceAutocomplete.as_view(), name="service_autocomplete",),
+    path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
+    path('admins-beneficiaire/autocomplete/', AdminAutocomplete.as_view(), name='administration_beneficiaire_autocomplete'),
+    path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
+    # contrat urls
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
+    path("contrat/print/<int:pk>/", ContratView.print_contrat, name='contrat_print'),
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
     path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
-    #path("locataire/add/", views.locataire, name='locataire'),
-    path("locataire/add/", LocataireView.as_view(template_name="baux/locataire.html"), name='locataire'),
-    path("locataire/list/", LocataireView.as_view(template_name="baux/locataire_list.html"), name='locataire_list'),
-    path("locataire/delete/<int:pk>/", LocataireDeleteView.as_view(), name='locataire_delete'),
-    path("locataire/update/<int:pk>/", LocataireView.as_view(template_name="baux/locataire.html"), name='locataire_update'),
-    #path("localisation/add/", views.localisation, name='localisation'),
-    path("localisation/add/", LocalisationView.as_view(template_name="baux/localisation.html"), name='localisation'),
-    path("localisation/list/", LocalisationView.as_view(template_name="baux/localisation_list.html"), name='localisation_list'),
-    path("localisation/delete/<int:pk>/", LocalisationDeleteView.as_view(), name='localisation_delete'),
-    path("localisation/update/<int:pk>/", LocalisationView.as_view(template_name="baux/localisation.html"), name='localisation_update'),
-    #routes for occupants
-    path("occupants/add/", OccupantsView.as_view(template_name="baux/occupants.html"), name='occupants'),
-    path("occupants/list/", OccupantsView.as_view(template_name="baux/occupants_list.html"), name='occupants_list'),
-    path("occupants/delete/<int:pk>/", OccupantsDeleteView.as_view(), name='occupants_delete'),
-    path("occupants/update/<int:pk>/", OccupantsView.as_view(template_name="baux/occupants.html"), name='occupants_update'),
-    # dossier reglements : 
-    path("non_mandatement/add/", Non_MandatementView.as_view(template_name="baux/non_mandatement.html"), name='non_mandatement'),
-    path("non_mandatement/list/", Non_MandatementView.as_view(template_name="baux/non_mandatement_list.html"), name='non_mandatement_list'),
-    path("non_mandatement/delete/<int:pk>/", Non_MandatementDeleteView.as_view(), name='non_mandatement_delete'),
-    path("non_mandatement/update/<int:pk>/", Non_MandatementView.as_view(template_name="baux/non_mandatement.html"), name='non_mandatement_update'),
-    # avenants : 
-    path("avenant/add/", AvenantsView.as_view(template_name="baux/avenant.html"), name='avenant'),
-    path("avenant/list/", AvenantsView.as_view(template_name="baux/avenant_list.html"), name='avenant_list'),
-    path("avenant/delete/<int:pk>/", AvenantsDeleteView.as_view(), name='avenant_delete'),
-    path("avenant/update/<int:pk>/", AvenantsView.as_view(template_name="baux/avenant.html"), name='avenant_update'),
+    path("structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration <int:administration_id>
     # consultation : 
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
     # Statistiques : 
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
-
+    # collecte : 
+    path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
+    path("collecte/list/", CollecteView.as_view(template_name="baux/collecte_list.html"), name='collecte_list'),
+    #path("collecte/print/<int:pk>/", ContratView.print_contrat, name='collecte_print'),
+    #path("collecte/delete/<int:pk>/", ContratDeleteView.as_view(), name='collecte_delete'),
+    #path("collecte/update/<int:pk>/", ContratView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
 ]

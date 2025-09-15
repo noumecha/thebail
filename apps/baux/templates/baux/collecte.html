@@ -1,0 +1,86 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Collecte{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="card p-3">
+
+        <h2>
+            {% if is_update %} 
+                Mise à jour du contrat "{{ form.instance }}" 
+            {% else %}  
+                Collecte d'informations sur les contrats de logements administratifs
+            {% endif %}
+        </h2>
+        <!-- form method="post" enctype="multipart/form-data" action="{% if is_update %}{% url 'baux:collecte_update' form.instance.id %}{% else %}{% url 'baux:collecte' %}{% endif %}" -->
+
+            <!-- section informations contrat -->
+            {% crispy form %}
+            {{ form.media }}
+
+            <!-- h4 class="bg-gray text-white p-2 mt-2 mb-2">AVENANTS</h4>
+            {% include "baux/formset_template.html" with formset=avenants_formset %} 
+
+            <!- section immeuble >
+            <h4 class="bg-gray text-white p-2 mt-2 mb-2">SECTION 2. INFORMATIONS SUR L'IMMEUBLE</h4>
+            {% include "baux/formset_template.html" with formset=immeubles_formset %}
+            <h5 class="text-uppercase bg-secondary-subtle"> V. Occupants Actuels de L'IMMEUBLE </h5>
+            {% include "baux/formset_template.html" with formset=occupants_residence_formset %}
+
+            {% include "baux/formset_template.html" with formset=occupants_bureau_formset %}
+
+            <!- section typecontrat >
+            <h4 class="bg-gray text-white p-2 mt-2 mb-2">typecontratS</h4>
+            {% include "baux/formset_template.html" with formset=typecontrats_formset %}
+
+            <h5 class="mt-3">Ayants droits du typecontrat</h5>
+            {% include "baux/formset_template.html" with formset=ayants_droits_formset %}
+
+            <h5 class="mt-3">Non mandatements</h5>
+            {% include "baux/formset_template.html" with formset=non_mandatements_formset %}
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-lg btn-primary">Enregistrer</button>
+            </div>-->
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field , errors in form.errors.items %}
+                            <li>{{ field }} : {{ errors|striptags }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        <!-- /form-->
+
+    </div>
+    <!-- typecontrat modal -->
+    <div class="modal fade" id="addTypeContratModal" tabindex="-1" aria-labelledby="addaddTypeContratModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-light">
+            <form id="typecontratForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTypeContratModalLabel">Ajouter un type de contrat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="typecontrat-form-content">Chargement...</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'js/collecte.js' %}"></script>
+{% endblock %}

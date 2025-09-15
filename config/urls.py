@@ -63,6 +63,9 @@ urlpatterns = [
 
     # baux 
     path("", include("apps.baux.urls")),
+    
+    # autorelaod on dev mode
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 handler404 = SystemView.as_view(template_name="pages_misc_error.html", status=404)

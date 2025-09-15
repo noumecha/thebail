@@ -1,0 +1,72 @@
+<table class="table table-sm">
+    <tr>
+        <th>Nom du Bailleur</th>
+        <th>Identifiant NIU </th>
+        <th>Representant</th>
+        <th>Contact</th>
+        <th>Action</th>
+    </tr>
+    {% for bailleur in bailleurs %}
+        <tr data-id="{{ bailleur.id }}">
+            <td>{{ bailleur.Raison_social }} </td>
+            <td>{{ bailleur.NIU }}</td>
+            <td>{{ bailleur.Nom_Prenom_Representant }}</td>
+            <td>{{ bailleur.Telephone }}</td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a 
+                            class="dropdown-item primary" 
+                            href="#"
+                            data-bs-target="#create-bailleur-modal"
+                            data-bs-toggle="modal"
+                            data-action = "update"
+                            data-id="{{ bailleur.id }}"
+                        >
+                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                        </a>
+                        <a href="#" 
+                            class="dropdown-item btn-success delete-bailleur"
+                            data-bs-target="#delete-bailleur-modal-{{ bailleur.id }}"
+                            data-bs-toggle="modal"
+                        >
+                            <i class="bx bx-trash me-1"></i>Supprimer
+                        </a>
+                    </div>
+                    <!-- delete bailleur -->
+                    <div class="modal fade" id="delete-bailleur-modal-{{ bailleur.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content p-0">
+                                <form action="{% url 'baux:bailleur_delete' bailleur.id %}" method="post" id="delete-bailleur-form">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Suppression d'un bailleur</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modal-content-message">
+                                            Voulez vous vraiment supprimer : {{ bailleur }} ?
+                                        </div>
+                                        <input type="hidden" value="{{ bailleur.id }}" name="id" id="delete-bailleur-input-id">
+                                    </div>
+                                    <div class="modal-footer flex-row-reverse">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">Aucun bailleur trouvé.</td>
+        </tr>
+    {% endfor %}
+</table>
+{% include 'baux/partials/paginator.html' with page_obj=page_obj %}

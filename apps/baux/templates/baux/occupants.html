@@ -10,23 +10,20 @@
 
 {% block content %}
     <div class="card p-3">
-        <h1>
-            {% if is_update %} 
-                Mise à jour de l'occupant "{{ form.instance }}" 
-            {% else %}  
-                Enregistrement d'un Occupant
-            {% endif %}
-        </h1>
+        <h1>Enregistrement d'un Occupant</h1>
 
         <!-- enregistrement -->
 
         <div class="">
-            <form method="post" action="{% if is_update %}{% url 'baux:occupants_update' form.instance.id %}{% else %}{% url 'baux:occupants' %}{% endif %}">
+            <form method="post" action="{% url 'baux:occupants' %}">
                 <!-- enregistrement -->
+                {% if not form.instance.id %}
 
                 {% crispy form %}
 
                 <input type="submit" class="d-grid gap-2 col-4 mx-auto btn btn-primary mb-3" name="save" value="Enregistrer">
+
+                {% endif %}
                 
                 {% if form.errors %}
                     <div class="alert alert-danger">

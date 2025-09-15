@@ -50,6 +50,10 @@ ENVIRONMENT = os.environ.get("DJANGO_ENVIRONMENT", default="local")
 # Application definition
 
 INSTALLED_APPS = [
+    # autocomplete features
+    'dal',
+    'dal_select2',
+    # 
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -72,7 +76,15 @@ INSTALLED_APPS = [
     "apps.baux",
     "crispy_forms",
     "crispy_bootstrap5",
+    #'bootstrap5',
     #"crispy_bootstrap4",
+    'formtools',
+    'django_select2',
+    # 
+    'django_countries',
+    'djmoney',
+    # autoreload on dev mode
+    "django_browser_reload",
 ]
 
 MIDDLEWARE = [
@@ -85,6 +97,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # autoreload on dev mode
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -190,6 +204,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 THEME_LAYOUT_DIR = THEME_LAYOUT_DIR
 THEME_VARIABLES = THEME_VARIABLES
+
+# saving file 
+# --------------------------------------------------------------------
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 
 

@@ -1,0 +1,67 @@
+<table class="table table-sm">
+    <tr>
+        <th>Libellé</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+    {% for revetementint in revetementints %}
+        <tr data-id="{{ revetementint.id }}">
+            <td>{{ revetementint.libelle|default:"-" }}</td>
+            <td>{{ revetementint.description|default:"-" }}</td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a 
+                            class="dropdown-item primary" 
+                            href="#"
+                            data-bs-target="#create-revetementint-modal"
+                            data-bs-toggle="modal"
+                            data-action = "update"
+                            data-id="{{ revetementint.id }}"
+                        >
+                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                        </a>
+                        <a href="#" 
+                            class="dropdown-item btn-success delete-revetementint"
+                            data-bs-target="#delete-revetementint-modal-{{ revetementint.id }}"
+                            data-bs-toggle="modal"
+                        >
+                            <i class="bx bx-trash me-1"></i>Supprimer
+                        </a>
+                    </div>
+                    <!-- delete revetementint -->
+                    <div class="modal fade" id="delete-revetementint-modal-{{ revetementint.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content p-0">
+                                <form action="{% url 'baux:revetementint_delete' revetementint.id %}" method="post" id="delete-revetementint-form">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Suppression d'un revetement intérieure</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modal-content-message">
+                                            Voulez vous vraiment supprimer : {{ revetementint }} ?
+                                        </div>
+                                        <input type="hidden" value="{{ revetementint.id }}" name="id" id="delete-revetementint-input-id">
+                                    </div>
+                                    <div class="modal-footer flex-row-reverse">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Aucun revetement intérieure trouvé.</td>
+        </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,71 @@
+<table class="table table-sm">
+    <tr>
+        <th>Noms et prenoms</th>
+        <th>Administration_tutelle</th>
+        <th>Matricule</th>
+        <th>Telephone</th>
+        <th>Action</th>
+    </tr>
+    {% for occupant in occupants %}
+        <tr data-id="{{ occupant.id }}">
+            <td>{{ occupant.Nom_Prenom }}</td>
+            <td>{{ occupant.Administration_tutelle }}</td>
+            <td>{{ occupant.Matricule }}</td>
+            <td>{{ occupant.Telephone }}</td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a 
+                            class="dropdown-item primary" 
+                            href="#"
+                            data-bs-target="#create-occupant-modal"
+                            data-bs-toggle="modal"
+                            data-action = "update"
+                            data-id="{{ occupant.id }}"
+                        >
+                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                        </a>
+                        <a href="#" 
+                            class="dropdown-item btn-success delete-occupant"
+                            data-bs-target="#delete-occupant-modal-{{ occupant.id }}"
+                            data-bs-toggle="modal"
+                        >
+                            <i class="bx bx-trash me-1"></i>Supprimer
+                        </a>
+                    </div>
+                    <!-- delete occupant -->
+                    <div class="modal fade" id="delete-occupant-modal-{{ occupant.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content p-0">
+                                <form action="{% url 'baux:occupant_delete' occupant.id %}" method="post" id="delete-occupant-form">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Suppression d'un occupant</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modal-content-message">
+                                            Voulez vous vraiment supprimer : {{ occupant }} ?
+                                        </div>
+                                        <input type="hidden" value="{{ occupant.id }}" name="id" id="delete-occupant-input-id">
+                                    </div>
+                                    <div class="modal-footer flex-row-reverse">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Aucun occupant trouvé.</td>
+        </tr>
+    {% endfor %}
+</table>

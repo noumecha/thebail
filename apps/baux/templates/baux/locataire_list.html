@@ -3,7 +3,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Listes Locataires{% endblock %}
+{% block title %}Liste des Locataires{% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -11,41 +11,76 @@
 {% block content %}
     <div class="card p-3">
         
-        <h1> Liste des locataires </h1>
-        <div class="container-flex">
-            <table class="table table-sm">
-                <tr>
-                    <th>Intitule</th>
-                    <th>NIU</th>
-                    <th>Representant</th>
-                    <th>Num_Cni</th>
-                    <th>Date CNI</th>
-                    <th>Action</th>
-                </tr>
-                {% for score in locatairesList %}
-                    <tr>
-                        {% if form.instance.id == score.id %}
-                            {% include 'baux/saveLocataire.html' %}
-                        {% else %}
-                            <td>{{ score.Intitule }} </td>
-                            <td>{{ score.NIU }}</td>
-                            <td>{{ score.Nom_Prenom_Representant }}</td>
-                            <td>{{ score.Num_Cni}}</td>
-                            <td>{{ score.Date_delivrance_cni }}</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item primary" href="{% url 'baux:locataire_update' score.id %}"><i class="bx bx-edit-alt me-1"></i>Modifier</a>
-                                        <a href="{% url 'baux:locataire_delete' score.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal"><i class="bx bx-trash me-1"></i>Supprimer</a>
-                                    </div>
-                                </div>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
+        <div class="card-header">
+            <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-md-12 col-lg-6">
+                    <h3 class="">Listes des locataires enregistrés</h3>
+                    <p class="text-sm">
+                        Gérer les locataires
+                    </p>
+                </div>
+                <div class="col-md-12 col-lg-6 text-end">
+                    <button
+                        type="button"
+                        class="btn btn-lg btn-dark btn-primary text-white"
+                        data-bs-toggle="modal"
+                        data-action = "create"
+                        id="add-button"
+                        data-bs-target="#create-locataire-modal"
+                    >
+                        <i class="menu-icon tf-icons bx bx-file"></i> Ajouter
+                    </button>
+                </div>
+            </div>
+            <form action="" class="row mt-3" id="locataire-search-form">
+                <div class="col-md-12 col-lg-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Rechercher un locataire" name="search" id="search">
+                        <button class="btn btn-outline-primary" type="button" id="clearSearch">
+                            <i class="bx bx-x"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="alert alert-success col-12 text-center mt-3" style="display:none;" id="message-show">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="container-flex" id="locataire-table-container">
         </div>
     </div>
-
+    <!-- create or update locataire -->
+    <div class="modal fade" id="create-locataire-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content p-0">
+                <form id="locataire-form">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title">Enregistrement des informations sur un locataire</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="locataire-form-container">Chargement...</div>    
+                        <div class="alert alert-success" style="display: none;" id="form-success"></div>
+                        <div class="alert alert-danger" style="display: none;" id="form-error"></div>
+                        <input type="hidden" value="" name="id" id="update-id">
+                    </div>
+                    <div class="modal-footer flex-row-reverse">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" id="save-btn" class="btn">...</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'js/locataire.js' %}"></script>
 {% endblock %}

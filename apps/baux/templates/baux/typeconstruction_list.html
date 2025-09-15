@@ -1,0 +1,87 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Ajouter des type de construction{% endblock %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="card p-3">
+        
+        <div class="card-header">
+            <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-md-12 col-lg-6">
+                    <h3 class="">Listes des types de construction enregistrés</h3>
+                    <p class="text-sm">
+                        Gérer les types de construction
+                    </p>
+                </div>
+                <div class="col-md-12 col-lg-6 text-end">
+                    <button
+                        type="button"
+                        class="btn btn-lg btn-dark btn-primary text-white"
+                        data-bs-toggle="modal"
+                        data-action = "create"
+                        id="add-button"
+                        data-bs-target="#create-typeconstruction-modal"
+                    >
+                        <i class="menu-icon tf-icons bx bx-file"></i> Ajouter
+                    </button>
+                </div>
+            </div>
+            <form action="" class="row mt-3" id="typeconstruction-search-form">
+                <div class="col-md-12 col-lg-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Rechercher un type de construction" name="search" id="search">
+                        <button class="btn btn-outline-primary" type="button" id="clearSearch">
+                            <i class="bx bx-x"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="alert alert-success col-12 text-center mt-3" style="display:none;" id="message-show">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="container-flex" id="typeconstruction-table-container">
+        </div>
+    </div>
+    <!-- create or update typeconstruction -->
+    <div class="modal fade" id="create-typeconstruction-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content p-0">
+                <form id="typeconstruction-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title">Enregistrement des informations sur un Type construction</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="typeconstruction-form-container">Chargement...</div>    
+                        <div class="alert alert-success" style="display: none;" id="form-success"></div>
+                        <div class="alert alert-danger" style="display: none;" id="form-error"></div>
+                        <input type="hidden" value="" name="id" id="update-id">
+                    </div>
+                    <div class="modal-footer flex-row-reverse">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" id="save-btn" class="btn">...</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'js/typeconstruction.js' %}"></script>
+{% endblock %}

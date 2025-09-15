@@ -1,0 +1,8 @@
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% crispy form %}
+{{ form.media }}
+{% for name, formset in formsets.items %}
+    {% include "baux/formset_template.html" with formset=formset %}
+{% endfor %}

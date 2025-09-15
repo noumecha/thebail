@@ -1,0 +1,9 @@
+/** 
+    CSS files for surcharging some code 
+**/
+.text-justify {
+    text-align: justify !important;
+}
+.select2-selection {
+    text-align: center !important;
+}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed {{content_layout_class}}" data-assets-path="{% static '/' %}" data-base-url="{{url}}" data-framework="django" data-template="vertical-menu-free">
+    <head>
+        <title>contrat</title>
+        {% load static %}
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="description" content="{% get_theme_variables 'template_description' %}" />
+        <meta name="keywords" content="{% get_theme_variables 'template_keyword' %}" />
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}" />
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    </head>
+    <body>
+        <!-- version francaise --> 
+        <!-- entete -->
+        <div class="container">
+            <div class="row d-flex flex-column">    
+                <h3 class="text-center">
+                    REPUBLIQUE DU CAMEROUN
+                </h3>
+                <h5 class="text-center">
+                    <i>Paix - Travail - Patrie</i>
+                </h5>
+            </div>
+            <div class="row d-flex flex-column">
+                <h3 class="">
+                    MINISTERE DES DOMAINES DU CADASTRE ET DES AFFAIRES FONCIERES
+                </h3>
+                <h3 class="">
+                    CONTRAT DE LOCATION D'IMMEUBLE N° {{ contrat.immeuble }}
+                </h3>
+            </div>
+            <div class="row d-flex flex-column">
+                <p class="text-center">
+                   Entre les sousignés 
+                </p>
+                <p class="text-left">
+                    Monsieur  {{ contrat.bailleur }}, propriétaire à <b>[addresse propriétaire]</b>, Départemnent [nom du département], Domicilié à 
+                    <b>[domicille propriétaire]</b> d'une part.
+                </p>
+                <p style="text-align: justify !important">
+                    et le Gouvernement de la Répubique du cameroun représéenté par le Ministre des Domaines du Cadastre et des Affaires Foncières d'autre part.
+                </p>
+            </div>
+        </div>
+        <!-- corps du contrat -->
+        <div class="container">  
+            <div class="d-flex row flex-column">
+                <h4 class="text-center">
+                    CONDITIONS PARTICULIERES
+                </h4>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Article Premier :</u></b> - Monsieur [nom propriétaire], donne en location au Gouvernement de la République du Cameroun qui
+                        accepte, un immeuble dont il déclare être propriétaire et qui est décrit ci-après dans les conditions générales.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 2 :</u></b> - La location, objet du présent contrat, est faite pour une durée [duree contrant] qui court du <b>[date debut contrat] au 
+                        [date fin contrat]</b> inclus. Elle est renouvelable par tacite reconduction.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 3 :</u></b> - Toutefois, le présent contrat peut être résilié au gré des parties sous réserve du respect d'un préavis d'un mois.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 4 :</u></b> - Les parties conviennent d'un loyer mensuel de <b>[montant loyer en [chiffre](en lettre)]</b> [type contrat impot] et [type contrat 
+                        revisable], payable par trimestre et d'avance sur présentation d'une facture de quatre exemplaiers. L'original étant timbré conformément à la réglémentation
+                        en vigeur et portant mention du numéror du présenta contrat de location.
+                        Toutefois, la première facture couvrira la période allant du <b>[date debut contrat]</b> au <b>[date fin dannée correspondant a date debut contrat] inclus</b>
+                    </p>
+                </div>
+            </div>
+            <div class="d-flex row flex-column">
+                <h4 class="text-center">
+                    CONDITIONS GENERALES
+                </h4>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 5</u></b> - L'immeuble, objet du présent contrat sis à <b>[localisation immeuble]</b> est un immeuble de type [type immeuble],
+                        [état immeuble] d'une superficie totale utile de [supperficie utilie de l'immeuble] m<sup>2</sup> (Titre foncier [numero titre foncier])
+                        comprennat <b>[nombre pièces]</b> principales dont 
+                        chambres à coucher .... <b>[total chambres à coucher]</b> ... : Hall ...<b>[total Hall]</b> : Parking ...<b>[total parking]</b>... : 
+                        Escaliers ...<b>[total escalier]</b>... Cuisines...<b>[total cuisines]</b>... : Salles d'eau : ...<b>[total salles d'eau]</b>... 
+                        Couloirs ...<b>[total couloirs]</b>... Terasse...<b>[Total terasse]</b>... Séjour...<b>[total séjour]</b>... : Déagemeents ...<b>[total dégagement]</b>...
+                        SDB ...<b>[total SDB]</b>... : Guérite ...<b>[total géurite]</b>... 
+                        Toiture en <b>[type toles toitures]</b>
+                        Installations sanitaires, élétricuqes d'eaut en <b>[état installation sanitaires]</b>. Cloture ....[cloture oui ou non].... Cette description est conforme aux
+                        conclusions deu rapport d'expertise établie le <b>[date résultat rapport d'expertise]</b> par <b>[autorité ayant établi le rapport d'expertise]</b>
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 6 :</u></b> - L'état des lieux a été dressé contradictoirement en présense du propriétaire ou de son mandataire et d'un représentant du gouvernement.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 7 :</u></b> - Le propriétaire s'engage à respecter la tranquilité des services du Gouvernement ou de son agent dans son immeuble pendant la durée 
+                            de la validité du présent contrat.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 8 :</u></b> - Le Gouvernement de la République du Cameroun s'engage à jouri de cet immeuble en bon père de famille.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 9 :</u></b> - Le propriétaire déclare avoir pris connaissance des dispositions des articles 1719 à 1724 et 1755 à 1756 du Code Civil 
+                            et s'engage à s'y conformer scrupulusement et notamment s'oblige par le présent contrat, à entretenir sa proriété immobilière en état de servir
+                            à l'usage pour lequel elle à été louée sans qu'il soit besoin d'aucune stipulation particulière. Il s'enage spécialement à renouveler les peintures
+                            extérieures touts les deux ans et à effectuer toute autre refection due à l'usure normale de sa propriété.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 10 :</u></b> - En cas de non-respect des dispositions de l'article 9, l'Etat peut exécuter les travaux incombant au propriétaire et emmetre à son
+                            encontre un ordre de recette imputtable sur les loyers dus.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 11 :</u></b> - Tout manquement aux dispositions ci-dessus souscrites par le propriétaire peut emporter d'office et sans préavis la résiliation du 
+                            présent contrat, sans préjudice de l'obligation de rembourser à l'Etat les sommes éventuellement perçues d'avance au titre du trimestre.
+                    </p>
+                </div><div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 12 :</u></b> - Il n'est rien dérogé aux dispositions du droit communt en dehors des situations du présent contrat.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 13 :</u></b> - Le présent contrat sera enreistré conforméméent à la réglémentation en vigeur, tous frais étant à la charge du bailleur.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- pied de page du contrat -->
+        <div class="container">
+            <div class="row d-flex">
+                <div class="col-lg-6"></div>
+                <div class="col-lg-6">
+                    <p class="">
+                        Yaoundé, le ......................................................
+                    </p>
+                </div>
+            </div>
+            <div class="row d-flex">
+                <div class="col-lg-6">
+                    <p style="text-align: justify !important">
+                        <b>Le bailleur,</b><br>
+                        <i>Rayer la mention inutile(1)</i>
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <p style="text-align: justify !important"><b>Le Ministre des Domaines du Cadastres et des Affaires Foncières</b></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- version anglaise-->
+        <!-- header -->
+        <div class="container">
+            <div class="row d-flex flex-column">    
+                <h3 class="text-center">
+                    REPUBLIC OF CAMEROON
+                </h3>
+                <h5 class="text-center">
+                    <i>Peace - Work - Fatherland</i>
+                </h5>
+            </div>
+            <div class="row d-flex flex-column">
+                <h3>
+                    MINISTRY OF STATE PROPERTY, SURVEYS AND LAND TENURE
+                </h3>
+                <h3>
+                    LEASE AGREEMENT FOR BUILDING No. [CONTRACT NUMBER HERE]
+                </h3>
+            </div>
+            <div class="row d-flex flex-column">
+                <p class="text-center">
+                    Between the undersigned
+                </p>
+                <p class="text-left">
+                    Mr. [owner's name], owner residing at <b>[owner's address]</b>, Department of [department name], residing at 
+                    <b>[owner's domicile]</b>, on the one hand.
+                </p>
+                <p style="text-align: justify !important">
+                    and the Government of the Republic of Cameroon, represented by the Minister of State Property, Surveys and Land Tenure, on the other hand.
+                </p>
+            </div>
+        </div>
+
+        <!-- contract body -->
+        <div class="container">  
+            <div class="d-flex row flex-column">
+                <h4 class="text-center">
+                    SPECIFIC TERMS
+                </h4>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Article 1:</u></b> - Mr. [owner's name] leases to the Government of the Republic of Cameroon, which accepts, a building he declares to own, described below under the general terms and conditions.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 2:</u></b> - The lease governed by this contract is for a period of [contract duration], starting from <b>[contract start date] to 
+                        [contract end date]</b> inclusive. It shall be renewed tacitly.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 3:</u></b> - However, this contract may be terminated by either party subject to a one-month notice period.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 4:</u></b> - The parties agree on a monthly rent of <b>[rent amount in [figures](in words)]</b> [taxable/untaxable type] and [revisable/non-revisable type], payable quarterly and in advance upon presentation of a four-copy invoice. The original must be stamped in accordance with current regulations and must mention the number of this lease agreement.
+                        However, the first invoice shall cover the period from <b>[contract start date]</b> to <b>[end of year date corresponding to contract start]</b>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="d-flex row flex-column">
+                <h4 class="text-center">
+                    GENERAL TERMS
+                </h4>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 5:</u></b> - The property governed by this contract, located at <b>[property location]</b>, is a [property type] building, [property condition], with a total usable area of [total usable area] m<sup>2</sup> (Land title No. [land title number]), consisting of <b>[number of rooms]</b> main rooms including:
+                        Bedrooms: ... <b>[number of bedrooms]</b> ... ; Hall: ... <b>[number of halls]</b> ; Parking: ... <b>[number of parkings]</b> ; 
+                        Stairs: ... <b>[number of stairs]</b> ; Kitchens: ... <b>[number of kitchens]</b> ; Bathrooms: ... <b>[number of bathrooms]</b> ; 
+                        Corridors: ... <b>[number of corridors]</b> ; Terrace: ... <b>[number of terraces]</b> ; Living room: ... <b>[number of living rooms]</b> ; 
+                        Passageways: ... <b>[number of passageways]</b> ; Bathrooms: ... <b>[number of bathrooms]</b> ; Security post: ... <b>[number of security posts]</b> ;
+                        Roofing in <b>[roofing type]</b>,
+                        Plumbing and electrical installations in <b>[state of sanitary installations]</b>. Fenced: ....[yes or no]....
+                        This description complies with the findings of the expert report prepared on <b>[expert report date]</b> by <b>[name of authority issuing report]</b>.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 6:</u></b> - The inventory of fixtures was carried out jointly in the presence of the owner or their representative and a government representative.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 7:</u></b> - The owner undertakes to ensure the quiet enjoyment of the premises by the Government or its agent during the validity of this contract.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 8:</u></b> - The Government of the Republic of Cameroon undertakes to use the building as a responsible tenant.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 9:</u></b> - The owner acknowledges being aware of Articles 1719 to 1724 and 1755 to 1756 of the Civil Code and undertakes to comply fully with them. In particular, the owner agrees to maintain the property in a condition suitable for the use for which it was rented, without the need for any special stipulations. The owner specifically commits to repainting the exterior every two years and carrying out all necessary repairs due to normal wear and tear.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 10:</u></b> - In case of non-compliance with Article 9, the State may carry out the necessary works at the owner's expense and issue a recovery order deductible from rent due.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 11:</u></b> - Any breach of the above provisions by the owner may result in the termination of this contract without notice and without prejudice to the obligation to reimburse any advance payments received for the quarter.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 12:</u></b> - Nothing in this contract shall derogate from the provisions of common law outside of the present stipulations.
+                    </p>
+                </div>
+                <div class="article-container">
+                    <p style="text-align: justify !important">
+                        <b><u>Art. 13:</u></b> - This contract shall be registered in accordance with the applicable regulations, with all costs borne by the lessor.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- contract footer -->
+        <div class="container">
+            <div class="row d-flex">
+                <div class="col-lg-6"></div>
+                <div class="col-lg-6">
+                    <p>
+                        Yaoundé, on ......................................................
+                    </p>
+                </div>
+            </div>
+            <div class="row d-flex">
+                <div class="col-lg-6">
+                    <p style="text-align: justify !important">
+                        <b>The Lessor,</b><br>
+                        <i>Cross out where not applicable(1)</i>
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <p style="text-align: justify !important"><b>The Minister of State Property, Surveys and Land Tenure</b></p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

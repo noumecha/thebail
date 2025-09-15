@@ -10,16 +10,14 @@
 {% block content %}
     <div class="card p-3">
 
-        <h1>
-            {% if is_update %} 
-                Mise à jour de l'avenant "{{ form.instance }}" 
-            {% else %}  
-                Enregistrement d'un dossier avenant
-            {% endif %}
-        </h1>
-        <form method="post" action="{% if is_update %}{% url 'baux:avenant_update' form.instance.id %}{% else %}{% url 'baux:avenant' %}{% endif %}">
+        <h1>Enregistrement d'un dossier avenant</h1>
+        <form method="post" action="{% url 'baux:avenant' %}">
+
+            {% if not form.instance.id %}
 
             {% crispy form %}
+
+            {% endif %}
 
             {% if form.errors %}
                 <div class="alert alert-danger">

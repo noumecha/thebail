@@ -13,7 +13,10 @@
     <!-- Canonical SEO -->
     <link rel="canonical" href="{% get_theme_variables 'product_page' %}">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/icon.png' %}" />
+    <!-- select2 -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
 
     <!-- Include the styles partial -->
     {% include "./partials/styles.html" %}
@@ -31,7 +34,6 @@
 
   <body>
     <!-- beautify ignore:end -->
-
     {% block layout %}
     {% endblock layout %}
 
@@ -40,9 +42,12 @@
     <!--Vendors Javascript-->
     {% block vendor_js %} {% endblock vendor_js %}
 
-    <!--Page Javascript-->
+    <!--Page Javascript--> <!-- generic js loading -->
     {% block page_js %} {% endblock page_js %}
 
+    <!-- extra js code -->
+    {% block extra_js %}
+    {% endblock %}
   </body>
 
 </html>
