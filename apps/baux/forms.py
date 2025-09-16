@@ -325,7 +325,11 @@ class OccupantsForm(forms.ModelForm):
                         Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
-                                <button type="button" i="occupant-collecte-add-btn" class="btn btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
+                                <button type="button" 
+                                    class="btn btn-outline-primary add-form" 
+                                    id="occupant-collecte-add-btn"
+                                    data-formset="occupants_residence"
+                                    data-table="occupant-collecte-table"> 
                                     + Ajouter à la liste
                                 </button>
                             """
@@ -365,7 +369,7 @@ class OccupantsForm(forms.ModelForm):
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr id="empty-occupant-row">
                                             <td colspan="8">
                                                 Aucune occupation de résidence ajouter ...
                                             </td>
@@ -425,7 +429,11 @@ class OccupantBureauxForm(forms.ModelForm):
                         Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
-                                <button type="button" id="occupantbureau-collecte-add-btn" class="btn btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
+                                <button type="button" 
+                                    class="btn btn-outline-primary add-form" 
+                                    id="occupantbureau-collecte-add-btn"
+                                    data-formset="occupants_bureau"
+                                    data-table="occupantbureau-collecte-table"> 
                                     + Ajouter à la liste
                                 </button>
                             """
@@ -462,7 +470,7 @@ class OccupantBureauxForm(forms.ModelForm):
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr id="empty-occupantbureau-row">
                                             <td colspan="7">Aucune occupation pour bureau ajouter ...</td>    
                                         </tr>
                                     </tbody>
@@ -963,8 +971,40 @@ class CollectesForm(forms.ModelForm):
                 Formset("ayants_droits_formset"),
                 Column(
                     HTML("""
+                        <tr>
                         <table id="ayantdroit-collecte-table" class='table table-bordered mt-2'>
-                    """)
+                            <thead class='thead-dark'>
+                                <tr>
+                                    <th>
+                                        Noms & Prénoms
+                                    </th>
+                                    <th>
+                                        Contact
+                                    </th>
+                                    <th>
+                                        Reference Grosse
+                                    </th>
+                                    <th>
+                                        Date de prise d'effet de Grosse
+                                    </th>
+                                    <th>
+                                        Reference Certificat de non appel
+                                    </th>
+                                    <th>
+                                        Date de prise d'effet du certificat
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id='empty-ayantdroit-row'>
+                                    <td colspan="7">Aucun ayant droit du bailleur ajouté ...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    """),
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -980,9 +1020,11 @@ class CollectesForm(forms.ModelForm):
                 Formset("non_mandatements_formset"),
                 Column(
                     HTML("""
-                        <button type="button" id="nonmandatement-collecte-add-btn" class="btn btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
-                            + Ajouter à la liste
-                        </button>
+                        <button type="button" 
+                            class="btn btn-outline-primary add-form" 
+                            id="nonmandatement-collecte-add-btn"
+                            data-formset="non_mandatements"
+                            data-table="nonmandatement-collecte-table"> + Ajouter à la liste </button>
                     """
                     ),
                     css_class='form-group col-md-3 mb-0'
@@ -1058,7 +1100,7 @@ class CollectesForm(forms.ModelForm):
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr id='empty-ayantdroit-row'>
                                     <td colspan="30">Aucune attestation de non mandatement ajouter ...</td>    
                                 </tr>
                             </tbody>
@@ -1784,15 +1826,15 @@ class NonMandatementForm(forms.ModelForm):
     class Meta:
         model = Non_Mandatement
         fields = (
-            "Exercice","Loyer_Mensuel","Ref_Attestattion","Date_signature","janvier","fevrier","mars","avril",
+            "Exercice","Loyer_Mensuel","Ref_Attestattion","janvier","fevrier","mars","avril",
             "mai","juin","juillet","aout","septembre","octobre","novembre","decembre","Montant_total_exercice",
-            "Visa_budgétaire","Ref_contrat_avenant","Etat",
+            "Visa_budgétaire","Ref_contrat_avenant",#"Etat","Date_signature",
         )
         labels = {
             "Exercice" : "Exercice",
             "Loyer_Mensuel" : "Loyer Mensuel",
             "Ref_Attestattion" : "Référnce de l'attestation de non mandatement",
-            "Date_signature" : "Date de signature",
+            #"Date_signature" : "Date de signature",
             "janvier" : "J",
             "fevrier" : "F",
             "mars" : "M",
@@ -1808,7 +1850,7 @@ class NonMandatementForm(forms.ModelForm):
             "Montant_total_exercice" : "Montant total par exercice (Nbre de mois x Loyer Mensuel)",
             "Visa_budgétaire" : "Visa budgétaire / Signature CF ?",
             "Ref_contrat_avenant" : "Reference Contrat / Avenant",
-            "Etat" : "Etat",
+            #"Etat" : "Etat",
         }
         widgets = {
           "Date_signature"  :  forms.TextInput(attrs={'type': 'date'}),
@@ -1834,9 +1876,9 @@ class NonMandatementForm(forms.ModelForm):
                             css_class='form-group col-md-6 mb-3'
                         ),
                         Column(FloatingField("Loyer_Mensuel"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ref_Attestattion"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Etat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_Attestattion"), css_class='form-group col-md-12 mb-0'),
+                        #Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Etat"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"

@@ -1,5 +1,23 @@
 $(function () {
     let avenantIndex = 1; // Pour numéroter les avenants
+    // objet pour la sauvegarde globale en base de données ---> creer un Array d'objet avenant à soumettre via ajax
+    const Avenant = {
+        ref: '',
+        ancienBailleur: '',
+        nouveauBailleur: '',
+        montantAncien: '',
+        montantNouveau: '',
+        attestationAncien: '',
+        attestationNouveau: '',
+        dureeAncien: '',
+        dureeNouveau: '',
+        dateSignature: '',
+        dateEffet: '',
+        modificationApportee: '',
+        localite: '',
+    }
+
+
     $('#avenant-collecte-add-btn').click(function () {
         const ref = $('#id_avenants-0-Ref_Avenant').val();
         const ancienBailleur = $('#id_avenants-0-Ancien_bailleur option:selected').text();

@@ -813,7 +813,7 @@ class Non_Mandatement (models.Model):
     Exercice = models.ForeignKey(Exercice, on_delete=models.CASCADE, null=True, related_name= "exercice")
     Loyer_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Ref_Attestattion = models.CharField(max_length=50, null=True, blank=True)
-    Date_signature =  models.CharField(max_length=50,null=True)
+    #Date_signature =  models.CharField(max_length=50,null=True)
     # mois non mandatés
     janvier = models.BooleanField(default=False, verbose_name="Janvier")
     fevrier = models.BooleanField(default=False, verbose_name="Février")
@@ -833,7 +833,7 @@ class Non_Mandatement (models.Model):
     # relations 
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur_non_mandatement")
     # 
-    Etat = models.CharField(choices=TYPE_DOSSIER, max_length=12, null=True) 
+    #Etat = models.CharField(choices=TYPE_DOSSIER, max_length=12, null=True)
     Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
 

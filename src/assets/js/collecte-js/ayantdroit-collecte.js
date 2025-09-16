@@ -7,6 +7,19 @@ $(function() {
         $("#id_ayants_droits-0-Reference_certificat_non_effet").val("");
         $("#id_ayants_droits-0-Date_prise_effet_certificat_non_effet").val("");
     }
+    
+    // objet pour la sauvegarde globale en base de données ---> creer un Array d'objet AyantDroit à soumettre via ajax
+    const AyantDroit = {
+        nom_prenom: '',
+        contact: '',
+        reference_grosse: '',
+        date_prise_effet_grosse: '',
+        reference_certificat_non_effet: '',
+        date_prise_effet_certificat_non_effet: ''
+    }
+
+    // default empty row
+    const $emptyRow = $("#empty-ayantdroit-row");
 
     $("#ayantdroit-collecte-add-btn").on("click", function () {
         const nomPrenom = $("#id_ayants_droits-0-Nom_Prenom").val();
@@ -16,69 +29,55 @@ $(function() {
         const certificat = $("#id_ayants_droits-0-Reference_certificat_non_effet").val();
         const dateCertificat = $("#id_ayants_droits-0-Date_prise_effet_certificat_non_effet").val();
 
+        // validation du formaulre ---> à revoir 
         if (!nomPrenom) {
             alert("Veuillez saisir le nom et prénom.");
             return;
         }
 
-        // Clone du template
-        const $template = $("#ayantdroit-template").find("tr").clone();
+        // template de ligne du tableau
+        let row = `
+                <tr>
+                    <td><input type="hidden" name="Nom_Prenom_hidden[]" value="${nomPrenom}">${nomPrenom}</td>
+                    <td><input type="hidden" name="Contact_hidden[]" value="${contact}">${contact}</td>
+                    <td><input type="hidden" name="Reference_Grosse_hidden[]" value="${grosse}">${grosse}</td>
+                    <td><input type="hidden" name="Date_prise_effet_grosse_hidden[]" value="${dateGrosse}">${dateGrosse}</td>
+                    <td><input type="hidden" name="Reference_certificat_non_effet_hidden[]" value="${certificat}">${certificat}</td>
+                    <td><input type="hidden" name="Date_prise_effet_certificat_non_effet_hidden[]" value="${dateCertificat}">${dateCertificat}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-warning edit-ayantdroit">Éditer</button>
+                        <button type="button" class="btn btn-sm btn-danger delete-ayantdroit">Supprimer</button>
+                    </td>
+                </tr>
+            `;
+        // Ajouter au tableau
+        $('#ayantdroit-collecte-table tbody').append(row);
 
-        $template.find(".nom-prenom").text(nomPrenom);
-        $template.find(".contact").text(contact);
-        $template.find(".grosse").text(grosse);
-        $template.find(".date-grosse").text(dateGrosse);
-        $template.find(".certificat").text(certificat);
-        $template.find(".date-certificat").text(dateCertificat);
-
-        // Sauvegarde les données dans des attributs pour la réédition
-        $template.data("form-values", {
-            nomPrenom,
-            contact,
-            grosse,
-            dateGrosse,
-            certificat,
-            dateCertificat
-        });
-
-        // Ajout dans le tableau
-        const $tbody = $("#ayantdroit-collecte-table tbody");
-        const $emptyRow = $tbody.find("tr:contains('Aucun ayant droit')");
-        if ($emptyRow.length) {
-            $emptyRow.remove();
-        }
-        $tbody.append($template);
+        // Supprimer le message "aucun ayant droit"
+        $emptyRow.hide();
 
         resetAyantDroitForm();
     });
 
-    // Suppression
-    $(document).on("click", ".ayantdroit-entry .btn-delete", function () {
-        $(this).closest("tr").remove();
-
-        // Si tableau vide, remettre ligne vide
-        const $tbody = $("#ayantdroit-collecte-table tbody");
-        if ($tbody.find("tr").length === 0) {
-            $tbody.append(`
-                <tr>
-                    <td colspan="7">Aucun ayant droit du bailleur ajouté ...</td>
-                </tr>
-            `);
+    // Supprimer une ligne
+    $(document).on('click', '.delete-ayantdroit', function () {
+        $(this).closest('tr').remove();
+        // Si plus de lignes, afficher "aucun ayant droit"
+        if ($('#ayantdroit-collecte-table tbody tr').length === 0) {
+            $emptyRow.show();
         }
     });
 
     // Édition
-    $(document).on("click", ".ayantdroit-entry .btn-edit", function () {
-        const $row = $(this).closest("tr");
-        const data = $row.data("form-values");
+    $(document).on("click", ".edit-ayantdroit", function () {
+        let row = $(this).closest("tr");
 
-        $("#id_ayants_droits-0-Nom_Prenom").val(data.nomPrenom);
-        $("#id_ayants_droits-0-Contact").val(data.contact);
-        $("#id_ayants_droits-0-Reference_Grosse").val(data.grosse);
-        $("#id_ayants_droits-0-Date_prise_effet_grosse").val(data.dateGrosse);
-        $("#id_ayants_droits-0-Reference_certificat_non_effet").val(data.certificat);
-        $("#id_ayants_droits-0-Date_prise_effet_certificat_non_effet").val(data.dateCertificat);
-
-        $row.remove();
+        $("#id_ayants_droits-0-Nom_Prenom").val(row.find('input[name="Nom_Prenom_hidden[]"]').val());
+        $("#id_ayants_droits-0-Contact").val(row.find('input[name="Contact_hidden[]"]').val());
+        $("#id_ayants_droits-0-Reference_Grosse").val(row.find('input[name="Reference_Grosse_hidden[]"]').val());
+        $("#id_ayants_droits-0-Date_prise_effet_grosse").val(row.find('input[name="Date_prise_effet_grosse_hidden[]"]').val());
+        $("#id_ayants_droits-0-Reference_certificat_non_effet").val(row.find('input[name="Reference_certificat_non_effet_hidden[]"]').val());
+        $("#id_ayants_droits-0-Date_prise_effet_certificat_non_effet").val(row.find('input[name="Date_prise_effet_certificat_non_effet_hidden[]"]').val());
+        row.remove();
     });
 });

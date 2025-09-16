@@ -188,43 +188,13 @@
             </div>
         </div>
     </div>
-    <!-- 📦 TEMPLATE AYANT DROIT (caché) -->
-    <div id="ayantdroit-template" style="display: none;">
-        <table id="ayantdroit-collecte-table" class='table table-bordered mt-2'> 
-            <thead class='thead-dark'> 
-                <tr> 
-                    <th> Noms & Prénoms </th> 
-                    <th> Contact </th> 
-                    <th> Reference Grosse </th> 
-                    <th> Date de prise d'effet de Grosse </th> 
-                    <th> Reference Certificat de non appel </th> 
-                    <th> Date de prise d'effet du certificat </th> 
-                    <th> Action </th> 
-                </tr> 
-            </thead> 
-            <tbody> 
-                <tr> 
-                    <td colspan="7">Aucun ayant droit du bailleur ajouter ...</td> 
-                </tr> 
-            </tbody> 
-        </table>
-        <tr class="ayantdroit-entry">
-            <td class="nom-prenom"></td>
-            <td class="contact"></td>
-            <td class="grosse"></td>
-            <td class="date-grosse"></td>
-            <td class="certificat"></td>
-            <td class="date-certificat"></td>
-            <td>
-                <button type="button" class="btn btn-sm btn-warning btn-edit">✏️</button>
-                <button type="button" class="btn btn-sm btn-danger btn-delete">🗑️</button>
-            </td>
-        </tr>
-    </div>
 
 {% endblock %}
 {% block extra_js %}
     <script src="{% static 'js/collecte.js' %}"></script>
     <script src="{% static 'js/collecte-js/avenants-collecte.js' %}"></script>
     <script src="{% static 'js/collecte-js/ayantdroit-collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/nonmandatement-collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/occupants-collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/occupantsbureaux-collecte.js' %}"></script>
 {% endblock %}
