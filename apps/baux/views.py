@@ -14,6 +14,8 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 from django.core.paginator import Paginator
 from dal import autocomplete
+from django.views.decorators.csrf import csrf_exempt
+from django.forms import modelformset_factory
 
 # generic paritl view function :
 def generic_partial_form_view(request, form_class, success_message):
@@ -552,6 +554,91 @@ class CollecteView(TemplateView):
             context = self.get_context_data(pk=pk)
             context["form"] = collecte_form
             return self.render_to_response(context)
+
+import json
+
+@csrf_exempt
+def collecte_create(request):
+    if request.method == "POST":
+        collecte_form = CollectesForm(request.POST)
+
+        ImmeubleFormSet = modelformset_factory(Immeubles, form=ImmeublesForm, extra=0)
+        BailleurFormSet = modelformset_factory(Bailleurs, form=BailleursForm, extra=0)
+
+        immeuble_formset = ImmeubleFormSet(request.POST, prefix="immeubles")
+        bailleur_formset = BailleurFormSet(request.POST, prefix="bailleurs")
+
+        if collecte_form.is_valid() and immeuble_formset.is_valid() and bailleur_formset.is_valid():
+            collecte = collecte_form.save()
+
+            # Sauvegarde des immeubles (si tu veux les garder)
+            for immeuble_form in immeuble_formset:
+                immeuble = immeuble_form.save(commit=False)
+                immeuble.Collecte = collecte
+                immeuble.save()
+
+            # Sauvegarde des bailleurs
+            for bailleur_form in bailleur_formset:
+                bailleur = bailleur_form.save(commit=False)
+                bailleur.Collecte = collecte
+                bailleur.save()
+            
+            # Traitement des ayants droits
+            ayants_droits_json = request.POST.get('ayants_droits_data')
+            if ayants_droits_json:
+                try:
+                    ayants_droits = json.loads(ayants_droits_json)
+
+                    for ad in ayants_droits:
+                        Ayant_droits.objects.create(
+                            Bailleur=bailleur,
+                            Nom_Prenom=ad.get('Nom_Prenom'),
+                            Contact=ad.get('Contact'),
+                            Reference_Grosse=ad.get('Reference_Grosse'),
+                            Date_prise_effet_grosse=ad.get('Date_prise_effet_grosse'),
+                            Reference_certificat_non_effet=ad.get('Reference_certificat_non_effet'),
+                            Date_prise_effet_certificat_non_effet=ad.get('Date_prise_effet_certificat_non_effet')
+                        )
+                except json.JSONDecodeError:
+                    return JsonResponse({"success": False, "errors": "Erreur lors du décodage des ayants droits."}, status=400)
+
+            # Traitement des avenants (données JSON depuis JS)
+            avenants_json = request.POST.get('avenants_data')
+            if avenants_json:
+                try:
+                    avenants = json.loads(avenants_json)
+                    for a in avenants:
+                        Avenants.objects.create(
+                            Collecte=collecte,
+                            Ref_Avenant=a.get('ref'),
+                            Date_Signature=a.get('dateSignature'),
+                            Date_effet=a.get('dateEffet'),
+                            Modification_apportee=a.get('modificationApportee'),
+                            Ancien_bailleur=a.get('ancienBailleur'),
+                            Nouveau_bailleur=a.get('nouveauBailleur'),
+                            Localite=a.get('localite'),
+                            Montant_TTC_Mensuel_ancien=a.get('montantAncien'),
+                            Montant_TTC_Mensuel_Nouveau=a.get('montantNouveau'),
+                            Attestion_domicilliation_bancaire_ancien=a.get('attestationAncien'),
+                            Attestion_domicilliation_bancaire_nouveau=a.get('attestationNouveau'),
+                            Duree_Contrat_Ancien=a.get('dureeAncien'),
+                            Duree_Contrat_Nouveau=a.get('dureeNouveau'),
+                        )
+                except json.JSONDecodeError:
+                    return JsonResponse({"success": False, "errors": "Erreur lors du décodage des avenants."}, status=400)
+
+            return JsonResponse({"success": True, "message": "Fiche de collecte enregistrée avec succès !"})
+
+        else:
+            # Fusion des erreurs de tous les formulaires pour debug
+            all_errors = {
+                "collecte": collecte_form.errors,
+                "immeubles": [f.errors for f in immeuble_formset],
+                "bailleurs": [f.errors for f in bailleur_formset]
+            }
+            return JsonResponse({"success": False, "errors": all_errors}, status=400)
+
+    return JsonResponse({"success": False, "message": "Méthode non autorisée."}, status=405)
 
 # contrat view 
 class ContratView(TemplateView):

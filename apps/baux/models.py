@@ -712,13 +712,13 @@ class FichiersPiece(models.Model):
 # Collecte model
 class Collectes (models.Model):
     # informations du contrat et sur le collecteur 
-    Numero_fiche_de_collecte = models.IntegerField(null=True, blank=True, unique=True)
-    Agent_de_collecte = models.TextField(blank = True,null= True)
-    Matricule_agent_de_collecte = models.TextField(blank = True,null= True)
+    Numero_fiche_de_collecte = models.CharField(max_length=50)
+    Agent_de_collecte = models.TextField(blank = True)
+    Matricule_agent_de_collecte = models.TextField(blank = True)
     Date_de_collecte = models.CharField(max_length=50,null=True)
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "typologie_contrat")
     # informations contrat initial
-    Numero_contrat = models.IntegerField(null=True, blank=True, unique=True)
+    Numero_contrat = models.CharField(max_length=50)
     Date_signature_contrat = models.CharField(max_length=50,null=True)
     Fonction_signataire_contrat = models.CharField(max_length=50,null=True)
     Date_effet_contrat = models.CharField(max_length=50,null=True)
@@ -728,7 +728,7 @@ class Collectes (models.Model):
     # avenant informations 
     Existance_avenant = models.BooleanField(verbose_name=('Existence d\'au moins un avenant ?'), choices=EXISTANCE_AVENANT, max_length=1, null=True)
     Existance_visa_budgetaire = models.BooleanField(verbose_name=('Existence du visa budgétaire ?'), choices=EXISTANCE_AVENANT, max_length=1, null=True)
-    observation = models.CharField(max_length=200)
+    observation = models.CharField(max_length=200, null=True)
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True)
     # many to many relationship with ElementDeDescription through ImmeubleElement --> description de la batisse
     pieces = models.ManyToManyField(Pieces, through="PieceCollectes")

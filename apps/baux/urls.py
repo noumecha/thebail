@@ -71,6 +71,7 @@ urlpatterns = [
     # collecte : 
     path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
     path("collecte/list/", CollecteView.as_view(template_name="baux/collecte_list.html"), name='collecte_list'),
+    path("collecte/create", views.collecte_create, name='collecte_create'),
     #path("collecte/print/<int:pk>/", ContratView.print_contrat, name='collecte_print'),
     #path("collecte/delete/<int:pk>/", ContratDeleteView.as_view(), name='collecte_delete'),
     #path("collecte/update/<int:pk>/", ContratView.as_view(template_name="baux/collecte.html"), name='collecte_update'),

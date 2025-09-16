@@ -45,4 +45,42 @@ $(function () {
     // toggle occupants visibility 
     toogleFormset("#id_immeubles-0-Type_location", "2", '#occupants_residence-0', '#occupants_bureau-0')
     toogleFormset("#id_immeubles-0-Type_location", "1", '#occupants_bureau-0', '#occupants_residence-0')
+
+    // process to the data saving : 
+    $(document).on("click", "#submit-id-save", function (e) {
+            e.preventDefault();
+            let formData = new FormData($("#collecte-form")[0]);
+            // avenants
+            let avenants = [];
+            let ayants_droits = [];
+            $('#avenant-collecte-list .avenant-entry').each(function () {
+                let data = $(this).data('avenant');
+                avenants.push(data); // Chaque data est un objet avenant
+            });
+            $('#ayantdroit-collecte-table tbody .ayantdroit-entry').each(function () {
+                let data = $(this).data('ayantdroit'); // Assure-toi que .data('ayantdroit') contient un objet JS
+                if (data) {
+                    ayants_droits.push(data);
+                }
+            });
+            console.log(ayants_droits);
+            formData.append('avenants_data', JSON.stringify(avenants));
+            formData.append('ayants_droits_data', JSON.stringify(ayants_droits));
+            /*$.ajax({
+                url: "/collecte/create",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alert("Collecte enregistrée avec succès !");
+                    showAlertMessage(response.message, '#form-success-collecte')
+                },
+                error: function (xhr, status, error) {
+                    let errors = xhr.responseJSON.errors;
+                    console.log(errors);
+                    showAlertMessage(errors, '#form-error-collecte')
+                }
+            });*/
+    });
 })

@@ -793,6 +793,9 @@ class CollectesForm(forms.ModelForm):
         }
         widgets = {
             'Date_Construction'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Date_de_collecte'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Date_signature_contrat' : forms.TextInput(attrs={'type': 'date'}),
+            'Date_effet_contrat' : forms.TextInput(attrs={'type': 'date'}),
         }
 
     def save(self, commit=True):
@@ -941,11 +944,8 @@ class CollectesForm(forms.ModelForm):
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
-                css_class="p-3 pt-0"
-            ),
-            Row(
                 Column(
-                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>c- Périodicité de règlement selon le contrat</h5>"), 
+                    HTML("<h5 class='mt-2 text-bold fw bg-secondary-subtle'>c- Périodicité de règlement selon le contrat</h5>"), 
                     css_class='form-group col-md-12 mb-0'
                 ),
                 Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-12 mb-0'),
