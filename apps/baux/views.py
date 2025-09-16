@@ -15,6 +15,53 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from dal import autocomplete
 
+# generic paritl view function :
+def generic_partial_form_view(request, form_class, success_message):
+    if request.method == "POST":
+        form = form_class(request.POST)
+        if form.is_valid():
+            instance = form.save()
+            return JsonResponse({
+                'success': True,
+                'id': instance.id,
+                'text': str(instance),
+                'message': success_message,
+            })
+        else:
+            html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
+            return JsonResponse({
+                'success': False,
+                'html': html,
+                'message': 'Erreur lors de l\'enregistrement',
+                'errors': form.errors,
+            })
+    else:
+        form = form_class()
+        html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
+
+# usage : 
+def revetementint_partial_form_view(request):
+    return generic_partial_form_view(
+        request,
+        form_class=RevetementIntsForm,
+        success_message='Revetement intérieur enregistré avec succès',
+    )
+
+def revetementext_partial_form_view(request):
+    return generic_partial_form_view(
+        request,
+        form_class=RevetementExtsForm,
+        success_message='Revetement extérieur enregistré avec succès',
+    )
+
+def exercice_partial_form_view(request):
+    return generic_partial_form_view(
+        request,
+        form_class=ExercicesForm,
+        success_message='Exercice enregistré avec succès',
+    )
+
 #generic view for basic operation 
 class BaseCRUDView(TemplateView):
     model = None
@@ -215,6 +262,15 @@ class HomeView(TemplateView):
         return context
 
 #occupant view
+class ExercicesView(BaseCRUDView):
+    model = Exercice
+    form_class = ExercicesForm
+    list_route = 'exercice_list'
+    list_template = 'baux/exercice_list.html'
+    partial_template = 'baux/partials/exercices_partial.html'
+    context_object_name = 'exercices'
+    search_fields = ["annee","LibelleFR"]
+
 class OccupantsView(BaseCRUDView):
     model = Occupants
     form_class = OccupantsForm
@@ -297,11 +353,17 @@ def bailleur_partial_form_view(request):
             return JsonResponse({
                 'success': True,
                 'id': bailleur.id,
-                'text': str(bailleur)
+                'text': str(bailleur),
+                'message': 'Bailleur enregistré avec succès',
             })
         else:
             html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
-            return JsonResponse({'success': False, 'html': html})
+            return JsonResponse({
+                'success': False,
+                'html': html,
+                'message': f'Erreur lors de l\'enregistrement',
+                'errors' : form.errors,
+            })
     else:
         form = BailleursForm()
         html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
@@ -315,15 +377,23 @@ def typecontrat_partial_form_view(request):
             return JsonResponse({
                 'success': True,
                 'id': typecontrat.id,
-                'text': str(typecontrat)
+                'text': str(typecontrat),
+                'message': 'Type de contrat enregistré avec succès',
             })
         else:
             html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
-            return JsonResponse({'success': False, 'html': html})
+            return JsonResponse({
+                'success': False, 
+                'html': html,
+                'message': f'Erreur lors de l\'enregistrement',
+                'errors' : form.errors,  
+            })
     else:
         form = TypeContratsForm()
         html = render_to_string('baux/partials/form_template.html', {'form': form}, request=request)
-        return JsonResponse({'html': html})
+        return JsonResponse({
+            'html': html,
+        })
 
 # revetements views
 class RevetementExtsView(BaseCRUDView):

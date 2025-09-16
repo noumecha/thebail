@@ -309,9 +309,12 @@ EXISTANCE_AVENANT = (
 # exercice model
 class Exercice(models.Model):
     annee = models.IntegerField(unique=True)
-    LibelleFR = models.CharField(max_length=20, null=True)
-    date_debut = models.DateField(null=True)
-    date_fin = models.DateField(null=True)
+    LibelleFR = models.CharField(max_length=20, null=True, unique=True)
+    date_debut = models.DateField(null=True, blank=True)
+    date_fin = models.DateField(null=True, blank=True)
+    #
+    Date_creation = models.DateTimeField(auto_now=True)
+    Date_miseajour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Exercice budgetaire {self.annee}"
@@ -550,7 +553,8 @@ class Immeubles (models.Model):
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True)
     # localisation
     Type_localisation = models.CharField(choices=TYPE_LOCALISATION, max_length=1)
-    pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="immeuble_pays", blank=True)
+    #pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="immeuble_pays", blank=True)
+    pays = CountryField(blank=True, null=True, blank_label="(Choisir le pays)")
     Ville = models.CharField(max_length=50,null=True, blank=True)
     Rue = models.CharField(max_length=50,null=True, blank=True)
     region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=True, related_name="immeuble_region", blank=True)

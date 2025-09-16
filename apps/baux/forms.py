@@ -325,13 +325,57 @@ class OccupantsForm(forms.ModelForm):
                         Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
-                                <button type="button" class="btn btn-sm btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
-                                    + Ajouter
+                                <button type="button" i="occupant-collecte-add-btn" class="btn btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
+                                    + Ajouter à la liste
                                 </button>
                             """
                             ),
                             css_class='form-group col-md-3 mb-0'
-                        ),  
+                        ),
+                        Column(
+                             HTML("""
+                                <tr>
+                                <table id="occupant-collecte-table" class='table table-bordered mt-2'>
+                                    <thead class='thead-dark'>
+                                        <tr>
+                                            <th>
+                                                Noms & Prénoms
+                                            </th>
+                                            <th>
+                                                Administration de tutelle de l'occupant
+                                            </th>
+                                            <th>
+                                                Fonction ou qualité de l'occupant
+                                            </th>
+                                            <th>
+                                                Matricule ou NIU
+                                            </th>
+                                            <th>
+                                                Référence de l'acte juridique d'attribution
+                                            </th>
+                                            <th>
+                                                Date de prise d'effet de l'acte (jj/mm/aa)
+                                            </th>
+                                            <th>
+                                                Numero de téléphone
+                                            </th>
+                                            <th>
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="8">
+                                                Aucune occupation de résidence ajouter ...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            """
+                            ),
+                            css_class='form-group col-md-12 mb-0'
+                        ),
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
@@ -381,12 +425,51 @@ class OccupantBureauxForm(forms.ModelForm):
                         Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
-                                <button type="button" class="btn btn-sm btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
-                                    + Ajouter
+                                <button type="button" id="occupantbureau-collecte-add-btn" class="btn btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
+                                    + Ajouter à la liste
                                 </button>
                             """
                             ),
                             css_class='form-group col-md-3 mb-0'
+                        ),
+                        Column(
+                             HTML("""
+                                <hr>  
+                                <table id="occupantbureau-collecte-table" class='table table-bordered mt-2'>
+                                    <thead class='thead-dark'>
+                                        <tr>
+                                            <th>
+                                                Intitulé du service administratif
+                                            </th>
+                                            <th>
+                                                Administration correspondante
+                                            </th>
+                                            <th>
+                                                Fonction du plus haut responsable du service
+                                            </th>
+                                            <th>
+                                                Référence de l'acte juridique de l'attribution du MINDCAF
+                                            </th>
+                                            <th>
+                                               Contact (Numero Camtel du Service)
+                                            </th>
+                                            <th>
+                                                Date inital d'occupation (JJ/MM/AA)
+                                            </th>
+                                            <th>
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="7">Aucune occupation pour bureau ajouter ...</td>    
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            """
+                            ),
+                            css_class='form-group col-md-12 mb-0'
                         ),   
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
@@ -779,18 +862,18 @@ class CollectesForm(forms.ModelForm):
                         Column(FloatingField("Agent_de_collecte"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Matricule_agent_de_collecte"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_de_collecte"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("TypeContrat"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("TypeContrat"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
                                 <label for="id_TypeContrat">Selectionner un type de contrat</label>
                                 <div class="d-flex align-items-center">
                                     {{ form.TypeContrat }}
-                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addTypeContratModal">
+                                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addTypeContratModal">
                                         + Ajouter
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-12 mb-3'
+                            css_class='form-group col-md-6 mb-3'
                         ),
                         css_class="form-row"
                     ),
@@ -840,7 +923,12 @@ class CollectesForm(forms.ModelForm):
                             css_class='form-group col-md-12 mb-0'
                         ),
                         Formset("avenants_formset"),
-                        Column(FloatingField("observation"), css_class='form-group col-md-12 mb-0'),
+                        Column(
+                            HTML("""
+                                <div id="avenant-collecte-list"></div>
+                            """)
+                        ),
+                        Column(FloatingField("observation"), css_class='form-group mt-1 col-md-12 mb-0'),
                         css_class="form-row"
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -873,6 +961,11 @@ class CollectesForm(forms.ModelForm):
                     css_class='form-group col-md-12 mb-0'
                 ),
                 Formset("ayants_droits_formset"),
+                Column(
+                    HTML("""
+                        <table id="ayantdroit-collecte-table" class='table table-bordered mt-2'>
+                    """)
+                ),
                 css_class="p-3 pt-0"
             ),
             # Non-Mandatement section
@@ -885,6 +978,93 @@ class CollectesForm(forms.ModelForm):
             ),
             Row(
                 Formset("non_mandatements_formset"),
+                Column(
+                    HTML("""
+                        <button type="button" id="nonmandatement-collecte-add-btn" class="btn btn-outline-primary add-form" data-prefix="{{ formset.prefix }}">
+                            + Ajouter à la liste
+                        </button>
+                    """
+                    ),
+                    css_class='form-group col-md-3 mb-0'
+                ),
+                Column(
+                    HTML("""
+                        <tr>
+                        <table id="nonmandatement-collecte-table" class='table-responsive table table-bordered mt-2'>
+                            <thead class='thead-dark'>
+                                <tr>
+                                    <th rowspan="2">
+                                        Exercice
+                                    </th>
+                                    <th rowspan="2">
+                                        Loyer Mensuel
+                                    </th>
+                                    <th rowspan="2">
+                                        Reference de l'attestation de non mandatement
+                                    </th>
+                                    <th colspan="12">
+                                        Mois non-mandatatés
+                                    </th>
+                                    <th rowspan="2">
+                                        Montant Total par exercice
+                                    </th>
+                                    <th rowspan="2">
+                                        Visa budgétaire / Signature CF ?
+                                    </th>
+                                    <th rowspan="2">
+                                        Reference Contrat / Avenant
+                                    </th>
+                                    <th rowspan="2">
+                                        Action
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        J
+                                    </th>
+                                    <th>
+                                        F
+                                    </th>
+                                    <th>
+                                        M
+                                    </th>
+                                    <th>
+                                        A
+                                    </th>
+                                    <th>
+                                        M
+                                    </th>
+                                    <th>
+                                        J
+                                    </th>
+                                    <th>
+                                        J
+                                    </th>
+                                    <th>
+                                        A
+                                    </th>
+                                    <th>
+                                        S
+                                    </th>
+                                    <th>
+                                        O
+                                    </th>
+                                    <th>
+                                        N
+                                    </th>
+                                    <th>
+                                        D
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="30">Aucune attestation de non mandatement ajouter ...</td>    
+                                </tr>
+                            </tbody>
+                        </table>
+                    """),
+                ),
                 css_class="p-3 pt-0"
             ),
             # Immeuble Section
@@ -899,13 +1079,6 @@ class CollectesForm(forms.ModelForm):
                 Formset("immeubles_formset"),
                 css_class="p-3 pt-0"
             ),
-            #Row(
-            #    Column(
-            #        HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
-            #        css_class='form-group col-md-12 mb-0'
-            #    ),
-            #    css_class='form-row'
-            #),
             Row(
                 Formset("occupants_residence_formset"),
                 css_class="p-3 pt-0"
@@ -1188,8 +1361,30 @@ class ImmeublesForm(forms.ModelForm):
                     "Etat physique du batiment",
                     Row(
                         Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Revetement_interieure"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Revetement_exterieure"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Revetement_interieure"), css_class='form-group col-md-6 mb-0'),
+                        Column(
+                            HTML("""
+                                <div class="d-flex align-items-center">
+                                    {{ form.Revetement_interieure }}
+                                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addRevetementInterieureModal">
+                                        + Ajouter
+                                    </button>
+                                </div>
+                            """),
+                            css_class='form-group col-md-6 mb-3'
+                        ),
+                        #Column(FloatingField("Revetement_exterieure"), css_class='form-group col-md-6 mb-0'),
+                        Column(
+                            HTML("""
+                                <div class="d-flex align-items-center">
+                                    {{ form.Revetement_exterieure }}
+                                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addRevetementExterieureModal">
+                                        + Ajouter
+                                    </button>
+                                </div>
+                            """),
+                            css_class='form-group col-md-6 mb-3'
+                        ),
                         Column(FloatingField("observation"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row' 
                     ),
@@ -1538,6 +1733,50 @@ class AvenantsForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0",
             ),
+            Row(
+                Column(
+                    HTML("""
+                        <button type="button" 
+                            class="btn btn-outline-primary add-form" 
+                            id="avenant-collecte-add-btn"
+                            data-formset="avenants"
+                            data-table="avenant-collecte-table"> + Ajouter à la liste </button>
+                    """
+                    ),
+                    css_class='form-group col-md-3 mb-0'
+                ),    
+            )
+        )
+
+
+# Exercice form 
+class ExercicesForm(forms.ModelForm):
+    class Meta:
+        model = Exercice
+        fields = (
+            "annee","LibelleFR","date_debut","date_fin",
+        )
+        labels = {
+            "annee" : "Année d'exercice",
+            "LibelleFR" : "Libellé de l'exercice",
+            "date_debut" : "Date de debut",
+            "date_fin" : "Date de fin",
+        }
+        widgets = {
+          "date_debut"  :  forms.TextInput(attrs={'type': 'date'}),
+          "date_fin"  :  forms.TextInput(attrs={'type': 'date'}),
+        }
+    def __init__(self, *args, **kwargs):
+        super(ExercicesForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column(FloatingField("annee"), css_class='form-group col-md-6 mb-0'),
+                Column(FloatingField("LibelleFR"), css_class='form-group col-md-6 mb-0'),
+                Column(FloatingField("date_debut"), css_class='form-group col-md-6 mb-0'),
+                Column(FloatingField("date_fin"), css_class='form-group col-md-6 mb-0'),
+                css_class="form-row",
+            ),
         )
 
 # non-mandatement forms
@@ -1582,7 +1821,18 @@ class NonMandatementForm(forms.ModelForm):
                 Fieldset(
                     "Informations Générales",
                     Row(
-                        Column(FloatingField("Exercice"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Exercice"), css_class='form-group col-md-6 mb-0'),
+                        Column(
+                            HTML("""
+                                <div class="d-flex align-items-center">
+                                    {{ form.Exercice }}
+                                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addExerciceModal">
+                                        + Ajouter
+                                    </button>
+                                </div>
+                            """),
+                            css_class='form-group col-md-6 mb-3'
+                        ),
                         Column(FloatingField("Loyer_Mensuel"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Ref_Attestattion"), css_class='form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
@@ -1671,6 +1921,18 @@ class AyantDroitsForm(forms.ModelForm):
                 ),
                 css_class="p-3 pt-0",
             ),
+            Row(
+                Column(
+                    HTML("""
+                         <button type="button"  class="btn btn-outline-primary add-form" id="ayantdroit-collecte-add-btn"
+                         data-formset="ayantdroits" data-table="ayantdroit-collecte-table">
+                          + Ajouter à la liste 
+                        </button>
+                    """
+                    ),
+                    css_class='form-group col-md-3 mb-0'
+                ),    
+            )
         )
 
 # collectes formset

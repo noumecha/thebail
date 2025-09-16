@@ -53,22 +53,19 @@ function ajaxModal(modalId, formnContainerId, formId, fetchUrl, selectItemId = n
             data: formData,
             success: function (data) {
                 if (data.success) {
-                    selectContainer.append(
+                    $(selectContainer).append(
                         $('<option>', {
                             value: data.id,
                             text: data.text,
                             selected: true
                         })
                     );
-                    setMessage(data.message, '#form-success');
-                    modal.hide();
-                    $('.modal-backdrop').remove(); // remove backdrop
-                    formContainer.empty(); // clear the form content
+                    $(formId).closest('form')[0].reset();
+                    id = '#form-success-'+modalId.replace('#','')
+                    showAlertMessage(data.message, id);
                 } else {                        
-                    errors = Array.from(Object.entries(data.errors), ([key, value]) => ({
-                        key, value
-                    }))
-                    setMessage(errors, '#form-error');
+                    id = '#form-error-'+modalId.replace('#','')
+                    showAlertMessage(data.errors, id)
                 }
             }
         });
@@ -171,13 +168,21 @@ function submitForm(formId, url, fetchUrl) {
 function showAlertMessage(msg, id) {
     const msgBlock = $(id);
     msgBlock.stop(true, true).empty();
-    if (Array.isArray(msg)) {
+
+    if (typeof msg === 'object' && !Array.isArray(msg)) {
+        // Handle JSON object with fields and arrays of messages
         const list = $('<ul></ul>');
-        msg.forEach((m) => list.append($('<li></li>').text(m.key + ': ' + m.value)));
+        Object.keys(msg).forEach((key) => {
+            msg[key].forEach((error) => {
+                list.append($('<li></li>').text(`${key}: ${error}`));
+            });
+        });
         msgBlock.append(list);
     } else {
+        // Handle string messages
         msgBlock.append($('<p class="text-center mb-0"></p>').text(msg));
     }
+
     msgBlock.fadeIn().css('display', 'block');
     setTimeout(() => msgBlock.fadeOut(), 5000);
 }
@@ -217,16 +222,49 @@ function setVisible(mainSelector, targetSelector = null, valueToShow = null) {
 }
 
 // toggle element visibility base on some slect element
+/*function toogleFormset(selectElement, value = null, formsetToShow, formsetToHide) {
+    if (selectElement) {
+        $(document).on('change', selectElement, function() {
+            const selectedValue = $(this).val();
+            //console.log("Selected value: ", selectedValue);
+            if (selectedValue === value) {
+                $(formsetToShow).show();
+                $(formsetToHide).hide();
+            } else {
+                $(formsetToShow).hide();
+                $(formsetToHide).show();
+            }
+        });
+    } else {
+        $(formsetToShow).show();
+        $(formsetToHide).show();
+    }
+}*/
+
 function toogleFormset(selectElement, value = null, formsetToShow, formsetToHide) {
-    $(document).on('change', selectElement, function() {
-        const selectedValue = $(this).val();
-        //console.log("Selected value: ", selectedValue);
-        if (selectedValue === value) {
-            $(formsetToShow).show();
-            $(formsetToHide).hide();
-        } else {
-            $(formsetToShow).hide();
-            $(formsetToHide).show();
-        }
-    });
+    if (selectElement) {
+        $(document).on('change', selectElement, function() {
+            const selectedValue = $(this).val();
+            //console.log("Selected value: ", selectedValue);
+            if (selectedValue === value) {
+                $(formsetToShow).show();
+                $(formsetToHide).hide();
+            } else if (selectedValue === "1" || selectedValue === "2") {
+                // If the value is the other specific value (1 or 2), hide the opposite formset
+                $(formsetToShow).hide();
+                $(formsetToHide).show();
+            } else {
+                // If the value is neither "1" nor "2", show both formsets
+                $(formsetToShow).show();
+                $(formsetToHide).show();
+            }
+        });
+
+        // Trigger the change event on page load to handle initial state
+        $(selectElement).trigger('change');
+    } else {
+        // If no selectElement is provided, show both formsets by default
+        $(formsetToShow).show();
+        $(formsetToHide).show();
+    }
 }

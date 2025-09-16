@@ -7,7 +7,42 @@ $(function () {
     toogleFormset("#id_Type_location", "2", '#batiment_occ_residence-0', '#batiment_occ_bureaux-0')
     toogleFormset("#id_Type_location", "1", '#batiment_occ_bureaux-0', '#batiment_occ_residence-0')
 
+    // select 2 widget 
+    $('#id_TypeContrat').select2({
+        placeholder : "Selectionnez un Type de Contrat",
+        allowClear: true,
+    })
+    $('#id_immeubles-0-Revetement_interieure').select2({
+        placeholder : "Selectionnez un revetement intérieure",
+        allowClear: true,
+    })
+    $('#id_immeubles-0-Revetement_exterieure').select2({
+        placeholder : "Selectionnez un revetement extérieure",
+        allowClear: true,
+    })
+    $('#id_non_mandatements-0-Exercice').select2({
+        placeholder : "Selectionnez un exercice",
+        allowClear: true,
+    })
+
     /****  for inside form modal ***/
     // typecontrat
     ajaxModal("#addTypeContratModal", "#typecontrat-form-content", "#typecontratForm", "/type-contrat-partial-form/", "#id_TypeContrat")
+    // revetementint-partial-form/, revetementext-partial-form/
+    ajaxModal("#addRevetementInterieureModal", "#revetementint-form-content", "#revetementintForm", "/revetementint-partial-form/", "#id_immeubles-0-Revetement_interieure")
+    ajaxModal("#addRevetementExterieureModal", "#revetementext-form-content", "#revetementextForm", "/revetementext-partial-form/", "#id_immeubles-0-Revetement_exterieure")
+    ajaxModal("#addExerciceModal", "#exercice-form-content", "#exerciceForm", "/exercice-partial-form/", "#id_non_mandatements-0-Exercice")
+
+    /** hidden & show elements */
+    // set visibility for type localisation
+    setVisible('#id_immeubles-0-Type_localisation', '#id_immeubles-0-Ville, #id_immeubles-0-pays, #id_immeubles-0-Rue', '1') // 1 - Extérieure
+    setVisible('#id_immeubles-0-Type_localisation', '#id_immeubles-0-region,  #id_immeubles-0-departement, #id_immeubles-0-arrondissement, #id_immeubles-0-Quartier', '2') // 2 - National
+
+    // set visibility for type personne
+    setVisible('#id_bailleurs-0-Type_personne', '#id_bailleurs-0-Nom_prenom, #id_bailleurs-0-Maticule, #id_bailleurs-0-Type_id_bailleur, #id_bailleurs-0-Num_doc, #id_bailleurs-0-Date_delivrance_doc, #id_bailleurs-0-Document_identification', '2') // 2 - personne physique
+    setVisible('#id_bailleurs-0-Type_personne', '#id_bailleurs-0-Raison_social', '1') // 1 - personne morale 
+
+    // toggle occupants visibility 
+    toogleFormset("#id_immeubles-0-Type_location", "2", '#occupants_residence-0', '#occupants_bureau-0')
+    toogleFormset("#id_immeubles-0-Type_location", "1", '#occupants_bureau-0', '#occupants_residence-0')
 })

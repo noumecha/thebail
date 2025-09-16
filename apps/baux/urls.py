@@ -31,6 +31,7 @@ urlpatterns = [
     *get_crud_urls(OccupantsView, "occupant/occupants", "occupant"),
     *get_crud_urls(AvenantsView, "avenant/avenants", "avenant"),
     *get_crud_urls(views.TypeContratView, "typecontrat/typecontrats", "typecontrat"),
+    *get_crud_urls(views.ExercicesView, "exercice/exercices", "exercice"),
     # revetements urls
     *get_crud_urls(RevetementIntsView, "revetementint/revetementints", "revetementint"),
     *get_crud_urls(RevetementExtsView, "revetementext/revetementexts", "revetementext"),
@@ -43,6 +44,10 @@ urlpatterns = [
     path('type-contrat-partial-form/', views.typecontrat_partial_form_view, name='type_contrat_partial_form'),
     # bailleur routes 
     path('bailleur-partial-form/', views.bailleur_partial_form_view, name='bailleur_partial_form'),
+    path('exercice-partial-form/', views.exercice_partial_form_view, name='exercice_partial_form'),
+    # revtement partial route
+    path('revetementint-partial-form/', views.revetementint_partial_form_view, name='revetementint_partial_form_view'),
+    path('revetementext-partial-form/', views.revetementext_partial_form_view, name='revetementext_partial_form_view'),
     # locataire routes
     #path('locataire-partial-form/', views._partial_form_view, name='locataire_partial_form'),
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose

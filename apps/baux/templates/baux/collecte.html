@@ -72,6 +72,8 @@
                 </div>
                 <div class="modal-body">
                     <div id="typecontrat-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-success-addTypeContratModal"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error-addTypeContratModal"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
@@ -80,7 +82,149 @@
             </div>
         </div>
     </div>
+    <!-- revetement intérieure -->
+    <div class="modal fade" id="addRevetementInterieureModal" tabindex="-1" aria-labelledby="addRevetementInterieureLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-light">
+            <form id="revetementintForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRevetementInterieureModal">Ajouter un revêtement intérieure</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="revetementint-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-success-addRevetementInterieureModal"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error-addRevetementInterieureModal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <!-- revetement extérieure -->
+    <div class="modal fade" id="addRevetementExterieureModal" tabindex="-1" aria-labelledby="addRevetementExterieureLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-light">
+            <form id="revetementextForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRevetementExterieureModal">Ajouter un revêtement extérieure</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="revetementext-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-success-addRevetementExterieureModal"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error-addRevetementExterieureModal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+   <!-- Exercice -->
+    <div class="modal fade" id="addExerciceModal" tabindex="-1" aria-labelledby="addExerciceLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-light">
+            <form id="exerciceForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addExerciceModal">Ajouter un exercice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="exercice-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-success-addExerciceModal"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error-addExerciceModal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div> 
+    <!-- Avenant table template -->
+    <div id="avenant-template" style="display: none;">
+        <div class="avenant-entry mb-3 border p-2 rounded bg-light position-relative">
+            <table class="table table-bordered mt-2">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Avenant N°<span class="ref-avenant">00</span></th>
+                        <th>Ancienne valeur</th>
+                        <th>Nouvelle Valeur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nom & Prénoms ou raison sociale du bailleur</td>
+                        <td class="ancien-bailleur"></td>
+                        <td class="nouveau-bailleur"></td>
+                    </tr>
+                    <tr>
+                        <td>Montant Loyer Mensuel (TTC)</td>
+                        <td class="ancien-montant"></td>
+                        <td class="nouveau-montant"></td>
+                    </tr>
+                    <tr>
+                        <td>Attestation de domiciliation bancaire</td>
+                        <td class="ancien-attestation"></td>
+                        <td class="nouveau-attestation"></td>
+                    </tr>
+                    <tr>
+                        <td>Durée du contrat</td>
+                        <td class="ancien-duree"></td>
+                        <td class="nouveau-duree"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-sm btn-warning btn-edit">✏️ Modifier</button>
+                <button type="button" class="btn btn-sm btn-danger btn-delete">🗑️ Supprimer</button>
+            </div>
+        </div>
+    </div>
+    <!-- 📦 TEMPLATE AYANT DROIT (caché) -->
+    <div id="ayantdroit-template" style="display: none;">
+        <table id="ayantdroit-collecte-table" class='table table-bordered mt-2'> 
+            <thead class='thead-dark'> 
+                <tr> 
+                    <th> Noms & Prénoms </th> 
+                    <th> Contact </th> 
+                    <th> Reference Grosse </th> 
+                    <th> Date de prise d'effet de Grosse </th> 
+                    <th> Reference Certificat de non appel </th> 
+                    <th> Date de prise d'effet du certificat </th> 
+                    <th> Action </th> 
+                </tr> 
+            </thead> 
+            <tbody> 
+                <tr> 
+                    <td colspan="7">Aucun ayant droit du bailleur ajouter ...</td> 
+                </tr> 
+            </tbody> 
+        </table>
+        <tr class="ayantdroit-entry">
+            <td class="nom-prenom"></td>
+            <td class="contact"></td>
+            <td class="grosse"></td>
+            <td class="date-grosse"></td>
+            <td class="certificat"></td>
+            <td class="date-certificat"></td>
+            <td>
+                <button type="button" class="btn btn-sm btn-warning btn-edit">✏️</button>
+                <button type="button" class="btn btn-sm btn-danger btn-delete">🗑️</button>
+            </td>
+        </tr>
+    </div>
+
 {% endblock %}
 {% block extra_js %}
     <script src="{% static 'js/collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/avenants-collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/ayantdroit-collecte.js' %}"></script>
 {% endblock %}
