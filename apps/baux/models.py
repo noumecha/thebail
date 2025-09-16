@@ -346,10 +346,10 @@ class Banques(models.Model):
 class Bailleurs(models.Model):
     # information d'identifications
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
-    Nom_prenom = models.CharField(max_length=50, null=True, blank=True)
+    Nom_prenom = models.CharField(max_length=50, null=True, blank=True, unique=True)
     #Nationalite_bailleur = CountryField(blank=True, null=True, blank_label="(Choisir la nationalité)")
-    Raison_social = models.CharField(max_length=50, null=True, blank=True)
-    NIU = models.CharField(max_length=14, null=True, blank=True)
+    Raison_social = models.CharField(max_length=50, null=True, blank=True, unique=True)
+    NIU = models.CharField(max_length=14, null=True, blank=True, unique=True)
     Maticule = models.CharField(max_length=14, null=True, blank=True)
     Telephone = models.CharField(max_length=20, null=True)
     Type_id_bailleur = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True, blank=True)
@@ -371,7 +371,7 @@ class Bailleurs(models.Model):
     Raison_social_abr = models.CharField(max_length=100, null=True, blank=True)
     Code_commune = models.CharField(max_length=100, null=True, blank=True)
     # relations
-    Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, null=True, blank=True, related_name="collecte_bailleur")
+    # Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, null=True, blank=True, related_name="collecte_bailleur")
     #
     Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
@@ -733,6 +733,7 @@ class Collectes (models.Model):
     # many to many relationship with ElementDeDescription through ImmeubleElement --> description de la batisse
     pieces = models.ManyToManyField(Pieces, through="PieceCollectes")
     # relationship : 
+    Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "collecte_bailleur")
     # informations générique
     Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)

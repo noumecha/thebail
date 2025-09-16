@@ -16,17 +16,6 @@ $(function () {
         });
     }
 
-    // objet pour la sauvegarde globale en base de données ---> creer un Array d'objet NonMandatement à soumettre via ajax
-    const NonMandatement = {
-        exercice : '',
-        loyer : '',
-        refAttestation : '',
-        montantTotal : '',
-        visa : '',
-        refContrat : '',
-        moisList : {}
-    }
-
     // prefix des ids 
     const prefix = "#id_non_mandatements-0-";
 
@@ -90,7 +79,7 @@ $(function () {
         }
 
         let row = `
-            <tr>
+            <tr data='nonmandatement'>
                 <td><input type="hidden" name="Exercice_hidden[]" value="${exercice}">${exerciceText}</td>
                 <td><input type="hidden" name="Loyer_hidden[]" value="${loyer}">${loyer}</td>
                 <td><input type="hidden" name="Ref_Attestattion_hidden[]" value="${refAttestation}">${refAttestation}</td>

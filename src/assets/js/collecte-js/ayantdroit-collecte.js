@@ -37,7 +37,7 @@ $(function() {
 
         // template de ligne du tableau
         let row = `
-                <tr>
+                <tr data='ayantdroit'>
                     <td><input type="hidden" name="Nom_Prenom_hidden[]" value="${nomPrenom}">${nomPrenom}</td>
                     <td><input type="hidden" name="Contact_hidden[]" value="${contact}">${contact}</td>
                     <td><input type="hidden" name="Reference_Grosse_hidden[]" value="${grosse}">${grosse}</td>

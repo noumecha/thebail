@@ -230,6 +230,7 @@ class BailleursForm(forms.ModelForm):
         self.helper.form_tag = False;self.fields['NIU'].required = False
         self.fields['Registre_commerce'].required = False; self.fields['Nom_Prenom_Representant'].required = False        
         self.fields['Num_doc'].required = False;self.fields['Date_delivrance_doc'].required = False 
+        self.fields['Document_identification'].required = False
         self.fields['Telephone_representant'].required = False
 
 
@@ -764,6 +765,8 @@ class CollectesForm(forms.ModelForm):
             "Regime_fiscal_contrat",
             "Montant_loyer_mensuel",
             "Devise",
+            # Bailleur 
+            "Bailleur",
             # avenant informations 
             "Existance_avenant",
             "Existance_visa_budgetaire",
@@ -785,6 +788,8 @@ class CollectesForm(forms.ModelForm):
             "Regime_fiscal_contrat" : "Régime fiscal",
             "Montant_loyer_mensuel" : "Montant du loyer mensuel(TTC)",
             "Devise" : "Devise",
+            # Bailleur 
+            "Bailleur" : "Bailleur",
             # avenant informations
             "Existance_avenant" : "Existance d'au moins un avenant ?",
             "Existance_visa_budgetaire" : "Existance d'un visa budgétaire ?",
@@ -796,6 +801,7 @@ class CollectesForm(forms.ModelForm):
             'Date_de_collecte'  :  forms.TextInput(attrs={'type': 'date'}),
             'Date_signature_contrat' : forms.TextInput(attrs={'type': 'date'}),
             'Date_effet_contrat' : forms.TextInput(attrs={'type': 'date'}),
+            'Bailleur': autocomplete.ModelSelect2(url='baux:bailleur_autocomplete'),
         }
 
     def save(self, commit=True):
@@ -884,7 +890,7 @@ class CollectesForm(forms.ModelForm):
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-6 mb-3'
+                            css_class='form-group col-md-12 mb-3'
                         ),
                         css_class="form-row"
                     ),
@@ -960,7 +966,19 @@ class CollectesForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                Formset("bailleurs_formset"),
+                #Formset("bailleurs_formset"),
+                Column(
+                    HTML("""
+                        <label for="id_Bailleur">Selectionner un Bailleur</label>
+                        <div class="d-flex align-items-center">
+                            {{ form.Bailleur }}
+                            <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addBailleurModal">
+                                + Ajouter
+                            </button>
+                        </div>
+                    """),
+                    css_class='form-group col-md-6 mb-3'
+                ),
                 css_class="p-3 pt-0"
             ),
             Row(
@@ -971,7 +989,7 @@ class CollectesForm(forms.ModelForm):
                 Formset("ayants_droits_formset"),
                 Column(
                     HTML("""
-                        <tr>
+                        <hr>
                         <table id="ayantdroit-collecte-table" class='table table-bordered mt-2'>
                             <thead class='thead-dark'>
                                 <tr>
@@ -1031,7 +1049,7 @@ class CollectesForm(forms.ModelForm):
                 ),
                 Column(
                     HTML("""
-                        <tr>
+                        <hr>
                         <table id="nonmandatement-collecte-table" class='table-responsive table table-bordered mt-2'>
                             <thead class='thead-dark'>
                                 <tr>
@@ -1477,7 +1495,6 @@ class ImmeublesForm(forms.ModelForm):
             #)
         )     
         self.fields['Date_Construction'].required = False;   
-
 
 # contrats forms 
 class TypeContratsForm(forms.ModelForm):
@@ -1988,10 +2005,10 @@ ImmeublesFormSet = inlineformset_factory(
     extra=1, can_delete=True
 )
 
-BailleursFormSet = inlineformset_factory(
+"""BailleursFormSet = inlineformset_factory(
     Collectes, Bailleurs, form=BailleursForm,
     extra=1, can_delete=True
-)
+)"""
 
 # Bailleurs formset
 NonMandatementFormSet = inlineformset_factory(

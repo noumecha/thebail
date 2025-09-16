@@ -15,11 +15,11 @@ $(function () {
         const service = $("#id_occupants_bureau-0-Service").val();
         const serviceText = $(`#id_occupants_bureau-0-Service option[value='${service}']`).text();
         const adminCorr = $("#id_occupants_bureau-0-Administration_correspondante").val();
+        const adminCorrText = $(`#id_occupants_bureau-0-Administration_correspondante option[value='${adminCorr}']`).text();
         const fonction = $("#id_occupants_bureau-0-Fonction").val();
         const refActe = $("#id_occupants_bureau-0-Ref_ActeJuridique_attribution").val();
         const contact = $("#id_occupants_bureau-0-Contact").val();
         const dateOccupation = $("#id_occupants_bureau-0-Date_initial_acte_occupation").val();
-        const immeuble = $("#id_occupants_bureau-0-Immeuble").val();
 
         if (!service) {
             alert("Veuillez saisir le nom du service.");
@@ -27,9 +27,9 @@ $(function () {
         }
 
         const row = `
-            <tr>
+            <tr data='occupantbureau'>
                 <td><input type="hidden" name="Service_hidden[]" value="${service}">${serviceText}</td>
-                <td><input type="hidden" name="Administration_correspondante_hidden[]" value="${adminCorr}">${adminCorr}</td>
+                <td><input type="hidden" name="Administration_correspondante_hidden[]" value="${adminCorr}">${adminCorrText}</td>
                 <td><input type="hidden" name="Fonction_hidden[]" value="${fonction}">${fonction}</td>
                 <td><input type="hidden" name="Ref_ActeJuridique_attribution_hidden[]" value="${refActe}">${refActe}</td>
                 <td><input type="hidden" name="Contact_hidden[]" value="${contact}">${contact}</td>

@@ -13,21 +13,10 @@ $(function () {
     // Lignes vides
     const $emptyRow = $("#occupant-collecte-table tbody #empty-occupant-row");
 
-    // objet pour la sauvegarde globale en base de données ---> creer un Array d'objet OccupantLogement à soumettre via ajax
-    const Occupant = {       
-        nomPrenom : '',
-        adminTutelle : '',
-        fonction : '',
-        matricule : '',
-        niu : '',
-        refActe : '',
-        dateActe : '',
-        telephone : '',
-    }
-
     $("#occupant-collecte-add-btn").on("click", function () {
         const nomPrenom = $("#id_occupants_residence-0-Nom_Prenom").val();
         const adminTutelle = $("#id_occupants_residence-0-Administration_tutelle").val();
+        const adminTutelleText = $(`#id_occupants_residence-0-Administration_tutelle option[value='${adminTutelle}']`).text();
         const fonction = $("#id_occupants_residence-0-Fonction").val();
         const matricule = $("#id_occupants_residence-0-Matricule").val();
         const niu = $("#id_occupants_residence-0-NIU").val();
@@ -41,9 +30,9 @@ $(function () {
         }
 
         const row = `
-            <tr>
+            <tr data='occupant'>
                 <td><input type="hidden" name="Nom_Prenom_hidden[]" value="${nomPrenom}">${nomPrenom}</td>
-                <td><input type="hidden" name="Administration_tutelle_hidden[]" value="${adminTutelle}">${adminTutelle}</td>
+                <td><input type="hidden" name="Administration_tutelle_hidden[]" value="${adminTutelle}">${adminTutelleText}</td>
                 <td><input type="hidden" name="Fonction_hidden[]" value="${fonction}">${fonction}</td>
                 <td>
                     <input type="hidden" name="Matricule_hidden[]" value="${matricule}">${matricule}<br>

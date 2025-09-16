@@ -16,6 +16,7 @@ from django.core.paginator import Paginator
 from dal import autocomplete
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import modelformset_factory
+import json
 
 # generic paritl view function :
 def generic_partial_form_view(request, form_class, success_message):
@@ -63,6 +64,13 @@ def exercice_partial_form_view(request):
         form_class=ExercicesForm,
         success_message='Exercice enregistré avec succès',
     )
+
+"""def bailleur_partial_form_view(request):
+    return generic_partial_form_view(
+        request,
+        form_class=ExercicesForm,
+        success_message='Exercice enregistré avec succès',
+    )"""
 
 #generic view for basic operation 
 class BaseCRUDView(TemplateView):
@@ -530,7 +538,7 @@ class CollecteView(TemplateView):
             form = CollectesForm()
         context['avenants_formset'] = AvenantsFormSet(prefix="avenants")
         context['immeubles_formset'] = ImmeublesFormSet(prefix="immeubles")
-        context['bailleurs_formset'] = BailleursFormSet(prefix="bailleurs")
+        #context['bailleurs_formset'] = BailleursFormSet(prefix="bailleurs")
         context['ayants_droits_formset'] = AyantDroitsFormSet(prefix="ayants_droits")
         context['occupants_residence_formset'] = OccupantsFormSet(prefix="occupants_residence")
         context['occupants_bureau_formset'] = OccupantBureauxFormSet(prefix="occupants_bureau")
@@ -555,20 +563,15 @@ class CollecteView(TemplateView):
             context["form"] = collecte_form
             return self.render_to_response(context)
 
-import json
-
 @csrf_exempt
 def collecte_create(request):
     if request.method == "POST":
         collecte_form = CollectesForm(request.POST)
 
         ImmeubleFormSet = modelformset_factory(Immeubles, form=ImmeublesForm, extra=0)
-        BailleurFormSet = modelformset_factory(Bailleurs, form=BailleursForm, extra=0)
-
         immeuble_formset = ImmeubleFormSet(request.POST, prefix="immeubles")
-        bailleur_formset = BailleurFormSet(request.POST, prefix="bailleurs")
 
-        if collecte_form.is_valid() and immeuble_formset.is_valid() and bailleur_formset.is_valid():
+        if collecte_form.is_valid() and immeuble_formset.is_valid():
             collecte = collecte_form.save()
 
             # Sauvegarde des immeubles (si tu veux les garder)
@@ -576,12 +579,6 @@ def collecte_create(request):
                 immeuble = immeuble_form.save(commit=False)
                 immeuble.Collecte = collecte
                 immeuble.save()
-
-            # Sauvegarde des bailleurs
-            for bailleur_form in bailleur_formset:
-                bailleur = bailleur_form.save(commit=False)
-                bailleur.Collecte = collecte
-                bailleur.save()
             
             # Traitement des ayants droits
             ayants_droits_json = request.POST.get('ayants_droits_data')
@@ -591,7 +588,7 @@ def collecte_create(request):
 
                     for ad in ayants_droits:
                         Ayant_droits.objects.create(
-                            Bailleur=bailleur,
+                            Bailleur=collecte.Bailleur,
                             Nom_Prenom=ad.get('Nom_Prenom'),
                             Contact=ad.get('Contact'),
                             Reference_Grosse=ad.get('Reference_Grosse'),
@@ -626,6 +623,105 @@ def collecte_create(request):
                         )
                 except json.JSONDecodeError:
                     return JsonResponse({"success": False, "errors": "Erreur lors du décodage des avenants."}, status=400)
+            # traitement des nonmandatement 
+            nonmandatements_json = request.POST.get('nonmandatements_data')
+            if nonmandatements_json:
+                try:
+                    nonmandatements = json.loads(nonmandatements_json)
+                    for n in nonmandatements:
+                        mois = n.get('mois', {})
+                        Non_Mandatement.objects.create(
+                            Exercice=n.get('Exercice'),
+                            Loyer_Mensuel=n.get('Loyer_Mensuel'),
+                            Ref_Attestattion=n.get('Ref_Attestattion'),
+                            janvier=mois.get('janvier'),
+                            fevrier=mois.get('fevrier'),
+                            mars=mois.get('mars'),
+                            avril=mois.get('avril'),
+                            mai=mois.get('mai'),
+                            juin=mois.get('juin'),
+                            juillet=mois.get('juillet'),
+                            aout=mois.get('aout'),
+                            septembre=mois.get('septembre'),
+                            octobre=mois.get('octobre'),
+                            novembre=mois.get('novembre'),
+                            decembre=mois.get('decembre'),
+                            Montant_total_exercice=n.get('Montant_total_exercice'),
+                            Visa_budgétaire=n.get('Visa_budgétaire'),
+                            Ref_contrat_avenant=n.get('Ref_contrat_avenant'),
+                            Bailleur=collecte.Bailleur
+                        )
+                except json.JSONDecodeError:
+                    return JsonResponse({"success": False, "errors": "Erreur lors du décodage des attestation de non mandatement."}, status=400)
+            # traitement pour immeuble 
+            # traitement des occupants
+            # residence
+            occupantsResidences_json = request.POST.get('occupantsResidences_data')
+            if occupantsResidences_json:
+                try:
+                    occupantsResidences = json.loads(occupantsResidences_json)
+
+                    for obj in occupantsResidences:
+                        Occupants.objects.create(
+                            Nom_Prenom = obj.get('Nom_Prenom'),
+                            Administration_tutelle = obj.get('Administration_tutelle'),
+                            Fonction = obj.get('Fonction'),
+                            Matricule = obj.get('Matricule'),
+                            NIU = obj.get('NIU'),
+                            Ref_ActeJuridique = obj.get('Ref_ActeJuridique'),
+                            Date_Signature_acte_juridique = obj.get('Date_Signature_acte_juridique'),
+                            Telephone = obj.get('Telephone'),
+                            Immeuble=immeuble,
+                        )
+                except json.JSONDecodeError:
+                    return JsonResponse({"success": False, "errors": "Erreur lors du décodage des occupants résidents."}, status=400)
+            # bureau
+            occupantsBureaux_json = request.POST.get('occupantsBureaux_data')
+            if occupantsBureaux_json:
+                try:
+                    occupantsBureaux = json.loads(occupantsBureaux_json)
+
+                    for obj in occupantsBureaux:
+                        OccupantBureaux.objects.create(
+                            Service=obj.get('Service'),
+                            Administration_correspondante=obj.get('Administration_correspondante'),
+                            Fonction=obj.get('Fonction'),
+                            Ref_ActeJuridique_attribution=obj.get('Ref_ActeJuridique_attribution'),
+                            Contact=obj.get('Contact'),
+                            Date_initial_acte_occupation=obj.get('Date_initial_acte_occupation'),
+                            Immeuble=immeuble,
+                        )
+                except json.JSONDecodeError:
+                    return JsonResponse({"success": False, "errors": "Erreur lors du décodage des occupants de bureaux"}, status=400)
+
+            # traitement des pièces collectés
+            pieces_json = request.POST.get('pieces_data')
+            if pieces_json:
+                try:
+                    pieces_data = json.loads(pieces_json)
+                    for p in pieces_data:
+                        piece_id = p.get('piece_id')
+                        statut = p.get('statut', False)
+                        nombre = p.get('nombre', 0)
+
+                        # Validation côté serveur (sécurité)
+                        if statut and (not nombre or nombre <= 0):
+                            return JsonResponse({
+                                "success": False,
+                                "errors": f"La pièce {piece_id} est cochée mais sans nombre valide."
+                            }, status=400)
+
+                        if statut or nombre > 0:
+                            PieceCollectes.objects.create(
+                                Collecte=collecte,
+                                Piece_id=piece_id,
+                                statut=statut,
+                                nombre=nombre
+                            )
+
+                except json.JSONDecodeError:
+                    return JsonResponse({"success": False, "errors": "Erreur lors du décodage des pièces collectées."}, status=400)
+
 
             return JsonResponse({"success": True, "message": "Fiche de collecte enregistrée avec succès !"})
 
@@ -634,7 +730,6 @@ def collecte_create(request):
             all_errors = {
                 "collecte": collecte_form.errors,
                 "immeubles": [f.errors for f in immeuble_formset],
-                "bailleurs": [f.errors for f in bailleur_formset]
             }
             return JsonResponse({"success": False, "errors": all_errors}, status=400)
 

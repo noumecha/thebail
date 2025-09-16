@@ -7,3 +7,12 @@ sqlparse==0.4.4
 typing_extensions==4.7.1
 whitenoise==6.5.0
 crispy_bootstrap5
+django-autocomplete-light
+django-formtools
+django-select2
+django-countries
+django-money
+django-browser-reload
+mysqlclient
+xhtml2pdf
+django-environ

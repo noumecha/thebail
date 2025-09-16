@@ -12,13 +12,16 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 import random
 import string
+import environ
 from pathlib import Path
-
 from dotenv import load_dotenv
 
 from .template import  THEME_LAYOUT_DIR, THEME_VARIABLES
 
 load_dotenv()  # take environment variables from .env.
+
+# Initialize environ
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,7 +48,6 @@ ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 
 # Current DJANGO_ENVIRONMENT
 ENVIRONMENT = os.environ.get("DJANGO_ENVIRONMENT", default="local")
-
 
 # Application definition
 
@@ -137,11 +139,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "HOST" : "localhost",
-        "PORT" : "3306",
-        "NAME": "thebail_db",
-        "USER": "root",
-        "PASSWORD": "",
+        "HOST" : env('DBHOST'),
+        "PORT" : env('DBPORT'),
+        "NAME": env('DBNAME'),
+        "USER": env('DBUSER'),
+        "PASSWORD": env('DBPASSWORD'),
     }
 }
 

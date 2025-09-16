@@ -113,6 +113,28 @@
             </div>
         </div>
     </div> 
+    <!-- Bailleur -->
+    <div class="modal fade" id="addBailleurModal" tabindex="-1" aria-labelledby="addBailleurLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-light">
+            <form id="bailleurForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBailleurModal">Ajouter un Bailleur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="bailleur-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-success-addBailleurModal"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error-addBailleurModal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div> 
     <!-- Avenant table template -->
     <div id="avenant-template" style="display: none;">
         <div class="avenant-entry mb-3 border p-2 rounded bg-light position-relative">
