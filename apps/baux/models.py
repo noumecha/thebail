@@ -712,13 +712,13 @@ class FichiersPiece(models.Model):
 # Collecte model
 class Collectes (models.Model):
     # informations du contrat et sur le collecteur 
-    Numero_fiche_de_collecte = models.CharField(max_length=50)
-    Agent_de_collecte = models.TextField(blank = True)
-    Matricule_agent_de_collecte = models.TextField(blank = True)
+    Numero_fiche_de_collecte = models.CharField(max_length=50, null=True)
+    Agent_de_collecte = models.TextField(blank = True, null=True)
+    Matricule_agent_de_collecte = models.TextField(blank = True, null=True)
     Date_de_collecte = models.CharField(max_length=50,null=True)
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "typologie_contrat")
     # informations contrat initial
-    Numero_contrat = models.CharField(max_length=50)
+    Numero_contrat = models.CharField(max_length=50, null=True)
     Date_signature_contrat = models.CharField(max_length=50,null=True)
     Fonction_signataire_contrat = models.CharField(max_length=50,null=True)
     Date_effet_contrat = models.CharField(max_length=50,null=True)
