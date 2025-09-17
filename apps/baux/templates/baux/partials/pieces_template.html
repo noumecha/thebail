@@ -1,0 +1,10 @@
+<div id="pieces-collecte-container" class="row p-2">
+  {% for piece in pieces %}
+    <div class="piece-entry p-2 col-md-4" data-piece-id="{{ piece.id }}" data-piece-libelle="{{ piece.libelle }}">
+        <label>
+            <input type="checkbox" name="piece_{{ piece.id }}_statut"> {{ piece.libelle }}
+        </label>
+        <input type="number" class="form-control d-inline-block w-25 ms-2" name="piece_{{ piece.id }}_nombre" value="0">
+    </div>
+  {% endfor %}
+</div>

@@ -186,6 +186,69 @@ $(function () {
     }
 
 
+    function collectImmeubles() {
+        let immeubles = [];
+        let errors = [];
+
+        // Chaque immeuble du formset
+        $("#immeubles-0").each(function (idx) {
+            let immeuble = {};
+
+            // Identification
+            immeuble.Designation = $(this).find("[name$='Designation']").val();
+            immeuble.Construction = $(this).find("[name$='Construction']").val();
+            immeuble.Date_Construction = $(this).find("[name$='Date_Construction']").val();
+            immeuble.Nombre_de_pieces = $(this).find("[name$='Nombre_de_pieces']").val();
+            immeuble.Superficie_louer = $(this).find("[name$='Superficie_louer']").val();
+            immeuble.Norme = $(this).find("[name$='Norme']").val();
+            immeuble.Type_location = $(this).find("[name$='Type_location']").val();
+
+            // Localisation
+            immeuble.Type_localisation = $(this).find("[name$='Type_localisation']").val();
+            immeuble.pays = $(this).find("[name$='pays']").val();
+            immeuble.Ville = $(this).find("[name$='Ville']").val();
+            immeuble.Rue = $(this).find("[name$='Rue']").val();
+            immeuble.region = $(this).find("[name$='region']").val();
+            immeuble.departement = $(this).find("[name$='departement']").val();
+            immeuble.arrondissement = $(this).find("[name$='arrondissement']").val();
+            immeuble.Quartier = $(this).find("[name$='Quartier']").val();
+            immeuble.Coordonee_gps = $(this).find("[name$='Coordonee_gps']").val();
+
+            // État physique
+            immeuble.Situation_de_la_batisse = $(this).find("[name$='Situation_de_la_batisse']").val();
+            immeuble.Revetement_interieure = $(this).find("[name$='Revetement_interieure']").val();
+            immeuble.Revetement_exterieure = $(this).find("[name$='Revetement_exterieure']").val();
+            immeuble.observation = $(this).find("[name$='observation']").val();
+
+            // Description dynamique (elements)
+            let elements = [];
+            $(this).find("[name^='immeubles-0-element_']").each(function () {
+                let name = $(this).attr("name");
+                if (name.endsWith("_statut")) {
+                    let id = name.split("_")[1];
+                    let statut = $(this).is(":checked");
+                    let nombre = parseInt($("[name='immeubles-0-element_" + id + "_nombre']").val()) || 0;
+
+                    // Validation côté client (comme pour les pièces)
+                    if (statut && nombre <= 0) {
+                        errors.push(`Dans l'immeuble n°${idx + 1}, l’élément #${id} est coché mais aucun nombre valide n’a été saisi.`);
+                    }
+
+                    elements.push({
+                        element_id: id,
+                        statut: statut,
+                        nombre: nombre,
+                    });
+                }
+            });
+            immeuble.elements = elements;
+
+            immeubles.push(immeuble);
+        });
+
+        return { immeubles, errors };
+    }
+
     // process to the data saving : 
     $(document).on("click", "#submit-id-save", function (e) {
         e.preventDefault();
@@ -197,6 +260,7 @@ $(function () {
         const nonMandatements = getNonMandatementData();
         const occupantsResidences = collectOccupantsResidence();
         const occupantsBureaux = collectOccupantsBureau();
+        const {immeubles, errors: immeublesElementsErrors} = collectImmeubles();
 
         // getting avenant form collecte form
         $('#avenant-collecte-list .avenant-entry').each(function () {
@@ -206,17 +270,24 @@ $(function () {
 
         // Validation JS for pieces collectes
         if (pieceErrors.length > 0) {
-            showAlertMessage(pieceErrors.join("<br>"), '#form-error-collecte');
+            showAlertMessage(pieceErrors, '#form-error-collecte');
             return;
         }
 
-        console.log(pieces);
+        // Validation JS for pieces collectes
+        if (immeublesElementsErrors.length > 0) {
+            showAlertMessage(immeublesElementsErrors, '#form-error-collecte');
+            return;
+        }
+
+        console.log(immeubles);
         formData.append('pieces_data', JSON.stringify(pieces));
         formData.append('avenants_data', JSON.stringify(avenants));
         formData.append('ayants_droits_data', JSON.stringify(ayants_droits));
         formData.append('nonmandatements_data', JSON.stringify(nonMandatements));
         formData.append('occupantsResidences_data', JSON.stringify(occupantsResidences));
         formData.append('occupantsBureaux_data', JSON.stringify(occupantsBureaux));
+        formData.append('immeubles_data', JSON.stringify(immeubles));
         $.ajax({
             url: "/collecte/create",
             type: "POST",

@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, modelformset_factory
 from .models import *
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.layout import HTML
@@ -681,25 +681,25 @@ class ImmeubleElementForm(forms.ModelForm):
             )
 
 # piece form
-class FichiersPieceForm(forms.ModelForm):
-    class Meta:
-        model = FichiersPiece
-        fields = ("fichier",)
-
-    def __init__(self, *args, **kwargs):
-        super(FichiersPieceForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Row(Column("fichier", css_class="col-md-12"))
-        )
-
-FichiersPieceFormSet = inlineformset_factory(
-    PieceCollectes, FichiersPiece,
-    form=FichiersPieceForm,
-    extra=0,  # nombre ajusté dynamiquement en JS
-    can_delete=True
-)
+#class FichiersPieceForm(forms.ModelForm):
+#    class Meta:
+#        model = FichiersPiece
+#        fields = ("fichier",)
+#
+#    def __init__(self, *args, **kwargs):
+#        super(FichiersPieceForm, self).__init__(*args, **kwargs)
+#        self.helper = FormHelper()
+#        self.helper.form_tag = False
+#        self.helper.layout = Layout(
+#            Row(Column("fichier", css_class="col-md-12"))
+#        )
+#
+#FichiersPieceFormSet = inlineformset_factory(
+#    PieceCollectes, FichiersPiece,
+#    form=FichiersPieceForm,
+#    extra=0,  # nombre ajusté dynamiquement en JS
+#    can_delete=True
+#)
 
 class PiecesForm(forms.ModelForm):
     class Meta:
@@ -804,27 +804,21 @@ class CollectesForm(forms.ModelForm):
             'Bailleur': autocomplete.ModelSelect2(url='baux:bailleur_autocomplete'),
         }
 
-    def save(self, commit=True):
-        instance = super().save(commit=commit)
-
-        # after saving the immeuble, create/update ImmeubleElement
-        for piece in Pieces.objects.all():
-            statut = self.cleaned_data.get(f"piece_{piece.id}_statut")
-            nombre = self.cleaned_data.get(f"piece_{piece.id}_nombre")
-
-            if statut:
-                obj, created = PieceCollectes.objects.update_or_create(
-                    collecte=instance, piece=piece,
-                    defaults={"statut": statut, "nombre": nombre or 0}
-                )
-            else:
-                # If unchecked, delete existing link if it exists
-                PieceCollectes.objects.filter(collecte=instance, piece=piece).delete()
-
-        return instance
-
     def __init__(self, *args, **kwargs):
         super(CollectesForm, self).__init__(*args, **kwargs)
+        # Si l'instance a déjà une valeur (form update)
+        if self.instance.pk:
+            if self.instance.Bailleur:
+                self.fields['Bailleur'].queryset = Bailleurs.objects.filter(
+                    pk=self.instance.Bailleur.pk
+                )
+        # on POST
+        if 'Bailleur' in self.data:
+            try:
+                bailleur_id = int(self.data.get('Bailleur'))
+                self.fields['Bailleur'].queryset = Bailleurs.objects.filter(pk=bailleur_id)
+            except (ValueError, TypeError):
+                pass
         # Dynamically create fields for each pieces
         pieces = list(Pieces.objects.all())
         # 1) Create dynamic fields
@@ -844,7 +838,7 @@ class CollectesForm(forms.ModelForm):
                 except PieceCollectes.DoesNotExist:
                     pass
         # 2) Build the dynamic rows for the layout
-        piece_rows = []
+        """piece_rows = []
         for el in pieces:
             piece_rows.append(
                 Column(
@@ -853,6 +847,7 @@ class CollectesForm(forms.ModelForm):
                     css_class="m-0 col-md-4 d-flex align-items-center justify-content-center"
                 )
             )
+        pieces = list(Pieces.objects.all())"""
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # informations sur le contrat
@@ -955,18 +950,11 @@ class CollectesForm(forms.ModelForm):
                     css_class='form-group col-md-12 mb-0'
                 ),
                 Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-12 mb-0'),
-                css_class="p-3 pt-0"
-            ),
-            # Bailleur section 
-            Row(
+                # Bailleur section 
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. bailleur</h5>"), 
                     css_class='form-group col-md-12 mb-0'
                 ),
-                css_class='form-row'
-            ),
-            Row(
-                #Formset("bailleurs_formset"),
                 Column(
                     HTML("""
                         <label for="id_Bailleur">Selectionner un Bailleur</label>
@@ -977,7 +965,7 @@ class CollectesForm(forms.ModelForm):
                             </button>
                         </div>
                     """),
-                    css_class='form-group col-md-6 mb-3'
+                    css_class='form-group col-md-12 mb-3'
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -1158,10 +1146,11 @@ class CollectesForm(forms.ModelForm):
             Row(
                 Fieldset(
                     "Pieces Collectées",
-                    Row(
-                        *piece_rows,
-                        css_class="form-row"
-                    ),
+                    #Row(
+                    #    *piece_rows,
+                    #    css_class="form-row"
+                    #),
+                    HTML("{% include 'baux/partials/pieces_template.html' with pieces=pieces %}"),
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-2"

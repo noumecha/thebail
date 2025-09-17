@@ -348,7 +348,7 @@ class Bailleurs(models.Model):
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
     Nom_prenom = models.CharField(max_length=50, null=True, blank=True, unique=True)
     #Nationalite_bailleur = CountryField(blank=True, null=True, blank_label="(Choisir la nationalité)")
-    Raison_social = models.CharField(max_length=50, null=True, blank=True, unique=True)
+    Raison_social = models.CharField(max_length=200, null=True, blank=True)#, unique=True
     NIU = models.CharField(max_length=14, null=True, blank=True, unique=True)
     Maticule = models.CharField(max_length=14, null=True, blank=True)
     Telephone = models.CharField(max_length=20, null=True)
@@ -370,8 +370,6 @@ class Bailleurs(models.Model):
     Code_centre = models.CharField(max_length=100, null=True, blank=True)
     Raison_social_abr = models.CharField(max_length=100, null=True, blank=True)
     Code_commune = models.CharField(max_length=100, null=True, blank=True)
-    # relations
-    # Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, null=True, blank=True, related_name="collecte_bailleur")
     #
     Date_creation = models.DateTimeField(auto_now=True)
     Date_miseajour = models.DateTimeField(auto_now=True)
@@ -546,7 +544,7 @@ class Immeubles (models.Model):
     # identification
     Designation = models.CharField(max_length=50, unique=True)
     Construction = models.ForeignKey(TypeConstructions, on_delete=models.CASCADE, null=True, related_name="construction")
-    Date_Construction = models.DateField(null=True)
+    Date_Construction = models.CharField(max_length=50,null=True)
     Nombre_de_pieces = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
     Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme", blank=True)
@@ -696,18 +694,18 @@ class Pieces(models.Model):
 def upload_piece_file(instance, filename):
     return f"collecte/{instance.piece_collectes.collecte.id}/pieces/{instance.pieces.libelle}/{filename}"
 
-class FichiersPiece(models.Model):
-    Collecte_piece = models.ForeignKey(PieceCollectes, on_delete=models.CASCADE, related_name="fichiers")
-    fichier = models.FileField(upload_to=upload_piece_file)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Fichier de pièce"
-        verbose_name_plural = "Fichiers de pièce"
-
-    def __str__(self):
-        return f"Fichier {self.fichier.name}"
+#class FichiersPiece(models.Model):
+#    Collecte_piece = models.ForeignKey(PieceCollectes, on_delete=models.CASCADE, related_name="fichiers")
+#    fichier = models.FileField(upload_to=upload_piece_file)
+#    Date_creation = models.DateTimeField(auto_now=True)
+#    Date_miseajour = models.DateTimeField(auto_now=True)
+#
+#    class Meta:
+#        verbose_name = "Fichier de pièce"
+#        verbose_name_plural = "Fichiers de pièce"
+#
+#    def __str__(self):
+#        return f"Fichier {self.fichier.name}"
 
 # Collecte model
 class Collectes (models.Model):
