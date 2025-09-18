@@ -3,6 +3,7 @@ from django import forms
 from apps.baux.validators import rib_validator
 from django_countries.fields import CountryField
 from djmoney.models.fields import MoneyField
+from django.utils import timezone
 
 # Create your models here.
 
@@ -313,8 +314,8 @@ class Exercice(models.Model):
     date_debut = models.DateField(null=True, blank=True)
     date_fin = models.DateField(null=True, blank=True)
     #
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Exercice budgetaire {self.annee}"
@@ -371,8 +372,8 @@ class Bailleurs(models.Model):
     Raison_social_abr = models.CharField(max_length=100, null=True, blank=True)
     Code_commune = models.CharField(max_length=100, null=True, blank=True)
     #
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         if self.Nom_prenom == None:
@@ -389,8 +390,8 @@ class Locataires(models.Model):
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=2, null=False)
     Peut_payer = models.CharField(choices=PEUT_PAYER, max_length=255, null=True)
     Observation = models.TextField(blank = True,null= True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"locataire N° {self.id} : {self.Intitule} "
@@ -399,8 +400,8 @@ class Administrations (models.Model):
     LibelleFr = models.CharField(max_length=50)
     AbreviationFr = models.CharField(max_length=20, null=True)
     code = models.CharField(max_length=2, null=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.LibelleFr}"
@@ -409,8 +410,8 @@ class Structures (models.Model):
     LibelleFr = models.CharField(max_length=50)
     Administration = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=False, related_name="administration")
     CodeFr = models.CharField(max_length=50, null=True, blank=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.LibelleFr}"
@@ -463,8 +464,8 @@ class Localisation (models.Model):
     departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=True, related_name="loca_departement", blank=True)
     arrondissement = models.ForeignKey(Arrondissemements, on_delete=models.CASCADE, null=True, related_name="loca_arrondissement", blank=True)
     pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="etranger", blank=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
     # new fields 
     Type_localisation = models.CharField(choices=TYPE_LOCALISATION, max_length=1, default=NA)
     Ville = models.CharField(max_length=50,null=True, blank=True)
@@ -480,8 +481,8 @@ class Localisation (models.Model):
 class TypeConstructions(models.Model):
     libelle = models.CharField(max_length=500)
     description = models.TextField(blank=True, null=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     # return text
     def __str__(self):
@@ -492,8 +493,8 @@ class TypeConstructions(models.Model):
 class RevetementInts(models.Model):
     libelle = models.CharField(max_length=500)
     description = models.TextField(blank=True, null=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     # return text
     def __str__(self):
@@ -504,8 +505,8 @@ class RevetementInts(models.Model):
 class RevetementExts(models.Model):
     libelle = models.CharField(max_length=500)
     description = models.TextField(blank=True, null=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     # return text
     def __str__(self):
@@ -515,8 +516,8 @@ class RevetementExts(models.Model):
 # Element de description pour un immeuble ex : garage, jardin, piscine etc
 class ElementDeDescription(models.Model):
     libelle = models.CharField(max_length=500)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     # return text
     def __str__(self):
@@ -530,8 +531,8 @@ class ImmeubleElement(models.Model):
     # statut de disponibilité oui/non
     statut = models.BooleanField(null=True, blank=True)  # True = disponible, False = non disponible
     nombre = models.PositiveIntegerField(default=0)  # nombre d’éléments dans l’immeuble
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     class Meta:
         unique_together = ("immeuble", "element")  # éviter les doublons
@@ -570,8 +571,8 @@ class Immeubles (models.Model):
     # relationship 
     Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, null=True, related_name="collecte_immeuble", blank=True)
     # 
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         return f" {self.Designation} " #/{self.Localisation}
@@ -588,8 +589,8 @@ class Recensements(models.Model):
     Description = models.TextField(blank = True,null= True)
     Etat = models.TextField(blank = True,null= True)
     Agent_recenseur = models.TextField(blank = True,null= True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
     Type_immeuble = models.CharField(choices=TYPE_IMMEUBLE, max_length=255, null=True)
     Type_mur = models.CharField(blank=True, choices=TYPE_MUR, max_length=255, null=True)
     Couleur = models.CharField(max_length=255,null=True,blank=True)
@@ -607,12 +608,12 @@ class OccupantBureaux (models.Model):
     Administration_correspondante = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "administration_correspondante")
     Fonction = models.CharField(max_length=50,null=True)
     Ref_ActeJuridique_attribution = models.CharField(max_length=50,null=True)
-    Contact = models.IntegerField(max_length=20,null=True)
+    Contact = models.CharField(max_length=20,null=True)
     Date_initial_acte_occupation = models.CharField(max_length=50,null=True)
     # generic fields 
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment_occ_bureaux")
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         return f" logés : {self.Service} "
@@ -629,8 +630,8 @@ class Occupants (models.Model):
     Telephone = models.CharField(max_length=20,null=True)
     # generic fields 
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment_occ_residence")
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return f" logés : {self.Nom_Prenom} "
 
@@ -644,8 +645,8 @@ class Ayant_droits (models.Model):
     # relations 
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name="bailleur_ayant_droit")
     #
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return f" Ayant droit : {self.Nom_Prenom} du bailleur {self.Bailleur} "
 
@@ -654,8 +655,8 @@ class Ayant_droits (models.Model):
 class TypeContrats(models.Model):
     libelle = models.CharField(max_length=500)
     description = models.TextField(blank=True, null=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     # return text
     def __str__(self):
@@ -668,8 +669,8 @@ class PieceCollectes(models.Model):
     Piece = models.ForeignKey("Pieces", on_delete=models.CASCADE, related_name="piece")
     statut = models.BooleanField(null=True, blank=True)  # statut de disponibilité oui/non
     nombre = models.PositiveIntegerField(default=0)  # nombre d’éléments collectés
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name = "Pièce d'une collecte"
@@ -681,8 +682,8 @@ class PieceCollectes(models.Model):
 
 class Pieces(models.Model):
     libelle = models.CharField(max_length=255, blank=True, null=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name = "Pièce collectée"
@@ -697,8 +698,8 @@ def upload_piece_file(instance, filename):
 #class FichiersPiece(models.Model):
 #    Collecte_piece = models.ForeignKey(PieceCollectes, on_delete=models.CASCADE, related_name="fichiers")
 #    fichier = models.FileField(upload_to=upload_piece_file)
-#    Date_creation = models.DateTimeField(auto_now=True)
-#    Date_miseajour = models.DateTimeField(auto_now=True)
+#    Date_creation = models.DateTimeField(default=timezone.now)
+#    Date_miseajour = models.DateTimeField(default=timezone.now)
 #
 #    class Meta:
 #        verbose_name = "Fichier de pièce"
@@ -733,8 +734,8 @@ class Collectes (models.Model):
     # relationship : 
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "collecte_bailleur")
     # informations générique
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f" Collecte du  {self.Date_collecte}  du  {self.contrat}  "
@@ -768,8 +769,8 @@ class Contrats (models.Model):
     Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True)
     Etat = models.BooleanField(null=True, blank=True)
     observation = models.CharField(max_length=200)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
     Soumis_impot = models.BooleanField(null=True, blank=True)
     Revisitable = models.BooleanField(null=True, blank=True)
     Visa_controlleur = models.BooleanField(null=True, blank=True)
@@ -799,8 +800,8 @@ class Avenants (models.Model):
     Duree_Contrat_Ancien = models.CharField(max_length=10, blank = True,null= True)
     Duree_Contrat_Nouveau = models.CharField(max_length=10, blank = True,null= True)
     # informations DB stats
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Avenant : {self.Ref_Avenant} du contrat : {self.collecte}" 
@@ -833,8 +834,31 @@ class Non_Mandatement (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur_non_mandatement")
     # 
     #Etat = models.CharField(choices=TYPE_DOSSIER, max_length=12, null=True)
-    Date_creation = models.DateTimeField(auto_now=True)
-    Date_miseajour = models.DateTimeField(auto_now=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Non Mandatement {self.Ref_Attestattion} ({self.Exercice}) "
+
+# model for agent de collecte
+class AgentCollecte(models.Model):
+    Matircule = models.CharField(max_length=50, null=True, blank=True, unique=True)
+    Titre = models.CharField(max_length=50, null=True, blank=True)
+    Nom = models.CharField(max_length=50, null=True, blank=True)
+    Prenom = models.CharField(max_length=50, null=True, blank=True)
+    Nom_jeune_fille = models.CharField(max_length=50, null=True, blank=True)
+    Date_naissance = models.CharField(max_length=50, null=True, blank=True)
+    Categorie = models.CharField(max_length=50, null=True, blank=True)
+    Indice = models.CharField(max_length=50, null=True, blank=True)
+    Grade = models.CharField(max_length=50, null=True, blank=True)
+    Classe = models.CharField(max_length=50, null=True, blank=True)
+    Echelon = models.CharField(max_length=50, null=True, blank=True)
+    Chapitre = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "agent_service")
+    #Chapitre = models.CharField(max_length=50, null=True, blank=True) ---> Chapitre as structure
+    Code_fonction = models.CharField(max_length=50, null=True, blank=True)
+    Fonction = models.CharField(max_length=50, null=True, blank=True)
+    #
+    #Date_creation = models.DateTimeField(default=timezone.now)
+    #Date_miseajour = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f"{self.Nom}"
