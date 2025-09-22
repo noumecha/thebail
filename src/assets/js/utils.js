@@ -153,11 +153,10 @@ function submitForm(formId, url, fetchUrl) {
                     showAlertMessage(data.message, '#form-success')
                     form.closest('form')[0].reset()
                     // on need to add something for proper refresh ps: containerId is the table container
-                    fetchDatas(fetchUrl)
+                    // fetchDatas(fetchUrl)
                 } else {
                     console.error("Error occurred on submit : ", data.message)
                     showAlertMessage(data.message, '#form-error')
-                    showAlertMessage(data.errors, '#form-error')
                 }
             }
         });

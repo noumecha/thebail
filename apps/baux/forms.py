@@ -3,11 +3,9 @@ from django.forms import inlineformset_factory, modelformset_factory
 from .models import *
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.bootstrap import InlineRadios
-from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field
+from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field, HTML, LayoutObject
 from dal import autocomplete
-from crispy_forms.layout import LayoutObject, HTML
 from django.template.loader import render_to_string
 
 # extedns crispy form capabilities 
@@ -49,13 +47,13 @@ class LocatairesForm(forms.ModelForm):
                 Fieldset(
                     "Informations locataire",
                     Row(
-                        Column(FloatingField("Intitule"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Peut_payer"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),  
-                        Column(FloatingField("Num_Cni"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_delivrance_cni"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_personne"), css_class='form-group col-md-6 mb-0'),  
+                        Column(FloatingField("Intitule"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Peut_payer"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Nom_Prenom_Representant"), css_class='overflow-hidden form-group col-md-6 mb-0'),  
+                        Column(FloatingField("Num_Cni"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_delivrance_cni"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-6 mb-0'),  
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
@@ -143,19 +141,19 @@ class BailleursForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Type_personne"), css_class='form-group col-md-12 mb-0 bailleur_type_personne'),   
-                        Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
-                        #Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
-                        Column(FloatingField("Maticule"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
-                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
-                        Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
-                        Column(FloatingField("Num_doc"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
-                        Column(FloatingField("Date_delivrance_doc"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Document_identification"), css_class='form-group col-md-12 mb-0 bailleur_type_id'),  
-                        Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Telephone_representant"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
+                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Nom_prenom"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_nom_prenom'),
+                        #Column(FloatingField("Nationalite_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Raison_social"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_date_creation_ent'),
+                        Column(FloatingField("Maticule"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_raison_social'),
+                        Column(FloatingField("Telephone"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Type_id_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Num_doc"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_registre_commerce'),
+                        Column(FloatingField("Date_delivrance_doc"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Document_identification"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_id'),  
+                        Column(FloatingField("Nom_Prenom_Representant"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Telephone_representant"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_num_cni'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -172,7 +170,7 @@ class BailleursForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-bold fw bg-secondary-subtle'>a- Identification</h5>"),
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -180,19 +178,19 @@ class BailleursForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Type_personne"), css_class='form-group col-md-12 mb-0 bailleur_type_personne'),   
-                        Column(FloatingField("Nom_prenom"), css_class='form-group col-md-6 mb-0 bailleur_nom_prenom'),
-                        #Column(FloatingField("Nationalite_bailleur"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Raison_social"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0 bailleur_date_creation_ent'),
-                        Column(FloatingField("Maticule"), css_class='form-group col-md-6 mb-0 bailleur_raison_social'),
-                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
-                        Column(FloatingField("Type_id_bailleur"), css_class='form-group col-md-6 mb-0 bailleur_niu'),
-                        Column(FloatingField("Num_doc"), css_class='form-group col-md-6 mb-0 bailleur_registre_commerce'),
-                        Column(FloatingField("Date_delivrance_doc"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Document_identification"), css_class='form-group col-md-12 mb-0 bailleur_type_id'),  
-                        Column(FloatingField("Nom_Prenom_Representant"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Telephone_representant"), css_class='form-group col-md-6 mb-0 bailleur_num_cni'),
+                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Nom_prenom"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_nom_prenom'),
+                        #Column(FloatingField("Nationalite_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Raison_social"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_date_creation_ent'),
+                        Column(FloatingField("Maticule"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_raison_social'),
+                        Column(FloatingField("Telephone"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Type_id_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_niu'),
+                        Column(FloatingField("Num_doc"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_registre_commerce'),
+                        Column(FloatingField("Date_delivrance_doc"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Document_identification"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_id'),  
+                        Column(FloatingField("Nom_Prenom_Representant"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Telephone_representant"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_num_cni'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -202,18 +200,18 @@ class BailleursForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-bold fw bg-secondary-subtle'>b- Références bancaires</h5>"),
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
             ),
             Row(
                 Fieldset(
                     "Références bancaires",
                     Row(
-                        Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("RIB"), css_class='form-group col-md-6 mb-0 representant_type_id'),
-                        Column(FloatingField("Document_RIB"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Intitule_compte"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Registre_commerce"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Banque"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("RIB"), css_class='overflow-hidden form-group col-md-6 mb-0 representant_type_id'),
+                        Column(FloatingField("Document_RIB"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Intitule_compte"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Registre_commerce"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -264,14 +262,14 @@ class LocalisationForm(forms.ModelForm):
                 Fieldset(
                     "Coordonnées géorgraphiques",
                     Row(
-                        Column(FloatingField("Type_localisation"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("pays"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ville"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Rue"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("region"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("departement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("arrondissement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Quartier"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Type_localisation"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("pays"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ville"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Rue"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("region"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("departement"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("arrondissement"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Quartier"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -316,15 +314,15 @@ class OccupantsForm(forms.ModelForm):
                 Fieldset(
                     "Occupation pour résidence",
                     Row(
-                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Administration_tutelle"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Matricule"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("NIU"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Ref_ActeJuridique"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Date_Signature_acte_juridique"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Telephone"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Immeuble"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Nom_Prenom"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Administration_tutelle"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Fonction"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Matricule"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Ref_ActeJuridique"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_Signature_acte_juridique"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Telephone"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(
                             HTML("""
                                 <button type="button" 
@@ -336,7 +334,7 @@ class OccupantsForm(forms.ModelForm):
                                 </button>
                             """
                             ),
-                            css_class='form-group col-md-3 mb-0'
+                            css_class='overflow-hidden form-group col-md-3 mb-0'
                         ),
                         Column(
                              HTML("""
@@ -380,7 +378,7 @@ class OccupantsForm(forms.ModelForm):
                                 </table>
                             """
                             ),
-                            css_class='form-group col-md-12 mb-0'
+                            css_class='overflow-hidden form-group col-md-12 mb-0'
                         ),
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
@@ -422,13 +420,13 @@ class OccupantBureauxForm(forms.ModelForm):
                 Fieldset(
                     "Occupation pour bureaux",
                     Row(
-                        Column(FloatingField("Service"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Administration_correspondante"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Contact"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Date_initial_acte_occupation"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Immeuble"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Service"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Administration_correspondante"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Fonction"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Contact"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Date_initial_acte_occupation"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(
                             HTML("""
                                 <button type="button" 
@@ -440,7 +438,7 @@ class OccupantBureauxForm(forms.ModelForm):
                                 </button>
                             """
                             ),
-                            css_class='form-group col-md-3 mb-0'
+                            css_class='overflow-hidden form-group col-md-3 mb-0'
                         ),
                         Column(
                              HTML("""
@@ -479,7 +477,7 @@ class OccupantBureauxForm(forms.ModelForm):
                                 </table>
                             """
                             ),
-                            css_class='form-group col-md-12 mb-0'
+                            css_class='overflow-hidden form-group col-md-12 mb-0'
                         ),   
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
@@ -526,7 +524,7 @@ class RecensementsForm(forms.ModelForm):
                 Fieldset(
                     "Informations sur le recenseur",
                     Row(
-                        Column(FloatingField("Agent_recenseur"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Agent_recenseur"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -537,8 +535,8 @@ class RecensementsForm(forms.ModelForm):
                 Fieldset(
                     "Informations sur l'immeuble",
                     Row(
-                        Column(FloatingField("Immeuble"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Description", css_class="form-group col-md-12 mb-0 mt-1")),
+                        Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                        Column(FloatingField("Description", css_class="overflow-hidden form-group col-md-12 mb-0 mt-1")),
                         css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -549,12 +547,12 @@ class RecensementsForm(forms.ModelForm):
                 Fieldset(
                     "Caractéristiques du batiment",
                     Row(
-                        #Column(FloatingField("Construction"), css_class='form-group col-md-6 mb-0'),             
-                        Column(FloatingField("Emprise_au_sol"), css_class='form-group col-md-6 mb-0'),             
-                        Column(FloatingField("Type_mur"), css_class='form-group col-md-6 mb-0'),            
-                        Column(FloatingField("Couleur"), css_class='color_class form-group col-md-6 mb-0'),            
-                        Column(FloatingField("Type_immeuble"), css_class='form-group col-md-6 mb-0'),
-                        #Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Emprise_au_sol"), css_class='overflow-hidden form-group col-md-6 mb-0'),             
+                        Column(FloatingField("Type_mur"), css_class='overflow-hidden form-group col-md-6 mb-0'),            
+                        Column(FloatingField("Couleur"), css_class='color_class overflow-hidden form-group col-md-6 mb-0'),            
+                        Column(FloatingField("Type_immeuble"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -583,8 +581,8 @@ class TypeConstructionsForm(forms.ModelForm):
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column(FloatingField("libelle"), css_class='form-group col-md-12 mb-0'),
-                Column(FloatingField("description"), css_class='form-group col-md-12 mb-0'),
+                Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 css_class="form-row",
             ),
         )
@@ -607,8 +605,8 @@ class RevetementIntsForm(forms.ModelForm):
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column(FloatingField("libelle"), css_class='form-group col-md-12 mb-0'),
-                Column(FloatingField("description"), css_class='form-group col-md-12 mb-0'),
+                Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 css_class="form-row",
             ),
         )
@@ -631,8 +629,8 @@ class RevetementExtsForm(forms.ModelForm):
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column(FloatingField("libelle"), css_class='form-group col-md-12 mb-0'),
-                Column(FloatingField("description"), css_class='form-group col-md-12 mb-0'),
+                Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 css_class="form-row",
             ),
         )
@@ -650,7 +648,7 @@ class ElementDeDescriptionForm(forms.ModelForm):
             self.helper =  FormHelper()
             self.helper.layout = Layout(
                 Row(
-                    Column(FloatingField("libelle"), css_class='form-group col-md-6 mb-0'),
+                    Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
                 ),         
             )
@@ -673,9 +671,9 @@ class ImmeubleElementForm(forms.ModelForm):
             self.helper =  FormHelper()
             self.helper.layout = Layout(
                 Row(
-                    Column(FloatingField("statut"), css_class='form-group col-md-6 mb-0'),
-                    Column(FloatingField("element"), css_class='form-group col-md-12 mb-0'),
-                    Column(FloatingField("nombre"), css_class='form-group col-md-6 mb-0'),
+                    Column(FloatingField("statut"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                    Column(FloatingField("element"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                    Column(FloatingField("nombre"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
                 ),
                         
@@ -714,7 +712,7 @@ class PiecesForm(forms.ModelForm):
             self.helper =  FormHelper()
             self.helper.layout = Layout(
                 Row(
-                    Column(FloatingField("libelle"), css_class='form-group col-md-6 mb-0'),
+                    Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
                 ),         
             )
@@ -738,9 +736,9 @@ class PieceCollectesForm(forms.ModelForm):
             self.helper =  FormHelper()
             self.helper.layout = Layout(
                 Row(
-                    Column(FloatingField("statut"), css_class='form-group col-md-6 mb-0'),
-                    Column(FloatingField("piece"), css_class='form-group col-md-12 mb-0'),
-                    Column(FloatingField("nombre"), css_class='form-group col-md-6 mb-0'),
+                    Column(FloatingField("statut"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                    Column(FloatingField("piece"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                    Column(FloatingField("nombre"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
                 ),
                         
@@ -755,7 +753,7 @@ class CollectesForm(forms.ModelForm):
             # informations du contrat et sur le collecteur 
             "Numero_fiche_de_collecte",
             "Agent_de_collecte",
-            "Matricule_agent_de_collecte",
+            #"Matricule_agent_de_collecte",
             "Date_de_collecte",
             "TypeContrat",
             # informations contrat initial
@@ -768,6 +766,8 @@ class CollectesForm(forms.ModelForm):
             "Devise",
             # Bailleur 
             "Bailleur",
+            # Agent 
+            "Agent",
             # avenant informations 
             "Existance_avenant",
             "Existance_visa_budgetaire",
@@ -778,7 +778,7 @@ class CollectesForm(forms.ModelForm):
             # informations du contrat et sur le collecteur
             "Numero_fiche_de_collecte" : "Fiche de collecte N°",
             "Agent_de_collecte" : "Agent de collecte",
-            "Matricule_agent_de_collecte" : "Matricule de l'agent de collecte",
+            #"Matricule_agent_de_collecte" : "Matricule de l'agent de collecte",
             "Date_de_collecte" : "Date de collecte",
             "TypeContrat" : "Typologie du contrat",
             # informations contrat initial
@@ -791,9 +791,11 @@ class CollectesForm(forms.ModelForm):
             "Devise" : "Devise",
             # Bailleur 
             "Bailleur" : "Bailleur",
+            # Agent 
+            "Agent" : "Matricule de l'agent de collecte",
             # avenant informations
-            "Existance_avenant" : "Existance d'au moins un avenant ?",
-            "Existance_visa_budgetaire" : "Existance d'un visa budgétaire ?",
+            #"Existance_avenant" : "Existance d'au moins un avenant ?",
+            #"Existance_visa_budgetaire" : "Existance d'un visa budgétaire ?",
             "observation" : "Observation",
             "Periodicite_Reglement" : "Périodicité de règlement selon le contrat",
         }
@@ -802,11 +804,17 @@ class CollectesForm(forms.ModelForm):
             'Date_signature_contrat' : forms.TextInput(attrs={'type': 'date'}),
             'Date_effet_contrat' : forms.TextInput(attrs={'type': 'date'}),
             'Existance_avenant': forms.RadioSelect,
+            'Existance_visa_budgetaire': forms.RadioSelect,
+            'Bailleur': autocomplete.ModelSelect2(url='baux:bailleur_autocomplete'),
+            'Agent': autocomplete.ModelSelect2(url='baux:agent_autocomplete'),
         }
 
 
     def __init__(self, *args, **kwargs):
         super(CollectesForm, self).__init__(*args, **kwargs)
+        # remove labels : 
+        self.fields['Existance_avenant'].label = ""
+        self.fields['Existance_visa_budgetaire'].label = ""
         # Si l'instance a déjà une valeur (form update)
         if self.instance.pk:
             if self.instance.Bailleur:
@@ -820,9 +828,14 @@ class CollectesForm(forms.ModelForm):
                 self.fields['Bailleur'].queryset = Bailleurs.objects.filter(pk=bailleur_id)
             except (ValueError, TypeError):
                 pass
-        # Dynamically create fields for each pieces
+        if 'Agent' in self.data:
+            try:
+                agent_id = int(self.data.get('Agent'))
+                self.fields['Agent'].queryset = AgentCollecte.objects.filter(pk=agent_id)
+            except (ValueError, TypeError):
+                pass
+        #1 Dynamically create fields for each pieces
         pieces = list(Pieces.objects.all())
-        # 1) Create dynamic fields
         for el in pieces:
             self.fields[f"piece_{el.pk}_statut"] = forms.BooleanField(
                 required=False, label=el.libelle
@@ -838,17 +851,8 @@ class CollectesForm(forms.ModelForm):
                     self.fields[f"piece_{el.pk}_nombre"].initial = link.nombre
                 except PieceCollectes.DoesNotExist:
                     pass
-        # 2) Build the dynamic rows for the layout
-        """piece_rows = []
-        for el in pieces:
-            piece_rows.append(
-                Column(
-                    Field(f"piece_{el.pk}_statut", css_class=""),
-                    Field(f"piece_{el.pk}_nombre", css_class="ms-2 w-50"),
-                    css_class="m-0 col-md-4 d-flex align-items-center justify-content-center"
-                )
-            )
-        pieces = list(Pieces.objects.all())"""
+        #1 Dynamically create fields for each immeubles elements
+        
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # title informations : 
@@ -857,30 +861,39 @@ class CollectesForm(forms.ModelForm):
                     HTML("""
                         <hr>
                     """),
-                    css_class='form-group col-md-12'
+                    css_class='overflow-hidden form-group col-md-12'
                 ),
             ),
             Row(
-                Column(css_class='text-center form-group col-md-3 mb-0'),
+                Column(css_class='text-center overflow-hidden form-group col-md-3 mb-0'),
                 Column(
                     HTML("""
                         <h3 class="p-0">Fiche de Collecte N°</h3>
                     """),
-                    css_class='form-group col-md-3'
+                    css_class='overflow-hidden form-group col-md-3 p-0 m-0'
                 ),
-                Column(FloatingField("Numero_fiche_de_collecte"), css_class='text-center form-group col-md-3 mb-0'),
-                Column(css_class='text-center form-group col-md-3 mb-0'),
+                Column(FloatingField("Numero_fiche_de_collecte"), css_class='text-center overflow-hidden form-group col-md-3 mb-0'),
+                Column(css_class='text-center overflow-hidden form-group col-md-3 mb-0'),
             ),
             Row(
-                Column(FloatingField("Matricule_agent_de_collecte"), css_class='form-group col-md-4 mb-0'),
-                Column(FloatingField("Agent_de_collecte"), css_class='form-group col-md-4 mb-0'),
-                Column(FloatingField("Date_de_collecte"), css_class='form-group col-md-4 mb-0'),
+                Column(
+                    HTML("""
+                        <label for="id_Agent">Selectionner le matricule d'un Agent</label>
+                        <div class="d-flex align-items-center">
+                            {{ form.Agent }}
+                        </div>
+                    """),
+                    css_class='overflow-hidden form-group col-md-4 mb-3'
+                ),
+                #Column(FloatingField("Matricule_agent_de_collecte"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                Column(FloatingField("Agent_de_collecte", css_class="disabled"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                Column(FloatingField("Date_de_collecte"), css_class='overflow-hidden form-group col-md-4 mb-0'),
             ),
             # informations sur le contrat
             Row(
                 Column(
                     HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 1. INFORMATIONS CONTRACTUELLES</h4>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -888,7 +901,7 @@ class CollectesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Typologie du contrat</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -903,7 +916,7 @@ class CollectesForm(forms.ModelForm):
                             </button>
                         </div>
                     """),
-                    css_class='form-group col-md-12 mb-3'
+                    css_class='overflow-hidden form-group col-md-12 mb-3'
                 ),
                 css_class="form-row"
             ),
@@ -911,7 +924,7 @@ class CollectesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Elements juridiques</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -919,19 +932,23 @@ class CollectesForm(forms.ModelForm):
                 # title of subsection
                 Column(
                     HTML("<h5 class='text-bold fw bg-secondary-subtle'>a- Contrat Initial</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 # content
                 Fieldset(
                     "Contrat Initial",
                     Row(
-                        Column(FloatingField("Numero_contrat"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Date_signature_contrat"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Fonction_signataire_contrat"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Date_effet_contrat"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Regime_fiscal_contrat"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Montant_loyer_mensuel"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Devise"), css_class='form-group col-md-3 mb-0'),
+                        Column(
+                            FloatingField("Numero_contrat"), css_class='overflow-hidden form-group col-md-3 mb-0'
+                        ),
+                        Column(
+                            FloatingField("Date_signature_contrat"), css_class='overflow-hidden form-group col-md-3 mb-0'
+                        ),
+                        Column(FloatingField("Fonction_signataire_contrat"), css_class='overflow-hidden overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_effet_contrat"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Regime_fiscal_contrat"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Montant_loyer_mensuel"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Devise"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         css_class="form-row"
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -942,11 +959,26 @@ class CollectesForm(forms.ModelForm):
                 Fieldset(
                     "Existence d'avenant / visa budgétaire",
                     Row(
-                        Column(InlineRadios("Existance_avenant"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Existance_visa_budgetaire"), css_class='form-group col-md-6 mb-0'),
+                        Column(css_class='text-center overflow-hidden form-group col-md-1 mb-0'),
                         Column(
-                            HTML("<h5 class='text-bold fw bg-secondary-subtle'>b- Avenants liés au Contrat Initial</h5>"), 
-                            css_class='form-group col-md-12 mb-0'
+                            HTML("""
+                                <h6 class="p-0 m-0" for="id_Existance_avenant">Existence d'au moins un avenant ?</h6>
+                            """),
+                            InlineRadios("Existance_avenant", css_class="p-0 m-0"),
+                            css_class='overflow-hidden text-center p-2 bg-white form-group col-md-4 mb-0'
+                        ),
+                        Column(css_class='text-center overflow-hidden form-group col-md-2 mb-0'),
+                        Column(
+                            HTML("""
+                                <h6 class="p-0 m-0" for="id_Existance_visa_budgetaire">Existence du visa budgétaire ?</h6>
+                            """),
+                            InlineRadios("Existance_visa_budgetaire", css_class="p-0 m-0"),
+                            css_class='overflow-hidden text-center p-2 bg-white form-group col-md-4 mb-0'
+                        ),
+                        Column(css_class='text-center overflow-hidden form-group col-md-1 mb-0'),
+                        Column(
+                            HTML("<h5 class='text-bold fw bg-secondary-subtle mt-2'>b- Avenants liés au Contrat Initial</h5>"), 
+                            css_class='overflow-hidden form-group col-md-12 mb-0'
                         ),
                         Formset("avenants_formset"),
                         Column(
@@ -954,20 +986,20 @@ class CollectesForm(forms.ModelForm):
                                 <div id="avenant-collecte-list"></div>
                             """)
                         ),
-                        Column(FloatingField("observation"), css_class='form-group mt-1 col-md-12 mb-0'),
+                        Column(FloatingField("observation"), css_class='overflow-hidden form-group mt-1 col-md-12 mb-0'),
                         css_class="form-row"
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 Column(
                     HTML("<h5 class='mt-2 text-bold fw bg-secondary-subtle'>c- Périodicité de règlement selon le contrat</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
-                Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-12 mb-0'),
+                Column(FloatingField("Periodicite_Reglement"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 # Bailleur section 
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. bailleur</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 Column(
                     HTML("""
@@ -979,14 +1011,14 @@ class CollectesForm(forms.ModelForm):
                             </button>
                         </div>
                     """),
-                    css_class='form-group col-md-12 mb-3'
+                    css_class='overflow-hidden form-group col-md-12 mb-3'
                 ),
                 css_class="p-3 pt-0"
             ),
             Row(
                 Column(
                     HTML("<h5 class='text-bold fw bg-secondary-subtle'>c- Ayants Droits du Bailleurs</h5>"),
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 Formset("ayants_droits_formset"),
                 Column(
@@ -1032,7 +1064,7 @@ class CollectesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. attestion de non-mandatement (non-encore payé)</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -1047,7 +1079,7 @@ class CollectesForm(forms.ModelForm):
                             data-table="nonmandatement-collecte-table"> + Ajouter à la liste </button>
                     """
                     ),
-                    css_class='form-group col-md-3 mb-0'
+                    css_class='overflow-hidden form-group col-md-3 mb-0'
                 ),
                 Column(
                     HTML("""
@@ -1133,7 +1165,7 @@ class CollectesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 2. INFORMATIONS SUR L'IMMEUBLE</h4>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -1153,7 +1185,7 @@ class CollectesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h4 class='text-uppercase bg-gray text-white p-2 mt-2 mb-2'>SECTION 3. pièces collectées</h4>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -1175,7 +1207,7 @@ class CollectesForm(forms.ModelForm):
                     "Enregistrer",
                     css_class="btn btn-lg btn-outline-primary"
                 ),
-                css_class='form-group col-md-6 col-lg-6 mb-0'
+                css_class='overflow-hidden form-group col-md-6 col-lg-6 mb-0'
             ),
         )
         self.helper.form_tag = False
@@ -1251,14 +1283,14 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                         "I. Identification",
                         Row(
-                            Column(FloatingField("Designation"), css_class='form-group col-md-12 mb-0'),
-                            Column(FloatingField("Construction"), css_class='form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'), 
-                            Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-4 mb-0'),
-                            Column(FloatingField("Superficie_louer"), css_class='form-group col-md-4 mb-0'), 
-                            Column(FloatingField("Norme"), css_class='form-group col-md-4 mb-0'),    
-                            Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),    
-                            #Column(FloatingField("Type_construction"), css_class='form-group col-md-6 mb-0'),
+                            Column(FloatingField("Designation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                            Column(FloatingField("Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                            Column(FloatingField("Date_Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'), 
+                            Column(FloatingField("Nombre_de_pieces"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                            Column(FloatingField("Superficie_louer"), css_class='overflow-hidden form-group col-md-4 mb-0'), 
+                            Column(FloatingField("Norme"), css_class='overflow-hidden form-group col-md-4 mb-0'),    
+                            Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-6 mb-0'),    
+                            #Column(FloatingField("Type_construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                             css_class='form-row'
                         ),
                         css_class="bg-white line__text border p-2 pt-4"
@@ -1269,16 +1301,16 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "II. Localisation",
                     Row(
-                        #Column(FloatingField("Localisation"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Type_localisation"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("pays"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ville"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Rue"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("region"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("departement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("arrondissement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Quartier"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps"), css_class='form-group col-md-12 mb-0'),
+                        #Column(FloatingField("Localisation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                        Column(FloatingField("Type_localisation"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("pays"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ville"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Rue"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("region"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("departement"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("arrondissement"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Quartier"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Coordonee_gps"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -1289,10 +1321,10 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "III. Etat physique du batiment",
                     Row(
-                        Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Revetement_interieure"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Revetement_exterieure"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("observation"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                        Column(FloatingField("Revetement_interieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Revetement_exterieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("observation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         css_class='form-row' 
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -1303,7 +1335,7 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "IV. Description de la batisse",
                     Row(
-                        Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         css_class='form-row' 
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
@@ -1348,7 +1380,7 @@ class ImmeublesForm(forms.ModelForm):
                 except ImmeubleElement.DoesNotExist:
                     pass
         # 2) Build the dynamic rows for the layout
-        """element_rows = []
+        element_rows = []
         for el in elements:
             element_rows.append(
                 Column(
@@ -1356,14 +1388,14 @@ class ImmeublesForm(forms.ModelForm):
                     Field(f"element_{el.pk}_nombre", css_class="ms-2 w-50"),
                     css_class="m-0 col-md-3 d-flex align-items-center justify-content-center"
                 )
-            )"""
+            )
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # title of the section
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Identification</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -1371,13 +1403,13 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Designation"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Construction"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Date_Construction"), css_class='form-group col-md-3 mb-0'), 
-                        Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-3 mb-0'), 
-                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Norme"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Type_location"), css_class='form-group col-md-4 mb-0'), 
+                        Column(FloatingField("Designation"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Construction"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_Construction"), css_class='overflow-hidden form-group col-md-3 mb-0'), 
+                        Column(FloatingField("Nombre_de_pieces"), css_class='overflow-hidden form-group col-md-3 mb-0'), 
+                        Column(FloatingField("Superficie_louer"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Norme"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-4 mb-0'), 
                         css_class='form-row'
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -1388,7 +1420,7 @@ class ImmeublesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Localisation</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -1396,15 +1428,15 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Localisation",
                     Row(
-                        Column(FloatingField("Type_localisation"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("pays"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Ville"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Rue"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("arrondissement"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("region"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("departement"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Quartier"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Coordonee_gps"), css_class='form-group col-md-9 mb-0'),
+                        Column(FloatingField("Type_localisation"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("pays"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Ville"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Rue"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("arrondissement"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("region"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("departement"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Quartier"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Coordonee_gps"), css_class='overflow-hidden form-group col-md-9 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -1415,7 +1447,7 @@ class ImmeublesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. Etat physique du batiment</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -1423,8 +1455,8 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Etat physique du batiment",
                     Row(
-                        Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-4 mb-0'),
-                        #Column(FloatingField("Revetement_interieure"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        #Column(FloatingField("Revetement_interieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
                                 <div class="d-flex align-items-center">
@@ -1434,9 +1466,9 @@ class ImmeublesForm(forms.ModelForm):
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-4 mb-3'
+                            css_class='overflow-hidden form-group col-md-4 mb-3'
                         ),
-                        #Column(FloatingField("Revetement_exterieure"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Revetement_exterieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
                                 <div class="d-flex align-items-center">
@@ -1446,9 +1478,9 @@ class ImmeublesForm(forms.ModelForm):
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-4 mb-3'
+                            css_class='overflow-hidden form-group col-md-4 mb-3'
                         ),
-                        Column(FloatingField("observation"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("observation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         css_class='form-row' 
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -1459,38 +1491,26 @@ class ImmeublesForm(forms.ModelForm):
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. Description de la batisse</h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
-            #Row(
-            #    Fieldset(
-            #        "Description de la batisse",
-            #        Row(
-            #            *element_rows,
-            #            css_class="form-row"
-            #        ),
-            #        css_class="bg-white line__text border p-2 pt-4"
-            #    ),
-            #    css_class="p-3 pt-0"
-            #),
             Row(
                 Fieldset(
-                    "Description de la batisserie",
-                    #Row(
-                    #    *element_rows,
-                    #    css_class="form-row"
-                    #),
-                    HTML("{% include 'baux/partials/elements_template.html' with elements=elements %}"),
+                    "Description de la batisse",
+                    Row(
+                        *element_rows,
+                        css_class="form-row"
+                    ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
-                css_class="p-3 pt-2"
+                css_class="p-3 pt-0"
             ),
             # Occupant section
             Row(
                 Column(
                     HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
-                    css_class='form-group col-md-12 mb-0'
+                    css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
@@ -1530,8 +1550,8 @@ class TypeContratsForm(forms.ModelForm):
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column(FloatingField("libelle"), css_class='form-group col-md-12 mb-0'),
-                Column(FloatingField("description"), css_class='form-group col-md-12 mb-0'),
+                Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 css_class="form-row",
             ),
         )
@@ -1636,15 +1656,15 @@ class ContratsForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Numero_contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("TypeContrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("nature_contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_Debut"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Duree_Contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Signataire"), css_class='form-group col-md-6 mb-0'),               
-                        #Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Bailleur"), css_class='form-group col-md-9 mb-0'),
+                        Column(FloatingField("Numero_contrat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("TypeContrat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("nature_contrat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Debut"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Date_Signature"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Duree_Contrat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Signataire"), css_class='overflow-hidden form-group col-md-6 mb-0'),               
+                        #Column(FloatingField("Superficie_louer"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Bailleur"), css_class='overflow-hidden form-group col-md-9 mb-0'),
                         Column(
                             HTML("""
                                 <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addBailleurModal">
@@ -1652,7 +1672,7 @@ class ContratsForm(forms.ModelForm):
                                 </button>
                             """
                             ),
-                            css_class='form-group col-md-3 mb-0'
+                            css_class='overflow-hidden form-group col-md-3 mb-0'
                         ),                        
                         Column(
                             HTML("""
@@ -1664,10 +1684,10 @@ class ContratsForm(forms.ModelForm):
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-12 mb-3'
+                            css_class='overflow-hidden form-group col-md-12 mb-3'
                         ),
-                        Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("statut_contrat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("statut_contrat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -1678,8 +1698,8 @@ class ContratsForm(forms.ModelForm):
                 Fieldset(
                     "Locataire",
                     Row(
-                        Column(FloatingField("Administration_beneficiaire"), css_class='form-group col-md-6 col-lg-6 mb-0'),
-                        Column(FloatingField("Structure"), css_class='form-group col-md-6 col-lg-6 mb-0'),
+                        Column(FloatingField("Administration_beneficiaire"), css_class='overflow-hidden form-group col-md-6 col-lg-6 mb-0'),
+                        Column(FloatingField("Structure"), css_class='overflow-hidden form-group col-md-6 col-lg-6 mb-0'),
                     ),
                     css_class="line__text border p-2 pt-4"
                 ),
@@ -1689,27 +1709,27 @@ class ContratsForm(forms.ModelForm):
                 Fieldset(
                     "Eléments financiers",
                     Row(
-                        Column(FloatingField("Periodicite_Reglement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_Nap_Mensuel"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_Taxe_Mensuel"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Devise"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Rabattement"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Periodicite_Reglement"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Nap_Mensuel"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Taxe_Mensuel"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Devise"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Rabattement"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(
                             Field('Soumis_impot'),
-                            css_class='form-group col-md-2 mb-0 pt-3'
+                            css_class='overflow-hidden form-group col-md-2 mb-0 pt-3'
                         ),
                         Column(
                             Field('Revisitable'),
-                            css_class='form-group col-md-2 mb-0 pt-3'
+                            css_class='overflow-hidden form-group col-md-2 mb-0 pt-3'
                         ),
                         Column(
                             Field('Visa_controlleur'),
-                            css_class='form-group col-md-2 mb-0 pt-3'
+                            css_class='overflow-hidden form-group col-md-2 mb-0 pt-3'
                         ),
-                        Column(FloatingField("Banque"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("RIB"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Document_RIB"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_Charges_Mensuel"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Banque"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("RIB"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Document_RIB"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_Charges_Mensuel"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     ),
                     css_class="line__text border p-2 pt-4"
                 ),
@@ -1724,7 +1744,7 @@ class ContratsForm(forms.ModelForm):
                     "Enregistrer",
                     css_class="btn btn-lg btn-outline-primary"
                 ),
-                css_class='form-group col-md-6 col-lg-6 mb-0'
+                css_class='overflow-hidden form-group col-md-6 col-lg-6 mb-0'
             ),
         )
         self.fields['observation'].required = False
@@ -1781,10 +1801,10 @@ class AvenantsForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Ref_Avenant"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Signataire"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Date_effet"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Ref_Avenant"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Signataire"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Date_Signature"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Date_effet"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -1795,16 +1815,16 @@ class AvenantsForm(forms.ModelForm):
                 Fieldset(
                     "Modifications",
                     Row(
-                        Column(FloatingField("Modification_apportee"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Ancien_bailleur"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Nouveau_bailleur"), css_class='form-group col-md-3 mb-0'),
-                        #Column(FloatingField("Localite"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Montant_TTC_Mensuel_ancien"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Montant_TTC_Mensuel_Nouveau"), css_class='form-group col-md-3 mb-0'),
-                        #Column(FloatingField("Attestion_domicilliation_bancaire_ancien"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Attestion_domicilliation_bancaire_nouveau"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Duree_Contrat_Ancien"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Duree_Contrat_Nouveau"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Modification_apportee"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Ancien_bailleur"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Nouveau_bailleur"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        #Column(FloatingField("Localite"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Montant_TTC_Mensuel_ancien"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Montant_TTC_Mensuel_Nouveau"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        #Column(FloatingField("Attestion_domicilliation_bancaire_ancien"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Attestion_domicilliation_bancaire_nouveau"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Duree_Contrat_Ancien"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Duree_Contrat_Nouveau"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -1821,7 +1841,7 @@ class AvenantsForm(forms.ModelForm):
                             data-table="avenant-collecte-table"> + Ajouter à la liste </button>
                     """
                     ),
-                    css_class='form-group col-md-3 mb-0'
+                    css_class='overflow-hidden form-group col-md-3 mb-0'
                 ),    
             )
         )
@@ -1849,10 +1869,10 @@ class ExercicesForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column(FloatingField("annee"), css_class='form-group col-md-6 mb-0'),
-                Column(FloatingField("LibelleFR"), css_class='form-group col-md-6 mb-0'),
-                Column(FloatingField("date_debut"), css_class='form-group col-md-6 mb-0'),
-                Column(FloatingField("date_fin"), css_class='form-group col-md-6 mb-0'),
+                Column(FloatingField("annee"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                Column(FloatingField("LibelleFR"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                Column(FloatingField("date_debut"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                Column(FloatingField("date_fin"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                 css_class="form-row",
             ),
         )
@@ -1884,22 +1904,25 @@ class NonMandatementForm(forms.ModelForm):
             "novembre" : "N",
             "decembre" : "D",
             "Montant_total_exercice" : "Montant total par exercice (Nbre de mois x Loyer Mensuel)",
-            "Visa_budgétaire" : "Visa budgétaire / Signature CF ?",
+            #"Visa_budgétaire" : "Visa budgétaire / Signature CF ?",
             "Ref_contrat_avenant" : "Reference Contrat / Avenant",
             #"Etat" : "Etat",
         }
         widgets = {
-          "Date_signature"  :  forms.TextInput(attrs={'type': 'date'}),
+            "Date_signature"  :  forms.TextInput(attrs={'type': 'date'}),
+            'Visa_budgétaire': forms.RadioSelect,
         }
     def __init__(self, *args, **kwargs):
         super(NonMandatementForm, self).__init__(*args, **kwargs)
+        # remove labels : 
+        self.fields['Visa_budgétaire'].label = ""
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
                 Fieldset(
                     "Informations Générales",
                     Row(
-                        #Column(FloatingField("Exercice"), css_class='form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Exercice"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
                                 <div class="d-flex align-items-center">
@@ -1909,12 +1932,12 @@ class NonMandatementForm(forms.ModelForm):
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-4 mb-3'
+                            css_class='overflow-hidden form-group col-md-4 mb-3'
                         ),
-                        Column(FloatingField("Loyer_Mensuel"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Ref_Attestattion"), css_class='form-group col-md-4 mb-0'),
-                        #Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
-                        #Column(FloatingField("Etat"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Loyer_Mensuel"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Ref_Attestattion"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        #Column(FloatingField("Date_signature"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        #Column(FloatingField("Etat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -1947,9 +1970,15 @@ class NonMandatementForm(forms.ModelForm):
                 Fieldset(
                     "Validation",
                     Row(
-                        Column(FloatingField("Montant_total_exercice"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Visa_budgétaire"), css_class='form-group col-md-4 mb-0'),
-                        Column(FloatingField("Ref_contrat_avenant"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Montant_total_exercice"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(
+                            HTML("""
+                                <h6 class="p-0 m-0" for="id_Visa_budgétaire">Visa budgétaire / Signature CF ?</h6>
+                            """),
+                            InlineRadios("Visa_budgétaire", css_class="p-0 m-0"),
+                            css_class='overflow-hidden text-center p-2 bg-white form-group col-md-4 mb-0'
+                        ),
+                        Column(FloatingField("Ref_contrat_avenant"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -1987,12 +2016,12 @@ class AyantDroitsForm(forms.ModelForm):
                 Fieldset(
                     "Ayants Droits du Bailleurs",
                     Row(
-                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Contact"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Reference_Grosse"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Date_prise_effet_grosse"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Reference_certificat_non_effet"), css_class='form-group col-md-3 mb-0'),
-                        Column(FloatingField("Date_prise_effet_certificat_non_effet"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Nom_Prenom"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Contact"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Reference_Grosse"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_prise_effet_grosse"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Reference_certificat_non_effet"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_prise_effet_certificat_non_effet"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -2008,7 +2037,7 @@ class AyantDroitsForm(forms.ModelForm):
                         </button>
                     """
                     ),
-                    css_class='form-group col-md-3 mb-0'
+                    css_class='overflow-hidden form-group col-md-3 mb-0'
                 ),    
             )
         )

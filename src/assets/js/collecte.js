@@ -1,4 +1,31 @@
 $(function () {
+
+    // get agent name base on the selected or typed matricule
+    let agent_name = $('#id_Agent_de_collecte');
+    agent_name.attr('disabled', true);
+    let agent_matricule = $('#id_Agent');
+    $(document).on('change', agent_matricule, function () {
+        let id = agent_matricule.val();
+        if (id) {
+            $.ajax({
+                url: '/agent/',
+                data: {
+                    "agent_id" : id
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $('#id_Agent_de_collecte').val(data.agent);
+                    } else {                        
+                        console.log("Aucune donnée trouvée ...");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error getting Agent :', error);
+                }
+            });
+        }
+    })
+
     // set visibility on modal load initialization
     setVisible('id_immeubles-0-Type_localisation', '#id_Ville, #id_Rue', '1') // 1 - Extérieure
     setVisible('id_immeubles-0-Type_localisation', '#id_region, #id_departement, #id_arrondissement, #id_Quartier', '2') // 2 - National

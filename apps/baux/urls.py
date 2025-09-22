@@ -57,6 +57,7 @@ urlpatterns = [
     path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
     path('admins-beneficiaire/autocomplete/', AdminAutocomplete.as_view(), name='administration_beneficiaire_autocomplete'),
     path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
+    path('agent/autocomplete/', AgentAutocomplete.as_view(), name='agent_autocomplete'),
     # contrat urls
     path("contrat/add/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat'),
     path("contrat/list/", ContratView.as_view(template_name="baux/contrat_list.html"), name='contrat_list'),
@@ -64,6 +65,7 @@ urlpatterns = [
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
     path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
     path("structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration <int:administration_id>
+    path("agent/", views.get_agent_name, name='get_agent_name'), # getting agent collecte base on his matricule
     # consultation : 
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
     # Statistiques : 

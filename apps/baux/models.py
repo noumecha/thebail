@@ -653,7 +653,7 @@ class Ayant_droits (models.Model):
 
 # type contrat model
 class TypeContrats(models.Model):
-    libelle = models.CharField(max_length=500)
+    libelle = models.CharField(max_length=500, unique=True)
     description = models.TextField(blank=True, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -708,12 +708,35 @@ def upload_piece_file(instance, filename):
 #    def __str__(self):
 #        return f"Fichier {self.fichier.name}"
 
+# model for agent de collecte
+class AgentCollecte(models.Model):
+    Matricule = models.CharField(max_length=50, null=True, blank=True, unique=True)
+    Titre = models.CharField(max_length=50, null=True, blank=True)
+    Nom = models.CharField(max_length=50, null=True, blank=True)
+    Prenom = models.CharField(max_length=50, null=True, blank=True)
+    Nom_jeune_fille = models.CharField(max_length=50, null=True, blank=True)
+    Date_naissance = models.CharField(max_length=50, null=True, blank=True)
+    Categorie = models.CharField(max_length=50, null=True, blank=True)
+    Indice = models.CharField(max_length=50, null=True, blank=True)
+    Grade = models.CharField(max_length=50, null=True, blank=True)
+    Classe = models.CharField(max_length=50, null=True, blank=True)
+    Echelon = models.CharField(max_length=50, null=True, blank=True)
+    Chapitre = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "agent_service")
+    #Chapitre = models.CharField(max_length=50, null=True, blank=True) ---> Chapitre as structure
+    Code_fonction = models.CharField(max_length=50, null=True, blank=True)
+    Fonction = models.CharField(max_length=50, null=True, blank=True)
+    #
+    #Date_creation = models.DateTimeField(default=timezone.now)
+    #Date_miseajour = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f"{self.Matricule}"
+
 # Collecte model
 class Collectes (models.Model):
     # informations du contrat et sur le collecteur 
     Numero_fiche_de_collecte = models.CharField(max_length=50, null=True)
     Agent_de_collecte = models.TextField(blank = True, null=True)
-    Matricule_agent_de_collecte = models.TextField(blank = True, null=True)
+    #Matricule_agent_de_collecte = models.TextField(blank = True, null=True)
     Date_de_collecte = models.CharField(max_length=50,null=True)
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "typologie_contrat")
     # informations contrat initial
@@ -734,17 +757,24 @@ class Collectes (models.Model):
     Existance_avenant = models.BooleanField(
         max_length=1,
         choices=EXISTANCE_AVENANT,
-        verbose_name=('Existence d\'au moins un avenant ?'),
+        #verbose_name=('Existence d\'au moins un avenant ?'),
         null=False, blank=False,
         default=False
     )
-    Existance_visa_budgetaire = models.BooleanField(verbose_name=('Existence du visa budgétaire ?'), choices=EXISTANCE_AVENANT, max_length=1, null=True)
+    Existance_visa_budgetaire = models.BooleanField(
+        #verbose_name=('Existence du visa budgétaire ?'), 
+        max_length=1,
+        choices=EXISTANCE_AVENANT,
+        null=False, blank=False,
+        default=False
+    )
     observation = models.CharField(max_length=200, null=True)
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True)
     # many to many relationship with ElementDeDescription through ImmeubleElement --> description de la batisse
     pieces = models.ManyToManyField(Pieces, through="PieceCollectes")
     # relationship : 
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "collecte_bailleur")
+    Agent = models.ForeignKey(AgentCollecte, on_delete=models.CASCADE, null=True, related_name= "collecte_agent")
     # informations générique
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -841,7 +871,12 @@ class Non_Mandatement (models.Model):
     novembre = models.BooleanField(default=False, verbose_name="Novembre")
     decembre = models.BooleanField(default=False, verbose_name="Decembre")
     Montant_total_exercice = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Visa_budgétaire = models.BooleanField(verbose_name=('Visa budgétaire / Signature CF ?'), choices=EXISTANCE_AVENANT, max_length=1, null=True)
+    Visa_budgétaire = models.BooleanField(
+        max_length=1,
+        choices=EXISTANCE_AVENANT,
+        null=False, blank=False,
+        default=False
+    )
     Ref_contrat_avenant = models.CharField(max_length=50, null=True, blank=True)
     # relations 
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur_non_mandatement")
@@ -852,26 +887,3 @@ class Non_Mandatement (models.Model):
 
     def __str__(self):
         return f"Non Mandatement {self.Ref_Attestattion} ({self.Exercice}) "
-
-# model for agent de collecte
-class AgentCollecte(models.Model):
-    Matircule = models.CharField(max_length=50, null=True, blank=True, unique=True)
-    Titre = models.CharField(max_length=50, null=True, blank=True)
-    Nom = models.CharField(max_length=50, null=True, blank=True)
-    Prenom = models.CharField(max_length=50, null=True, blank=True)
-    Nom_jeune_fille = models.CharField(max_length=50, null=True, blank=True)
-    Date_naissance = models.CharField(max_length=50, null=True, blank=True)
-    Categorie = models.CharField(max_length=50, null=True, blank=True)
-    Indice = models.CharField(max_length=50, null=True, blank=True)
-    Grade = models.CharField(max_length=50, null=True, blank=True)
-    Classe = models.CharField(max_length=50, null=True, blank=True)
-    Echelon = models.CharField(max_length=50, null=True, blank=True)
-    Chapitre = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "agent_service")
-    #Chapitre = models.CharField(max_length=50, null=True, blank=True) ---> Chapitre as structure
-    Code_fonction = models.CharField(max_length=50, null=True, blank=True)
-    Fonction = models.CharField(max_length=50, null=True, blank=True)
-    #
-    #Date_creation = models.DateTimeField(default=timezone.now)
-    #Date_miseajour = models.DateTimeField(default=timezone.now)
-    def __str__(self):
-        return f"{self.Nom}"
