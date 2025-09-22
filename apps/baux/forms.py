@@ -1476,7 +1476,7 @@ class ImmeublesForm(forms.ModelForm):
             #),
             Row(
                 Fieldset(
-                    "Description de la batisse",
+                    "Description de la batisserie",
                     #Row(
                     #    *element_rows,
                     #    css_class="form-row"

@@ -125,9 +125,9 @@
     </li>
     <!-- Collecte -->
     <li class="menu-item {% if '/collecte/' == request.resolver_match.url_name or '/collecte/' in request.path %}active open{% endif %}">
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <a href="javascript:void(0);" title="Remontée des fiches de collecte" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-file"></i>
-        <div class="text-truncate" title="Remontée des fiches de collecte" data-i18n="Form Elements">Remontée des fiches de collecte</div>
+        <div class="text-truncate" data-i18n="Form Elements">Remontée des fiches de collecte</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {% if '/collecte/add/' == request.path %}active{% endif %}">
