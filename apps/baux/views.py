@@ -543,6 +543,7 @@ class CollecteView(TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["collecteList"] = Collectes.objects.all().order_by('-Date_creation')
         pieces = Pieces.objects.all()
+        elements = ElementDeDescription.objects.all()
         pk = kwargs.get('pk', None)
         if pk:
             collecte = get_object_or_404(Collectes, pk=pk)
@@ -557,6 +558,7 @@ class CollecteView(TemplateView):
         context['non_mandatements_formset'] = NonMandatementFormSet(prefix="non_mandatements")
         context["form"] = form
         context["pieces"] = pieces
+        context["elements"] = elements
         context["is_update"] = pk is not None
         return context
 

@@ -1,0 +1,11 @@
+<div id="elements-description-container" class="row p-2">
+    {{ elements }}
+    {% for element in elements %}
+    <div class="element-entry p-2 col-md-2" data-element-id="{{ element.id }}" data-element-libelle="{{ element.libelle }}">
+        <label>
+            {{ element.libelle }} <input type="checkbox" name="element_{{ element.id }}_statut">
+        </label>
+        <input type="number" class="form-control d-inline-block w-25 ms-2" name="element_{{ element.id }}_nombre" value="0">
+    </div>
+    {% endfor %}
+</div>

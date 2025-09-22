@@ -127,12 +127,12 @@
     <li class="menu-item {% if '/collecte/' == request.resolver_match.url_name or '/collecte/' in request.path %}active open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-file"></i>
-        <div class="text-truncate" data-i18n="Form Elements">Collecte</div>
+        <div class="text-truncate" title="Remontée des fiches de collecte" data-i18n="Form Elements">Remontée des fiches de collecte</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item {% if '/collecte/add/' == request.path %}active{% endif %}">
-          <a href="{% url 'baux:collecte' %}" class="menu-link">
-            <div class="text-truncate" data-i18n="Basic Inputs">Remplissage</div>
+          <a href="{% url 'baux:collecte' %}" title="Saisie d'une fiche de collecte" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Saisie d'une fiche de collecte</div>
           </a>
         </li>
         <li class="menu-item {% if '/collecte/list/' == request.path %}active{% endif %}">

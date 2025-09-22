@@ -2,6 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory, modelformset_factory
 from .models import *
 from crispy_bootstrap5.bootstrap5 import FloatingField
+from crispy_forms.bootstrap import InlineRadios
 from crispy_forms.layout import HTML
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field
@@ -315,15 +316,15 @@ class OccupantsForm(forms.ModelForm):
                 Fieldset(
                     "Occupation pour résidence",
                     Row(
-                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Administration_tutelle"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Matricule"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("NIU"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ref_ActeJuridique"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_Signature_acte_juridique"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Telephone"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Administration_tutelle"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Fonction"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Matricule"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("NIU"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Ref_ActeJuridique"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_Signature_acte_juridique"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Telephone"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Immeuble"), css_class='form-group col-md-3 mb-0'),
                         Column(
                             HTML("""
                                 <button type="button" 
@@ -340,7 +341,7 @@ class OccupantsForm(forms.ModelForm):
                         Column(
                              HTML("""
                                 <tr>
-                                <table id="occupant-collecte-table" class='table table-bordered mt-2'>
+                                <table id="occupant-collecte-table" class='bg-white table table-bordered mt-2'>
                                     <thead class='thead-dark'>
                                         <tr>
                                             <th>
@@ -384,7 +385,7 @@ class OccupantsForm(forms.ModelForm):
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
-                    css_class="line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -421,13 +422,13 @@ class OccupantBureauxForm(forms.ModelForm):
                 Fieldset(
                     "Occupation pour bureaux",
                     Row(
-                        Column(FloatingField("Service"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Administration_correspondante"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Contact"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_initial_acte_occupation"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Immeuble"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Service"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Administration_correspondante"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Fonction"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Contact"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Date_initial_acte_occupation"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Immeuble"), css_class='form-group col-md-4 mb-0'),
                         Column(
                             HTML("""
                                 <button type="button" 
@@ -444,7 +445,7 @@ class OccupantBureauxForm(forms.ModelForm):
                         Column(
                              HTML("""
                                 <hr>  
-                                <table id="occupantbureau-collecte-table" class='table table-bordered mt-2'>
+                                <table id="occupantbureau-collecte-table" class='bg-white table table-bordered mt-2'>
                                     <thead class='thead-dark'>
                                         <tr>
                                             <th>
@@ -483,7 +484,7 @@ class OccupantBureauxForm(forms.ModelForm):
                         css_class='form-row' 
                         """ ,label_class='text-decoration-none' """
                     ),
-                    css_class="line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -797,12 +798,12 @@ class CollectesForm(forms.ModelForm):
             "Periodicite_Reglement" : "Périodicité de règlement selon le contrat",
         }
         widgets = {
-            'Date_Construction'  :  forms.TextInput(attrs={'type': 'date'}),
-            'Date_de_collecte'  :  forms.TextInput(attrs={'type': 'date'}),
+            'Date_de_collecte' : forms.TextInput(attrs={'type': 'date'}),
             'Date_signature_contrat' : forms.TextInput(attrs={'type': 'date'}),
             'Date_effet_contrat' : forms.TextInput(attrs={'type': 'date'}),
-            'Bailleur': autocomplete.ModelSelect2(url='baux:bailleur_autocomplete'),
+            'Existance_avenant': forms.RadioSelect,
         }
+
 
     def __init__(self, *args, **kwargs):
         super(CollectesForm, self).__init__(*args, **kwargs)
@@ -850,6 +851,31 @@ class CollectesForm(forms.ModelForm):
         pieces = list(Pieces.objects.all())"""
         self.helper =  FormHelper()
         self.helper.layout = Layout(
+            # title informations : 
+            Row(
+                Column(
+                    HTML("""
+                        <hr>
+                    """),
+                    css_class='form-group col-md-12'
+                ),
+            ),
+            Row(
+                Column(css_class='text-center form-group col-md-3 mb-0'),
+                Column(
+                    HTML("""
+                        <h3 class="p-0">Fiche de Collecte N°</h3>
+                    """),
+                    css_class='form-group col-md-3'
+                ),
+                Column(FloatingField("Numero_fiche_de_collecte"), css_class='text-center form-group col-md-3 mb-0'),
+                Column(css_class='text-center form-group col-md-3 mb-0'),
+            ),
+            Row(
+                Column(FloatingField("Matricule_agent_de_collecte"), css_class='form-group col-md-4 mb-0'),
+                Column(FloatingField("Agent_de_collecte"), css_class='form-group col-md-4 mb-0'),
+                Column(FloatingField("Date_de_collecte"), css_class='form-group col-md-4 mb-0'),
+            ),
             # informations sur le contrat
             Row(
                 Column(
@@ -861,37 +887,25 @@ class CollectesForm(forms.ModelForm):
             # title of the section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Identification</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Typologie du contrat</h5>"), 
                     css_class='form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
             ),
             Row(
-                Fieldset(
-                    "Identifications",
-                    Row(
-                        Column(FloatingField("Numero_fiche_de_collecte"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Agent_de_collecte"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Matricule_agent_de_collecte"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_de_collecte"), css_class='form-group col-md-6 mb-0'),
-                        #Column(FloatingField("TypeContrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(
-                            HTML("""
-                                <label for="id_TypeContrat">Selectionner un type de contrat</label>
-                                <div class="d-flex align-items-center">
-                                    {{ form.TypeContrat }}
-                                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addTypeContratModal">
-                                        + Ajouter
-                                    </button>
-                                </div>
-                            """),
-                            css_class='form-group col-md-12 mb-3'
-                        ),
-                        css_class="form-row"
-                    ),
-                    css_class="bg-white line__text border p-2 pt-4"
+                Column(
+                    HTML("""
+                        <label for="id_TypeContrat">Selectionner un type de contrat</label>
+                        <div class="d-flex align-items-center">
+                            {{ form.TypeContrat }}
+                            <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addTypeContratModal">
+                                + Ajouter
+                            </button>
+                        </div>
+                    """),
+                    css_class='form-group col-md-12 mb-3'
                 ),
-                css_class="p-3 pt-0"
+                css_class="form-row"
             ),
             # Element juridiques section
             Row(
@@ -911,16 +925,16 @@ class CollectesForm(forms.ModelForm):
                 Fieldset(
                     "Contrat Initial",
                     Row(
-                        Column(FloatingField("Numero_contrat"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Date_signature_contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Fonction_signataire_contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_effet_contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Regime_fiscal_contrat"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_loyer_mensuel"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Devise"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Numero_contrat"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_signature_contrat"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Fonction_signataire_contrat"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_effet_contrat"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Regime_fiscal_contrat"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Montant_loyer_mensuel"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Devise"), css_class='form-group col-md-3 mb-0'),
                         css_class="form-row"
                     ),
-                    css_class="bg-white line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -928,8 +942,8 @@ class CollectesForm(forms.ModelForm):
                 Fieldset(
                     "Existence d'avenant / visa budgétaire",
                     Row(
-                        Column(FloatingField("Existance_avenant"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Existance_visa_budgetaire"), css_class='form-group col-md-12 mb-0'),
+                        Column(InlineRadios("Existance_avenant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Existance_visa_budgetaire"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("<h5 class='text-bold fw bg-secondary-subtle'>b- Avenants liés au Contrat Initial</h5>"), 
                             css_class='form-group col-md-12 mb-0'
@@ -943,7 +957,7 @@ class CollectesForm(forms.ModelForm):
                         Column(FloatingField("observation"), css_class='form-group mt-1 col-md-12 mb-0'),
                         css_class="form-row"
                     ),
-                    css_class="bg-white line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 Column(
                     HTML("<h5 class='mt-2 text-bold fw bg-secondary-subtle'>c- Périodicité de règlement selon le contrat</h5>"), 
@@ -978,7 +992,7 @@ class CollectesForm(forms.ModelForm):
                 Column(
                     HTML("""
                         <hr>
-                        <table id="ayantdroit-collecte-table" class='table table-bordered mt-2'>
+                        <table id="ayantdroit-collecte-table" class='table bg-white table-bordered mt-2'>
                             <thead class='thead-dark'>
                                 <tr>
                                     <th>
@@ -1038,7 +1052,7 @@ class CollectesForm(forms.ModelForm):
                 Column(
                     HTML("""
                         <hr>
-                        <table id="nonmandatement-collecte-table" class='table-responsive table table-bordered mt-2'>
+                        <table id="nonmandatement-collecte-table" class='table-responsive bg-white table table-bordered mt-2'>
                             <thead class='thead-dark'>
                                 <tr>
                                     <th rowspan="2">
@@ -1151,7 +1165,7 @@ class CollectesForm(forms.ModelForm):
                     #    css_class="form-row"
                     #),
                     HTML("{% include 'baux/partials/pieces_template.html' with pieces=pieces %}"),
-                    css_class="bg-white line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-2"
             ),
@@ -1334,15 +1348,15 @@ class ImmeublesForm(forms.ModelForm):
                 except ImmeubleElement.DoesNotExist:
                     pass
         # 2) Build the dynamic rows for the layout
-        element_rows = []
+        """element_rows = []
         for el in elements:
             element_rows.append(
                 Column(
                     Field(f"element_{el.pk}_statut", css_class=""),
                     Field(f"element_{el.pk}_nombre", css_class="ms-2 w-50"),
-                    css_class="m-0 col-md-4 d-flex align-items-center justify-content-center"
+                    css_class="m-0 col-md-3 d-flex align-items-center justify-content-center"
                 )
-            )
+            )"""
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # title of the section
@@ -1357,16 +1371,16 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Designation"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Construction"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_Construction"), css_class='form-group col-md-6 mb-0'), 
-                        Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-6 mb-0'), 
-                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Norme"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_location"), css_class='form-group col-md-6 mb-0'), 
+                        Column(FloatingField("Designation"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Construction"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_Construction"), css_class='form-group col-md-3 mb-0'), 
+                        Column(FloatingField("Nombre_de_pieces"), css_class='form-group col-md-3 mb-0'), 
+                        Column(FloatingField("Superficie_louer"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Norme"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Type_location"), css_class='form-group col-md-4 mb-0'), 
                         css_class='form-row'
                     ),
-                    css_class="bg-white line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -1382,18 +1396,18 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Localisation",
                     Row(
-                        Column(FloatingField("Type_localisation"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("pays"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ville"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Rue"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("region"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("departement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("arrondissement"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Quartier"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Coordonee_gps"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Type_localisation"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("pays"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Ville"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Rue"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("arrondissement"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("region"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("departement"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Quartier"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Coordonee_gps"), css_class='form-group col-md-9 mb-0'),
                         css_class='form-row'
                     ),
-                    css_class="bg-white line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -1409,18 +1423,18 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Etat physique du batiment",
                     Row(
-                        Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Situation_de_la_batisse"), css_class='form-group col-md-4 mb-0'),
                         #Column(FloatingField("Revetement_interieure"), css_class='form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
                                 <div class="d-flex align-items-center">
                                     {{ form.Revetement_interieure }}
                                     <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addRevetementInterieureModal">
-                                        + Ajouter
+                                        + 
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-6 mb-3'
+                            css_class='form-group col-md-4 mb-3'
                         ),
                         #Column(FloatingField("Revetement_exterieure"), css_class='form-group col-md-6 mb-0'),
                         Column(
@@ -1428,16 +1442,16 @@ class ImmeublesForm(forms.ModelForm):
                                 <div class="d-flex align-items-center">
                                     {{ form.Revetement_exterieure }}
                                     <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addRevetementExterieureModal">
-                                        + Ajouter
+                                        + 
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-6 mb-3'
+                            css_class='form-group col-md-4 mb-3'
                         ),
                         Column(FloatingField("observation"), css_class='form-group col-md-12 mb-0'),
                         css_class='form-row' 
                     ),
-                    css_class="bg-white line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
             ),
@@ -1449,16 +1463,28 @@ class ImmeublesForm(forms.ModelForm):
                 ),
                 css_class='form-row'
             ),
+            #Row(
+            #    Fieldset(
+            #        "Description de la batisse",
+            #        Row(
+            #            *element_rows,
+            #            css_class="form-row"
+            #        ),
+            #        css_class="bg-white line__text border p-2 pt-4"
+            #    ),
+            #    css_class="p-3 pt-0"
+            #),
             Row(
                 Fieldset(
                     "Description de la batisse",
-                    Row(
-                        *element_rows,
-                        css_class="form-row"
-                    ),
-                    css_class="bg-white line__text border p-2 pt-4"
+                    #Row(
+                    #    *element_rows,
+                    #    css_class="form-row"
+                    #),
+                    HTML("{% include 'baux/partials/elements_template.html' with elements=elements %}"),
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
-                css_class="p-3 pt-0"
+                css_class="p-3 pt-2"
             ),
             # Occupant section
             Row(
@@ -1709,30 +1735,33 @@ class AvenantsForm(forms.ModelForm):
         model = Avenants
         fields = (
             "Ref_Avenant",
+            "Signataire",
             "Date_Signature",
             "Date_effet",
             "Modification_apportee",
             "Ancien_bailleur",
             "Nouveau_bailleur",
-            "Localite",
+            #"Localite",
             "Montant_TTC_Mensuel_ancien",
             "Montant_TTC_Mensuel_Nouveau",
-            "Attestion_domicilliation_bancaire_ancien",
+            #"Attestion_domicilliation_bancaire_ancien",
             "Attestion_domicilliation_bancaire_nouveau",
             "Duree_Contrat_Ancien",
             "Duree_Contrat_Nouveau",
+            "Signataire"
         )
         labels = {
             "Ref_Avenant" : "Référence de l'avenant",
+            "Signataire" : "Signataire",
             "Date_Signature" : "Date de signature",
             "Date_effet" : "Date de prise d'effet",
             "Modification_apportee" : "Modification apportée",
             "Ancien_bailleur" : "Nom & Prénom de l'ancien bailleur",
             "Nouveau_bailleur" : "Nom & Prénom du nouveau bailleur",
-            "Localite" : "Localité",
+            #"Localite" : "Localité",
             "Montant_TTC_Mensuel_ancien" : "Montant Ancien Loyer Mensuel (TTC)",
             "Montant_TTC_Mensuel_Nouveau" : "Montant Nouveau Loyer Mensuel (TTC)",
-            "Attestion_domicilliation_bancaire_ancien" : "Ancienne Attestation de domicilliation bancaire",
+            #"Attestion_domicilliation_bancaire_ancien" : "Ancienne Attestation de domicilliation bancaire",
             "Attestion_domicilliation_bancaire_nouveau" : "Nouvelle Attestation de domicilliation bancaire",
             "Duree_Contrat_Ancien" : "Ancienne Durée Contrat",
             "Duree_Contrat_Nouveau" : "Nouvelle Durée Contrat",
@@ -1752,9 +1781,10 @@ class AvenantsForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Ref_Avenant"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_effet"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Ref_Avenant"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Signataire"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Date_Signature"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Date_effet"), css_class='form-group col-md-4 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -1765,16 +1795,16 @@ class AvenantsForm(forms.ModelForm):
                 Fieldset(
                     "Modifications",
                     Row(
-                        Column(FloatingField("Modification_apportee"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ancien_bailleur"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Nouveau_bailleur"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Localite"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_TTC_Mensuel_ancien"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Montant_TTC_Mensuel_Nouveau"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Attestion_domicilliation_bancaire_ancien"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Attestion_domicilliation_bancaire_nouveau"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Duree_Contrat_Ancien"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Duree_Contrat_Nouveau"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Modification_apportee"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Ancien_bailleur"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Nouveau_bailleur"), css_class='form-group col-md-3 mb-0'),
+                        #Column(FloatingField("Localite"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Montant_TTC_Mensuel_ancien"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Montant_TTC_Mensuel_Nouveau"), css_class='form-group col-md-3 mb-0'),
+                        #Column(FloatingField("Attestion_domicilliation_bancaire_ancien"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Attestion_domicilliation_bancaire_nouveau"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Duree_Contrat_Ancien"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Duree_Contrat_Nouveau"), css_class='form-group col-md-3 mb-0'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"
@@ -1839,7 +1869,7 @@ class NonMandatementForm(forms.ModelForm):
         labels = {
             "Exercice" : "Exercice",
             "Loyer_Mensuel" : "Loyer Mensuel",
-            "Ref_Attestattion" : "Référnce de l'attestation de non mandatement",
+            "Ref_Attestattion" : "Référence de l'attestation de non mandatement",
             #"Date_signature" : "Date de signature",
             "janvier" : "J",
             "fevrier" : "F",
@@ -1875,19 +1905,19 @@ class NonMandatementForm(forms.ModelForm):
                                 <div class="d-flex align-items-center">
                                     {{ form.Exercice }}
                                     <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addExerciceModal">
-                                        + Ajouter
+                                        +
                                     </button>
                                 </div>
                             """),
-                            css_class='form-group col-md-6 mb-3'
+                            css_class='form-group col-md-4 mb-3'
                         ),
-                        Column(FloatingField("Loyer_Mensuel"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ref_Attestattion"), css_class='form-group col-md-12 mb-0'),
+                        Column(FloatingField("Loyer_Mensuel"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Ref_Attestattion"), css_class='form-group col-md-4 mb-0'),
                         #Column(FloatingField("Date_signature"), css_class='form-group col-md-6 mb-0'),
                         #Column(FloatingField("Etat"), css_class='form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
-                    css_class="line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0",
             ),
@@ -1895,21 +1925,21 @@ class NonMandatementForm(forms.ModelForm):
                 Fieldset(
                     "Mois non-mandatés",
                     Row(
-                        Column("janvier", css_class="col-md-2"),
-                        Column("fevrier", css_class="col-md-2"),
-                        Column("mars", css_class="col-md-2"),
-                        Column("avril", css_class="col-md-2"),
-                        Column("mai", css_class="col-md-2"),
-                        Column("juin", css_class="col-md-2"),
-                        Column("juillet", css_class="col-md-2"),
-                        Column("aout", css_class="col-md-2"),
-                        Column("septembre", css_class="col-md-2"),
-                        Column("octobre", css_class="col-md-2"),
-                        Column("novembre", css_class="col-md-2"),
-                        Column("decembre", css_class="col-md-2"),
+                        Column("janvier", css_class="col-md-1"),
+                        Column("fevrier", css_class="col-md-1"),
+                        Column("mars", css_class="col-md-1"),
+                        Column("avril", css_class="col-md-1"),
+                        Column("mai", css_class="col-md-1"),
+                        Column("juin", css_class="col-md-1"),
+                        Column("juillet", css_class="col-md-1"),
+                        Column("aout", css_class="col-md-1"),
+                        Column("septembre", css_class="col-md-1"),
+                        Column("octobre", css_class="col-md-1"),
+                        Column("novembre", css_class="col-md-1"),
+                        Column("decembre", css_class="col-md-1"),
                         css_class="form-row"
                     ),
-                    css_class="line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0",
             ),
@@ -1917,12 +1947,12 @@ class NonMandatementForm(forms.ModelForm):
                 Fieldset(
                     "Validation",
                     Row(
-                        Column(FloatingField("Montant_total_exercice"), css_class='form-group col-md-12 mb-0'),
-                        Column(FloatingField("Visa_budgétaire"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Ref_contrat_avenant"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Montant_total_exercice"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Visa_budgétaire"), css_class='form-group col-md-4 mb-0'),
+                        Column(FloatingField("Ref_contrat_avenant"), css_class='form-group col-md-4 mb-0'),
                         css_class="form-row",
                     ),
-                    css_class="line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0",
             ),
@@ -1957,15 +1987,15 @@ class AyantDroitsForm(forms.ModelForm):
                 Fieldset(
                     "Ayants Droits du Bailleurs",
                     Row(
-                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Contact"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Reference_Grosse"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_prise_effet_grosse"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Reference_certificat_non_effet"), css_class='form-group col-md-6 mb-0'),
-                        Column(FloatingField("Date_prise_effet_certificat_non_effet"), css_class='form-group col-md-6 mb-0'),
+                        Column(FloatingField("Nom_Prenom"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Contact"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Reference_Grosse"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_prise_effet_grosse"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Reference_certificat_non_effet"), css_class='form-group col-md-3 mb-0'),
+                        Column(FloatingField("Date_prise_effet_certificat_non_effet"), css_class='form-group col-md-3 mb-0'),
                         css_class="form-row",
                     ),
-                    css_class="line__text border p-2 pt-4"
+                    css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0",
             ),

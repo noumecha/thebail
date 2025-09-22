@@ -725,7 +725,19 @@ class Collectes (models.Model):
     Montant_loyer_mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Devise = models.CharField(choices=DEVISES, max_length=5, null=True)
     # avenant informations 
-    Existance_avenant = models.BooleanField(verbose_name=('Existence d\'au moins un avenant ?'), choices=EXISTANCE_AVENANT, max_length=1, null=True)
+    #Existance_avenant = models.BooleanField(
+    #    verbose_name=('Existence d\'au moins un avenant ?'), 
+    #    #choices=EXISTANCE_AVENANT, 
+    #    #max_length=1, null=True
+    #    blank=False, default=False
+    #)
+    Existance_avenant = models.BooleanField(
+        max_length=1,
+        choices=EXISTANCE_AVENANT,
+        verbose_name=('Existence d\'au moins un avenant ?'),
+        null=False, blank=False,
+        default=False
+    )
     Existance_visa_budgetaire = models.BooleanField(verbose_name=('Existence du visa budgétaire ?'), choices=EXISTANCE_AVENANT, max_length=1, null=True)
     observation = models.CharField(max_length=200, null=True)
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True)
@@ -786,16 +798,17 @@ class Avenants (models.Model):
     collecte = models.ForeignKey(Collectes, on_delete=models.CASCADE, null=True, related_name= "collecte")
     # informations génériques
     Ref_Avenant = models.CharField(max_length=50, unique=True)
+    Signataire = models.CharField(max_length=50, null=True, blank=True)
     Date_Signature = models.CharField(max_length=50,null=True)
     Date_effet = models.CharField(max_length=50,null=True)
     Modification_apportee = models.TextField(blank = True,null= True)
     Ancien_bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "ancien_bailleur")
     Nouveau_bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "nouveau_bailleur")
-    Localite = models.CharField(max_length=50,null=True)
+    #Localite = models.CharField(max_length=50,null=True)
     # informations spécifiques
     Montant_TTC_Mensuel_ancien = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_TTC_Mensuel_Nouveau = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Attestion_domicilliation_bancaire_ancien = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
+    #Attestion_domicilliation_bancaire_ancien = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     Attestion_domicilliation_bancaire_nouveau = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     Duree_Contrat_Ancien = models.CharField(max_length=10, blank = True,null= True)
     Duree_Contrat_Nouveau = models.CharField(max_length=10, blank = True,null= True)
