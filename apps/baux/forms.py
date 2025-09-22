@@ -2,7 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory, modelformset_factory
 from .models import *
 from crispy_bootstrap5.bootstrap5 import FloatingField
-from crispy_forms.bootstrap import InlineRadios
+from crispy_forms.bootstrap import InlineRadios, PrependedText
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field, HTML, LayoutObject
 from dal import autocomplete
@@ -911,7 +911,7 @@ class CollectesForm(forms.ModelForm):
                         <label for="id_TypeContrat">Selectionner un type de contrat</label>
                         <div class="d-flex align-items-center">
                             {{ form.TypeContrat }}
-                            <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addTypeContratModal">
+                            <button type="button" id="id-add-contrat-type" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addTypeContratModal">
                                 + Ajouter
                             </button>
                         </div>
@@ -1549,6 +1549,8 @@ class TypeContratsForm(forms.ModelForm):
         super(TypeContratsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
+            # Prepends 
+            PrependedText('libelle', 'Contrat MINDCAF-'),
             Row(
                 Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),

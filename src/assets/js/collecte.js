@@ -3,9 +3,8 @@ $(function () {
     // get agent name base on the selected or typed matricule
     let agent_name = $('#id_Agent_de_collecte');
     agent_name.attr('disabled', true);
-    let agent_matricule = $('#id_Agent');
-    $(document).on('change', agent_matricule, function () {
-        let id = agent_matricule.val();
+    $(document).on('change', '#id_Agent', function () {
+        let id = $(this).val();
         if (id) {
             $.ajax({
                 url: '/agent/',
@@ -25,6 +24,55 @@ $(function () {
             });
         }
     })
+
+    // select arrondissement and set other localisation informations automatically
+    let region = $('#id_immeubles-0-region');
+    let dpt = $('#id_immeubles-0-departement');
+    let numero_collecte = $('#id_Numero_fiche_de_collecte')
+
+    region.attr('disabled', true);
+    dpt.attr('disabled', true);
+    numero_collecte.attr('disabled', true);
+
+    $(document).on('change',  '#id_immeubles-0-arrondissement', function () {
+        let arrondissement_id = $(this).val();
+        $.ajax({
+            url: '/arrondissement/',
+            data: {
+                'arrondissement_id': arrondissement_id
+            },
+            success: function (data) {
+                if (data.success) {
+                    region.val(data.region_id);
+                    dpt.val(data.dpt_id);
+                    numero_collecte.val(data.numero_collecte);
+                } else {
+                    console.log("Aucune donnée trouvée ...");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error getting data :', error);
+            }
+        })
+    });
+
+    // disable and enable the contrat type button by default 
+    $('#id-add-contrat-type').hide();
+    if ($('#id_TypeContrat')) {
+        $(document).on('change', '#id_TypeContrat', function() {
+            const selectedValue = $('#id_TypeContrat option:selected').text();
+            console.log(selectedValue)
+            if (selectedValue === "Contrat CONTRAT MINDCAF-AUTRE") {
+                $('#id-add-contrat-type').show();
+            } else {
+                $('#id-add-contrat-type').hide();
+            }
+        });
+        $('#id_TypeContrat').trigger('change');
+    } else {
+        $('#id_TypeContrat').show();
+    }
+    
 
     // set visibility on modal load initialization
     setVisible('id_immeubles-0-Type_localisation', '#id_Ville, #id_Rue', '1') // 1 - Extérieure

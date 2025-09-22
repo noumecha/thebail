@@ -513,6 +513,32 @@ class BailleurAutocomplete(autocomplete.Select2QuerySetView):
             )
         return qs
     
+# getting localisation datas base on selected arrondissment
+def get_localisation_datas(request):
+    if request.method == 'GET':
+        arrondissement_id = request.GET.get('arrondissement_id')
+        if not arrondissement_id:
+            return JsonResponse({'error': 'Aucun arrondissement selectionné'}, status=400)
+        try:
+            arrondissement = get_object_or_404(Arrondissemements, pk=arrondissement_id)
+            departement = arrondissement.departement
+            region = get_object_or_404(Regions, pk=departement.Region.id)
+            dpt = get_object_or_404(Departements, pk=departement.id)
+            #
+            number = Immeubles.objects.filter(region=region, departement=departement, Collecte__isnull=False).count()
+            numero = number + 1
+            numero_collecte = f"{region.Libelle[:2]}-{dpt.LibelleFR[:3]}-{numero:04d}"
+            return JsonResponse({
+                'region_id': region.id,
+                'dpt_id' : dpt.id,
+                'numero_collecte' : numero_collecte,
+                'success': True
+                }, safe=False, status=200)
+        except (ValueError, Administrations.DoesNotExist):
+            return JsonResponse({'error': 'Arrondissement selectionné incorrect' + ValueError, 'success': False}, status=400)
+    return JsonResponse({'error': 'Invalid request', 'success': False}, status=400)
+
+
 # getting agent name base on the selected or entry matricule
 def get_agent_name(request):
     if request.method == 'GET':

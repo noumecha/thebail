@@ -66,6 +66,7 @@ urlpatterns = [
     path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
     path("structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration <int:administration_id>
     path("agent/", views.get_agent_name, name='get_agent_name'), # getting agent collecte base on his matricule
+    path("arrondissement/", views.get_localisation_datas, name='get_localisation_datas'), # localisation data base on arraondissement
     # consultation : 
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
     # Statistiques : 
