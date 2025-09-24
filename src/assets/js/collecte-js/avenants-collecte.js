@@ -3,8 +3,8 @@ $(function () {
     
     $('#avenant-collecte-add-btn').click(function () {
         const ref = $('#id_avenants-0-Ref_Avenant').val();
-        const ancienBailleur = $('#id_avenants-0-Ancien_bailleur option:selected').text();
-        const nouveauBailleur = $('#id_avenants-0-Nouveau_bailleur option:selected').text();
+        const ancienBailleur = $('#id_avenants-0-Ancien_bailleur option:selected').val();
+        const nouveauBailleur = $('#id_avenants-0-Nouveau_bailleur option:selected').val();
         const montantAncien = $('#id_avenants-0-Montant_TTC_Mensuel_ancien').val();
         const montantNouveau = $('#id_avenants-0-Montant_TTC_Mensuel_Nouveau').val();
         const attestationAncien = $('#id_avenants-0-Attestion_domicilliation_bancaire_ancien').val();

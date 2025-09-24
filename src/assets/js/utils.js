@@ -220,26 +220,6 @@ function setVisible(mainSelector, targetSelector = null, valueToShow = null) {
     
 }
 
-// toggle element visibility base on some slect element
-/*function toogleFormset(selectElement, value = null, formsetToShow, formsetToHide) {
-    if (selectElement) {
-        $(document).on('change', selectElement, function() {
-            const selectedValue = $(this).val();
-            //console.log("Selected value: ", selectedValue);
-            if (selectedValue === value) {
-                $(formsetToShow).show();
-                $(formsetToHide).hide();
-            } else {
-                $(formsetToShow).hide();
-                $(formsetToHide).show();
-            }
-        });
-    } else {
-        $(formsetToShow).show();
-        $(formsetToHide).show();
-    }
-}*/
-
 function toogleFormset(selectElement, value = null, formsetToShow, formsetToHide) {
     if (selectElement) {
         $(document).on('change', selectElement, function() {
@@ -266,4 +246,13 @@ function toogleFormset(selectElement, value = null, formsetToShow, formsetToHide
         $(formsetToShow).show();
         $(formsetToHide).show();
     }
+}
+
+// function disabledCSS
+function disabledCSS(el) {
+    el.css({
+        'background-color': '#e9ecef',
+        'pointer-events': 'none',
+        'opacity': '1'
+    });
 }

@@ -10,6 +10,56 @@
 {% block content %}
     <div class="card mt-3 p-3">
         <h1>Listes de fiches de collectes</h1>
+        <div > 
+            <table class="table table-sm">
+                <tr>
+                    <th>Numero de fiche </th>
+                    <th>Agent de collecte </th>
+                    <th>Date de collecte </th>
+                    <th>Numero du collecte</th>
+                    <th>Date de signature du collecte</th>
+                    <th>Fonction du signataire</th>
+                    <th>Date prise effet </th>
+                    <th>Montant loyer mensuel</th>
+                    <th>Action</th>
+                </tr>
+                 
+                {% for collecte in collecteList %}
+                   <tr>
+                        {% if form.instance.id == collecte.id %}
+                        {% include 'baux/savecollecte.html' %}
+                        {% else %}
+                            <td>{{ collecte.Numero_fiche_de_collecte }} </td>
+                            <td>{{ collecte.Agent_de_collecte }}</td>
+                            <td>{{ collecte.Date_de_collecte }}</td>
+                            <td>{{ collecte.Numero_contrat }}</td>
+                            <td>{{ collecte.Date_signature_contrat }}</td>
+                            <td>{{ collecte.Fonction_signataire_contrat }}</td>
+                            <td>{{ collecte.Date_effet_contrat }}</td>
+                            <td>{{ collecte.Montant_loyer_mensuel }}</td>
+                            <td>
+                              <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                <div class="dropdown-menu">
+                                  <a class="disabled dropdown-item primary" href="{% url 'baux:collecte_update' collecte.id %}">
+                                    <i class="bx bx-edit-alt me-1"></i>Modifier
+                                  </a>
+                                  <a href="{% url 'baux:collecte_delete' collecte.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
+                                    <i class="bx bx-trash me-1"></i>Supprimer
+                                  </a>
+                                  <a href="{% url 'baux:collecte_print' collecte.id %}" class="disabled dropdown-item">
+                                    <i class="bx bx-printer me-1"></i>Imprimer le contrat
+                                  </a>
+                                </div>
+                              </div>
+                            </td>
+                        {% endif %}
+                     </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
     </div>
 
 {% endblock %}

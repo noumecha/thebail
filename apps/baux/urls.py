@@ -53,7 +53,7 @@ urlpatterns = [
     path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     # autocomplete on contrat form
-    path( "service/autocomplete/", ServiceAutocomplete.as_view(), name="service_autocomplete",),
+    path("service/autocomplete/", ServiceAutocomplete.as_view(), name="service_autocomplete"),
     path('structure/autocomplete/', StructureAutocomplete.as_view(), name='structure_autocomplete'),
     path('admins-beneficiaire/autocomplete/', AdminAutocomplete.as_view(), name='administration_beneficiaire_autocomplete'),
     path('bailleur/autocomplete/', BailleurAutocomplete.as_view(), name='bailleur_autocomplete'),
@@ -75,6 +75,9 @@ urlpatterns = [
     path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
     path("collecte/list/", CollecteView.as_view(template_name="baux/collecte_list.html"), name='collecte_list'),
     path("collecte/create", views.collecte_create, name='collecte_create'),
+    path("collecte/print/<int:pk>/", CollecteView.print, name='collecte_print'),
+    path("collecte/delete/<int:pk>/", CollecteDeleteView.as_view(), name='collecte_delete'),
+    path("collecte/update/<int:pk>/", CollecteView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
     #path("collecte/print/<int:pk>/", ContratView.print_contrat, name='collecte_print'),
     #path("collecte/delete/<int:pk>/", ContratDeleteView.as_view(), name='collecte_delete'),
     #path("collecte/update/<int:pk>/", ContratView.as_view(template_name="baux/collecte.html"), name='collecte_update'),

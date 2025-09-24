@@ -477,8 +477,10 @@ class RecensementView(BaseCRUDView):
 class ServiceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Structures.objects.all()
-        if self.q:
-            qs = qs.filter(libelle__icontains=self.q)
+        administration_id = self.request.GET.get("administration_id")
+        print("Administration depuis GET:", administration_id)
+        if administration_id:
+            qs = qs.filter(Administration_id=administration_id)
         return qs
     
 class StructureAutocomplete(autocomplete.Select2QuerySetView):
@@ -581,7 +583,12 @@ class TypeContratView(BaseCRUDView):
     
 # check if instace exist
 def instanceExist(model, idEl, msg):
-    instance = get_object_or_404(model, pk=idEl)
+    instance = None
+    if idEl == None:
+        return JsonResponse({"success": False, "errors": "l'élément selectionné n'exite pas"}, status=400)
+    else:
+        instance = get_object_or_404(model, pk=idEl)
+    #
     if instance:
         return instance
     else:
@@ -611,6 +618,28 @@ class CollecteView(TemplateView):
         context["elements"] = elements
         context["is_update"] = pk is not None
         return context
+    
+    def print(request, pk):
+        # fetch content from db and load template context
+        collecte = get_object_or_404(Collectes, pk=pk)
+        context = {"collecte" : collecte}
+        html = render_to_string("baux/docs/contrat_doc.html", context)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="f"contrat_{contrat.numero_contrat}".pdf"'
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Error generating PDF', status=500)
+        return response
+
+class CollecteDeleteView(DeleteView):
+    model = Collectes
+    template_name = 'baux/collecte_delete.html'
+    success_url = reverse_lazy('baux:collecte_list')
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        context["form"] = CollectesForm()
+        return context
 
 @csrf_exempt
 def collecte_create(request):
@@ -623,7 +652,7 @@ def collecte_create(request):
                 with transaction.atomic():
                     collecte = collecte_form.save()
                     bailleurInstance = get_object_or_404(Bailleurs, pk=collecte.Bailleur.pk)
-                    print(collecte.Bailleur.pk)
+                    print(bailleurInstance)
                     # Sauvegarde des immeubles 
                     immeubles_json = request.POST.get("immeubles_data")
                     if immeubles_json:
@@ -711,7 +740,8 @@ def collecte_create(request):
 
                             for ad in ayants_droits:
                                 Ayant_droits.objects.create(
-                                    Bailleur=collecte.Bailleur.pk,
+                                    Bailleur=collecte.Bailleur,
+                                    Bailleur_id=collecte.Bailleur.pk,
                                     Nom_Prenom=ad.get('Nom_Prenom'),
                                     Contact=ad.get('Contact'),
                                     Reference_Grosse=ad.get('Reference_Grosse'),
@@ -733,17 +763,17 @@ def collecte_create(request):
                                 nouveaubailleur = instanceExist(Bailleurs, a.get('nouveauBailleur'), "Nouveau Bailleur selectionné non existant")
                                 # 
                                 Avenants.objects.create(
-                                    Collecte=collecte,
+                                    collecte=collecte,
                                     Ref_Avenant=a.get('ref'),
                                     Date_Signature=a.get('dateSignature'),
                                     Date_effet=a.get('dateEffet'),
                                     Modification_apportee=a.get('modificationApportee'),
                                     Ancien_bailleur=ancienbailleur,
                                     Nouveau_bailleur=nouveaubailleur,
-                                    Localite=a.get('localite'),
+                                    #Localite=a.get('localite'),
                                     Montant_TTC_Mensuel_ancien=a.get('montantAncien'),
                                     Montant_TTC_Mensuel_Nouveau=a.get('montantNouveau'),
-                                    Attestion_domicilliation_bancaire_ancien=a.get('attestationAncien'),
+                                    #Attestion_domicilliation_bancaire_ancien=a.get('attestationAncien'),
                                     Attestion_domicilliation_bancaire_nouveau=a.get('attestationNouveau'),
                                     Duree_Contrat_Ancien=a.get('dureeAncien'),
                                     Duree_Contrat_Nouveau=a.get('dureeNouveau'),
@@ -758,13 +788,13 @@ def collecte_create(request):
                             nonmandatements = json.loads(nonmandatements_json)
                             for n in nonmandatements:
                                 # getting proper instance base on id
-                                exercice = instanceExist(Exercice, n.get('Exercice'), "Exercice selectionné non existant")
+                                exercice = instanceExist(Exercice, n.get('exercice'), "Exercice selectionné non existant")
                                 #
                                 mois = n.get('mois', {})
                                 Non_Mandatement.objects.create(
                                     Exercice=exercice,
-                                    Loyer_Mensuel=n.get('Loyer_Mensuel'),
-                                    Ref_Attestattion=n.get('Ref_Attestattion'),
+                                    Loyer_Mensuel=n.get('loyer'),#Loyer_Mensuel
+                                    Ref_Attestattion=n.get('refAttestation'),#Ref_Attestattion
                                     janvier=mois.get('janvier'),
                                     fevrier=mois.get('fevrier'),
                                     mars=mois.get('mars'),
@@ -777,10 +807,11 @@ def collecte_create(request):
                                     octobre=mois.get('octobre'),
                                     novembre=mois.get('novembre'),
                                     decembre=mois.get('decembre'),
-                                    Montant_total_exercice=n.get('Montant_total_exercice'),
-                                    Visa_budgétaire=n.get('Visa_budgétaire'),
-                                    Ref_contrat_avenant=n.get('Ref_contrat_avenant'),
-                                    Bailleur=collecte.Bailleur.pk
+                                    Montant_total_exercice=n.get('montantTotal'),#Montant_total_exercice
+                                    Visa_budgétaire=n.get('visa'),
+                                    Ref_contrat_avenant=n.get('refContrat'),#Ref_contrat_avenant
+                                    Bailleur=collecte.Bailleur,
+                                    Bailleur_id=collecte.Bailleur.pk,
                                 )
                         except json.JSONDecodeError:
                             return JsonResponse({"success": False, "errors": "Erreur lors du décodage des attestation de non mandatement."}, status=400)

@@ -1,4 +1,9 @@
 $(function () {
+    
+    // prefix des ids 
+    const prefix = "#id_non_mandatements-0-";
+
+    // reseting form
     function resetNonMandatementForm() {
         $('#id_non_mandatements-0-Exercice').select2({
             placeholder : "Selectionnez un exercice",
@@ -7,7 +12,8 @@ $(function () {
         $("#id_non_mandatements-0-Loyer_Mensuel").val("");
         $("#id_non_mandatements-0-Ref_Attestattion").val("");
         $("#id_non_mandatements-0-Montant_total_exercice").val("");
-        $("#id_non_mandatements-0-Visa_budgétaire").val("");
+        //$("#id_non_mandatements-0-Visa_budgétaire").val("");
+        $(`${prefix}Visa_budgétaire input[type=radio]`).prop('checked', false);
         $("#id_non_mandatements-0-Ref_contrat_avenant").val("");
 
         const mois = ["janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "decembre"];
@@ -15,9 +21,6 @@ $(function () {
             $(`#id_non_mandatements-0-${mois}`).prop('checked', false);
         });
     }
-
-    // prefix des ids 
-    const prefix = "#id_non_mandatements-0-";
 
     // Lignes vides
     const $emptyRow = $("#nonmandatement-collecte-table tbody #empty-ayantdroit-row");
@@ -54,13 +57,20 @@ $(function () {
 
     updateTotalAmount();
 
+    // geting data from the form
     $("#nonmandatement-collecte-add-btn").on("click", function () {
         const exercice = $(`${prefix}Exercice`).val();
         const exerciceText = $(`${prefix}Exercice option[value='${exercice}']`).text();
         const loyer = $(`${prefix}Loyer_Mensuel`).val();
         const refAttestation = $(`${prefix}Ref_Attestattion`).val();
         const montantTotal = $(`${prefix}Montant_total_exercice`).val();
-        const visa = $(`${prefix}Visa_budgétaire`).val();
+        // get visa value 
+        let visa = false;
+        if ($('#id_non_mandatements-0-Visa_budgétaire_1').is(':checked')) {
+            visa = false;    
+        } else {
+            visa = true;
+        }
         const refContrat = $(`${prefix}Ref_contrat_avenant`).val();
 
         const moisList = ["janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "decembre"];
@@ -86,7 +96,7 @@ $(function () {
                 ${moisList.map((mois, index) => `<td>${moisCoches[index]}</td>`).join('')}
                 ${moisHiddenInputs}
                 <td><input type="hidden" name="Montant_total_hidden[]" value="${montantTotal}">${montantTotal}</td>
-                <td><input type="hidden" name="Visa_hidden[]" value="${visa}">${visa == true ? "oui" : "non"}</td>
+                <td><input type="hidden" name="Visa_hidden[]" value="${visa}">${visa === true ? "oui" : "non"}</td>
                 <td><input type="hidden" name="Ref_contrat_hidden[]" value="${refContrat}">${refContrat}</td>
                 <td>
                     <button type="button" class="btn btn-sm btn-warning edit-nonmandatement">Éditer</button>
@@ -119,7 +129,9 @@ $(function () {
         $(`${prefix}Ref_Attestattion`).val(row.find('input[name="Ref_Attestattion_hidden[]"]').val());
         $(`${prefix}Date_signature`).val(row.find('input[name="Date_signature_hidden[]"]').val());
         $(`${prefix}Montant_total_exercice`).val(row.find('input[name="Montant_total_hidden[]"]').val());
-        $(`${prefix}Visa_budgétaire`).val(row.find('input[name="Visa_hidden[]"]').val());
+        //$(`${prefix}Visa_budgétaire`).val(row.find('input[name="Visa_hidden[]"]').val());
+        const visaValue = row.find('input[name="Visa_hidden[]"]').val();
+        $(`${prefix}Visa_budgétaire input[type=radio][value="${visaValue}"]`).prop('checked', true);
         $(`${prefix}Ref_contrat_avenant`).val(row.find('input[name="Ref_contrat_hidden[]"]').val());
         $(`${prefix}Etat`).val(row.find('input[name="Etat_hidden[]"]').val());
 

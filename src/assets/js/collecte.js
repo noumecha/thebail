@@ -1,8 +1,24 @@
 $(function () {
 
+    // Quand l'administration change
+    $(document).on("change", "#id_occupants_bureau-0-Administration_correspondante", function () {
+        var adminId = $(this).val();
+        // Trouve le champ Service dans le même formset
+        var serviceField = $(this).closest(".form-row").find("#id_occupants_bureau-0-Service");
+        // Reconstruit l’URL de l’autocomplete avec administration_id
+        var baseUrl = serviceField.data("autocomplete-light-url").split("?")[0];
+        var newUrl = baseUrl + "?administration_id=" + adminId;
+        // Applique l’URL mise à jour
+        serviceField.attr("data-autocomplete-light-url", newUrl);
+        // Réinitialise le champ Service
+        serviceField.val(null).trigger("change");
+    });
+
     // get agent name base on the selected or typed matricule
     let agent_name = $('#id_Agent_de_collecte');
-    agent_name.attr('disabled', true);
+    agent_name.prop('readonly', true);
+    disabledCSS(agent_name);
+
     $(document).on('change', '#id_Agent', function () {
         let id = $(this).val();
         if (id) {
@@ -30,9 +46,12 @@ $(function () {
     let dpt = $('#id_immeubles-0-departement');
     let numero_collecte = $('#id_Numero_fiche_de_collecte')
 
-    region.attr('disabled', true);
-    dpt.attr('disabled', true);
-    numero_collecte.attr('disabled', true);
+    region.prop('readonly', true);
+    dpt.prop('readonly', true);
+    numero_collecte.prop('readonly', true);
+    disabledCSS(region);
+    disabledCSS(dpt);
+    disabledCSS(numero_collecte);
 
     $(document).on('change',  '#id_immeubles-0-arrondissement', function () {
         let arrondissement_id = $(this).val();
@@ -113,6 +132,26 @@ $(function () {
     ajaxModal("#addExerciceModal", "#exercice-form-content", "#exerciceForm", "/exercice-partial-form/", "#id_non_mandatements-0-Exercice")
     ajaxModal("#addBailleurModal", "#bailleur-form-content", "#bailleurForm", "/bailleur-partial-form/", "#id_Bailleur")
 
+    // handle the show/hide logic
+    var avenantsForm = $('#avenants-0');
+    var titleForm = $('#avenant-collecte-form-title');
+    var checkbox = $('#id_Existance_avenant_0');
+    function toggleElements() {
+        if (checkbox.is(':checked')) {
+            avenantsForm.show();
+            titleForm.show();
+        } else {
+            avenantsForm.hide();
+            titleForm.hide();
+        }
+    }
+
+    checkbox.on('change', function() {
+        toggleElements();
+        console.log("changed")
+    });
+    toggleElements();
+
     /** hidden & show elements */
     // set visibility for type localisation
     setVisible('#id_immeubles-0-Type_localisation', '#id_immeubles-0-Ville, #id_immeubles-0-pays, #id_immeubles-0-Rue', '1') // 1 - Extérieure
@@ -174,7 +213,8 @@ $(function () {
             };
 
             let montantTotal = row.find("input[name='Montant_total_hidden[]']").val();
-            let visa = row.find("input[name='Visa_hidden[]']").val();
+            let visa = row.find("input[name='Visa_hidden[]']").val() === "true";
+            console.log("visa value : " ,visa)
             let refContrat = row.find("input[name='Ref_contrat_hidden[]']").val();
 
             data.push({
@@ -355,7 +395,7 @@ $(function () {
             return;
         }
 
-        console.log(immeubles);
+        console.log(nonMandatements);
         formData.append('pieces_data', JSON.stringify(pieces));
         formData.append('avenants_data', JSON.stringify(avenants));
         formData.append('ayants_droits_data', JSON.stringify(ayants_droits));
@@ -370,12 +410,10 @@ $(function () {
             processData: false,
             contentType: false,
             success: function (response) {
-                alert("Collecte enregistrée avec succès !");
                 showAlertMessage(response.message, '#form-success-collecte')
             },
             error: function (xhr, status, error) {
                 let errors = xhr.responseJSON.errors;
-                console.log(errors);
                 showAlertMessage(errors, '#form-error-collecte')
             }
         });

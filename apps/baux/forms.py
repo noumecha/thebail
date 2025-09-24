@@ -5,7 +5,7 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.bootstrap import InlineRadios, PrependedText
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Fieldset, Submit, Button, Field, HTML, LayoutObject
-from dal import autocomplete
+from dal import autocomplete, forward
 from django.template.loader import render_to_string
 
 # extedns crispy form capabilities 
@@ -390,6 +390,7 @@ class OccupantsForm(forms.ModelForm):
         )
         self.helper.form_tag = False
 
+# occupant pour bureaux
 class OccupantBureauxForm(forms.ModelForm):
     class Meta:
         model = OccupantBureaux
@@ -408,8 +409,10 @@ class OccupantBureauxForm(forms.ModelForm):
 
         widgets = {
             'Date_initial_acte_occupation' : forms.TextInput(attrs={'type': 'date'}),
-            'Service': autocomplete.ModelSelect2(url='baux:service_autocomplete'),
             'Administration_correspondante': autocomplete.ModelSelect2(url='baux:administration_beneficiaire_autocomplete'),
+            'Service': autocomplete.ModelSelect2(
+                url='baux:service_autocomplete',
+            ),
         }
         
     def __init__(self, *args, **kwargs):
@@ -420,8 +423,8 @@ class OccupantBureauxForm(forms.ModelForm):
                 Fieldset(
                     "Occupation pour bureaux",
                     Row(
-                        Column(FloatingField("Service"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Administration_correspondante"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Service"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Fonction"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Contact"), css_class='overflow-hidden form-group col-md-4 mb-0'),
@@ -977,7 +980,7 @@ class CollectesForm(forms.ModelForm):
                         ),
                         Column(css_class='text-center overflow-hidden form-group col-md-1 mb-0'),
                         Column(
-                            HTML("<h5 class='text-bold fw bg-secondary-subtle mt-2'>b- Avenants liés au Contrat Initial</h5>"), 
+                            HTML("<h5 class='text-bold fw bg-secondary-subtle mt-2' id='avenant-collecte-form-title'>b- Avenants liés au Contrat Initial</h5>"), 
                             css_class='overflow-hidden form-group col-md-12 mb-0'
                         ),
                         Formset("avenants_formset"),
@@ -1549,10 +1552,10 @@ class TypeContratsForm(forms.ModelForm):
         super(TypeContratsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
-            # Prepends 
-            PrependedText('libelle', 'Contrat MINDCAF-'),
             Row(
-                Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                # Prepends 
+                PrependedText('libelle', 'Contrat MINDCAF-'),
+                #Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 css_class="form-row",
             ),
