@@ -402,8 +402,8 @@ class OccupantBureauxForm(forms.ModelForm):
             "Administration_correspondante" : "Administration correspondante",
             "Fonction" : "Fonction du plus haut responsable du service",
             "Ref_ActeJuridique_attribution" : "Référence de l'acte juridique d'attribution du MINDCAF",
-            "Contact" : "Contact (Numéro Camtel du service)",
-            "Date_initial_acte_occupation" : "Date initial d'occupation (jj/mm/aa)",
+            "Contact" : "Numéro de service",
+            "Date_initial_acte_occupation" : "Date initiale d'occupation (jj/mm/aa)",
             "Immeuble" : "Imeuble",
         }
 

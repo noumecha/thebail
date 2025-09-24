@@ -135,9 +135,12 @@ $(function () {
     // handle the show/hide logic
     var avenantsForm = $('#avenants-0');
     var titleForm = $('#avenant-collecte-form-title');
-    var checkbox = $('#id_Existance_avenant_0');
+    var radios = $('input[name="Existance_avenant"]'); 
+    console.log(radios);
+
     function toggleElements() {
-        if (checkbox.is(':checked')) {
+        if ($('input[name="Existance_avenant"]:checked').val() == 'True') {  
+            console.log("true val");
             avenantsForm.show();
             titleForm.show();
         } else {
@@ -146,10 +149,12 @@ $(function () {
         }
     }
 
-    checkbox.on('change', function() {
+    radios.on('change', function() {
         toggleElements();
-        console.log("changed")
+        console.log("changed : ", $('input[name="Existance_avenant"]:checked').val());
     });
+
+    // appel initial
     toggleElements();
 
     /** hidden & show elements */
