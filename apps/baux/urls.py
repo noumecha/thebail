@@ -30,7 +30,7 @@ urlpatterns = [
     *get_crud_urls(LocalisationView, "localisation/localisations", "localisation"),
     *get_crud_urls(OccupantsView, "occupant/occupants", "occupant"),
     *get_crud_urls(AvenantsView, "avenant/avenants", "avenant"),
-    *get_crud_urls(views.TypeContratView, "typecontrat/typecontrats", "typecontrat"),
+    *get_crud_urls(TypeContratView, "typecontrat/typecontrats", "typecontrat"),
     *get_crud_urls(views.ExercicesView, "exercice/exercices", "exercice"),
     # revetements urls
     *get_crud_urls(RevetementIntsView, "revetementint/revetementints", "revetementint"),
@@ -74,7 +74,7 @@ urlpatterns = [
     # collecte : 
     path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
     path("collecte/list/", CollecteView.as_view(template_name="baux/collecte_list.html"), name='collecte_list'),
-    path("collecte/create", views.collecte_create, name='collecte_create'),
+    path("collecte/create", collecte_create, name='collecte_create'),
     path("collecte/print/<int:pk>/", CollecteView.print, name='collecte_print'),
     path("collecte/delete/<int:pk>/", CollecteDeleteView.as_view(), name='collecte_delete'),
     path("collecte/update/<int:pk>/", CollecteView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
