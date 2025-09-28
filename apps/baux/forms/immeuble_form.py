@@ -4,6 +4,7 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset, Field, HTML
 from .nonmandatement_form import *
+from dal import autocomplete
 from .ayantdroit_form import *
 
 # immeuble element formset
@@ -71,6 +72,7 @@ class ImmeublesForm(forms.ModelForm):
         }
         widgets = {
             'Date_Construction'  :  forms.TextInput(attrs={'type': 'date'}),
+            'arrondissement': autocomplete.ModelSelect2(url='baux:arrondissement_autocomplete'),
         }
 
     def save(self, commit=True):
@@ -182,6 +184,13 @@ class ImmeublesForm(forms.ModelForm):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
         # Dynamically create fields for each element
         elements = list(ElementDeDescription.objects.all())
+        # manage select 2 input 
+        if 'arrondissement' in self.data:
+            try:
+                arrondissement_id = int(self.data.get('arrondissement'))
+                self.fields['arrondissement'].queryset = Arrondissemements.objects.filter(pk=arrondissement_id)
+            except (ValueError, TypeError):
+                pass
         # 1) Create dynamic fields
         for el in elements:
             self.fields[f"element_{el.pk}_statut"] = forms.BooleanField(

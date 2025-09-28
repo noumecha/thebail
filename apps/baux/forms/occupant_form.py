@@ -27,6 +27,7 @@ class OccupantBureauxForm(forms.ModelForm):
             'Administration_correspondante': autocomplete.ModelSelect2(url='baux:administration_beneficiaire_autocomplete'),
             'Service': autocomplete.ModelSelect2(
                 url='baux:service_autocomplete',
+                forward=['Administration_correspondante'],
             ),
         }
         
@@ -163,7 +164,7 @@ class OccupantsForm(forms.ModelForm):
                             css_class='overflow-hidden form-group col-md-3 mb-0'
                         ),
                         Column(
-                             HTML("""
+                                HTML("""
                                 <tr>
                                 <table id="occupant-collecte-table" class='bg-white table table-bordered mt-2'>
                                     <thead class='thead-dark'>

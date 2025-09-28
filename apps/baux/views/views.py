@@ -1,25 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView, DeleteView, UpdateView
-from django.urls import reverse_lazy
+from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.contrib import messages
 from web_project import TemplateLayout
 from django.template.loader import render_to_string
 from ..models import *
 from ..forms import *
-from django.http import HttpResponse
-import xhtml2pdf.pisa as pisa
-from formtools.wizard.views import SessionWizardView
-from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 from django.core.paginator import Paginator
 from dal import autocomplete
-from django.views.decorators.csrf import csrf_exempt
-from django.forms import modelformset_factory
-import json
-from django.db import transaction
-import traceback
-import sys
 
 # generic partial view function :
 def generic_partial_form_view(request, form_class, success_message):
@@ -67,13 +56,6 @@ def exercice_partial_form_view(request):
         form_class=ExercicesForm,
         success_message='Exercice enregistré avec succès',
     )
-
-"""def bailleur_partial_form_view(request):
-    return generic_partial_form_view(
-        request,
-        form_class=ExercicesForm,
-        success_message='Exercice enregistré avec succès',
-    )"""
 
 #generic view for basic operation 
 class BaseCRUDView(TemplateView):
@@ -478,10 +460,14 @@ class RecensementView(BaseCRUDView):
 class ServiceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Structures.objects.all()
+        # debug utile pendant dev
+        print("GET params:", dict(self.request.GET))
+        print("forwarded:", getattr(self, 'forwarded', None))
         administration_id = self.request.GET.get("administration_id")
-        print("Administration depuis GET:", administration_id)
         if administration_id:
             qs = qs.filter(Administration_id=administration_id)
+        if self.q:
+            qs = qs.filter(LibelleFr__icontains=self.q)
         return qs
     
 class StructureAutocomplete(autocomplete.Select2QuerySetView):
@@ -513,6 +499,15 @@ class BailleurAutocomplete(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(
                 Q(Nom_prenom__icontains=self.q) | Q(Raison_social__icontains=self.q)
+            )
+        return qs
+    
+class ArrondissementAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Arrondissemements.objects.all().order_by('AbreviationFr')
+        if self.q:
+            qs = qs.filter(
+                Q(LibelleFR__icontains=self.q) | Q(AbreviationFr__icontains=self.q)
             )
         return qs
     
