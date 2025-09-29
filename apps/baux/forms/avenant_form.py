@@ -24,7 +24,8 @@ class AvenantsForm(forms.ModelForm):
             "Attestion_domicilliation_bancaire_nouveau",
             "Duree_Contrat_Ancien",
             "Duree_Contrat_Nouveau",
-            "Signataire"
+            "Signataire",
+            "Fichier_avenant"
         )
         labels = {
             "Ref_Avenant" : "Référence de l'avenant",
@@ -41,6 +42,7 @@ class AvenantsForm(forms.ModelForm):
             "Attestion_domicilliation_bancaire_nouveau" : "Nouvelle Attestation de domicilliation bancaire",
             "Duree_Contrat_Ancien" : "Ancienne Durée Contrat",
             "Duree_Contrat_Nouveau" : "Nouvelle Durée Contrat",
+            "Fichier_avenant" : "Fichier numerique Avenant",
         }
         widgets = {
             "Date_Signature" : forms.TextInput(attrs={'type': 'date'}),
@@ -61,6 +63,7 @@ class AvenantsForm(forms.ModelForm):
                         Column(FloatingField("Signataire"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Date_Signature"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Date_effet"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Fichier_avenant"), css_class="overflow-hidden form-group col-md-4 mb-0"),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4"

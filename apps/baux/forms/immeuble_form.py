@@ -32,8 +32,19 @@ class ImmeubleElementForm(forms.ModelForm):
                 ),
                         
             )
+
 # immeubles form
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
 class ImmeublesForm(forms.ModelForm):
+    images = MultipleFileField()
+
     class Meta:
         model = Immeubles
 
@@ -43,7 +54,7 @@ class ImmeublesForm(forms.ModelForm):
             # localisation fields
             "Type_localisation","pays","Ville","Rue","region","departement","arrondissement","Quartier","Coordonee_gps",
             # etat physique du batiement fields
-            "Situation_de_la_batisse","Revetement_interieure","Revetement_exterieure", "observation",
+            "Situation_de_la_batisse","Revetement_interieure","Revetement_exterieure", "observation","images"
         )
         labels = {
             # idenfification labels
@@ -69,6 +80,7 @@ class ImmeublesForm(forms.ModelForm):
             "arrondissement" : "Arrondissement",
             "Quartier" : "Quartier",
             "Coordonee_gps" : "Coordonnées GPS",
+            "images" : "Chargés les images de l'immeuble"
         }
         widgets = {
             'Date_Construction'  :  forms.TextInput(attrs={'type': 'date'}),
@@ -238,6 +250,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Superficie_louer"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Norme"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-4 mb-0'), 
+                        Column(FloatingField("images"), css_class='overflow-hidden form-group col-md-12 mb-0'), 
                         css_class='form-row'
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"

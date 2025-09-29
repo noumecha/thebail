@@ -15,7 +15,7 @@ import string
 import environ
 from pathlib import Path
 from dotenv import load_dotenv
-
+from django.contrib.messages import constants as messages
 from .template import  THEME_LAYOUT_DIR, THEME_VARIABLES
 
 load_dotenv()  # take environment variables from .env.
@@ -102,6 +102,14 @@ MIDDLEWARE = [
     # autoreload on dev mode
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
 
 ROOT_URLCONF = "config.urls"
 

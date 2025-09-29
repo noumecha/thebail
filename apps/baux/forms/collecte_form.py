@@ -27,6 +27,8 @@ class CollectesForm(forms.ModelForm):
             "Regime_fiscal_contrat",
             "Montant_loyer_mensuel",
             "Devise",
+            "RIB_contrat_initial",
+            "Fichier_contrat_initial",
             # Bailleur 
             "Bailleur",
             # Agent 
@@ -52,6 +54,8 @@ class CollectesForm(forms.ModelForm):
             "Regime_fiscal_contrat" : "Régime fiscal",
             "Montant_loyer_mensuel" : "Montant du loyer mensuel(TTC)",
             "Devise" : "Devise",
+            "RIB_contrat_initial" : "RIB Contrat Initial",
+            "Fichier_contrat_initial" : "Fichier Contrat Initial",
             # Bailleur 
             "Bailleur" : "Bailleur",
             # Agent 
@@ -212,6 +216,8 @@ class CollectesForm(forms.ModelForm):
                         Column(FloatingField("Regime_fiscal_contrat"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Montant_loyer_mensuel"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Devise"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("RIB_contrat_initial"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Fichier_contrat_initial"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         css_class="form-row"
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"

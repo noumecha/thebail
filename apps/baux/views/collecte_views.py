@@ -13,6 +13,7 @@ import json
 from django.db import transaction
 import traceback
 import sys
+from django.contrib import messages
 
 # check if instace exist
 def instanceExist(model, idEl, msg):
@@ -58,7 +59,7 @@ class CollecteView(TemplateView):
         context = {"collecte" : collecte}
         html = render_to_string("baux/docs/contrat_doc.html", context)
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="f"contrat_{contrat.numero_contrat}".pdf"'
+        response['Content-Disposition'] = 'attachment; filename="f"contrat_{collecte.numero_contrat}".pdf"'
         pisa_status = pisa.CreatePDF(html, dest=response)
         if pisa_status.err:
             return HttpResponse('Error generating PDF', status=500)
@@ -69,6 +70,12 @@ class CollecteDeleteView(DeleteView):
     template_name = 'baux/collecte_delete.html'
     success_url = reverse_lazy('baux:collecte_list')
 
+    def delete(self, request, *args, **kwargs):
+        # récupère l'objet avant suppression
+        self.object = self.get_object()
+        messages.success(request, f"La fiche de collecte N° {self.object.Numero_fiche_de_collecte} a bien été supprimée !")
+        return super().delete(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["form"] = CollectesForm()
@@ -77,7 +84,7 @@ class CollecteDeleteView(DeleteView):
 @csrf_exempt
 def collecte_create(request):
     if request.method == "POST":
-        collecte_form = CollectesForm(request.POST)
+        collecte_form = CollectesForm(request.POST, request.FILES)
 
         if collecte_form.is_valid():
             #collecte = collecte_form.save()
@@ -85,7 +92,6 @@ def collecte_create(request):
                 with transaction.atomic():
                     collecte = collecte_form.save()
                     bailleurInstance = get_object_or_404(Bailleurs, pk=collecte.Bailleur.pk)
-                    print(bailleurInstance)
                     # Sauvegarde des immeubles 
                     immeubles_json = request.POST.get("immeubles_data")
                     if immeubles_json:
@@ -111,7 +117,7 @@ def collecte_create(request):
                                     Ville=im.get("Ville")
                                 ).exists():
                                     errors.append(
-                                        f"Immeuble {idx+1}: déjà existant (Designation + Ville)."
+                                        f"Immeuble {idx+1} {designation}: déjà existant (Designation + Ville)."
                                     )
 
                                 immeubles_valides.append(im)
@@ -153,6 +159,10 @@ def collecte_create(request):
                                     Revetement_exterieure=revExt,
                                     observation=im.get("observation"),
                                 )
+                                # Récupération des fichiers envoyés
+                                files = request.FILES.getlist("immeuble_images")
+                                for f in files:
+                                    ImmeubleImage.objects.create(immeuble=immeuble, image=f)
 
                                 # éléments dynamiques liés à l’immeuble
                                 for el in im.get("elements", []):
@@ -194,6 +204,9 @@ def collecte_create(request):
                                 # getting proper instance base on id
                                 ancienbailleur = instanceExist(Bailleurs, a.get('ancienBailleur'), "Ancien Bailleur selectionné non existant")
                                 nouveaubailleur = instanceExist(Bailleurs, a.get('nouveauBailleur'), "Nouveau Bailleur selectionné non existant")
+                                # Récupérer le fichier associé si présent
+                                file_field_name = f"fichier_avenant_{a.get('ref')}"
+                                fichier_avenant = request.FILES.get(file_field_name)
                                 # 
                                 Avenants.objects.create(
                                     collecte=collecte,
@@ -210,6 +223,7 @@ def collecte_create(request):
                                     Attestion_domicilliation_bancaire_nouveau=a.get('attestationNouveau'),
                                     Duree_Contrat_Ancien=a.get('dureeAncien'),
                                     Duree_Contrat_Nouveau=a.get('dureeNouveau'),
+                                    Fichier_avenant=fichier_avenant  # ⚡ Le fichier unique
                                 )
                         except json.JSONDecodeError:
                             return JsonResponse({"success": False, "errors": "Erreur lors du décodage des avenants."}, status=400)
@@ -224,6 +238,10 @@ def collecte_create(request):
                                 exercice = instanceExist(Exercice, n.get('exercice'), "Exercice selectionné non existant")
                                 #
                                 mois = n.get('mois', {})
+                                # gestion du fichier
+                                uid = n.get("uid")
+                                fichier = request.FILES.get(f"nonmandatement_file_{uid}")
+                                #
                                 Non_Mandatement.objects.create(
                                     Exercice=exercice,
                                     Loyer_Mensuel=n.get('loyer'),#Loyer_Mensuel
@@ -245,6 +263,7 @@ def collecte_create(request):
                                     Ref_contrat_avenant=n.get('refContrat'),#Ref_contrat_avenant
                                     Bailleur=collecte.Bailleur,
                                     Bailleur_id=collecte.Bailleur.pk,
+                                    Fichier_nonmandatement=fichier if fichier else None
                                 )
                         except json.JSONDecodeError:
                             return JsonResponse({"success": False, "errors": "Erreur lors du décodage des attestation de non mandatement."}, status=400)

@@ -10,7 +10,15 @@
 {% block content %}
     <div class="card mt-3 p-3">
         <h1>Listes de fiches de collectes</h1>
-        <div > 
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+        <div >
             <table class="table table-sm">
                 <tr>
                     <th>Numero de fiche </th>
@@ -23,9 +31,9 @@
                     <th>Montant loyer mensuel</th>
                     <th>Action</th>
                 </tr>
-                 
+                
                 {% for collecte in collecteList %}
-                   <tr>
+                  <tr>
                         {% if form.instance.id == collecte.id %}
                         {% include 'baux/savecollecte.html' %}
                         {% else %}
@@ -44,17 +52,45 @@
                                   <a class="disabled dropdown-item primary" href="{% url 'baux:collecte_update' collecte.id %}">
                                     <i class="bx bx-edit-alt me-1"></i>Modifier
                                   </a>
-                                  <a href="{% url 'baux:collecte_delete' collecte.id %}" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
-                                    <i class="bx bx-trash me-1"></i>Supprimer
+                                  <a href="#"
+                                      class="dropdown-item btn-success delete-fichecollecte"
+                                      data-bs-target="#delete-fichecollecte-modal-{{ collecte.id }}"
+                                      data-bs-toggle="modal"
+                                  >
+                                      <i class="bx bx-trash me-1"></i>Supprimer
                                   </a>
-                                  <a href="{% url 'baux:collecte_print' collecte.id %}" class="disabled dropdown-item">
+                                  <a href="{% url 'baux:collecte_print' collecte.id %}" class="dropdown-item">
                                     <i class="bx bx-printer me-1"></i>Imprimer le contrat
                                   </a>
+                                </div>
+                                <!-- delete typecontrat -->
+                                <div class="modal fade" id="delete-fichecollecte-modal-{{ collecte.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content p-0">
+                                            <form action="{% url 'baux:collecte_delete' collecte.id %}" method="post" id="delete-fichecollecte-form">
+                                                {% csrf_token %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Suppression d'une fiche de collecte</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id="modal-content-message">
+                                                        Voulez vous vraiment supprimer la fiche de collecte N° {{ collecte.Numero_fiche_de_collecte }} ?
+                                                    </div>
+                                                    <input type="hidden" value="{{ collecte.id }}" name="id" id="delete-fichecollecte-input-id">
+                                                </div>
+                                                <div class="modal-footer flex-row-reverse">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                                    <button type="submit" class="btn btn-primary">Supprimer</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                               </div>
                             </td>
                         {% endif %}
-                     </tr>
+                    </tr>
                 {% endfor %}
 
             </table>

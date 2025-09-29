@@ -444,7 +444,7 @@ def immeuble_partial_form_view(request):
         html = render_to_string('baux/partials/immeuble_modal_form.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
 
-# recensements views        
+# recensements views
 class RecensementView(BaseCRUDView):
     model = Recensements
     form_class = RecensementsForm
@@ -454,22 +454,32 @@ class RecensementView(BaseCRUDView):
     context_object_name = 'recensements'
     search_fields = ['Immeuble__Designation','Type_immeuble','Type_mur']
 
-# Contrat Class and views : 
-
-# autopcomplete task in partialing form 
+# autopcomplete task in partialing form
 class ServiceAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Structures.objects.all()
         # debug utile pendant dev
-        print("GET params:", dict(self.request.GET))
+        print("GET params:", self.request)
         print("forwarded:", getattr(self, 'forwarded', None))
-        administration_id = self.request.GET.get("administration_id")
-        if administration_id:
-            qs = qs.filter(Administration_id=administration_id)
+        # 1) Valeur forwardée par DAL
+        administration_val = None
+        if hasattr(self, 'forwarded'):
+            administration_val = self.forwarded.get('Administration_correspondante')
+        # 2) Autres formes possibles (au cas où)
+        if not administration_val:
+            administration_val = self.request.GET.get('administration_id') or self.request.GET.get('forward[Administration_correspondante]')
+        if administration_val:
+            # éventuellement caster en int si nécessaire
+            try:
+                administration_val = int(administration_val)
+                qs = qs.filter(Administration_id=administration_val)
+            except (ValueError, TypeError):
+                # cas où forwarded donne une chaîne (par ex. label) : essayer filtre par nom si besoin
+                qs = qs.filter(Administration__Nom__icontains=str(administration_val))
         if self.q:
             qs = qs.filter(LibelleFr__icontains=self.q)
         return qs
-    
+
 class StructureAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Structures.objects.all()

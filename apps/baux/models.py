@@ -580,6 +580,17 @@ class Immeubles (models.Model):
     def nombre_de_recensements(self):
         return self.immeuble_recensement.count()
 
+class ImmeubleImage(models.Model):
+    immeuble = models.ForeignKey(
+        Immeubles,
+        on_delete=models.CASCADE,
+        related_name="immeuble_images"
+    )
+    image = models.ImageField(upload_to="immeubles/")
+
+    def __str__(self):
+        return f"Image de {self.immeuble.Designation}"
+
 # Recensements model
 class Recensements(models.Model):
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
@@ -747,7 +758,8 @@ class Collectes (models.Model):
     Regime_fiscal_contrat = models.CharField(max_length=50,null=True)
     Montant_loyer_mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Devise = models.CharField(choices=DEVISES, max_length=5, null=True)
-    # avenant informations 
+    RIB_contrat_initial =  models.CharField(max_length=26, null=True)
+    Fichier_contrat_initial = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     Existance_avenant = models.BooleanField(
         max_length=1,
         choices=EXISTANCE_AVENANT,
@@ -836,6 +848,7 @@ class Avenants (models.Model):
     Attestion_domicilliation_bancaire_nouveau = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     Duree_Contrat_Ancien = models.CharField(max_length=10, blank = True,null= True)
     Duree_Contrat_Nouveau = models.CharField(max_length=10, blank = True,null= True)
+    Fichier_avenant = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     # informations DB stats
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -874,7 +887,8 @@ class Non_Mandatement (models.Model):
     Ref_contrat_avenant = models.CharField(max_length=50, null=True, blank=True)
     # relations 
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur_non_mandatement")
-    # 
+    #
+    Fichier_nonmandatement = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     #Etat = models.CharField(choices=TYPE_DOSSIER, max_length=12, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)

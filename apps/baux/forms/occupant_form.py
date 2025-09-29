@@ -152,11 +152,11 @@ class OccupantsForm(forms.ModelForm):
                         Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(
                             HTML("""
-                                <button type="button" 
-                                    class="btn btn-outline-primary add-form" 
+                                <button type="button"
+                                    class="btn btn-outline-primary add-form"
                                     id="occupant-collecte-add-btn"
                                     data-formset="occupants_residence"
-                                    data-table="occupant-collecte-table"> 
+                                    data-table="occupant-collecte-table">
                                     + Ajouter à la liste
                                 </button>
                             """

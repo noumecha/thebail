@@ -12,7 +12,7 @@ class NonMandatementForm(forms.ModelForm):
         fields = (
             "Exercice","Loyer_Mensuel","Ref_Attestattion","janvier","fevrier","mars","avril",
             "mai","juin","juillet","aout","septembre","octobre","novembre","decembre","Montant_total_exercice",
-            "Visa_budgétaire","Ref_contrat_avenant",#"Etat","Date_signature",
+            "Visa_budgétaire","Ref_contrat_avenant","Fichier_nonmandatement"
         )
         labels = {
             "Exercice" : "Exercice",
@@ -35,6 +35,7 @@ class NonMandatementForm(forms.ModelForm):
             #"Visa_budgétaire" : "Visa budgétaire / Signature CF ?",
             "Ref_contrat_avenant" : "Reference Contrat / Avenant",
             #"Etat" : "Etat",
+            "Fichier_nonmandatement" : "Fichier Numerique"
         }
         widgets = {
             "Date_signature"  :  forms.TextInput(attrs={'type': 'date'}),
@@ -64,7 +65,7 @@ class NonMandatementForm(forms.ModelForm):
                         ),
                         Column(FloatingField("Loyer_Mensuel"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Ref_Attestattion"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                        #Column(FloatingField("Date_signature"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Fichier_nonmandatement"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         #Column(FloatingField("Etat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),

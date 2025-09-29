@@ -37,12 +37,14 @@ $(function () {
         $entry.find('.nouveau-duree').text(dureeNouveau);
 
         // Stocker les données dans un attribut data
+        const fichierAvenant = $('#id_avenants-0-Fichier_avenant')[0].files[0];
         $entry.data('avenant', {
             ref, ancienBailleur, nouveauBailleur,
             montantAncien, montantNouveau,
             attestationAncien, attestationNouveau,
             dureeAncien, dureeNouveau, dateSignature, dateEffet,
-            modificationApportee, localite
+            modificationApportee, localite,
+            fichier: fichierAvenant // ⚡ On stocke le fichier ici
         });
 
         // Ajouter au DOM

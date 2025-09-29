@@ -88,8 +88,15 @@ $(function () {
             return;
         }
 
+        // Récupération du fichier
+        let fileInput = $(`${prefix}Fichier_nonmandatement`)[0];
+        let file = fileInput && fileInput.files.length > 0 ? fileInput.files[0] : null;
+
+        // Générer un identifiant unique pour relier la ligne à son fichier
+        let uid = Date.now() + "_" + Math.floor(Math.random() * 1000);
+
         let row = `
-            <tr data='nonmandatement'>
+            <tr data='nonmandatement' data-uid="${uid}">
                 <td><input type="hidden" name="Exercice_hidden[]" value="${exercice}">${exerciceText}</td>
                 <td><input type="hidden" name="Loyer_hidden[]" value="${loyer}">${loyer}</td>
                 <td><input type="hidden" name="Ref_Attestattion_hidden[]" value="${refAttestation}">${refAttestation}</td>
@@ -98,6 +105,7 @@ $(function () {
                 <td><input type="hidden" name="Montant_total_hidden[]" value="${montantTotal}">${montantTotal}</td>
                 <td><input type="hidden" name="Visa_hidden[]" value="${visa}">${visa === true ? "oui" : "non"}</td>
                 <td><input type="hidden" name="Ref_contrat_hidden[]" value="${refContrat}">${refContrat}</td>
+                <td><input type="hidden" name="uid_hidden[]" value="${uid}"></td>
                 <td>
                     <button type="button" class="btn btn-sm btn-warning edit-nonmandatement">Éditer</button>
                     <button type="button" class="btn btn-sm btn-danger delete-nonmandatement">Supprimer</button>
@@ -107,6 +115,13 @@ $(function () {
 
         $('#nonmandatement-collecte-table tbody').append(row);
         $emptyRow.hide();
+
+        // Ajouter le fichier au FormData (global)
+        if (file) {
+            window.nonMandatementFiles = window.nonMandatementFiles || {};
+            window.nonMandatementFiles[uid] = file;
+        }
+
         resetNonMandatementForm();
     });
 

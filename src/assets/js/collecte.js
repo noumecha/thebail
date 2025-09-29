@@ -385,7 +385,13 @@ $(function () {
         // getting avenant form collecte form
         $('#avenant-collecte-list .avenant-entry').each(function () {
             let data = $(this).data('avenant');
-            avenants.push(data); // Chaque data est un objet avenant
+            let { fichier, ...jsonData } = data;
+            //avenants.push(data);
+            avenants.push(jsonData);
+            // On attache le fichier à FormData avec un nom unique
+            if (fichier) {
+                formData.append(`fichier_avenant_${jsonData.ref}`, fichier);
+            }
         });
 
         // Validation JS for pieces collectes
@@ -399,15 +405,30 @@ $(function () {
             showAlertMessage(immeublesElementsErrors, '#form-error-collecte');
             return;
         }
-
-        console.log(nonMandatements);
+        console.log("non mandatements datas : " + nonMandatements);
         formData.append('pieces_data', JSON.stringify(pieces));
+        // manage avenant datas
         formData.append('avenants_data', JSON.stringify(avenants));
+        //
         formData.append('ayants_droits_data', JSON.stringify(ayants_droits));
+        // manage nonmandatement datas
         formData.append('nonmandatements_data', JSON.stringify(nonMandatements));
+        if (window.nonMandatementFiles) {// Ajouter les fichiers liés
+            for (let uid in window.nonMandatementFiles) {
+                formData.append(`nonmandatement_file_${uid}`, window.nonMandatementFiles[uid]);
+            }
+        }
         formData.append('occupantsResidences_data', JSON.stringify(occupantsResidences));
         formData.append('occupantsBureaux_data', JSON.stringify(occupantsBureaux));
+        // manage immeuble datas
         formData.append('immeubles_data', JSON.stringify(immeubles));
+        let fileInput = $("#immeubles-0").find("input[type='file'][name$='images']")[0]; // adding image files
+        if (fileInput && fileInput.files.length > 0) {
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append("immeuble_images", fileInput.files[i]);
+            }
+        }
+        console.log("images for immeuble : " + fileInput)
         $.ajax({
             url: "/collecte/create",
             type: "POST",
