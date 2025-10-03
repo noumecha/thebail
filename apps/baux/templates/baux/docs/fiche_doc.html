@@ -15,14 +15,14 @@
             }
             .footer {
                 position: fixed;
-                bottom: 1cm;
-                left: 1cm;
-                right: 1cm;
+                bottom: 0.5cm;
+                left: 0.5cm;
+                right: 0.5cm;
                 width: calc(100% - 2cm); /* total page width minus margins */
                 display: flex;
                 justify-content: center; /* text on left, QR on right */
                 align-items: center; /* vertically centered */
-                font-size: 18px;
+                font-size: 14px;
                 color: black;
                 z-index: 1000;
             }
@@ -126,7 +126,6 @@
         </div>
 
         <!-- section 1 informations sur l'immeuble-->
-        {% if immeuble %}
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -135,6 +134,7 @@
                         </h3>
                     </div>
                 </div>
+                {% if immeuble %}
                 <!-- identification -->
                 <div class="row">
                     <div class="col-12">
@@ -166,7 +166,7 @@
                                     <td class="px-1 m-0">
                                         <div class="row">
                                             {% for typeconstruction in typeconstructions %}
-                                            <label class="col-3 d-flex align-items-center custom-checkbox-container">
+                                            <label class="col-auto d-flex align-items-center ">
                                                 <input type="checkbox"
                                                     {% if immeuble.Construction == typeconstruction %}checked{% endif %}>
                                                 <span class="px-1 checkmark">{{ typeconstruction.libelle }}</span>
@@ -219,7 +219,7 @@
                                     <td class="p-2 m-0">
                                         <div class="row">
                                             {% for value, label in typelocations %}
-                                            <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                            <label class="col-auto d-flex align-items-center ">
                                                 <input type="checkbox" {% if immeuble.Type_location == value %}checked{% endif %}>
                                                 <span class="px-1 checkmark">{{ label }}</span>
                                             </label>
@@ -337,7 +337,7 @@
                                     <td colspan="2" class="px-1 m-0">
                                         <div class="row">
                                             {% for value, label in situationbatisses %}
-                                            <label class="col-4 d-flex align-items-center custom-checkbox-container">
+                                            <label class="col-4 d-flex align-items-center ">
                                                 <input type="checkbox" {% if immeuble.Situation_de_la_batisse == value %}checked{% endif %}>
                                                 <span class="px-1 checkmark">{{ label }}</span>
                                             </label>
@@ -358,7 +358,7 @@
                                     <td class="px-1 m-0">
                                         <div class="row">
                                             {% for obj in revetints %}
-                                            <label class="col-3 d-flex align-items-center custom-checkbox-container">
+                                            <label class="col-3 d-flex align-items-center ">
                                                 <input type="checkbox"
                                                     {% if immeuble.Revetement_interieure == obj %}checked{% endif %}>
                                                 <span class="px-1 checkmark">{{ obj.libelle }}</span>
@@ -380,7 +380,7 @@
                                     <td class="px-1 m-0">
                                         <div class="row">
                                             {% for obj in revetexts %}
-                                            <label class="col-3 d-flex align-items-center custom-checkbox-container">
+                                            <label class="col-3 d-flex align-items-center ">
                                                 <input type="checkbox"
                                                     {% if immeuble.Revetement_exterieure == obj %}checked{% endif %}>
                                                 <span class="px-1 checkmark">{{ obj.libelle }}</span>
@@ -432,11 +432,11 @@
                                             <tr>
                                                 <td colspan="2" class="p-0 m-0">
                                                     <div class="row d-flex">
-                                                        <label class="col d-flex align-items-center custom-checkbox-container">
+                                                        <label class="col d-flex align-items-center ">
                                                             <input type="checkbox" {% if imel and imel.statut %}checked{% endif %}>
                                                             <span class="px-1 checkmark">Oui</span>
                                                         </label>
-                                                        <label class="col d-flex align-items-center custom-checkbox-container">
+                                                        <label class="col d-flex align-items-center ">
                                                             <input type="checkbox" {% if imel and imel.statut == False %}checked{% endif %}>
                                                             <span class="px-1 checkmark">Non</span>
                                                         </label>
@@ -554,8 +554,16 @@
                         </div>
                     </div>
                 </div>
-            {% endif %}
-        </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class='text-center'>
+                            Aucun immeuble lié
+                        </h6>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
 
         <!-- section 2 information contractuelles -->
         <div class="container">
@@ -581,7 +589,7 @@
                                 <td colspan="2" class="px-1 m-0">
                                     <div class="row">
                                         {% for obj in typologiescontrats %}
-                                        <label class="col-4 d-flex align-items-center custom-checkbox-container">
+                                        <label class="col-4 d-flex align-items-center ">
                                             <input type="checkbox" {% if collecte.TypeContrat == obj %}checked{% endif %}>
                                             <span class="px-1 checkmark">{{ obj.libelle }}</span>
                                         </label>
@@ -720,8 +728,8 @@
                                             </table>
                                         </div>
                                         {% empty %}
-                                        <tr>
-                                            <td colspan="10">
+                                        <tr colspan="10">
+                                            <td>
                                                 Aucun avenant trouvé !
                                             </td>
                                         </tr>
@@ -738,16 +746,10 @@
                                 <td class="p-2 m-0">
                                     <div class="row">
                                         {% for value, label in periodicitereglements %}
-                                        <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                        <label class="col-auto d-flex align-items-center ">
                                             <input type="checkbox" {% if collecte.Periodicite_Reglement == value %}checked{% endif %}>
                                             <span class="px-1 checkmark">{{ label }}</span>
                                         </label>
-                                        {% empty %}
-                                        <tr colspan="10">
-                                            <td>
-                                                Aucune périodicité de règlement défini !
-                                            </td>
-                                        </tr>
                                         {% endfor %}
                                     </div>
                                 </td>
@@ -776,7 +778,7 @@
                                 <td class="px-1 m-0">
                                     <div class="row">
                                         {% for value, label in typepersonnes %}
-                                        <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                        <label class="col-auto d-flex align-items-center ">
                                             <input type="checkbox" {% if bailleur.Type_personne == value %}checked{% endif %}>
                                             <span class="px-1 checkmark">{{ label }}</span>
                                         </label>
@@ -834,16 +836,10 @@
                                     </ul>
                                     <div class="row">
                                         {% for value, label in statutsbailleur %}
-                                        <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                        <label class="col-auto d-flex align-items-center ">
                                             <input type="checkbox" {% if bailleur.Statut_bailleur == value %}checked{% endif %}>
                                             <span class="px-1 checkmark">{{ label }}</span>
                                         </label>
-                                        {% empty %}
-                                        <tr colspan="10">
-                                            <td>
-                                                Aucun statut de bailleur défini !
-                                            </td>
-                                        </tr>
                                         {% endfor %}
                                     </div>
                                 </td>
@@ -1059,7 +1055,7 @@
                                         <tr>
                                             <td class="px-1 m-0">
                                                 <div class="row d-flex">
-                                                    <label class="col d-flex align-items-center custom-checkbox-container">
+                                                    <label class="col d-flex align-items-center ">
                                                         <input type="checkbox" {% if piececol and piececol.statut %}checked{% endif %}>
                                                         {{ el.libelle }}
                                                     </label>
@@ -1084,7 +1080,6 @@
         <!-- Footer fixed at bottom -->
         <div class="footer">
             <div class="footer-text">
-                Page {{ page_number }} sur {{ total_pages }} | 
                 Opération de recensement des contrats des baux 
                 sur l'étendue du territoire National et à l'étranger (Générer le : {{ now|date:"d/m/Y H:i" }})
             </div>
