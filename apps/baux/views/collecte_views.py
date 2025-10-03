@@ -14,6 +14,12 @@ from django.db import transaction
 import traceback
 import sys
 from django.contrib import messages
+from weasyprint import HTML, CSS
+import os
+from django.conf import settings
+import qrcode
+import base64
+from io import BytesIO
 
 # check if instace exist
 def instanceExist(model, idEl, msg):
@@ -27,6 +33,25 @@ def instanceExist(model, idEl, msg):
         return instance
     else:
         return JsonResponse({"success": False, "errors": msg}, status=400)
+
+def chunk_list(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i+n]
+
+def generate_qr_code(data: str):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=5,
+        border=1,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    img_str = base64.b64encode(buffer.getvalue()).decode()
+    return f"data:image/png;base64,{img_str}"
 
 # collecte view
 class CollecteView(TemplateView):
@@ -59,11 +84,86 @@ class CollecteView(TemplateView):
         context = {"collecte" : collecte}
         html = render_to_string("baux/docs/contrat_doc.html", context)
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="f"contrat_{collecte.numero_contrat}".pdf"'
+        response['Content-Disposition'] = f'attachment; filename="fiche_collecte_{collecte.Numero_fiche_de_collecte}.pdf"'
         pisa_status = pisa.CreatePDF(html, dest=response)
         if pisa_status.err:
             return HttpResponse('Error generating PDF', status=500)
         return response
+
+    def printfiche(request, pk):
+        collecte = get_object_or_404(Collectes, pk=pk)
+        immeuble = Immeubles.objects.filter(Collecte=collecte).first()
+        typeconstructions = TypeConstructions.objects.all()
+        typelocations = TYPE_LOCATION
+        situationbatisses = STATUT_BATISSE
+        revetints = RevetementInts.objects.all()
+        revetexts = RevetementExts.objects.all()
+        # elements in immeuble
+        elements = list(ElementDeDescription.objects.all().order_by('id'))
+        immeubleelements_qs = ImmeubleElement.objects.filter(immeuble=immeuble)
+        immeuble_elements_map = {imel.element_id: imel for imel in immeubleelements_qs}
+        element_groups = list(chunk_list(elements, 9))
+        # occupants
+        occresisendes = Occupants.objects.filter(Immeuble=immeuble)
+        occbureaux = OccupantBureaux.objects.filter(Immeuble=immeuble)
+        #
+        typologiescontrats = TypeContrats.objects.all()
+        #
+        periodicitereglements = PERIODICITE_LOYER
+        # avenant
+        avenants = Avenants.objects.filter(collecte=collecte)[:2]
+        # bailleurs
+        bailleur = collecte.Bailleur
+        typepersonnes = TYPE_PERSONNE
+        statutsbailleur = STATUT_BAILLEUR
+        ayantdroits = Ayant_droits.objects.filter(Bailleur=bailleur)
+        nommandatements = Non_Mandatement.objects.filter(Bailleur=bailleur)
+        # pieces on collecte
+        pieces = list(Pieces.objects.all().order_by('id'))
+        pieceselements_qs = PieceCollectes.objects.filter(Collecte_id=collecte.pk)
+        pieces_map = {el.Piece_id: el for el in pieceselements_qs}
+        pieces_groups = list(chunk_list(pieces, 4))
+        # qr code 
+        qr_data = f"Fiche collecte n° {collecte.Numero_fiche_de_collecte}"  # or a URL
+        qr_code_img = generate_qr_code(qr_data)
+        # context
+        context = {
+            "collecte" : collecte,
+            "immeuble" : immeuble,
+            "typeconstructions" : typeconstructions,
+            "typelocations" : typelocations,
+            "situationbatisses" : situationbatisses,
+            "revetints" : revetints,
+            "revetexts" : revetexts,
+            "elements_groups": element_groups,
+            "immeuble_elements_map": immeuble_elements_map,
+            "occresisendes" : occresisendes,
+            "occbureaux" : occbureaux,
+            "typologiescontrats" : typologiescontrats,
+            "periodicitereglements" : periodicitereglements,
+            "avenants" : avenants,
+            "bailleur" : bailleur,
+            "typersonnes" : typepersonnes,
+            "statutsbailleur" : statutsbailleur,
+            "ayantdroits" : ayantdroits,
+            "nommandatements" : nommandatements,
+            "pieces_groups" : pieces_groups,
+            "pieces_map" : pieces_map,
+            # for styles
+            "base_url": request.build_absolute_uri("/").rstrip('/'),
+            "now": timezone.now(),
+            "qr_code_img" : qr_code_img
+        }
+        html = render_to_string("baux/docs/fiche_doc.html", context)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="fiche_collecte_{collecte.Numero_fiche_de_collecte}.pdf"'
+        css_files = [
+            CSS(filename=os.path.join(settings.STATIC_ROOT, 'css/bootstrap.min.css')),
+            CSS(filename=os.path.join(settings.STATIC_ROOT, 'css/style.css')),
+        ]
+        HTML(string=html).write_pdf(response, stylesheets=css_files)
+        return response
+
 
 class CollecteDeleteView(DeleteView):
     model = Collectes

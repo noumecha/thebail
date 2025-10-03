@@ -10,7 +10,6 @@ from django.utils import timezone
 MORAL = 1
 PHYSIQUE = 2
 TYPE_PERSONNE = (
-        ('', 'Selectionnez le type de personnalité juridique'),
         (str(MORAL), '1 - Personne Morale'),
         (str(PHYSIQUE), '2 - Personne Physique'),
     )
@@ -33,7 +32,6 @@ POSITION_GPS = (
         (str(Est), 'E - EST'),
     )
 STATUT_BATISSE = (
-    ('', 'Choisir le statut de la batisse'),
     (str(1), '1 - Bâtisse occupée'),
     (str(2), '2 - Bâtisse non-occupée'),
     (str(3), '3 - Bâtisse en bon état'),
@@ -49,14 +47,13 @@ DA=4
 CO=5
 SI=6
 TYPE_LOCATION = (
-    ('', 'Choisir le type de location'),
     (str(LB), '1 - Location Pour Bureaux'),
     (str(LP), '2 - Location pour logement'),
     (str(DI), '3 - Domicile'),
     (str(DA), '4 - Domanial'),
     (str(CO), '5 - Conventionné'),
     (str(SI), '6 - Sic'),
-)  
+)
 
 EX = 1
 NA = 2
@@ -71,7 +68,6 @@ trimestriel='T'
 Semestriel ='S'
 Annuel='A'
 PERIODICITE_LOYER = (
-        ('', 'Choose DELAY FOR rent payment'),
         (str(Mensuel), '1 - Mensuellement'),
         (str(trimestriel), '2 - Trimestriellement'),
         (str(Semestriel), '3 - Semestriellement'),
@@ -91,7 +87,7 @@ TYPE_DOSSIER = (
         ('', 'Choose type of FILES'),
         (str(M), '1 - facture payée (mandatée)'),
         (str(N), '2 - facture non-payée (non-mandatée)'),
-     )  
+    )
 V = 'VILLA'
 D = 'DUPLEX'
 A = 'AUTRES'
@@ -569,7 +565,9 @@ class Immeubles (models.Model):
     # many to many relationship with ElementDeDescription through ImmeubleElement --> description de la batisse
     elements = models.ManyToManyField(ElementDeDescription, through="ImmeubleElement")
     # relationship 
-    Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, null=True, related_name="collecte_immeuble", blank=True)
+    #Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, null=True, related_name="collecte_immeuble", blank=True)
+    Collecte = models.OneToOneField("Collectes", on_delete=models.CASCADE, related_name="immeuble", null=True, blank=True)
+
     # 
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -892,6 +890,14 @@ class Non_Mandatement (models.Model):
     #Etat = models.CharField(choices=TYPE_DOSSIER, max_length=12, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
+
+    def mois_status(self):
+        """Return a list of (month_name, value) for easy template loop"""
+        months = [
+            'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+        ]
+        return [(m, getattr(self, m)) for m in months]
 
     def __str__(self):
         return f"Non Mandatement {self.Ref_Attestattion} ({self.Exercice}) "

@@ -535,7 +535,7 @@ def get_localisation_datas(request):
             #
             number = Immeubles.objects.filter(region=region, departement=departement, Collecte__isnull=False).count()
             numero = number + 1
-            numero_collecte = f"{region.Libelle[:2]}-{dpt.LibelleFR[:3]}-{numero:04d}"
+            numero_collecte = f"{region.Libelle[:2]}-{dpt.LibelleFR[:3]}-{arrondissement.LibelleFR[:3]}-{numero:04d}"
             return JsonResponse({
                 'region_id': region.id,
                 'dpt_id' : dpt.id,

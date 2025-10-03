@@ -1,0 +1,1086 @@
+{% load static %}
+{% load i18n %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>fiche de collecte</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+        <style>
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+                @bottom-center {
+                    content: "Page " counter(page) " sur " counter(pages) "\A"
+                    "Opération de recensement des contrats des baux sur l'étendue du territoire National et à l'étranger ({{ now|date:'d/m/Y H:i' }})";
+                    font-size: 15px;
+                    position: fixed;
+                    bottom: 1cm;
+                    left: 3cm;
+                    color: black;
+                    white-space: pre; /* this is important to make \A work */
+                }
+                
+            }
+            .qr-footer {
+                position: fixed;
+                bottom: 1cm;
+                left: 1cm;
+                width: 50px;
+                height: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- header -->
+        <div class="container">
+            <div class="row">
+                <div class="col-4 d-flex flex-column">
+                    <h6 class="text-uppercase text-center">
+                        Republique du cameroun
+                    </h6>
+                    <span class="text-center">
+                        Paix - Travail - Patrie
+                    </span>
+                    <span class="text-center">
+                        *******
+                    </span>
+                    <h6 class="text-uppercase text-center">
+                        Ministere des finances
+                    </h6>
+                    <span class="text-center">
+                        *******
+                    </span class="text-center">
+                    <h6 class="text-uppercase text-center">
+                        secretariat general
+                    </h6>
+                    <span class="text-center">
+                        *******
+                    </span>
+                </div>
+                <div class="col-4 d-flex">
+
+                </div>
+                <div class="col-4 d-flex flex-column">
+                    <h6 class="text-uppercase text-center">
+                        Republic of cameroon
+                    </h6>
+                    <span class="text-center">
+                        Peace - Work - Fatherland
+                    </span>
+                    <span class="text-center">
+                        *******
+                    </span>
+                    <h6 class="text-uppercase text-center">
+                        Ministry of finance
+                    </h6>
+                    <span class="text-center">
+                        *******
+                    </span class="text-center">
+                    <h6 class="text-uppercase text-center">
+                        general secretary
+                    </h6>
+                    <span class="text-center">
+                        *******
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class='bg-secondary fw-bold text-uppercase text-center p-2 mt-2 mb-2'>
+                        fiche collecte n° {{ collecte.Numero_fiche_de_collecte }}
+                    </h1>
+                </div>
+                <div class="col-12">
+                    <h3 class='bg-secondary-subtle fw-bold text-uppercase text-center'>
+                        collecte d'informations sur les contrats de logements administratifs
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-flex">
+                    <h4 class='text-uppercase'>
+                        agent de collecte :
+                        <span class='bg-secondary-subtle'>
+                            {{ collecte.Agent.Nom }} {{ collecte.Agent.Prenom }}
+                        </span>
+                    </h4>
+                </div>
+                <div class="col">
+                    <h4 class='text-uppercase'>
+                        matricule agent de collecte :
+                        <span class='bg-secondary-subtle'>{{ collecte.Agent.Matricule }}</span>
+                    </h4>
+                </div>
+                <div class="col-4">
+                    <h4 class='text-uppercase'>
+                        date de collecte :
+                        <span class='bg-secondary-subtle'>{{ collecte.Date_de_collecte }}</span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- section 1 informations sur l'immeuble-->
+        {% if immeuble %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class='bg-secondary-subtle fw-bold text-uppercase text-left'>
+                            SECTION 1. - informations sur l'immeuble
+                        </h3>
+                    </div>
+                </div>
+                <!-- identification -->
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class='text-uppercase fw-bold text-left p-0 m-0'>
+                            I. identification
+                        </h4>
+                    </div>
+                    <div class="col-12">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <h6 class="">
+                                            a. - Désignation du bien
+                                        </h6>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <span class='px-1 m-0 bg-secondary-subtle'>
+                                            {{ immeuble.Designation }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <h6 class="">
+                                            b. - Type de contruction
+                                        </h6>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <div class="row">
+                                            {% for typeconstruction in typeconstructions %}
+                                            <label class="col-3 d-flex align-items-center custom-checkbox-container">
+                                                <input type="checkbox"
+                                                    {% if immeuble.Construction == typeconstruction %}checked{% endif %}>
+                                                <span class="px-1 checkmark">{{ typeconstruction.libelle }}</span>
+                                            </label>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <h6 class="">
+                                            c. - Caractéristiques
+                                        </h6>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <ul class="row d-flex">
+                                            <li class="col-6">
+                                                Date construction :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.Date_Construction }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Nombre Total de pièce :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.Nombre_de_pieces }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Superficie Louée(m²) :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.Superficie_louer }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Norme cadastrale :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.Norme }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <h6 class="">
+                                            d. - Type de location
+                                        </h6>
+                                    </td>
+                                    <td class="p-2 m-0">
+                                        <div class="row">
+                                            {% for value, label in typelocations %}
+                                            <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                                <input type="checkbox" {% if immeuble.Type_location == value %}checked{% endif %}>
+                                                <span class="px-1 checkmark">{{ label }}</span>
+                                            </label>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- localisation -->
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class='text-uppercase fw-bold text-left p-0 m-0'>
+                            II. Localisation
+                        </h4>
+                    </div>
+                    <div class="col-12">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <h6 class="">
+                                            a. - Représentation Diplomatique
+                                        </h6>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <ul class="row d-flex">
+                                            <li class="col-6">
+                                                Pays :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.pays }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Ville :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.Ville }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Rue :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.Rue }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <h6 class="">
+                                            b. - National
+                                        </h6>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <ul class="row d-flex">
+                                            <li class="col-6">
+                                                Région :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.region }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Département :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.departement }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Arrondissement :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.arrondissement }}
+                                                </span>
+                                            </li>
+                                            <li class="col-6">
+                                                Quartier :
+                                                <span class='bg-secondary-subtle'>
+                                                    {{ immeuble.Quartier }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <h6 class="">
+                                            c. - Coordonnées GPS
+                                        </h6>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <span class='px-1 m-0 bg-secondary-subtle'>
+                                            {{ immeuble.Coordonee_gps }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- etat physique du batiment -->
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class='bg-secondary-subtle text-uppercase fw-bold text-left p-0 m-0'>
+                            III. Etat physique du batiment
+                        </h4>
+                    </div>
+                    <div class="col-12">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" class="px-1 m-0">
+                                        <div class="row">
+                                            {% for value, label in situationbatisses %}
+                                            <label class="col-4 d-flex align-items-center custom-checkbox-container">
+                                                <input type="checkbox" {% if immeuble.Situation_de_la_batisse == value %}checked{% endif %}>
+                                                <span class="px-1 checkmark">{{ label }}</span>
+                                            </label>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <ul>
+                                            <li>
+                                                <h6 class="">
+                                                    Revêtement intérieure :
+                                                </h6>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <div class="row">
+                                            {% for obj in revetints %}
+                                            <label class="col-3 d-flex align-items-center custom-checkbox-container">
+                                                <input type="checkbox"
+                                                    {% if immeuble.Revetement_interieure == obj %}checked{% endif %}>
+                                                <span class="px-1 checkmark">{{ obj.libelle }}</span>
+                                            </label>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-1 m-0">
+                                        <ul>
+                                            <li>
+                                                <h6 class="">
+                                                    Revêtement extérieure :
+                                                </h6>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td class="px-1 m-0">
+                                        <div class="row">
+                                            {% for obj in revetexts %}
+                                            <label class="col-3 d-flex align-items-center custom-checkbox-container">
+                                                <input type="checkbox"
+                                                    {% if immeuble.Revetement_exterieure == obj %}checked{% endif %}>
+                                                <span class="px-1 checkmark">{{ obj.libelle }}</span>
+                                            </label>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="px-1 m-0">
+                                        <div class="row">
+                                            <label class="col-3 fw-bold p-0 m-0">
+                                                Observation :
+                                            </label>
+                                            <div class="col-9 border border-2 border-secondary">
+                                                {{ immeuble.observation }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- description de la batisse -->
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class='bg-secondary-subtle text-uppercase fw-bold text-left p-0 m-0'>
+                            IV. description de la batisse
+                        </h4>
+                    </div>
+                    <div class="row g-2">
+                        {% for group in elements_groups %}
+                            <div class="col-4">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="bg-secondary-subtle">Existence</th>
+                                            <th></th>
+                                            <th colspan="2"></th>
+                                            <th></th>
+                                            <th class="bg-secondary-subtle">Quantité</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for el in group %}
+                                            {% with imel=immeuble_elements_map|get_item:el.id %}
+                                            <tr>
+                                                <td colspan="2" class="p-0 m-0">
+                                                    <div class="row d-flex">
+                                                        <label class="col d-flex align-items-center custom-checkbox-container">
+                                                            <input type="checkbox" {% if imel and imel.statut %}checked{% endif %}>
+                                                            <span class="px-1 checkmark">Oui</span>
+                                                        </label>
+                                                        <label class="col d-flex align-items-center custom-checkbox-container">
+                                                            <input type="checkbox" {% if imel and imel.statut == False %}checked{% endif %}>
+                                                            <span class="px-1 checkmark">Non</span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td></td>
+                                                <td colspan="2" class="p-0 m-0">
+                                                    <span class="px-1 checkmark">{{ el.libelle }}</span>
+                                                </td>
+                                                <td></td>
+                                                <td class="p-0 m-0">
+                                                    <span class="bg-secondary-subtle text-center px-1 checkmark">
+                                                        {% if imel %}{{ imel.nombre }}{% else %}0{% endif %}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {% endwith %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- occupants -->
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class='bg-secondary-subtle text-uppercase fw-bold text-left p-0 m-0'>
+                            V. Occupants actuels de l'immeuble
+                        </h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <ul>
+                                <li class="text-left">
+                                    Occupant pour résidence
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-secondary-subtle">Noms & Prénom</th>
+                                        <th class="bg-secondary-subtle">Administration de tutelle de l'occpant</th>
+                                        <th class="bg-secondary-subtle">Fonction ou Qualité de l'occupat </th>
+                                        <th class="bg-secondary-subtle">Matricule ou NIU</th>
+                                        <th class="bg-secondary-subtle">Référence Juridique de l'acte d'attribution</th>
+                                        <th class="bg-secondary-subtle">Date de Prise d'effet de l'acte (jj/mm/aa)</th>
+                                        <th class="bg-secondary-subtle">Numéro de téléphone</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for occ_residence in occresisendes %}
+                                    <tr>
+                                        <td>{{occ_residence.Nom_Prenom}}</td>
+                                        <td>{{occ_residence.Administration_tutelle}}</td>
+                                        <td>{{occ_residence.Fonction}}</td>
+                                        <td>{{occ_residence.Matricule}}</td>
+                                        <td>{{occ_residence.Ref_ActeJuridique}}</td>
+                                        <td>{{occ_residence.Date_Signature_acte_juridique}}</td>
+                                        <td>{{occ_residence.Telephone}}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr colspan="10">
+                                        <td>
+                                            Aucun occupant trouvé !
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <ul>
+                                <li class="text-left">
+                                    Occupant pour bureaux
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-secondary-subtle">Intitulé du Service administratif</th>
+                                        <th class="bg-secondary-subtle">Administration Correspondante</th>
+                                        <th class="bg-secondary-subtle">Fonction du plus haut responsaple du service</th>
+                                        <th class="bg-secondary-subtle">Référence de l'acte Juridique d'attribution du MINDCAF</th>
+                                        <th class="bg-secondary-subtle">Contact (Numéro Camtel du service)</th>
+                                        <th class="bg-secondary-subtle">Date initial d'occupation(JJ/MM/AA)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for occ_bur in occbureaux %}
+                                    <tr>
+                                        <td>{{occ_bur.Service}}</td>
+                                        <td>{{occ_bur.Administration_correspondante}}</td>
+                                        <td>{{occ_bur.Fonction}}</td>
+                                        <td>{{occ_bur.Ref_ActeJuridique_attribution}}</td>
+                                        <td>{{occ_bur.Contact}}</td>
+                                        <td>{{occ_bur.Date_initial_acte_occupation}}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="10">
+                                            Aucun occupant trouvé !
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- section 2 information contractuelles -->
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class='bg-secondary-subtle fw-bold text-uppercase text-left p-0 m-0'>
+                        SECTION 2. - informations contractuelles
+                    </h3>
+                </div>
+            </div>
+            
+            <!-- typologie du contrat -->
+            <div class="row">
+                <div class="col-12">
+                    <h4 class='bg-secondary-subtle text-uppercase fw-bold text-left p-2'>
+                        I. Typologie du contrat
+                    </h4>
+                </div>
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="px-1 m-0">
+                                    <div class="row">
+                                        {% for obj in typologiescontrats %}
+                                        <label class="col-4 d-flex align-items-center custom-checkbox-container">
+                                            <input type="checkbox" {% if collecte.TypeContrat == obj %}checked{% endif %}>
+                                            <span class="px-1 checkmark">{{ obj.libelle }}</span>
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- éléments juridiques -->
+            <div class="row">
+                <div class="col-12">
+                    <h4 class='bg-secondary-subtle text-uppercase fw-bold text-left p-0 m-0'>
+                        II. Elements juridiques
+                    </h4>
+                </div>
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="px-1 m-0">
+                                    <h6 class="">
+                                        a. - Contrat Initial
+                                    </h6>
+                                </td>
+                                <td class="px-1 m-0">
+                                    <ul class="row d-flex">
+                                        <li class="col-6">
+                                            Référence ou Numero du Contrat :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ collecte.Numero_contrat }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Date Signature :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ collecte.Date_signature_contrat }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Qualité ou fonciton du signataire du contrat :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ collecte.Fonction_signataire_contrat }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Date d'effet :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ collecte.Date_effet_contrat }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Régiment fiscal :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ collecte.Regime_fiscal_contrat }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Montant loyer mensuel(TTC) :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ collecte.Montant_loyer_mensuel }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Devise :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ collecte.Devise }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-1 m-0">
+                                    <h6 class="">
+                                        b. - Avenants liés au Contrat Inital
+                                    </h6>
+                                </td>
+                                <td class="px-1 m-0">
+                                    <div class="row">
+                                        {% for aveant in avenants %}
+                                        <div class="col-6">
+                                            <ul class="row d-flex">
+                                                <li class="col-12">
+                                                    Référence de l'avenant N° 01 :
+                                                    <span class='bg-secondary-subtle'>
+                                                        {{ avenant.Ref_Avenant }}
+                                                    </span>
+                                                </li>
+                                                <li class="col-6">
+                                                    Date Signature :
+                                                    <span class='bg-secondary-subtle'>
+                                                        {{ avenant.Date_Signature }}
+                                                    </span>
+                                                </li>
+                                                <li class="col-6">
+                                                    Date d'effet :
+                                                    <span class='bg-secondary-subtle'>
+                                                        {{ avenant.Date_effet }}
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                            <table class="row">
+                                                <thead>
+                                                    <tr>
+                                                        <th><i>Avenant N°01</i></th>
+                                                        <th>Ancienne valeur</th>
+                                                        <th>Nouvelle valeur</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Nom & Prénoms ou raison sociale du Bailleur</td>
+                                                        <td>{{ avenant.Ancien_bailleur }}</td>
+                                                        <td>{{ avenant.Nouveau_bailleur }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Montant Loyer Mensuel (TTC)</td>
+                                                        <td>{{ avenant.Montant_TTC_Mensuel_ancien }}</td>
+                                                        <td>{{ avenant.Montant_TTC_Mensuel_Nouveau }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Attestion de domiciliation bancaire</td>
+                                                        <td></td>
+                                                        <td>{{ avenant.Attestion_domicilliation_bancaire_nouveau }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Durée du contrat</td>
+                                                        <td>{{ avenant.Duree_Contrat_Ancien }}</td>
+                                                        <td>{{ avenant.Duree_Contrat_Nouveau }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="10">
+                                                Aucun avenant trouvé !
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-1 m-0">
+                                    <h6 class="">
+                                        c. - Périodicité de règlement selon le contrat
+                                    </h6>
+                                </td>
+                                <td class="p-2 m-0">
+                                    <div class="row">
+                                        {% for value, label in periodicitereglements %}
+                                        <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                            <input type="checkbox" {% if collecte.Periodicite_Reglement == value %}checked{% endif %}>
+                                            <span class="px-1 checkmark">{{ label }}</span>
+                                        </label>
+                                        {% empty %}
+                                        <tr colspan="10">
+                                            <td>
+                                                Aucune périodicité de règlement défini !
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- bailleur -->
+            <div class="row">
+                <div class="col-12">
+                    <h4 class='bg-secondary-subtle text-uppercase fw-bold text-left p-0 m-0'>
+                        III. Bailleur
+                    </h4>
+                </div>
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="px-1 m-0">
+                                    <h6 class="">
+                                        a. - Identification
+                                    </h6>
+                                </td>
+                                <td class="px-1 m-0">
+                                    <div class="row">
+                                        {% for value, label in typepersonnes %}
+                                        <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                            <input type="checkbox" {% if bailleur.Type_personne == value %}checked{% endif %}>
+                                            <span class="px-1 checkmark">{{ label }}</span>
+                                        </label>
+                                        {% empty %}
+                                        <tr colspan="10">
+                                            <td>
+                                                Aucun type de personnalité juridique défini !
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </div>
+                                    <ul class="row d-flex">
+                                        <li class="col-6">
+                                            Noms & Prénoms/Raison social :
+                                            <span class='bg-secondary-subtle'>
+                                                {% if bailleur.Nom_prenom %}
+                                                    {{ bailleur.Nom_prenom }}
+                                                {% endif %}
+
+                                                {% if bailleur.Raison_social %}
+                                                    {{ bailleur.Raison_social }}
+                                                {% endif %}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            NIU/M<sup>le</sup> :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.NIU }} / {{ bailleur.Maticule }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Téléphone :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.Telephone }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            CNI & Date délivrance :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.Date_delivrance_doc }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Réprésenté par :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.Nom_Prenom_Representant }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Contact :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.Telephone_representant }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <div class="row">
+                                        {% for value, label in statutsbailleur %}
+                                        <label class="col-auto d-flex align-items-center custom-checkbox-container">
+                                            <input type="checkbox" {% if bailleur.Statut_bailleur == value %}checked{% endif %}>
+                                            <span class="px-1 checkmark">{{ label }}</span>
+                                        </label>
+                                        {% empty %}
+                                        <tr colspan="10">
+                                            <td>
+                                                Aucun statut de bailleur défini !
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-1 m-0">
+                                    <h6 class="">
+                                        b. - Références Bancaires
+                                    </h6>
+                                </td>
+                                <td class="px-1 m-0">
+                                    <ul class="row d-flex">
+                                        <li class="col-6">
+                                            Libelle Banque :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.Banque }}
+                                            </span>
+                                        </li>
+                                        <li class="col-6">
+                                            Numéro RIB :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.RIB }}
+                                            </span>
+                                        </li>
+                                        <li class="col-12">
+                                            Intitulé du Compte :
+                                            <span class='bg-secondary-subtle'>
+                                                {{ bailleur.Intitule_compte }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-1 m-0">
+                                    <h6 class="">
+                                        c. - Ayant Droits du Bailleurs
+                                    </h6>
+                                </td>
+                                <td class="p-2 m-0">
+                                    <div class="row">
+                                        <table class='table table-bordered'>
+                                            <thead class='thead-dark'>
+                                                <tr>
+                                                    <th class="bg-secondary-subtle">
+                                                        Noms & Prénoms
+                                                    </th>
+                                                    <th class="bg-secondary-subtle">
+                                                        Contact
+                                                    </th>
+                                                    <th class="bg-secondary-subtle">
+                                                        Reference Grosse
+                                                    </th>
+                                                    <th class="bg-secondary-subtle">
+                                                        Date de prise d'effet de Grosse
+                                                    </th>
+                                                    <th class="bg-secondary-subtle">
+                                                        Reference Certificat de non appel
+                                                    </th>
+                                                    <th class="bg-secondary-subtle">
+                                                        Date de prise d'effet du certificat
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ayantdroit in ayantdroits %}
+                                                <tr>
+                                                    <td>{{ ayantdroit.Nom_Prenom }}</td>
+                                                    <td>{{ ayantdroit.Contact }}</td>
+                                                    <td>{{ ayantdroit.Reference_Grosse }}</td>
+                                                    <td>{{ ayantdroit.Date_prise_effet_grosse }}</td>
+                                                    <td>{{ ayantdroit.Reference_certificat_non_effet }}</td>
+                                                    <td>{{ ayantdroit.Date_prise_effet_certificat_non_effet }}</td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr colspan="10">
+                                                    <td>
+                                                        Aucune périodicité de règlement défini !
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- attestation de non mandatement -->
+            <div class="row">
+                <div class="col-12">
+                    <h4 class='bg-secondary-subtle text-uppercase fw-bold text-left p-2'>
+                        IV. Attestation de non-mandatement (non-encore payé)
+                    </h4>
+                </div>
+                <div class="col-12">
+                    <table id="nonmandatement-collecte-table" class='table-responsive bg-white table table-bordered mt-2'>
+                        <thead class='thead-dark'>
+                            <tr>
+                                <th class='bg-secondary-subtle' rowspan="2">
+                                    Exercice
+                                </th>
+                                <th class='bg-secondary-subtle' rowspan="2">
+                                    Loyer Mensuel
+                                </th>
+                                <th class='bg-secondary-subtle' rowspan="2">
+                                    Reference de l'attestation de non mandatement
+                                </th>
+                                <th class='bg-secondary-subtle' colspan="12">
+                                    Mois non-mandatatés
+                                </th>
+                                <th class='bg-secondary-subtle' rowspan="2">
+                                    Montant Total par exercice
+                                </th>
+                                <th class='bg-secondary-subtle' rowspan="2">
+                                    Visa budgétaire / Signature CF ?
+                                </th>
+                                <th class='bg-secondary-subtle' rowspan="2">
+                                    Reference Contrat / Avenant
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class='bg-secondary-subtle'>
+                                    J
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    F
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    M
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    A
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    M
+                                </th>
+                                <th>
+                                    J
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    J
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    A
+                                </th>
+                                <th>
+                                    S
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    O
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    N
+                                </th>
+                                <th class='bg-secondary-subtle'>
+                                    D
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for nommandatement in nommandatements %}
+                            <tr>
+                                <td>{{ nommandatement.Exercice }}</td>
+                                <td>{{ nommandatement.Loyer_Mensuel }}</td>
+                                <td>{{ nommandatement.Ref_Attestattion  }}</td>
+                                {% for month, checked in nommandatement.mois_status %}
+                                <td>
+                                    <input type="checkbox" disabled {% if checked %}checked{% endif %}>
+                                </td>
+                                {% endfor %}
+                                <td>{{ nommandatement.Montant_total_exercice}}</td>
+                                <td>{{ nommandatement.Visa_budgétaire }}</td>
+                                <td>{{ nommandatement.Ref_contrat_avenant }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr colspan="30">
+                                <td>
+                                    Aucune attestation de non mandatement trouvé !
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- section 2 information contractuelles -->
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class='bg-secondary-subtle fw-bold text-uppercase text-left'>
+                        SECTION 3. - Pieces collectees
+                    </h4>
+                </div>
+                <div class="row g-2">
+                    {% for group in pieces_groups %}
+                        <div class="col-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-secondary-subtle">Désignation</th>
+                                        <th class="bg-secondary-subtle">Nombre</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for el in group %}
+                                        {% with piececol=pieces_map|get_item:el.id %}
+                                        <tr>
+                                            <td class="px-1 m-0">
+                                                <div class="row d-flex">
+                                                    <label class="col d-flex align-items-center custom-checkbox-container">
+                                                        <input type="checkbox" {% if piececol and piececol.statut %}checked{% endif %}>
+                                                        {{ el.libelle }}
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="px-1 m-0">
+                                                <span class="bg-secondary-subtle text-center px-1 checkmark">
+                                                    {% if piececol %}{{ piececol.nombre }}{% else %}0{% endif %}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endwith %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <img class="qr-footer" src="{{ qr_code_img }}" alt="QR Code">
+
+    </body>
+</html>

@@ -125,7 +125,7 @@ module.exports = (conf, srcGlob) => {
     const taskFunction = function () {
       // return src(root(font.path))
       return (
-        src(font.path)
+        src(font.path, { encoding: false })
           // .pipe(dest(normalize(path.join(conf.distPath, 'fonts', font.name))))
           .pipe(dest(path.join(conf.distPath, 'fonts', font.name)))
       );

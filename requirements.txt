@@ -16,3 +16,5 @@ django-browser-reload
 mysqlclient
 xhtml2pdf
 django-environ
+django-weasyprint
+qrcode[pil]
