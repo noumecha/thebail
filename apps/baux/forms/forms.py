@@ -224,8 +224,8 @@ class RevetementIntsForm(forms.ModelForm):
 
         fields = ('libelle', 'description')
         labels = {
-            'libelle': "Revetement interieure",
-            'description': "Description du revetement interieure",
+            'libelle': "Revetement interieur",
+            'description': "Description du revetement interieur",
         }
         widgets = {
           'description': forms.Textarea(attrs={'rows':20, 'cols':10}),

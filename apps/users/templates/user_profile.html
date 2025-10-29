@@ -1,0 +1,74 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Compte utilisateur{% endblock %}
+
+{% block page_js %}
+{{ block.super }}
+<script src="{% static 'js/pages-account-settings-account.js' %}"></script>
+{% endblock page_js %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="nav-align-top">
+      <ul class="nav nav-pills flex-column flex-md-row mb-6 gap-2 gap-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="{% url 'user_profile' %}"><i class="ri-group-line me-1_5"></i>Profile</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'user_password_update' %}"><i class="ri-lock-line me-1_5"></i>Mot de passe</a></li>
+      </ul>
+    </div>
+    <div class="card mb-6">
+      <!-- Account -->
+      <div class="card-body">
+        <div class="d-flex align-items-start align-items-sm-center gap-6">
+          <img src="{% static 'img/avatars/1.png' %}" alt="user-avatar" class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
+          <div class="button-wrapper">
+            <label for="upload" class="btn btn-sm btn-primary me-3 mb-4" tabindex="0">
+              <span class="d-none d-sm-block">Changer la photo de profil</span>
+              <i class="ri-upload-2-line d-block d-sm-none"></i>
+              <input type="file" id="upload" class="account-file-input" hidden accept="image/png, image/jpeg" />
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="card-body pt-0">
+        <form id="formAccountSettings" method="POST" onsubmit="return false" action="{% url 'user_profile' %}">
+          {% csrf_token %}
+          <div class="row mt-1 g-5">
+            <div class="col-md-6">
+              <div class="form-floating form-floating-outline">
+                <input class="form-control" type="text" id="firstName" name="firstName" value="{{ user.first_name }}" placeholder="entrez le nom" autofocus />
+                <label for="firstName">Nom</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating form-floating-outline">
+                <input class="form-control" type="text" id="username" name="username" value="{{ user.username }}" placeholder="entrez le nom d'utilisateur" autofocus />
+                <label for="username">Nom d'utilisateur</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating form-floating-outline">
+                <input class="form-control" type="text" name="lastName" id="lastName" value="{{ user.last_name }}" placeholder="entrez le prenom" />
+                <label for="lastName">Prenom</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating form-floating-outline">
+                <input class="form-control" type="text" id="email" name="email" value="{{ user.email }}" placeholder="archivault@example.com" />
+                <label for="email">E-mail</label>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <button type="submit" class="btn btn-primary me-3">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+      <!-- /Account -->
+    </div>
+  </div>
+</div>
+{% endblock %}

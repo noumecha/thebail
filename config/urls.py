@@ -63,6 +63,7 @@ urlpatterns = [
 
     # baux 
     path("", include("apps.baux.urls")),
+    path("", include("apps.users.urls")),
     
     # autorelaod on dev mode
     path("__reload__/", include("django_browser_reload.urls")),

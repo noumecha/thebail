@@ -363,7 +363,7 @@ class CollectesForm(forms.ModelForm):
                                         Loyer Mensuel
                                     </th>
                                     <th rowspan="2">
-                                        Reference de l'attestation de non mandatement
+                                        Reference de l'attestation de non mandatement & Date de signature
                                     </th>
                                     <th colspan="12">
                                         Mois non-mandatatés

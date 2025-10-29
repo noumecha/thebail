@@ -111,11 +111,11 @@ $(function () {
         allowClear: true,
     })
     $('#id_immeubles-0-Revetement_interieure').select2({
-        placeholder : "Selectionnez un revetement intérieure",
+        placeholder : "Selectionnez un revetement intérieur",
         allowClear: true,
     })
     $('#id_immeubles-0-Revetement_exterieure').select2({
-        placeholder : "Selectionnez un revetement extérieure",
+        placeholder : "Selectionnez un revetement extérieur",
         allowClear: true,
     })
     $('#id_non_mandatements-0-Exercice').select2({

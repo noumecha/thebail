@@ -15,6 +15,7 @@ import string
 import environ
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 from django.contrib.messages import constants as messages
 from .template import  THEME_LAYOUT_DIR, THEME_VARIABLES
 
@@ -76,8 +77,13 @@ INSTALLED_APPS = [
     #"apps.locataire",
     #"apps.bailleur",
     "apps.baux",
+    "apps.users",
     "crispy_forms",
     "crispy_bootstrap5",
+    # Tooling API-GEN
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
     #'bootstrap5',
     #"crispy_bootstrap4",
     'formtools',
@@ -101,6 +107,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # autoreload on dev mode
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    'apps.users.middleware.JWTAuthMiddleware',
 ]
 
 MESSAGE_TAGS = {
@@ -127,8 +134,10 @@ TEMPLATES = [
                 "config.context_processors.my_setting",
                 "config.context_processors.environment",
             ],
+            # templates tags librairies
             "libraries": {
                 "theme": "web_project.template_tags.theme",
+                "utils_tags": "config.templatetags.utils_tags",
             },
             "builtins": [
                 "django.templatetags.static",
@@ -140,6 +149,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+# token managemment
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -215,6 +232,10 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 THEME_LAYOUT_DIR = THEME_LAYOUT_DIR
 THEME_VARIABLES = THEME_VARIABLES
 
+AUTH_USER_MODEL = 'users.Utilisateur'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'
 # saving file 
 # --------------------------------------------------------------------
 MEDIA_URL = '/uploads/'

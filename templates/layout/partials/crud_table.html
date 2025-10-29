@@ -1,0 +1,78 @@
+{% load utils_tags %}
+
+<div id="table-loader" class="d-none text-center my-4">
+  <i class="ri-loader-2-fill ri-2x spin text-primary"></i>
+  <p class="mt-2">Chargement des données...</p>
+</div>
+
+<table class="table" id="data-table">
+  <thead>
+    <tr>
+      {% for header in headers %}
+        <th>{{ header }}</th>
+      {% endfor %}
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody class="table-border-bottom-0">
+    {% for obj in objects %}
+      <tr>
+        {% for field in fields %}
+          <td>{{ obj|get_attr:field|default:"-" }}</td>
+        {% endfor %}
+        <td>
+          <div class="dropdown">
+            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+              <i class="ri-more-2-line"></i>
+            </button>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item primary"
+                href="#"
+                data-bs-target="#create-{{ object_name|lower }}-modal"
+                data-bs-toggle="modal"
+                data-action="update"
+                data-id="{{ obj.id }}">
+                <i class="ri-pencil-line me-1"></i>Modifier
+              </a>
+              <a
+                href="#"
+                class="dropdown-item btn-success"
+                data-bs-target="#delete-{{ object_name|lower }}-modal-{{ obj.id }}"
+                data-bs-toggle="modal">
+                <i class="ri-delete-bin-6-line me-1"></i>Supprimer
+              </a>
+            </div>
+
+            <!-- Modal de suppression -->
+            <div class="modal fade" id="delete-{{ object_name|lower }}-modal-{{ obj.id }}" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content p-0">
+                  <form action="{% url delete_url obj.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title">Suppression d’un {{ object_name }}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      Voulez-vous vraiment supprimer : {{ obj }} ?
+                    </div>
+                    <div class="modal-footer flex-row-reverse">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                      <button type="submit" class="btn btn-primary">Supprimer</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="10" class="text-center">Aucun élément trouvé…</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

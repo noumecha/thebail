@@ -66,8 +66,8 @@ class ImmeublesForm(forms.ModelForm):
             "Norme" : "Norme de Cadastrale",
             "Type_location" : "Type de location",
             # etat physique du batiement fields
-            "Revetement_interieure" : "Revetement interieure",
-            "Revetement_exterieure" : "Revetement exterieure",
+            "Revetement_interieure" : "Revetement interieur",
+            "Revetement_exterieure" : "Revetement exterieur",
             "observation" : "Observation",
             "Situation_de_la_batisse" : "Etat de la batisse",
             # localisation labels
