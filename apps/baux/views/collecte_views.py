@@ -77,7 +77,7 @@ class CollecteView(TemplateView):
         context["elements"] = elements
         context["is_update"] = pk is not None
         return context
-    
+
     def print(request, pk):
         # fetch content from db and load template context
         collecte = get_object_or_404(Collectes, pk=pk)
@@ -123,7 +123,7 @@ class CollecteView(TemplateView):
         pieceselements_qs = PieceCollectes.objects.filter(Collecte_id=collecte.pk)
         pieces_map = {el.Piece_id: el for el in pieceselements_qs}
         pieces_groups = list(chunk_list(pieces, 4))
-        # qr code 
+        # qr code
         qr_data = f"Fiche collecte n° {collecte.Numero_fiche_de_collecte}"  # or a URL
         qr_code_img = generate_qr_code(qr_data)
         # context
@@ -192,12 +192,12 @@ def collecte_create(request):
                 with transaction.atomic():
                     collecte = collecte_form.save()
                     bailleurInstance = get_object_or_404(Bailleurs, pk=collecte.Bailleur.pk)
-                    # Sauvegarde des immeubles 
+                    # Sauvegarde des immeubles
                     immeubles_json = request.POST.get("immeubles_data")
                     if immeubles_json:
                         try:
                             immeubles_data = json.loads(immeubles_json)
-                            # immeuble validation : 
+                            # immeuble validation :
                             errors = []  # pour collecter toutes les errors
                             immeubles_valides = []
 
@@ -235,7 +235,7 @@ def collecte_create(request):
                                 region = instanceExist(Regions, im.get("region"), "La région selectionnée n'existe pas")
                                 departement = instanceExist(Departements, im.get("departement"), "Le département selectionné n'existe pas")
                                 arrondissement = instanceExist(Arrondissemements, im.get("arrondissement"), "L'arrondissemnt selectionnée n'existe pas")
-                                # 
+                                #
                                 immeuble = Immeubles.objects.create(
                                     Collecte=collecte,
                                     Designation=im.get("Designation"),
@@ -307,7 +307,7 @@ def collecte_create(request):
                                 # Récupérer le fichier associé si présent
                                 file_field_name = f"fichier_avenant_{a.get('ref')}"
                                 fichier_avenant = request.FILES.get(file_field_name)
-                                # 
+                                #
                                 Avenants.objects.create(
                                     collecte=collecte,
                                     Ref_Avenant=a.get('ref'),
@@ -328,7 +328,7 @@ def collecte_create(request):
                         except json.JSONDecodeError:
                             return JsonResponse({"success": False, "errors": "Erreur lors du décodage des avenants."}, status=400)
 
-                    # traitement des nonmandatement 
+                    # traitement des nonmandatement
                     nonmandatements_json = request.POST.get('nonmandatements_data')
                     if nonmandatements_json:
                         try:
@@ -346,6 +346,7 @@ def collecte_create(request):
                                     Exercice=exercice,
                                     Loyer_Mensuel=n.get('loyer'),#Loyer_Mensuel
                                     Ref_Attestattion=n.get('refAttestation'),#Ref_Attestattion
+                                    Date_Signature=n.get('dateSignature'),
                                     janvier=mois.get('janvier'),
                                     fevrier=mois.get('fevrier'),
                                     mars=mois.get('mars'),
@@ -392,7 +393,7 @@ def collecte_create(request):
                                 )
                         except json.JSONDecodeError:
                             return JsonResponse({"success": False, "errors": "Erreur lors du décodage des occupants résidents."}, status=400)
-                    
+
                     # bureau
                     occupantsBureaux_json = request.POST.get('occupantsBureaux_data')
                     if occupantsBureaux_json:

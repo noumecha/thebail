@@ -13,7 +13,7 @@ class CollectesForm(forms.ModelForm):
         model = Collectes
 
         fields = (
-            # informations du contrat et sur le collecteur 
+            # informations du contrat et sur le collecteur
             "Numero_fiche_de_collecte",
             "Agent_de_collecte",
             #"Matricule_agent_de_collecte",
@@ -29,11 +29,11 @@ class CollectesForm(forms.ModelForm):
             "Devise",
             "RIB_contrat_initial",
             "Fichier_contrat_initial",
-            # Bailleur 
+            # Bailleur
             "Bailleur",
-            # Agent 
+            # Agent
             "Agent",
-            # avenant informations 
+            # avenant informations
             "Existance_avenant",
             "Existance_visa_budgetaire",
             "observation",
@@ -56,14 +56,14 @@ class CollectesForm(forms.ModelForm):
             "Devise" : "Devise",
             "RIB_contrat_initial" : "RIB Contrat Initial",
             "Fichier_contrat_initial" : "Fichier Contrat Initial",
-            # Bailleur 
+            # Bailleur
             "Bailleur" : "Bailleur",
-            # Agent 
+            # Agent
             "Agent" : "Matricule de l'agent de collecte",
             # avenant informations
             #"Existance_avenant" : "Existance d'au moins un avenant ?",
             #"Existance_visa_budgetaire" : "Existance d'un visa budgétaire ?",
-            "observation" : "Observation",
+            "observation" : "Observation générale",
             "Periodicite_Reglement" : "Périodicité de règlement selon le contrat",
         }
         widgets = {
@@ -79,7 +79,7 @@ class CollectesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CollectesForm, self).__init__(*args, **kwargs)
-        # remove labels : 
+        # remove labels :
         self.fields['Existance_avenant'].label = ""
         self.fields['Existance_visa_budgetaire'].label = ""
         # Si l'instance a déjà une valeur (form update)
@@ -119,10 +119,10 @@ class CollectesForm(forms.ModelForm):
                 except PieceCollectes.DoesNotExist:
                     pass
         #1 Dynamically create fields for each immeubles elements
-        
+
         self.helper =  FormHelper()
         self.helper.layout = Layout(
-            # title informations : 
+            # title informations :
             Row(
                 Column(
                     HTML("""
@@ -159,7 +159,7 @@ class CollectesForm(forms.ModelForm):
             # informations sur le contrat
             Row(
                 Column(
-                    HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 1. INFORMATIONS CONTRACTUELLES</h4>"), 
+                    HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 1. INFORMATIONS CONTRACTUELLES</h4>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -167,7 +167,7 @@ class CollectesForm(forms.ModelForm):
             # title of the section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Typologie du contrat</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Typologie du contrat</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -190,7 +190,7 @@ class CollectesForm(forms.ModelForm):
             # Element juridiques section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Elements juridiques</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Elements juridiques</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -198,7 +198,7 @@ class CollectesForm(forms.ModelForm):
             Row(
                 # title of subsection
                 Column(
-                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>a- Contrat Initial</h5>"), 
+                    HTML("<h5 class='text-bold fw bg-secondary-subtle'>a- Contrat Initial</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 # content
@@ -246,7 +246,7 @@ class CollectesForm(forms.ModelForm):
                         ),
                         Column(css_class='text-center overflow-hidden form-group col-md-1 mb-0'),
                         Column(
-                            HTML("<h5 class='text-bold fw bg-secondary-subtle mt-2' id='avenant-collecte-form-title'>b- Avenants liés au Contrat Initial</h5>"), 
+                            HTML("<h5 class='text-bold fw bg-secondary-subtle mt-2' id='avenant-collecte-form-title'>b- Avenants liés au Contrat Initial</h5>"),
                             css_class='overflow-hidden form-group col-md-12 mb-0'
                         ),
                         Formset("avenants_formset"),
@@ -255,19 +255,18 @@ class CollectesForm(forms.ModelForm):
                                 <div id="avenant-collecte-list"></div>
                             """)
                         ),
-                        Column(FloatingField("observation"), css_class='overflow-hidden form-group mt-1 col-md-12 mb-0'),
                         css_class="form-row"
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 Column(
-                    HTML("<h5 class='mt-2 text-bold fw bg-secondary-subtle'>c- Périodicité de règlement selon le contrat</h5>"), 
+                    HTML("<h5 class='mt-2 text-bold fw bg-secondary-subtle'>c- Périodicité de règlement selon le contrat</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 Column(FloatingField("Periodicite_Reglement"), css_class='overflow-hidden form-group col-md-12 mb-0'),
-                # Bailleur section 
+                # Bailleur section
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. bailleur</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. bailleur</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 Column(
@@ -332,7 +331,7 @@ class CollectesForm(forms.ModelForm):
             # Non-Mandatement section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. attestion de non-mandatement (non-encore payé)</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. attestion de non-mandatement (non-encore payé)</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -341,8 +340,8 @@ class CollectesForm(forms.ModelForm):
                 Formset("non_mandatements_formset"),
                 Column(
                     HTML("""
-                        <button type="button" 
-                            class="btn btn-outline-primary add-form" 
+                        <button type="button"
+                            class="btn btn-outline-primary add-form"
                             id="nonmandatement-collecte-add-btn"
                             data-formset="non_mandatements"
                             data-table="nonmandatement-collecte-table"> + Ajouter à la liste </button>
@@ -422,7 +421,7 @@ class CollectesForm(forms.ModelForm):
                             </thead>
                             <tbody>
                                 <tr id='empty-ayantdroit-row'>
-                                    <td colspan="30">Aucune attestation de non mandatement ajouter ...</td>    
+                                    <td colspan="30">Aucune attestation de non mandatement ajouter ...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -433,7 +432,7 @@ class CollectesForm(forms.ModelForm):
             # Immeuble Section
             Row(
                 Column(
-                    HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 2. INFORMATIONS SUR L'IMMEUBLE</h4>"), 
+                    HTML("<h4 class='bg-gray text-white p-2 mt-2 mb-2'>SECTION 2. INFORMATIONS SUR L'IMMEUBLE</h4>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -453,7 +452,7 @@ class CollectesForm(forms.ModelForm):
             # Pièces collectées
             Row(
                 Column(
-                    HTML("<h4 class='text-uppercase bg-gray text-white p-2 mt-2 mb-2'>SECTION 3. pièces collectées</h4>"), 
+                    HTML("<h4 class='text-uppercase bg-gray text-white p-2 mt-2 mb-2'>SECTION 3. pièces collectées</h4>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -469,6 +468,10 @@ class CollectesForm(forms.ModelForm):
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-2"
+            ),
+            Row(
+                Column(FloatingField("observation"), css_class='overflow-hidden form-group mt-1 col-md-12 mb-0'),
+                css_class='p-3 pt-2 form-row'
             ),
             Column(
                 Submit(

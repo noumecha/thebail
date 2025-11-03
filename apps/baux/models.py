@@ -19,7 +19,7 @@ TYPE_IMMEUBLE = (
         ('', 'Choisir le type d\'immeuble'),
         (str(BATI), '1 - Immeuble Bati'),
         (str(NON_BATI), '2 - Immeuble Non-Bati'),
-    )   
+    )
 Nord='N'
 Sud ='S'
 Ouest ='O'
@@ -61,7 +61,7 @@ TYPE_LOCALISATION = (
     ('', 'Choisir le type de localisation'),
     (str(EX), '1 - Représentation diplomatique'),
     (str(NA), '2 - National'),
-) 
+)
 
 Mensuel='M'
 trimestriel='T'
@@ -297,7 +297,7 @@ DEVISES = (
     ("ZMW", "ZMW"),
     ("ZWL", "ZWL"),
 )
-# Existence 
+# Existence
 EXISTANCE_AVENANT = (
     (True, ('Oui')),
     (False, ('Non'))
@@ -316,7 +316,7 @@ class Exercice(models.Model):
     def __str__(self):
         return f"Exercice budgetaire {self.annee}"
 
-# banque model 
+# banque model
 class Banques(models.Model):
     codeBanque = models.CharField(max_length=255, blank=True, null=True)
     sigle = models.CharField(max_length=255, blank=True)
@@ -361,7 +361,7 @@ class Bailleurs(models.Model):
     RIB = models.CharField(max_length=26, null=True)#,validators=[rib_validator]
     Document_RIB = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
     Intitule_compte = models.CharField(max_length=100, null=True, blank=True)
-    # 
+    #
     Registre_commerce = models.CharField(max_length=100, null=True, blank=True)
     Regime_contribuable = models.CharField(max_length=100, null=True, blank=True)
     Code_centre = models.CharField(max_length=100, null=True, blank=True)
@@ -462,7 +462,7 @@ class Localisation (models.Model):
     pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="etranger", blank=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
-    # new fields 
+    # new fields
     Type_localisation = models.CharField(choices=TYPE_LOCALISATION, max_length=1, default=NA)
     Ville = models.CharField(max_length=50,null=True, blank=True)
     Rue = models.CharField(max_length=50,null=True, blank=True)
@@ -484,7 +484,7 @@ class TypeConstructions(models.Model):
     def __str__(self):
         libelle = self.libelle.upper()
         return f"{libelle}"
-    
+
 # type RevetementInt model
 class RevetementInts(models.Model):
     libelle = models.CharField(max_length=500)
@@ -564,14 +564,14 @@ class Immeubles (models.Model):
     observation = models.CharField(max_length=200, null=True, blank=True)
     # many to many relationship with ElementDeDescription through ImmeubleElement --> description de la batisse
     elements = models.ManyToManyField(ElementDeDescription, through="ImmeubleElement")
-    # relationship 
+    # relationship
     #Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, null=True, related_name="collecte_immeuble", blank=True)
     Collecte = models.OneToOneField("Collectes", on_delete=models.CASCADE, related_name="immeuble", null=True, blank=True)
 
-    # 
+    #
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
-    
+
     def __str__(self):
         return f" {self.Designation} " #/{self.Localisation}
 
@@ -593,7 +593,7 @@ class ImmeubleImage(models.Model):
 class Recensements(models.Model):
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="immeuble_recensement")
     Numero = models.IntegerField()
-    # immeuble informations that can be changed 
+    # immeuble informations that can be changed
     # Construction = models.ForeignKey(TypeConstructions, on_delete=models.CASCADE, null=True, related_name="construction")
     Description = models.TextField(blank = True,null= True)
     Etat = models.TextField(blank = True,null= True)
@@ -606,12 +606,12 @@ class Recensements(models.Model):
     Emprise_au_sol = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
     # new fieds
     #Situation_de_la_batisse = models.CharField(choices=STATUT_BATISSE, max_length=1, null=True)
-    
+
 
     def __str__(self):
         return f"Recensement - {self.Immeuble} - du {self.Date_creation.strftime('%d/%m/%Y')}"
 
-# type occupant bureaux    
+# type occupant bureaux
 class OccupantBureaux (models.Model):
     Service = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "intitulle_service")
     Administration_correspondante = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "administration_correspondante")
@@ -619,11 +619,11 @@ class OccupantBureaux (models.Model):
     Ref_ActeJuridique_attribution = models.CharField(max_length=50,null=True)
     Contact = models.CharField(max_length=20,null=True)
     Date_initial_acte_occupation = models.CharField(max_length=50,null=True)
-    # generic fields 
+    # generic fields
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment_occ_bureaux")
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
-    
+
     def __str__(self):
         return f" logés : {self.Service} "
 
@@ -637,7 +637,7 @@ class Occupants (models.Model):
     Ref_ActeJuridique = models.CharField(max_length=50,null=True)
     Date_Signature_acte_juridique = models.CharField(max_length=50,null=True)
     Telephone = models.CharField(max_length=20,null=True)
-    # generic fields 
+    # generic fields
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment_occ_residence")
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -651,7 +651,7 @@ class Ayant_droits (models.Model):
     Date_prise_effet_grosse = models.CharField(max_length=50,null=True)
     Reference_certificat_non_effet = models.CharField(max_length=50, null=True, blank=True)
     Date_prise_effet_certificat_non_effet = models.CharField(max_length=50,null=True)
-    # relations 
+    # relations
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name="bailleur_ayant_droit")
     #
     Date_creation = models.DateTimeField(default=timezone.now)
@@ -742,7 +742,7 @@ class AgentCollecte(models.Model):
 
 # Collecte model
 class Collectes (models.Model):
-    # informations du contrat et sur le collecteur 
+    # informations du contrat et sur le collecteur
     Numero_fiche_de_collecte = models.CharField(max_length=50, null=True, unique=True)
     Agent_de_collecte = models.TextField(blank = True, null=True)
     #Matricule_agent_de_collecte = models.TextField(blank = True, null=True)
@@ -766,7 +766,7 @@ class Collectes (models.Model):
         default=False
     )
     Existance_visa_budgetaire = models.BooleanField(
-        #verbose_name=('Existence du visa budgétaire ?'), 
+        #verbose_name=('Existence du visa budgétaire ?'),
         max_length=1,
         choices=EXISTANCE_AVENANT,
         null=False, blank=False,
@@ -776,7 +776,7 @@ class Collectes (models.Model):
     Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True)
     # many to many relationship with ElementDeDescription through ImmeubleElement --> description de la batisse
     pieces = models.ManyToManyField(Pieces, through="PieceCollectes")
-    # relationship : 
+    # relationship :
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "collecte_bailleur")
     Agent = models.ForeignKey(AgentCollecte, on_delete=models.CASCADE, null=True, related_name= "collecte_agent")
     # informations générique
@@ -802,7 +802,7 @@ class Contrats (models.Model):
     Date_Signature = models.DateField(null=True)
     Date_Debut = models.DateField(null=True)
     #Ref_contrat = models.CharField(max_length=50, null=True)
-    Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True) 
+    Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True)
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Taxe_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Rabattement = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
@@ -822,9 +822,9 @@ class Contrats (models.Model):
     Visa_controlleur = models.BooleanField(null=True, blank=True)
     # fields
     Numero_contrat = models.IntegerField(null=True, blank=True, unique=True)
-    
+
     def __str__(self):
-        return f" Contrat N° {self.Numero_contrat} entre : {self.Bailleur} et  {self.Administration_beneficiaire}"  
+        return f" Contrat N° {self.Numero_contrat} entre : {self.Bailleur} et  {self.Administration_beneficiaire}"
 
 # Avenants model
 class Avenants (models.Model):
@@ -852,7 +852,7 @@ class Avenants (models.Model):
     Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Avenant : {self.Ref_Avenant} du contrat : {self.collecte}" 
+        return f"Avenant : {self.Ref_Avenant} du contrat : {self.collecte}"
 
 # Non Mandatement model
 class Non_Mandatement (models.Model):
@@ -861,7 +861,7 @@ class Non_Mandatement (models.Model):
     Exercice = models.ForeignKey(Exercice, on_delete=models.CASCADE, null=True, related_name= "exercice")
     Loyer_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Ref_Attestattion = models.CharField(max_length=50, null=True, blank=True)
-    #Date_signature =  models.CharField(max_length=50,null=True)
+    Date_signature =  models.CharField(max_length=50,null=True)
     # mois non mandatés
     janvier = models.BooleanField(default=False, verbose_name="Janvier")
     fevrier = models.BooleanField(default=False, verbose_name="Février")
@@ -883,7 +883,7 @@ class Non_Mandatement (models.Model):
         default=False
     )
     Ref_contrat_avenant = models.CharField(max_length=50, null=True, blank=True)
-    # relations 
+    # relations
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur_non_mandatement")
     #
     Fichier_nonmandatement = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)

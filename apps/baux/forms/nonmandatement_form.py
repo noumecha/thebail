@@ -18,7 +18,7 @@ class NonMandatementForm(forms.ModelForm):
             "Exercice" : "Exercice",
             "Loyer_Mensuel" : "Loyer Mensuel",
             "Ref_Attestattion" : "Référence de l'attestation de non mandatement",
-            #"Date_signature" : "Date de signature",
+            "Date_signature" : "Date de signature",
             "janvier" : "J",
             "fevrier" : "F",
             "mars" : "M",
@@ -43,7 +43,7 @@ class NonMandatementForm(forms.ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(NonMandatementForm, self).__init__(*args, **kwargs)
-        # remove labels : 
+        # remove labels :
         self.fields['Visa_budgétaire'].label = ""
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -66,6 +66,7 @@ class NonMandatementForm(forms.ModelForm):
                         Column(FloatingField("Loyer_Mensuel"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Ref_Attestattion"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Fichier_nonmandatement"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                        Column(FloatingField("Date_signature"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         #Column(FloatingField("Etat"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         css_class="form-row",
                     ),
