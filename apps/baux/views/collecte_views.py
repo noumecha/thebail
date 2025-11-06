@@ -6,7 +6,7 @@ from web_project import TemplateLayout
 from django.template.loader import render_to_string
 from ..models import *
 from ..forms import *
-from django.http import HttpResponse
+from django.http import FileResponse, HttpResponse
 import xhtml2pdf.pisa as pisa
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -14,7 +14,8 @@ from django.db import transaction
 import traceback
 import sys
 from django.contrib import messages
-from weasyprint import HTML, CSS
+#from weasyprint import HTML, CSS
+from utils.pdf import generate_pdf_from_html
 import os
 from django.conf import settings
 import qrcode
@@ -155,14 +156,47 @@ class CollecteView(TemplateView):
             "qr_code_img" : qr_code_img
         }
         html = render_to_string("baux/docs/fiche_doc.html", context)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="fiche_collecte_{collecte.Numero_fiche_de_collecte}.pdf"'
-        css_files = [
-            CSS(filename=os.path.join(settings.STATIC_ROOT, 'css/bootstrap.min.css')),
-            CSS(filename=os.path.join(settings.STATIC_ROOT, 'css/style.css')),
-        ]
-        HTML(string=html).write_pdf(response, stylesheets=css_files)
+        # 2️⃣ Définir les chemins des fichiers temporaires
+        temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp_pdf')
+        os.makedirs(temp_dir, exist_ok=True)
+
+        html_path = os.path.join(temp_dir, f'fiche_collecte_{collecte.id}.html')
+        pdf_path = os.path.join(temp_dir, f'fiche_collecte_{collecte.id}.pdf')
+
+        # 3️⃣ Écrire le fichier HTML temporaire (inclut les liens CSS)
+        # On intègre directement les balises <link> pour tes fichiers CSS
+        html_full = f"""
+        <html>
+        <head>
+            <link rel="stylesheet" href="{os.path.join(settings.STATIC_ROOT, 'css/bootstrap.min.css')}">
+            <link rel="stylesheet" href="{os.path.join(settings.STATIC_ROOT, 'css/style.css')}">
+        </head>
+        <body>
+            {html}
+        </body>
+        </html>
+        """
+
+        with open(html_path, 'w', encoding='utf-8') as f:
+            f.write(html_full)
+
+        # 4️⃣ Appeler la version portable de WeasyPrint pour générer le PDF
+        generate_pdf_from_html(html_path, pdf_path)
+
+        # 5️⃣ Renvoyer le fichier PDF comme réponse HTTP
+        filename = f"fiche_collecte_{collecte.Numero_fiche_de_collecte}.pdf"
+        response = FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
         return response
+        #response = HttpResponse(content_type='application/pdf')
+        #response['Content-Disposition'] = f'attachment; filename="fiche_collecte_{collecte.Numero_fiche_de_collecte}.pdf"'
+        #css_files = [
+        #    CSS(filename=os.path.join(settings.STATIC_ROOT, 'css/bootstrap.min.css')),
+        #    CSS(filename=os.path.join(settings.STATIC_ROOT, 'css/style.css')),
+        #]
+        #HTML(string=html).write_pdf(response, stylesheets=css_files)
+        #return response
 
 
 class CollecteDeleteView(DeleteView):
