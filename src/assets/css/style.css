@@ -1,44 +1,58 @@
-/** 
-    CSS files for surcharging some code 
+/**
+    CSS files for surcharging some code
 **/
 .text-justify {
-    text-align: justify !important;
+  text-align: justify !important;
 }
 .select2-selection {
-    text-align: center !important;
+  text-align: center !important;
 }
 
 /** checked value in pdf **/
 /* Hide the default checkbox input */
 .custom-checkbox-container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
 }
 
 /* Create a custom checkmark placeholder */
 .checkmark {
-    display: inline-block;
-    width: 1.5em; /* Adjust size as needed */
-    height: 1.5em;
-    border: 2px solid #ccc;
-    border-radius: 4px; /* Optional: for rounded corners */
-    margin-right: 8px;
-    vertical-align: middle;
-    position: relative;
-    box-sizing: border-box;
+  display: inline-block;
+  width: 1.5em; /* Adjust size as needed */
+  height: 1.5em;
+  border: 2px solid #ccc;
+  border-radius: 4px; /* Optional: for rounded corners */
+  margin-right: 8px;
+  vertical-align: middle;
+  position: relative;
+  box-sizing: border-box;
 }
 
 /* Display the emoji when the checkbox is checked */
 .custom-checkbox-container input:checked ~ .checkmark::after {
-    content: "✔"; /* The emoji to display */
-    display: block;
-    font-size: 1em;
-    color: #007bff; /* A color for the emoji */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  content: '✔'; /* The emoji to display */
+  display: block;
+  font-size: 1em;
+  color: #007bff; /* A color for the emoji */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/**  */
+#elements-collecte-container .form-check {
+  margin-bottom: 0;
+}
+
+#elements-collecte-container label {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+#elements-collecte-container input[type='number'] {
+  width: 80px;
 }

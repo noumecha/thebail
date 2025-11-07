@@ -164,12 +164,13 @@ class CollecteView(TemplateView):
         pdf_path = os.path.join(temp_dir, f'fiche_collecte_{collecte.id}.pdf')
 
         # 3️⃣ Écrire le fichier HTML temporaire (inclut les liens CSS)
-        # On intègre directement les balises <link> pour tes fichiers CSS
+        bootstrap_css = open(os.path.join(settings.STATIC_ROOT, 'css/bootstrap.min.css')).read()
+        style_css = open(os.path.join(settings.STATIC_ROOT, 'css/style.css')).read()
         html_full = f"""
         <html>
         <head>
-            <link rel="stylesheet" href="{os.path.join(settings.STATIC_ROOT, 'css/bootstrap.min.css')}">
-            <link rel="stylesheet" href="{os.path.join(settings.STATIC_ROOT, 'css/style.css')}">
+            <style>{bootstrap_css}</style>
+            <style>{style_css}</style>
         </head>
         <body>
             {html}

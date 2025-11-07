@@ -10,21 +10,21 @@
         <style>
             @page {
                 size: A4 landscape;
-                margin: 1cm;
-                
+                /*margin: 1cm;*/
+                margin: 1.5cm 1cm 1.5cm 1cm;
+                font-size: 14px;
+                color: black;
+              @bottom-center {
+                content: "Opération de recensement des contrats des baux sur l'étendue du territoire National et à l'étranger ({{ now|date:'M' }} {{ now|date:'Y' }})";
+              }
+              @bottom-right {
+                content: "Page " counter(page) " sur " counter(pages);
+              }
             }
             .footer {
                 position: fixed;
-                bottom: 0.5cm;
-                left: 0.5cm;
-                right: 0.5cm;
-                width: calc(100% - 2cm); /* total page width minus margins */
-                display: flex;
-                justify-content: center; /* text on left, QR on right */
-                align-items: center; /* vertically centered */
-                font-size: 14px;
-                color: black;
-                z-index: 1000;
+                bottom: -1.25cm;
+                left: 0;
             }
 
             .qr-footer {
@@ -574,7 +574,7 @@
                     </h3>
                 </div>
             </div>
-            
+
             <!-- typologie du contrat -->
             <div class="row">
                 <div class="col-12">
@@ -1079,10 +1079,6 @@
 
         <!-- Footer fixed at bottom -->
         <div class="footer">
-            <div class="footer-text">
-                Opération de recensement des contrats des baux 
-                sur l'étendue du territoire National et à l'étranger (Générer le : {{ now|date:"d/m/Y H:i" }})
-            </div>
             <img src="{{ qr_code_img }}" class="qr-footer" alt="QR Code">
         </div>
 

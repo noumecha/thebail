@@ -1,0 +1,10 @@
+<div>
+  {% for group, options, index in widget.optgroups %}
+    {% for option in options %}
+      <div class="form-check">
+        {{ option.tag }}
+        <label class="form-check-label" for="{{ option.id_for_label }}">{{ option.label }}</label>
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>

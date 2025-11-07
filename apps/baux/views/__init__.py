@@ -2,3 +2,7 @@ from .collecte_views import *
 from .views import *
 from .contrat_views import *
 from .nonmandatement_views import *
+from .autocomplete_views import *
+from .revetement_views import *
+from .views_base import *
+from .partial_form_views import *

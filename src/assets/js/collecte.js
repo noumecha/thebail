@@ -79,8 +79,7 @@ $(function () {
   if ($('#id_TypeContrat')) {
     $(document).on('change', '#id_TypeContrat', function () {
       const selectedValue = $('#id_TypeContrat option:selected').text();
-      console.log(selectedValue);
-      if (selectedValue === 'Contrat CONTRAT MINDCAF-AUTRE') {
+      if (selectedValue === 'CONTRAT MINDCAF-AUTRE') {
         $('#id-add-contrat-type').show();
       } else {
         $('#id-add-contrat-type').hide();
@@ -154,11 +153,21 @@ $(function () {
   );
   ajaxModal('#addBailleurModal', '#bailleur-form-content', '#bailleurForm', '/bailleur-partial-form/', '#id_Bailleur');
 
+  // element and pieces
+  ajaxModal(
+    '#addElementModal',
+    '#element-form-content',
+    '#elementForm',
+    '/element-description-partial-form/',
+    '.elements-collecte-container-tbody:last'
+  );
+
+  ajaxModal('#addPieceModal', '#piece-form-content', '#pieceForm', '/piece-collecte-partial-form/', null);
+
   // handle the show/hide logic
   var avenantsForm = $('#avenants-0');
   var titleForm = $('#avenant-collecte-form-title');
   var radios = $('input[name="Existance_avenant"]');
-  console.log(radios);
 
   function toggleElements() {
     if ($('input[name="Existance_avenant"]:checked').val() == 'True') {

@@ -511,7 +511,7 @@ class RevetementExts(models.Model):
 
 # Element de description pour un immeuble ex : garage, jardin, piscine etc
 class ElementDeDescription(models.Model):
-    libelle = models.CharField(max_length=500)
+    libelle = models.CharField(max_length=500, unique=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
 
@@ -670,7 +670,7 @@ class TypeContrats(models.Model):
     # return text
     def __str__(self):
         libelle = self.libelle.upper()
-        return f"Contrat {libelle}"
+        return f"{libelle}"
 
 # Piece Collecte -- association table between Collectes and Pieces
 class PieceCollectes(models.Model):
@@ -690,7 +690,7 @@ class PieceCollectes(models.Model):
         return f"{self.Collecte.Numero_fiche_de_collecte} - {self.Piece.libelle}"
 
 class Pieces(models.Model):
-    libelle = models.CharField(max_length=255, blank=True, null=True)
+    libelle = models.CharField(max_length=255, blank=True, null=True, unique=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
 

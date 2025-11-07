@@ -39,7 +39,7 @@ class LocatairesForm(forms.ModelForm):
             "Observation": "Observation" ,
             "Peut_payer" : "Peut payer",
         }
-        
+
         widgets = {
             'Observation': forms.Textarea(attrs={'rows':4, 'cols':10}),
             'Date_delivrance_cni'  :  forms.TextInput(attrs={'type': 'date'}),
@@ -55,11 +55,11 @@ class LocatairesForm(forms.ModelForm):
                         Column(FloatingField("Intitule"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Peut_payer"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-6 mb-0'),
-                        Column(FloatingField("Nom_Prenom_Representant"), css_class='overflow-hidden form-group col-md-6 mb-0'),  
+                        Column(FloatingField("Nom_Prenom_Representant"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Num_Cni"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Date_delivrance_cni"), css_class='overflow-hidden form-group col-md-6 mb-0'),
-                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-6 mb-0'),  
-                        css_class='form-row' 
+                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        css_class='form-row'
                         """ ,label_class='text-decoration-none' """
                     ),
                     css_class="line__text border p-2 pt-4",
@@ -127,7 +127,7 @@ class RecensementsForm(forms.ModelForm):
         model = Recensements
 
         fields = (
-            "Agent_recenseur", "Type_immeuble", "Type_mur", 
+            "Agent_recenseur", "Type_immeuble", "Type_mur",
             "Couleur", "Emprise_au_sol", "Description", "Immeuble", #"Situation_de_la_batisse"
         )
 
@@ -178,10 +178,10 @@ class RecensementsForm(forms.ModelForm):
                 Fieldset(
                     "Caractéristiques du batiment",
                     Row(
-                        #Column(FloatingField("Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),             
-                        Column(FloatingField("Emprise_au_sol"), css_class='overflow-hidden form-group col-md-6 mb-0'),             
-                        Column(FloatingField("Type_mur"), css_class='overflow-hidden form-group col-md-6 mb-0'),            
-                        Column(FloatingField("Couleur"), css_class='color_class overflow-hidden form-group col-md-6 mb-0'),            
+                        #Column(FloatingField("Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Emprise_au_sol"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Type_mur"), css_class='overflow-hidden form-group col-md-6 mb-0'),
+                        Column(FloatingField("Couleur"), css_class='color_class overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Type_immeuble"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         #Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         css_class='form-row'
@@ -191,7 +191,7 @@ class RecensementsForm(forms.ModelForm):
                 css_class="p-3 pt-0"
             ),
         )
-        self.fields['Description'].required = False   
+        self.fields['Description'].required = False
 
 # type immeuble form
 class TypeConstructionsForm(forms.ModelForm):
@@ -206,7 +206,7 @@ class TypeConstructionsForm(forms.ModelForm):
         widgets = {
           'description': forms.Textarea(attrs={'rows':20, 'cols':10}),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super(TypeConstructionsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
@@ -217,7 +217,7 @@ class TypeConstructionsForm(forms.ModelForm):
                 css_class="form-row",
             ),
         )
-    
+
 class RevetementIntsForm(forms.ModelForm):
     class Meta:
         model = RevetementInts
@@ -230,7 +230,7 @@ class RevetementIntsForm(forms.ModelForm):
         widgets = {
           'description': forms.Textarea(attrs={'rows':20, 'cols':10}),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super(RevetementIntsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
@@ -254,7 +254,7 @@ class RevetementExtsForm(forms.ModelForm):
         widgets = {
           'description': forms.Textarea(attrs={'rows':20, 'cols':10}),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super(RevetementExtsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
@@ -281,7 +281,7 @@ class ElementDeDescriptionForm(forms.ModelForm):
                 Row(
                     Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
-                ),         
+                ),
             )
 
 
@@ -299,7 +299,7 @@ class PiecesForm(forms.ModelForm):
                 Row(
                     Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
-                ),         
+                ),
             )
 
 class PieceCollectesForm(forms.ModelForm):
@@ -326,7 +326,7 @@ class PieceCollectesForm(forms.ModelForm):
                     Column(FloatingField("nombre"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
                 ),
-                        
+
             )
 
 
@@ -343,19 +343,35 @@ class TypeContratsForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows':20, 'cols':10}),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super(TypeContratsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
-                # Prepends 
+                # Prepends
                 PrependedText('libelle', 'Contrat MINDCAF-'),
                 #Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                 css_class="form-row",
             ),
         )
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Prepend text to libelle
+        prepend_text = 'Contrat MINDCAF-'
+        libelle = self.cleaned_data.get('libelle', '')
+
+        # Only prepend if it doesn't already start with the prefix
+        if libelle and not libelle.startswith(prepend_text):
+            instance.libelle = prepend_text + libelle
+
+        if commit:
+            instance.save()
+
+        return instance
 
 
 # Exercice form

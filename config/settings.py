@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     # autocomplete features
     'dal',
     'dal_select2',
-    # 
+    #
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -88,7 +88,7 @@ INSTALLED_APPS = [
     #"crispy_bootstrap4",
     'formtools',
     'django_select2',
-    # 
+    #
     'django_countries',
     'djmoney',
     # autoreload on dev mode
@@ -151,7 +151,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # token managemment
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
@@ -211,6 +211,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# root for pdf :
+PDF_STATIC = BASE_DIR / "src" / "assets"
+
 
 STATICFILES_DIRS = [
     BASE_DIR / "src" / "assets",
@@ -236,7 +239,7 @@ AUTH_USER_MODEL = 'users.Utilisateur'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'
-# saving file 
+# saving file
 # --------------------------------------------------------------------
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')

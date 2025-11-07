@@ -4,6 +4,7 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset, Field, HTML
 from .nonmandatement_form import *
+from django.template.loader import render_to_string
 from dal import autocomplete
 from .ayantdroit_form import *
 
@@ -30,7 +31,7 @@ class ImmeubleElementForm(forms.ModelForm):
                     Column(FloatingField("nombre"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                     css_class='form-row'
                 ),
-                        
+
             )
 
 # immeubles form
@@ -92,7 +93,12 @@ class ImmeublesForm(forms.ModelForm):
 
         # after saving the immeuble, create/update ImmeubleElement
         for element in ElementDeDescription.objects.all():
-            statut = self.cleaned_data.get(f"element_{element.id}_statut")
+            #statut = self.cleaned_data.get(f"element_{element.id}_statut")
+            statut = self.cleaned_data.get(f"element_{el.pk}_statut")
+            if statut in ["True", "true", True]:
+                statut = True
+            else:
+                statut = False
             nombre = self.cleaned_data.get(f"element_{element.id}_nombre")
 
             if statut:  # if element is selected
@@ -118,11 +124,11 @@ class ImmeublesForm(forms.ModelForm):
                         Row(
                             Column(FloatingField("Designation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                             Column(FloatingField("Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),
-                            Column(FloatingField("Date_Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'), 
+                            Column(FloatingField("Date_Construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                             Column(FloatingField("Nombre_de_pieces"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                            Column(FloatingField("Superficie_louer"), css_class='overflow-hidden form-group col-md-4 mb-0'), 
-                            Column(FloatingField("Norme"), css_class='overflow-hidden form-group col-md-4 mb-0'),    
-                            Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-6 mb-0'),    
+                            Column(FloatingField("Superficie_louer"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                            Column(FloatingField("Norme"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                            Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                             #Column(FloatingField("Type_construction"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                             css_class='form-row'
                         ),
@@ -158,7 +164,7 @@ class ImmeublesForm(forms.ModelForm):
                         Column(FloatingField("Revetement_interieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Revetement_exterieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("observation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
-                        css_class='form-row' 
+                        css_class='form-row'
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
@@ -169,7 +175,7 @@ class ImmeublesForm(forms.ModelForm):
                     "IV. Description de la batisse",
                     Row(
                         Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-12 mb-0'),
-                        css_class='form-row' 
+                        css_class='form-row'
                     ),
                     css_class="bg-white line__text border p-2 pt-4"
                 ),
@@ -194,47 +200,69 @@ class ImmeublesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
-        # Dynamically create fields for each element
-        elements = list(ElementDeDescription.objects.all())
-        # manage select 2 input 
+        # manage select 2 input
         if 'arrondissement' in self.data:
             try:
                 arrondissement_id = int(self.data.get('arrondissement'))
                 self.fields['arrondissement'].queryset = Arrondissemements.objects.filter(pk=arrondissement_id)
             except (ValueError, TypeError):
                 pass
-        # 1) Create dynamic fields
-        for el in elements:
-            self.fields[f"element_{el.pk}_statut"] = forms.BooleanField(
-                required=False, label=el.libelle
+        #
+        elements = list(ElementDeDescription.objects.all())
+        element_groups = []
+        group = []
+
+        for index, el in enumerate(elements, start=1):
+            statut_oui_name = f"element_{el.pk}_statut_oui"
+            statut_non_name = f"element_{el.pk}_statut_non"
+            nombre_name = f"element_{el.pk}_nombre"
+
+            # ✅ Deux checkboxes
+            self.fields[statut_oui_name] = forms.BooleanField(
+                required=False,
+                label="Oui",
+                widget=forms.CheckboxInput(attrs={"class": "form-check-input statut-checkbox", "data-group": f"element_{el.pk}"}),
             )
-            self.fields[f"element_{el.pk}_nombre"] = forms.IntegerField(
+            self.fields[statut_non_name] = forms.BooleanField(
+                required=False,
+                label="Non",
+                widget=forms.CheckboxInput(attrs={"class": "form-check-input statut-checkbox", "data-group": f"element_{el.pk}"}),
+            )
+            self.fields[nombre_name] = forms.IntegerField(
                 required=False, min_value=0, initial=0, label="",
             )
-            # Optional: set initial values when editing an existing Immeuble
+
+            # Valeurs initiales (si instance)
             if self.instance and self.instance.pk:
                 try:
                     link = ImmeubleElement.objects.get(immeuble=self.instance, element=el)
-                    self.fields[f"element_{el.pk}_statut"].initial = link.statut
-                    self.fields[f"element_{el.pk}_nombre"].initial = link.nombre
+                    if link.statut is True:
+                        self.fields[statut_oui_name].initial = True
+                    elif link.statut is False:
+                        self.fields[statut_non_name].initial = True
+                    self.fields[nombre_name].initial = link.nombre
                 except ImmeubleElement.DoesNotExist:
                     pass
-        # 2) Build the dynamic rows for the layout
-        element_rows = []
-        for el in elements:
-            element_rows.append(
-                Column(
-                    Field(f"element_{el.pk}_statut", css_class=""),
-                    Field(f"element_{el.pk}_nombre", css_class="ms-2 w-50"),
-                    css_class="m-0 col-md-3 d-flex align-items-center justify-content-center"
-                )
-            )
+
+            group.append({
+                "id": el.pk,
+                "libelle": el.libelle,
+                "statut_oui": self[statut_oui_name],
+                "statut_non": self[statut_non_name],
+                "nombre_input": self[nombre_name],
+            })
+
+            if index % 9 == 0 or index == len(elements):
+                element_groups.append(group)
+                group = []
+
+        html_content = render_to_string("baux/widgets/immeuble_elements.html", {"element_groups": element_groups})
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # title of the section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Identification</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>I. Identification</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -245,12 +273,12 @@ class ImmeublesForm(forms.ModelForm):
                     Row(
                         Column(FloatingField("Designation"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Construction"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Date_Construction"), css_class='overflow-hidden form-group col-md-3 mb-0'), 
-                        Column(FloatingField("Nombre_de_pieces"), css_class='overflow-hidden form-group col-md-3 mb-0'), 
+                        Column(FloatingField("Date_Construction"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Nombre_de_pieces"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Superficie_louer"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Norme"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                        Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-4 mb-0'), 
-                        Column(FloatingField("images"), css_class='overflow-hidden form-group col-md-12 mb-0'), 
+                        Column(FloatingField("Type_location"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("images"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         css_class='form-row'
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
@@ -260,7 +288,7 @@ class ImmeublesForm(forms.ModelForm):
             # title of the section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Localisation</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>II. Localisation</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -287,7 +315,7 @@ class ImmeublesForm(forms.ModelForm):
             # title of the section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. Etat physique du batiment</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>III. Etat physique du batiment</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -297,32 +325,30 @@ class ImmeublesForm(forms.ModelForm):
                     "Etat physique du batiment",
                     Row(
                         Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                        #Column(FloatingField("Revetement_interieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
                                 <div class="d-flex align-items-center">
                                     {{ form.Revetement_interieure }}
                                     <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addRevetementInterieureModal">
-                                        + 
+                                        +
                                     </button>
                                 </div>
                             """),
                             css_class='overflow-hidden form-group col-md-4 mb-3'
                         ),
-                        #Column(FloatingField("Revetement_exterieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(
                             HTML("""
                                 <div class="d-flex align-items-center">
                                     {{ form.Revetement_exterieure }}
                                     <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addRevetementExterieureModal">
-                                        + 
+                                        +
                                     </button>
                                 </div>
                             """),
                             css_class='overflow-hidden form-group col-md-4 mb-3'
                         ),
                         Column(FloatingField("observation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
-                        css_class='form-row' 
+                        css_class='form-row'
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
@@ -331,7 +357,7 @@ class ImmeublesForm(forms.ModelForm):
             # Dynamic section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. Description de la batisse</h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>IV. Description de la batisse</h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -339,10 +365,13 @@ class ImmeublesForm(forms.ModelForm):
             Row(
                 Fieldset(
                     "Description de la batisse",
-                    Row(
-                        *element_rows,
-                        css_class="form-row"
-                    ),
+                    HTML(html_content),
+                    HTML("""
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addElementModal">
+                            Ajouter un élément
+                        </button>
+                    </div>"""),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"
@@ -350,7 +379,7 @@ class ImmeublesForm(forms.ModelForm):
             # Occupant section
             Row(
                 Column(
-                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"), 
+                    HTML("<h5 class='text-uppercase bg-secondary-subtle'>V. Occupants actuels de l'immeuble </h5>"),
                     css_class='overflow-hidden form-group col-md-12 mb-0'
                 ),
                 css_class='form-row'
@@ -369,5 +398,5 @@ class ImmeublesForm(forms.ModelForm):
             #        css_class="bg-white line__text border p-2 pt-4"
             #    )
             #)
-        )     
-        self.fields['Date_Construction'].required = False;   
+        )
+        self.fields['Date_Construction'].required = False

@@ -25,48 +25,50 @@ function setMessage(msg, id) {
 }
 
 // form modal form inside another form
-function ajaxModal(modalId, formnContainerId, formId, fetchUrl, selectItemId = null) {
+function ajaxModal(modalId, formContainerId, formId, fetchUrl, selectItemId = null) {
   const modal = $(modalId);
-  const formContainer = $(formnContainerId);
+  const formContainer = $(formContainerId);
   const selectContainer = $(selectItemId);
-  // Ouvrir le modal et charger le formulaire
+
   $(document).on('click', '[data-bs-target="' + modalId + '"]', function () {
     $.get(fetchUrl, function (data) {
       formContainer.html(data.html);
     });
   });
-  // Gérer la soumission AJAX du formulaire
+
   $(document).on('submit', `${formId}`, function (e) {
     e.preventDefault();
     const form = $(this);
     const formData = form.serialize();
-    // delete mask field that'are required but not visible
+
     $(form)
       .find(':input')
       .each(function () {
-        if (!$(this).is(':visible')) {
-          $(this).prop('required', false);
-        }
+        if (!$(this).is(':visible')) $(this).prop('required', false);
       });
-    // send ajax request
+
     $.ajax({
       url: fetchUrl,
       type: 'POST',
       data: formData,
       success: function (data) {
         if (data.success) {
-          $(selectContainer).append(
-            $('<option>', {
-              value: data.id,
-              text: data.text,
-              selected: true
-            })
-          );
+          if (selectContainer && selectContainer.length && !data.html) {
+            $(selectContainer).append($('<option>', { value: data.id, text: data.text, selected: true }));
+          }
+          if (data.html) {
+            // append data to the last child of selectContainer
+            $(selectContainer).append(data.html);
+          }
+
           $(formId).closest('form')[0].reset();
-          id = '#form-success-' + modalId.replace('#', '');
+          const id = '#form-success-' + modalId.replace('#', '');
           showAlertMessage(data.message, id);
+
+          const modalInstance = bootstrap.Modal.getInstance(document.querySelector(modalId));
+          modalInstance.hide();
         } else {
-          id = '#form-error-' + modalId.replace('#', '');
+          const id = '#form-error-' + modalId.replace('#', '');
           showAlertMessage(data.errors, id);
         }
       }
@@ -206,10 +208,9 @@ function showAlertMessage(msg, id) {
 
 // show message
 function showMessage() {
-  console.log('works');
   container = $('#message-show');
   container.fadeIn().css('display', 'block');
-  setTimeout(() => container.fadeOut(), 5000);
+  setTimeout(() => container.fadeOut(), 3000);
 }
 
 // function to toogle visibility and required attribute of fields in form base on another field value

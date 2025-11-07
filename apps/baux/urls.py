@@ -1,12 +1,11 @@
 from django.urls import path
-from . import views
 from django.contrib import admin
 from .views import *
 from django.urls import re_path as url
 
 app_name = 'baux'
 
-# crud urls helper 
+# crud urls helper
 def get_crud_urls(view_class, prefix, name):
     """ Helper function to generate CRUD URLs for a view class """
     #name = view_class.model._meta.model_name
@@ -19,8 +18,15 @@ def get_crud_urls(view_class, prefix, name):
         path(f"{prefix}/delete/<int:pk>", view_class.as_view(), {'action': 'delete'}, name=f'{name}_delete'),
     ]
 
+# partial form helper urls
+def partial_form_urls(view_func, prefix, name):
+    """ Helper function to generate partial form URL """
+    return [
+        path(f"{prefix}-partial-form/", view_func, name=f'{name}_partial_form'),
+    ]
 # urls
 urlpatterns = [
+    # cruds urls
     *get_crud_urls(LocataireView, "locataire/locataires", "locataire"),
     *get_crud_urls(BailleurView, "bailleur/bailleurs", "bailleur"),
     *get_crud_urls(ImmeubleView, "immeuble/immeubles", "immeuble"),
@@ -32,25 +38,20 @@ urlpatterns = [
     *get_crud_urls(AvenantsView, "avenant/avenants", "avenant"),
     *get_crud_urls(TypeContratView, "typecontrat/typecontrats", "typecontrat"),
     *get_crud_urls(views.ExercicesView, "exercice/exercices", "exercice"),
-    # revetements urls
     *get_crud_urls(RevetementIntsView, "revetementint/revetementints", "revetementint"),
     *get_crud_urls(RevetementExtsView, "revetementext/revetementexts", "revetementext"),
-    # 
     *get_crud_urls(ElementDeDescriptionView, "elementdescription/elementdescriptions", "elementdescription"),
     *get_crud_urls(PieceView, "piece/pieces", "piece"),
-    # 
-    path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
-    # type contrant partial 
-    path('type-contrat-partial-form/', views.typecontrat_partial_form_view, name='type_contrat_partial_form'),
-    # bailleur routes 
-    path('bailleur-partial-form/', views.bailleur_partial_form_view, name='bailleur_partial_form'),
-    path('exercice-partial-form/', views.exercice_partial_form_view, name='exercice_partial_form'),
-    # revtement partial route
-    path('revetementint-partial-form/', views.revetementint_partial_form_view, name='revetementint_partial_form_view'),
-    path('revetementext-partial-form/', views.revetementext_partial_form_view, name='revetementext_partial_form_view'),
-    # locataire routes
-    #path('locataire-partial-form/', views._partial_form_view, name='locataire_partial_form'),
-    path('immeuble-partial-form/', views.immeuble_partial_form_view, name='immeuble_partial_form'), # for modal purpose
+    # partial forms urls
+    *partial_form_urls(TypeContratPartialFormView.as_view(), "type-contrat", "type_contrat"),
+    *partial_form_urls(BailleursPartialFormView.as_view(), "bailleur", "bailleur"),
+    *partial_form_urls(ExercicePartialFormView.as_view(), "exercice", "exercice"),
+    *partial_form_urls(RevetementIntPartialFormView.as_view(), "revetement-ext", "revetementext"),
+    *partial_form_urls(RevetementExtPartialFormView.as_view(), "revetement-int", "revetementint"),
+    *partial_form_urls(ImmeublePartialFormView.as_view(), "immeuble", "immeuble"),
+    *partial_form_urls(ElementPartialFormView.as_view(), "element-description", "elementdescription"),
+    *partial_form_urls(PiecePartialFormView.as_view(), "piece-collecte", "piececollecte"),
+    # specific partial form urls
     path("Menuimmeuble/add/", views.Menuimmeuble, name='Menuimmeuble'),
     # autocomplete on contrat form
     path("service/autocomplete/", ServiceAutocomplete.as_view(), name="service_autocomplete"),
@@ -68,11 +69,11 @@ urlpatterns = [
     path("structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration <int:administration_id>
     path("agent/", views.get_agent_name, name='get_agent_name'), # getting agent collecte base on his matricule
     path("arrondissement/", views.get_localisation_datas, name='get_localisation_datas'), # localisation data base on arraondissement
-    # consultation : 
+    # consultation :
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
-    # Statistiques : 
+    # Statistiques :
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
-    # collecte : 
+    # collecte :
     path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
     path("collecte/list/", CollecteView.as_view(template_name="baux/collecte_list.html"), name='collecte_list'),
     path("collecte/create", collecte_create, name='collecte_create'),
@@ -80,4 +81,5 @@ urlpatterns = [
     path("collecte/printfiche/<int:pk>/", CollecteView.printfiche, name='collecte_printfiche'),
     path("collecte/delete/<int:pk>/", CollecteDeleteView.as_view(), name='collecte_delete'),
     path("collecte/update/<int:pk>/", CollecteView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
+    path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
 ]

@@ -91,7 +91,7 @@
             </div>
         </div>
     </div>
-   <!-- Exercice -->
+    <!-- Exercice -->
     <div class="modal fade" id="addExerciceModal" tabindex="-1" aria-labelledby="addExerciceLabel">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content bg-light">
@@ -135,6 +135,54 @@
             </div>
         </div>
     </div>
+
+    <!-- Pieces -->
+    <div class="modal fade" id="addPieceModal" tabindex="-1" aria-labelledby="addPieceLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-light">
+            <form id="pieceForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPieceModal">Ajouter une Pièce</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="piece-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-success-addPieceModal"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error-addPieceModal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- éléments -->
+    <div class="modal fade" id="addElementModal" tabindex="-1" aria-labelledby="addElementLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-light">
+            <form id="elementForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addElementModal">Ajouter un Element</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="element-form-content">Chargement...</div>
+                    <div class="alert alert-success" style="display: none;" id="form-success-addElementModal"></div>
+                    <div class="alert alert-danger" style="display: none;" id="form-error-addElementModal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Avenant table template -->
     <div id="avenant-template" style="display: none;">
         <div class="avenant-entry mb-3 border p-2 rounded bg-light position-relative">

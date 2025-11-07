@@ -101,25 +101,43 @@ class CollectesForm(forms.ModelForm):
                 self.fields['Agent'].queryset = AgentCollecte.objects.filter(pk=agent_id)
             except (ValueError, TypeError):
                 pass
-        #1 Dynamically create fields for each pieces
+        #
         pieces = list(Pieces.objects.all())
-        for el in pieces:
-            self.fields[f"piece_{el.pk}_statut"] = forms.BooleanField(
+        piece_groups = []
+        group = []
+
+        for index, el in enumerate(pieces, start=1):
+            statut_name = f"piece_{el.pk}_statut_oui"
+            nombre_name = f"piece_{el.pk}_nombre"
+
+            self.fields[statut_name] = forms.BooleanField(
                 required=False, label=el.libelle
             )
-            self.fields[f"piece_{el.pk}_nombre"] = forms.IntegerField(
+            self.fields[nombre_name] = forms.IntegerField(
                 required=False, min_value=0, initial=0, label="",
             )
+
             # Optional: set initial values when editing an existing Collecte
             if self.instance and self.instance.pk:
                 try:
                     link = PieceCollectes.objects.get(collecte=self.instance, piece=el)
-                    self.fields[f"piece_{el.pk}_statut"].initial = link.statut
-                    self.fields[f"piece_{el.pk}_nombre"].initial = link.nombre
+                    self.fields[statut_name].initial = link.statut
+                    self.fields[nombre_name].initial = link.nombre
                 except PieceCollectes.DoesNotExist:
                     pass
-        #1 Dynamically create fields for each immeubles elements
 
+            group.append({
+                "id": el.pk,
+                "libelle": el.libelle,
+                "statut_input": self[statut_name],
+                "nombre_input": self[nombre_name],
+            })
+
+            if index % 9 == 0 or index == len(pieces):
+                piece_groups.append(group)
+                group = []
+
+        html_content = render_to_string("baux/widgets/pieces_template.html", {"piece_groups": piece_groups})
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # title informations :
@@ -152,7 +170,6 @@ class CollectesForm(forms.ModelForm):
                     """),
                     css_class='overflow-hidden form-group col-md-4 mb-3'
                 ),
-                #Column(FloatingField("Matricule_agent_de_collecte"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                 Column(FloatingField("Agent_de_collecte", css_class="disabled"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                 Column(FloatingField("Date_de_collecte"), css_class='overflow-hidden form-group col-md-4 mb-0'),
             ),
@@ -464,7 +481,8 @@ class CollectesForm(forms.ModelForm):
                     #    *piece_rows,
                     #    css_class="form-row"
                     #),
-                    HTML("{% include 'baux/partials/pieces_template.html' with pieces=pieces %}"),
+                    #HTML("{% include 'baux/partials/pieces_template.html' with pieces=pieces %}"),
+                    HTML(html_content),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-2"
