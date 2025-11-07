@@ -2,8 +2,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .views_base import GenericPartialFormView
 from ..models import ElementDeDescription, Pieces
-from ..forms import (RevetementIntsForm, ElementDeDescriptionForm, PieceCollectesForm,
-                    RevetementExtsForm, ExercicesForm, BailleursForm,TypeContratsForm, ImmeublesForm, ElementDeDescriptionForm)
+from ..forms import *
 
 # partial form views
 class RevetementExtPartialFormView(GenericPartialFormView):
@@ -45,17 +44,17 @@ class ElementPartialFormView(GenericPartialFormView):
         return html_row
 
 class PiecePartialFormView(GenericPartialFormView):
-    form_class = PieceCollectesForm
+    form_class = PiecesForm
     success_message = 'Pièce enregistrée avec succès'
 
     def get_success_html(self, instance, request):
         """Return the HTML row for the new piece."""
-        form_parent = ImmeublesForm() # Or the correct parent form
-        statut_input = form_parent[f"piece_{instance.pk}_statut"]
+        form_parent = CollectesForm()
+        statut_input = form_parent[f"piece_{instance.pk}_statut_oui"]
         nombre_input = form_parent[f"piece_{instance.pk}_nombre"]
 
         return render_to_string(
-            "baux/widgets/piece_element_row.html", # You'll need to create this template
+            "baux/widgets/piece_element_row.html",
             {
                 "el": {
                     "id": instance.pk,

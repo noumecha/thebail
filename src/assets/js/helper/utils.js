@@ -58,7 +58,8 @@ function ajaxModal(modalId, formContainerId, formId, fetchUrl, selectItemId = nu
           }
           if (data.html) {
             // append data to the last child of selectContainer
-            $(selectContainer).append(data.html);
+            //$(selectContainer).append(data.html);
+            appendToDynamicGroup(selectContainer, data.html);
           }
 
           $(formId).closest('form')[0].reset();
@@ -73,6 +74,85 @@ function ajaxModal(modalId, formContainerId, formId, fetchUrl, selectItemId = nu
         }
       }
     });
+  });
+}
+
+// apppending dynamic group
+const GROUP_HEADERS = {
+  element: `
+    <thead class="table-light">
+      <tr>
+        <th class="p-0">Existence</th>
+        <th class="bg-secondary-subtle p-0"></th>
+        <th class="p-0">Quantité</th>
+      </tr>
+    </thead>
+  `,
+  piece: `
+    <thead class="table-light">
+      <tr>
+        <th class="p-0">Désignation</th>
+        <th class="p-0">Quantité</th>
+      </tr>
+    </thead>
+  `
+};
+
+function appendToDynamicGroup(containerSelector, newRowHtml) {
+  const container = $(containerSelector);
+  const groupType = container.getAttribute('data-group-type');
+  const maxItems = parseInt(container.getAttribute('data-max-items')) || 9;
+
+  // Find the last group
+  let lastGroup = container.querySelector('.col-block:last-of-type');
+  if (!lastGroup) {
+    // If no group exists, create one
+    lastGroup = createNewGroup(container, groupType);
+    container.appendChild(lastGroup);
+  }
+
+  const tbody = lastGroup.querySelector('tbody');
+  const currentCount = tbody.querySelectorAll('tr').length;
+
+  // If last group is full, create a new one
+  if (currentCount >= maxItems) {
+    const newGroup = createNewGroup(container, groupType);
+    container.appendChild(newGroup);
+    newGroup.querySelector('tbody').insertAdjacentHTML('beforeend', newRowHtml);
+  } else {
+    tbody.insertAdjacentHTML('beforeend', newRowHtml);
+  }
+}
+
+function createNewGroup(container, type) {
+  const headerHtml = GROUP_HEADERS[type] || '';
+  const colClass = type === 'piece' ? 'col-md-6 col-lg-4' : 'col-md-4';
+
+  const newGroup = document.createElement('div');
+  newGroup.className = `${colClass} col-block mb-4`;
+  newGroup.innerHTML = `
+    <table class="table align-middle text-center">
+      ${headerHtml}
+      <tbody class="${type}-collecte-container-tbody"></tbody>
+    </table>
+  `;
+  return newGroup;
+}
+
+// generic function to mange checkboxes in the dynamic groups
+rebindElementCheckboxes();
+function rebindElementCheckboxes() {
+  $('.statut-checkbox').forEach(checkbox => {
+    checkbox.removeEventListener('change', checkbox._handler);
+    checkbox._handler = e => {
+      const group = e.target.getAttribute('data-group');
+      if (e.target.checked) {
+        $(`.statut-checkbox[data-group='${group}']`).forEach(cb => {
+          if (cb !== e.target) cb.checked = false;
+        });
+      }
+    };
+    checkbox.addEventListener('change', checkbox._handler);
   });
 }
 

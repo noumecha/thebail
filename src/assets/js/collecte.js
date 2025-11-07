@@ -134,14 +134,14 @@ $(function () {
     '#addRevetementInterieureModal',
     '#revetementint-form-content',
     '#revetementintForm',
-    '/revetementint-partial-form/',
+    '/revetement-int-partial-form/',
     '#id_immeubles-0-Revetement_interieure'
   );
   ajaxModal(
     '#addRevetementExterieureModal',
     '#revetementext-form-content',
     '#revetementextForm',
-    '/revetementext-partial-form/',
+    '/revetement-ext-partial-form/',
     '#id_immeubles-0-Revetement_exterieure'
   );
   ajaxModal(
@@ -159,10 +159,16 @@ $(function () {
     '#element-form-content',
     '#elementForm',
     '/element-description-partial-form/',
-    '.elements-collecte-container-tbody:last'
+    '#elements-collecte-container'
   );
 
-  ajaxModal('#addPieceModal', '#piece-form-content', '#pieceForm', '/piece-collecte-partial-form/', null);
+  ajaxModal(
+    '#addPieceModal',
+    '#piece-form-content',
+    '#pieceForm',
+    '/piece-collecte-partial-form/',
+    '#pieces-collecte-container'
+  );
 
   // handle the show/hide logic
   var avenantsForm = $('#avenants-0');

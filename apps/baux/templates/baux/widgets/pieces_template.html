@@ -1,6 +1,6 @@
-<div class="row" id="elements-collecte-container">
+<div class="row" id="pieces-collecte-container" data-group-type="piece" data-max-items="9">
   {% for group in piece_groups %}
-    <div class="col-md-6 col-lg-4 mb-4">
+    <div class="col-md-6 col-block col-lg-4 mb-4">
       <table class="table table-bordered align-middle text-center">
         <thead class="table-light">
           <tr>
@@ -8,11 +8,11 @@
             <th class="p-0">Quantité</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="pieces-collecte-container-tbody" class="pieces-collecte-container-tbody">
           {% for el in group %}
             <tr>
-              <td class="d-flex ps-0 pe-0">
-                <div class="d-flex form-check p-0 ps-1 form-check-inline">
+              <td class="d-flex ps-2 pe-0">
+                <div class="d-flex form-check form-check-inline">
                   {{ el.statut_input }}
                   <label class="form-check-label ms-1">{{ el.libelle }}</label>
                 </div>
@@ -25,3 +25,25 @@
     </div>
   {% endfor %}
 </div>
+
+<!--script>
+  const GROUP_HEADERS = {
+  element: `
+    <thead class="table-light">
+      <tr>
+        <th class="p-0">Existence</th>
+        <th class="bg-secondary-subtle p-0"></th>
+        <th class="p-0">Quantité</th>
+      </tr>
+    </thead>
+  `,
+  piece: `
+    <thead class="table-light">
+      <tr>
+        <th class="p-0">Désignation</th>
+        <th class="p-0">Quantité</th>
+      </tr>
+    </thead>
+  `
+  };
+</script-->

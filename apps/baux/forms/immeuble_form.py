@@ -94,7 +94,7 @@ class ImmeublesForm(forms.ModelForm):
         # after saving the immeuble, create/update ImmeubleElement
         for element in ElementDeDescription.objects.all():
             #statut = self.cleaned_data.get(f"element_{element.id}_statut")
-            statut = self.cleaned_data.get(f"element_{el.pk}_statut")
+            statut = self.cleaned_data.get(f"element_{element.pk}_statut")
             if statut in ["True", "true", True]:
                 statut = True
             else:

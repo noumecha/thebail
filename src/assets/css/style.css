@@ -44,15 +44,18 @@
 }
 
 /**  */
-#elements-collecte-container .form-check {
+#elements-collecte-container .form-check,
+#pieces-collecte-container .form-check {
   margin-bottom: 0;
 }
 
-#elements-collecte-container label {
+#elements-collecte-container label,
+#pieces-collecte-container label {
   margin-bottom: 0;
   font-size: 0.9rem;
 }
 
-#elements-collecte-container input[type='number'] {
+#elements-collecte-container input[type='number'],
+#pieces-collecte-container input[type='number'] {
   width: 80px;
 }

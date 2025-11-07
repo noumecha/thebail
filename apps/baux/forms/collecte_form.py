@@ -111,7 +111,9 @@ class CollectesForm(forms.ModelForm):
             nombre_name = f"piece_{el.pk}_nombre"
 
             self.fields[statut_name] = forms.BooleanField(
-                required=False, label=el.libelle
+                required=False,
+                label=el.libelle,
+                widget=forms.CheckboxInput(attrs={"class": "form-check-input statut-checkbox", "data-group": f"element_{el.pk}"}),
             )
             self.fields[nombre_name] = forms.IntegerField(
                 required=False, min_value=0, initial=0, label="",
@@ -477,15 +479,16 @@ class CollectesForm(forms.ModelForm):
             Row(
                 Fieldset(
                     "Pieces Collectées",
-                    #Row(
-                    #    *piece_rows,
-                    #    css_class="form-row"
-                    #),
-                    #HTML("{% include 'baux/partials/pieces_template.html' with pieces=pieces %}"),
                     HTML(html_content),
+                    HTML("""
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addPieceModal">
+                            Ajouter une pièce
+                        </button>
+                    </div>"""),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
-                css_class="p-3 pt-2"
+                css_class="p-3 pt-0"
             ),
             Row(
                 Column(FloatingField("observation"), css_class='overflow-hidden form-group mt-1 col-md-12 mb-0'),

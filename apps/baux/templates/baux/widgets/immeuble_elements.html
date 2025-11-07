@@ -1,6 +1,6 @@
-<div class="row" id="elements-collecte-container">
+<div class="row" id="elements-collecte-container" data-group-type="element" data-max-items="9">
   {% for group in element_groups %}
-    <div class="col-md-4 mb-4">
+    <div class="col-md-4 col-block mb-4">
       <table class="table align-middle text-center">
         <thead class="table-light">
           <tr>
@@ -33,17 +33,14 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  // exclusivité entre les checkboxes "oui" et "non"
-  document.querySelectorAll(".statut-checkbox").forEach((checkbox) => {
-    checkbox.addEventListener("change", (e) => {
+  document.addEventListener("change", function (e) {
+    if (e.target.classList.contains("statut-checkbox")) {
       const group = e.target.getAttribute("data-group");
       if (e.target.checked) {
         document.querySelectorAll(`.statut-checkbox[data-group='${group}']`).forEach((cb) => {
           if (cb !== e.target) cb.checked = false;
         });
       }
-    });
+    }
   });
-});
 </script>
