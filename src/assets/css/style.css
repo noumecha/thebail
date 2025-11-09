@@ -8,6 +8,30 @@
   text-align: center !important;
 }
 
+/** for file upload **/
+/* Hide the default file input text */
+.file-upload-wrapper input[type='file'] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* Style the visible label instead */
+.file-upload-label {
+  display: inline-block;
+  background: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-upload-label:hover {
+  background: #e9ecef;
+}
+
 /** checked value in pdf **/
 /* Hide the default checkbox input */
 .custom-checkbox-container input {

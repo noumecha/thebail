@@ -1,5 +1,6 @@
 from django import forms
 from ..models import *
+from .utils import MultipleFileField
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.bootstrap import InlineRadios
 from crispy_forms.helper import FormHelper
@@ -109,6 +110,7 @@ class CollectesForm(forms.ModelForm):
         for index, el in enumerate(pieces, start=1):
             statut_name = f"piece_{el.pk}_statut_oui"
             nombre_name = f"piece_{el.pk}_nombre"
+            images_name = f"piece_{el.pk}_images"
 
             self.fields[statut_name] = forms.BooleanField(
                 required=False,
@@ -118,6 +120,10 @@ class CollectesForm(forms.ModelForm):
             self.fields[nombre_name] = forms.IntegerField(
                 required=False, min_value=0, initial=0, label="",
             )
+            self.fields[images_name] = MultipleFileField(
+                required=False,
+                label="",
+            )
 
             # Optional: set initial values when editing an existing Collecte
             if self.instance and self.instance.pk:
@@ -125,6 +131,7 @@ class CollectesForm(forms.ModelForm):
                     link = PieceCollectes.objects.get(collecte=self.instance, piece=el)
                     self.fields[statut_name].initial = link.statut
                     self.fields[nombre_name].initial = link.nombre
+                    self.fields[images_name].initial = link.images
                 except PieceCollectes.DoesNotExist:
                     pass
 
@@ -133,6 +140,7 @@ class CollectesForm(forms.ModelForm):
                 "libelle": el.libelle,
                 "statut_input": self[statut_name],
                 "nombre_input": self[nombre_name],
+                "images_input": self[images_name],
             })
 
             if index % 9 == 0 or index == len(pieces):
@@ -457,7 +465,10 @@ class CollectesForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                Formset("immeubles_formset"),
+                HTML(
+                    "{% include 'baux/forms/immeuble_formset_block.html' %}"
+                ),
+                #Formset("immeubles_formset"),
                 css_class="p-3 pt-0"
             ),
             Row(

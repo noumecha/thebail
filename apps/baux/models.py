@@ -676,8 +676,10 @@ class TypeContrats(models.Model):
 class PieceCollectes(models.Model):
     Collecte = models.ForeignKey("Collectes", on_delete=models.CASCADE, related_name="pieces_collectes")
     Piece = models.ForeignKey("Pieces", on_delete=models.CASCADE, related_name="piece")
-    statut = models.BooleanField(null=True, blank=True)  # statut de disponibilité oui/non
-    nombre = models.PositiveIntegerField(default=0)  # nombre d’éléments collectés
+    statut = models.BooleanField(null=True, blank=True)
+    nombre = models.PositiveIntegerField(default=0)
+    image = models.ImageField(upload_to="immeubles/")
+    # timestamps
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
 
@@ -700,22 +702,6 @@ class Pieces(models.Model):
 
     def __str__(self):
         return f" {self.libelle}  "
-
-def upload_piece_file(instance, filename):
-    return f"collecte/{instance.piece_collectes.collecte.id}/pieces/{instance.pieces.libelle}/{filename}"
-
-#class FichiersPiece(models.Model):
-#    Collecte_piece = models.ForeignKey(PieceCollectes, on_delete=models.CASCADE, related_name="fichiers")
-#    fichier = models.FileField(upload_to=upload_piece_file)
-#    Date_creation = models.DateTimeField(default=timezone.now)
-#    Date_miseajour = models.DateTimeField(default=timezone.now)
-#
-#    class Meta:
-#        verbose_name = "Fichier de pièce"
-#        verbose_name_plural = "Fichiers de pièce"
-#
-#    def __str__(self):
-#        return f"Fichier {self.fichier.name}"
 
 # model for agent de collecte
 class AgentCollecte(models.Model):

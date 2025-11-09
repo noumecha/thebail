@@ -1,9 +1,15 @@
 <tr>
-  <td class="d-flex ps-0 pe-0">
-    <div class="d-flex form-check p-0 ps-1 form-check-inline">
+  <td class="d-flex ps-2 pe-0">
+    <div class="d-flex form-check form-check-inline">
       {{ el.statut_input }}
-      <label class="form-check-label ms-1">{{ el.libelle }}</label>
+      <label class="form-check-label text-start ms-1">{{ el.libelle }}</label>
     </div>
   </td>
   <td class="p-0 align-items-center" style="width: 80px;">{{ el.nombre_input }}</td>
+  <td class="p-0 align-items-center">
+    <div class="file-upload-wrapper">
+      {{ el.images_input }}
+      <label class="file-upload-label p-1">0 fich.</label>
+    </div>
+  </td>
 </tr>

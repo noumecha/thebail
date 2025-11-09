@@ -6,19 +6,12 @@
           <tr>
             <th class="p-0">Désignation</th>
             <th class="p-0">Quantité</th>
+            <th class="p-0">Images</th>
           </tr>
         </thead>
         <tbody id="pieces-collecte-container-tbody" class="pieces-collecte-container-tbody">
           {% for el in group %}
-            <tr>
-              <td class="d-flex ps-2 pe-0">
-                <div class="d-flex form-check form-check-inline">
-                  {{ el.statut_input }}
-                  <label class="form-check-label ms-1">{{ el.libelle }}</label>
-                </div>
-              </td>
-              <td class="p-0 align-items-center" style="width: 80px;">{{ el.nombre_input }}</td>
-            </tr>
+            {% include "baux/widgets/piece_element_row.html" with el=el %}
           {% endfor %}
         </tbody>
       </table>

@@ -1,0 +1,4 @@
+{{ immeubles_formset.management_form }}
+{% for form in immeubles_formset.forms %}
+  {{ form.render_collecte_layout|safe }}
+{% endfor %}

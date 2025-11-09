@@ -1,5 +1,6 @@
 from django import forms
 from ..models import *
+from .utils import MultipleFileField
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Fieldset, Field, HTML
@@ -33,15 +34,6 @@ class ImmeubleElementForm(forms.ModelForm):
                 ),
 
             )
-
-# immeubles form
-class MultipleFileInput(forms.ClearableFileInput):
-    allow_multiple_selected = True
-
-class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", MultipleFileInput())
-        super().__init__(*args, **kwargs)
 
 class ImmeublesForm(forms.ModelForm):
     images = MultipleFileField()
@@ -198,6 +190,11 @@ class ImmeublesForm(forms.ModelForm):
         )
         return helper
 
+
+    def render_collecte_layout(self):
+        """Return custom HTML layout for collecte section."""
+        return render_to_string("baux/forms/collecte_immeuble_form.html", {"form": self})
+
     def __init__(self, *args, **kwargs):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
         # manage select 2 input
@@ -257,6 +254,7 @@ class ImmeublesForm(forms.ModelForm):
                 group = []
 
         html_content = render_to_string("baux/widgets/immeuble_elements.html", {"element_groups": element_groups})
+        form_content = render_to_string("baux/forms/collecte_immeuble_form.html", {"form" : ImmeublesForm})
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # title of the section

@@ -93,68 +93,66 @@ const GROUP_HEADERS = {
       <tr>
         <th class="p-0">Désignation</th>
         <th class="p-0">Quantité</th>
+        <th class="p-0">Images</th>
       </tr>
     </thead>
   `
 };
 
 function appendToDynamicGroup(containerSelector, newRowHtml) {
-  const container = $(containerSelector);
-  const groupType = container.getAttribute('data-group-type');
-  const maxItems = parseInt(container.getAttribute('data-max-items')) || 9;
+  const $container = $(containerSelector);
+  const groupType = $container.data('group-type');
+  const maxItems = parseInt($container.data('max-items')) || 9;
 
-  // Find the last group
-  let lastGroup = container.querySelector('.col-block:last-of-type');
-  if (!lastGroup) {
-    // If no group exists, create one
-    lastGroup = createNewGroup(container, groupType);
-    container.appendChild(lastGroup);
+  // Find last group
+  let $lastGroup = $container.find('.col-block').last();
+
+  // If no group exists, create one
+  if (!$lastGroup.length) {
+    $lastGroup = createNewGroup($container, groupType);
+    $container.append($lastGroup);
   }
 
-  const tbody = lastGroup.querySelector('tbody');
-  const currentCount = tbody.querySelectorAll('tr').length;
+  const $tbody = $lastGroup.find('tbody');
+  const currentCount = $tbody.find('tr').length;
 
   // If last group is full, create a new one
   if (currentCount >= maxItems) {
-    const newGroup = createNewGroup(container, groupType);
-    container.appendChild(newGroup);
-    newGroup.querySelector('tbody').insertAdjacentHTML('beforeend', newRowHtml);
+    const $newGroup = createNewGroup($container, groupType);
+    $container.append($newGroup);
+    $newGroup.find('tbody').append(newRowHtml);
   } else {
-    tbody.insertAdjacentHTML('beforeend', newRowHtml);
+    $tbody.append(newRowHtml);
   }
 }
 
-function createNewGroup(container, type) {
+function createNewGroup($container, type) {
   const headerHtml = GROUP_HEADERS[type] || '';
   const colClass = type === 'piece' ? 'col-md-6 col-lg-4' : 'col-md-4';
 
-  const newGroup = document.createElement('div');
-  newGroup.className = `${colClass} col-block mb-4`;
-  newGroup.innerHTML = `
-    <table class="table align-middle text-center">
-      ${headerHtml}
-      <tbody class="${type}-collecte-container-tbody"></tbody>
-    </table>
-  `;
-  return newGroup;
+  const $newGroup = $(`
+    <div class="${colClass} col-block mb-4">
+      <table class="table align-middle text-center">
+        ${headerHtml}
+        <tbody class="${type}-collecte-container-tbody"></tbody>
+      </table>
+    </div>
+  `);
+
+  return $newGroup;
 }
 
 // generic function to mange checkboxes in the dynamic groups
-rebindElementCheckboxes();
-function rebindElementCheckboxes() {
-  $('.statut-checkbox').forEach(checkbox => {
-    checkbox.removeEventListener('change', checkbox._handler);
-    checkbox._handler = e => {
-      const group = e.target.getAttribute('data-group');
-      if (e.target.checked) {
-        $(`.statut-checkbox[data-group='${group}']`).forEach(cb => {
-          if (cb !== e.target) cb.checked = false;
-        });
-      }
-    };
-    checkbox.addEventListener('change', checkbox._handler);
-  });
-}
+document.addEventListener('change', function (e) {
+  if (e.target.classList.contains('statut-checkbox')) {
+    const group = e.target.getAttribute('data-group');
+    if (e.target.checked) {
+      document.querySelectorAll(`.statut-checkbox[data-group='${group}']`).forEach(cb => {
+        if (cb !== e.target) cb.checked = false;
+      });
+    }
+  }
+});
 
 // function to load modal content
 function loadModal(modalId, formContainer, url) {
@@ -357,3 +355,21 @@ function disabledCSS(el) {
     opacity: '1'
   });
 }
+
+// for file upload
+$(document).on('change', 'input[type="file"][multiple]', function () {
+  const count = this.files.length;
+  const label = $(this).siblings('.file-upload-label');
+
+  if (count === 0) {
+    label.text('0 fich.');
+  } else if (count === 1) {
+    label.text('1 fich.');
+  } else {
+    label.text(`${count} fich.`);
+  }
+});
+
+$(document).on('click', '.file-upload-label', function () {
+  $(this).siblings('input[type="file"]').trigger('click');
+});

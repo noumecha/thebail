@@ -25,7 +25,4 @@ class Migration(migrations.Migration):
             name='Raison_social',
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
-        migrations.DeleteModel(
-            name='FichiersPiece',
-        ),
     ]

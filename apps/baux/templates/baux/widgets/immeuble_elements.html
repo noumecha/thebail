@@ -11,20 +11,7 @@
         </thead>
         <tbody id="elements-collecte-container-tbody" class="elements-collecte-container-tbody">
           {% for el in group %}
-            <tr>
-              <td class="d-flex ps-0 pe-0">
-                <div class="form-check form-check-inline">
-                  {{ el.statut_oui }}
-                  <label class="form-check-label ms-1">Oui</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  {{ el.statut_non }}
-                  <label class="form-check-label ms-1">Non</label>
-                </div>
-              </td>
-              <td class="p-0 align-items-center text-start">{{ el.libelle }}</td>
-              <td class="p-0 align-items-center" style="width: 80px;">{{ el.nombre_input }}</td>
-            </tr>
+            {% include "baux/widgets/immeuble_element_row.html" with el=el %}
           {% endfor %}
         </tbody>
       </table>

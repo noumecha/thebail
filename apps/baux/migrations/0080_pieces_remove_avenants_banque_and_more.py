@@ -518,20 +518,6 @@ class Migration(migrations.Migration):
                 'unique_together': {('Collecte', 'Piece')},
             },
         ),
-        migrations.CreateModel(
-            name='FichiersPiece',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fichier', models.FileField(upload_to=apps.baux.models.upload_piece_file)),
-                ('Date_creation', models.DateTimeField(auto_now=True)),
-                ('Date_miseajour', models.DateTimeField(auto_now=True)),
-                ('Collecte_piece', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fichiers', to='baux.piececollectes')),
-            ],
-            options={
-                'verbose_name': 'Fichier de pièce',
-                'verbose_name_plural': 'Fichiers de pièce',
-            },
-        ),
         migrations.AddField(
             model_name='collectes',
             name='pieces',
