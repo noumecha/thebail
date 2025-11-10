@@ -1,0 +1,14 @@
+{% load crispy_forms_tags %}
+{% if variant == "left_label" %}
+  <div class="d-flex align-items-center mb-2">
+    <label for="{{ field.id_for_label }}" class="fw-bold me-2">{{ field.label }} :</label>
+    {{ field }}
+  </div>
+{% elif variant == "inline_label" %}
+  <div class="form-floating mb-2">
+    {{ field }}
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+  </div>
+{% else %}
+  {{ field }}
+{% endif %}

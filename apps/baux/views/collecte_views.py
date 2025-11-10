@@ -69,6 +69,18 @@ class CollecteView(TemplateView):
             form = CollectesForm()
         context['avenants_formset'] = AvenantsFormSet(prefix="avenants")
         context['immeubles_formset'] = ImmeublesFormSet(prefix="immeubles")
+        for immeuble_form in context['immeubles_formset'].forms:
+            immeuble_instance = immeuble_form.instance
+
+            immeuble_form.occupants_residence_formset = OccupantsFormSet(
+                prefix=f"res_{immeuble_instance.pk or 'new'}",
+                instance=immeuble_instance,
+            )
+
+            immeuble_form.occupants_bureau_formset = OccupantBureauxFormSet(
+                prefix=f"bur_{immeuble_instance.pk or 'new'}",
+                instance=immeuble_instance,
+            )
         context['ayants_droits_formset'] = AyantDroitsFormSet(prefix="ayants_droits")
         context['occupants_residence_formset'] = OccupantsFormSet(prefix="occupants_residence")
         context['occupants_bureau_formset'] = OccupantBureauxFormSet(prefix="occupants_bureau")

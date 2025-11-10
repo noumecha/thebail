@@ -465,9 +465,7 @@ class CollectesForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                HTML(
-                    "{% include 'baux/forms/immeuble_formset_block.html' %}"
-                ),
+                HTML("{% for form in immeubles_formset.forms %}{{ form.render_collecte_layout|safe }}{% endfor %}"),
                 #Formset("immeubles_formset"),
                 css_class="p-3 pt-0"
             ),

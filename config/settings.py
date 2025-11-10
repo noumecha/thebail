@@ -138,6 +138,7 @@ TEMPLATES = [
             "libraries": {
                 "theme": "web_project.template_tags.theme",
                 "utils_tags": "config.templatetags.utils_tags",
+                "form_variants": "apps.baux.templatetags.form_variants",
             },
             "builtins": [
                 "django.templatetags.static",

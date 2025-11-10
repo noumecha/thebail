@@ -1,0 +1,130 @@
+{% load crispy_forms_tags %}
+<!-- immeuble collecte form -->
+<div class="row">
+  <h5 class='text-uppercase bg-secondary-subtle'>I. Identification</h5>
+  <table class="table table-bordered align-middle text-center">
+    <tbody>
+      <tr>
+        <td class="text-start p-0">
+          <label for="id_immeubles-0-Designation" class="fw-bold text-start form-check-label ms-1">a. - Désignation du bien</label>
+        </td>
+        <td class="text-start p-0">
+          {% include "baux/widgets/field_widget.html" with field=form.Designation variant="no_label" %}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-start p-0">
+          <label for="id_immeubles-0-Construction" class="fw-bold text-start form-check-label ms-1">b. - Construction</label>
+        </td>
+        <td class="text-start p-0">
+          {% include "baux/widgets/dynamic_choice_list.html" with list_id="construction-list" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction-choice-hidden" add_wrapper_id="new-construction-wrapper" new_input_id="new-construction-input" add_btn_id="add-construction-btn" choices=type_constructions selected=form.initial.construction_choice %}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-start pt-0 pb-0 ps-0">
+          <label for="id_immeubles-0-Date_Construction" class="fw-bold text-start form-check-label ms-1">c. - Caractéristiques</label>
+        </td>
+        <td class="text-start">
+          <div class="row">
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.Date_Construction variant="left_label" %}
+            </div>
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.Nombre_de_pieces variant="left_label" %}
+            </div>
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.Superficie_louer variant="left_label" %}
+            </div>
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.Norme variant="left_label" %}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-start p-0">
+          <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Type de location</label>
+        </td>
+        <td class="text-start p-0">
+          {% include "baux/widgets/dynamic_choice_list.html" with list_id="type-location-list" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type-location-choice-hidden" add_wrapper_id="new-type-location-wrapper" new_input_id="new-type-location-input" add_btn_id="add-type-location-btn" choices=type_locations selected=form.initial.type_location_choice %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h5 class='text-uppercase bg-secondary-subtle mt-2'>II. Localisation</h5>
+  <table class="table table-bordered align-middle text-center">
+    <tbody>
+      <tr>
+        <td class="text-start pt-0 pb-0 ps-0">
+          <label for="id_immeubles-0-pays" class="fw-bold text-start form-check-label ms-1">a. - Représentation Diplomatique</label>
+        </td>
+        <td class="text-start">
+          <div class="row">
+            <div class="col-md-4">
+              {% include "baux/widgets/field_widget.html" with field=form.pays variant="left_label" %}
+            </div>
+            <div class="col-md-4">
+              {% include "baux/widgets/field_widget.html" with field=form.Ville variant="left_label" %}
+            </div>
+            <div class="col-md-4">
+              {% include "baux/widgets/field_widget.html" with field=form.Rue variant="left_label" %}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-start pt-0 pb-0 ps-0">
+          <label for="id_immeubles-0-pays" class="fw-bold text-start form-check-label ms-1">b. - National</label>
+        </td>
+        <td class="text-start">
+          <div class="row">
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.region variant="left_label" %}
+            </div>
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.departement variant="left_label" %}
+            </div>
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.arrondissement variant="left_label" %}
+            </div>
+            <div class="col-md-6">
+              {% include "baux/widgets/field_widget.html" with field=form.Quartier variant="left_label" %}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-start p-0">
+          <label for="id_immeubles-0-Coordonee_gps" class="fw-bold text-start form-check-label ms-1">c. - Coordonnées GPS</label>
+        </td>
+        <td class="text-start p-0">
+          {% include "baux/widgets/field_widget.html" with field=form.Coordonee_gps %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h5 class='text-uppercase bg-secondary-subtle mt-2'>III. Localisation</h5>
+  <table class="table">
+
+  </table>
+
+  {# Place for nested formsets (occupants) #}
+  {% if form.occupants_residence_formset %}
+    <h5 class="text-uppercase bg-secondary-subtle p-2 mt-3">IV. Occupants (Résidence)</h5>
+    {{ form.occupants_residence_formset.management_form }}
+    {% for subform in form.occupants_residence_formset.forms %}
+      {{ subform.as_p }}
+    {% endfor %}
+  {% endif %}
+
+  {% if form.occupants_bureau_formset %}
+    <h5 class="text-uppercase bg-secondary-subtle p-2 mt-3">V. Occupants (Bureaux)</h5>
+    {{ form.occupants_bureau_formset.management_form }}
+    {% for subform in form.occupants_bureau_formset.forms %}
+      {{ subform.as_p }}
+    {% endfor %}
+  {% endif %}
+
+</div>

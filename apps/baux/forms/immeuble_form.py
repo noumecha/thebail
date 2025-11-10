@@ -190,11 +190,6 @@ class ImmeublesForm(forms.ModelForm):
         )
         return helper
 
-
-    def render_collecte_layout(self):
-        """Return custom HTML layout for collecte section."""
-        return render_to_string("baux/forms/collecte_immeuble_form.html", {"form": self})
-
     def __init__(self, *args, **kwargs):
         super(ImmeublesForm, self).__init__(*args, **kwargs)
         # manage select 2 input
@@ -204,7 +199,7 @@ class ImmeublesForm(forms.ModelForm):
                 self.fields['arrondissement'].queryset = Arrondissemements.objects.filter(pk=arrondissement_id)
             except (ValueError, TypeError):
                 pass
-        #
+        # immeuble elements
         elements = list(ElementDeDescription.objects.all())
         element_groups = []
         group = []
@@ -252,9 +247,9 @@ class ImmeublesForm(forms.ModelForm):
             if index % 9 == 0 or index == len(elements):
                 element_groups.append(group)
                 group = []
-
+        self.element_groups = element_groups
+        # render dynamic HTML content for elements
         html_content = render_to_string("baux/widgets/immeuble_elements.html", {"element_groups": element_groups})
-        form_content = render_to_string("baux/forms/collecte_immeuble_form.html", {"form" : ImmeublesForm})
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             # title of the section
@@ -398,3 +393,52 @@ class ImmeublesForm(forms.ModelForm):
             #)
         )
         self.fields['Date_Construction'].required = False
+
+    def render_collecte_layout(self):
+        """Render the full layout from the external template."""
+        # manage fields
+        self.fields["Designation"].label = ""
+        self.fields["Coordonee_gps"].label = ""
+        #
+        for name, field in self.fields.items():
+            widget = field.widget
+            if not widget.attrs.get("class"):
+                if isinstance(widget, forms.Select):
+                    widget.attrs["class"] = "form-select"
+                else:
+                    widget.attrs["class"] = "form-control"
+        # type constructions :
+        if "Construction" in self.fields:
+            del self.fields["Construction"]
+        self.construction_choices = TypeConstructions.objects.all()
+        self.fields["construction_choice"] = forms.CharField(
+            required=False,
+            widget=forms.HiddenInput()
+        )
+        # type de locations :
+        if "Type_location" in self.fields:
+            del self.fields["Type_location"]
+        self.type_locations = TypeLocations.objects.all()
+        self.fields["type_location_choice"] = forms.CharField(
+            required=False,
+            widget=forms.HiddenInput()
+        )
+
+        return render_to_string(
+            "baux/forms/immeuble_form_layout.html",
+            {
+                "form": self, "element_groups": self.element_groups,
+                "type_constructions" : self.construction_choices,
+                "type_locations" : self.type_locations
+            },
+        )
+
+    def clean(self):
+        cleaned = super().clean()
+        selected_label = cleaned.get("construction_choice")
+        if not selected_label:
+            raise forms.ValidationError("Veuillez choisir un type de construction.")
+
+        type_obj, _ = TypeConstructions.objects.get_or_create(libelle=selected_label)
+        cleaned["Construction"] = type_obj
+        return cleaned

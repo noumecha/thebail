@@ -485,6 +485,18 @@ class TypeConstructions(models.Model):
         libelle = self.libelle.upper()
         return f"{libelle}"
 
+# type construction model
+class TypeLocations(models.Model):
+    libelle = models.CharField(max_length=500)
+    description = models.TextField(blank=True, null=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
+
+    # return text
+    def __str__(self):
+        libelle = self.libelle.upper()
+        return f"{libelle}"
+
 # type RevetementInt model
 class RevetementInts(models.Model):
     libelle = models.CharField(max_length=500)
@@ -545,7 +557,7 @@ class Immeubles (models.Model):
     Nombre_de_pieces = models.DecimalField(blank=True, null=True, max_digits=14, decimal_places=0, default=0)
     Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Norme = models.ForeignKey(Normes, on_delete=models.CASCADE, null=True, related_name="norme")
-    Type_location = models.CharField(choices=TYPE_LOCATION, max_length=1, null=True)
+    Type_location = models.ForeignKey(TypeLocations, on_delete=models.CASCADE, null=True, related_name="typelocation")
     # localisation
     Type_localisation = models.CharField(choices=TYPE_LOCALISATION, max_length=1)
     #pays = models.ForeignKey(Pays, on_delete=models.CASCADE, null=True, related_name="immeuble_pays", blank=True)
