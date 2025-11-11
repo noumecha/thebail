@@ -1,37 +1,40 @@
 {% load static %}
+
 <!DOCTYPE html>
-<html lang="en"
-  class="light-style layout-menu-fixed {{content_layout_class}}"
-  data-assets-path="{% static '/' %}"
-  data-base-url="{{url}}"
-  data-framework="django"
-  data-template="vertical-menu-free"
->
+
+<html lang="en" class="light-style layout-menu-fixed {{content_layout_class}}" data-assets-path="{% static '/' %}" data-base-url="{{url}}" data-framework="django" data-template="vertical-menu-free">
 
   <head>
-    <title>
-      {% block title %}Connexion-baux{% endblock title %}
-    </title>
+    <title>{% block title %}{% endblock title %} | {% get_theme_variables 'template_name' %} - {% get_theme_variables 'template_suffix' %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <meta name="description" content="{% get_theme_variables 'template_description' %}" />
     <meta name="keywords" content="{% get_theme_variables 'template_keyword' %}" />
+    <!-- Canonical SEO -->
+    <link rel="canonical" href="{% get_theme_variables 'product_page' %}">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/icon.png' %}" />
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&ampdisplay=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <!-- Icons -->
-    <link rel="stylesheet" href="{% static 'vendor/fonts/remixicon/remixicon.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/fonts/boxicons.css' %}" />
     <!--Core CSS -->
-    <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
     <link rel="stylesheet" href="{% static 'vendor/css/core.css' %}" />
     <link rel="stylesheet" href="{% static 'vendor/css/theme-default.css' %}" />
     <link rel="stylesheet" href="{% static 'css/demo.css' %}" />
-    <link rel="stylesheet" href="{% static 'vendor/css/pages/page-auth.css' %}" />
     <!--Vendor CSS-->
     <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+    <!--Core CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/css/pages/page-auth.css' %}" />
+    <!-- select2 -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <script src="{% static 'vendor/js/helpers.js' %}"></script>
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static 'js/config.js' %}"></script>
   </head>
   <body>
     <div class="position-relative">
@@ -40,31 +43,16 @@
 
           <!-- Login -->
           <div class="card p-7">
-            <!-- Logo 
-            <div class="app-brand justify-content-center mt-5">
-              <a href="{% url 'index' %}" class="app-brand-link gap-3">
-                  <img class="avatar"
-                    style="
-                        height: 120px;
-                        width: 120px;
-                        object-fit: contain;
-                    "
-                    src="{% static 'img/logo/logo.png' %}"
-                    alt="Archivault" width="">
-              </a>
-            </div>
-            <-- /Logo -->
 
             <div class="card-body mt-1">
-              <h4 class="mb-5 text-center">Gestion des baux administratifs</h4>
-
-              <form method="post" id="formAuthentication" class="mb-5" action="{% url 'login' %}">
+              <h4 class="mb-3 text-center">Gestion des baux administratifs</h4>
+              <form method="post" id="formAuthentication" class="mb-3" action="{% url 'login' %}">
                 {% csrf_token %}
                 <div class="form-floating form-floating-outline mb-2">
                   <input type="text" class="form-control" id="username" name="username" placeholder="Entrez votre nom d'utilisateur" autofocus>
                   <label for="username">Nom d'utilisateur</label>
                 </div>
-                <div class="mb-">
+                <div class="mb-3">
                   <div class="form-password-toggle">
                     <div class="input-group input-group-merge">
                       <div class="form-floating form-floating-outline">
@@ -73,11 +61,13 @@
                           aria-describedby="password" />
                         <label for="password">Mot de passe</label>
                       </div>
-                      <span class="input-group-text cursor-pointer"><i class="ri-eye-off-line ri-20px"></i></span>
+                      <span class="input-group-text cursor-pointer">
+                        <i class="menu-icon tf-icons bx bx-hide" style="font-size: 1.25rem;"></i>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div class="mb-5 pb-2 d-flex justify-content-between pt-2 align-items-center">
+                <div class="mb-2 pb-2 d-flex justify-content-between pt-2 align-items-center">
                   <div class="form-check mb-0">
                     <input class="form-check-input" type="checkbox" id="remember-me">
                     <label class="form-check-label" for="remember-me">
@@ -96,14 +86,11 @@
               </form>
             </div>
           </div>
-          <!-- /Login -->
-          <img src="{% static 'img/illustrations/tree-3.png' %}" alt="auth-tree" class="authentication-image-object-left d-none d-lg-block">
-          <img src="{% static 'img/illustrations/auth-basic-mask-light.png' %}" height="172" class="authentication-image d-none d-lg-block" alt="triangle-bg">
-          <img src="{% static 'img/illustrations/tree.png' %}" alt="auth-tree" class="authentication-image-object-right d-none d-lg-block">
         </div>
       </div>
     </div>
     <!-- JS -->
+    <!--Core Javascript-->
     <script src="{% static 'vendor/libs/jquery/jquery.js' %}"></script>
     <script src="{% static 'vendor/libs/popper/popper.js' %}"></script>
     <script src="{% static 'vendor/js/bootstrap.js' %}"></script>
@@ -111,6 +98,7 @@
     <script src="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
     <script src="{% static 'vendor/js/menu.js' %}"></script>
     <script src="{% static 'vendor/js/helpers.js' %}"></script>
+    <script src="{% static 'vendor/js/functions.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/utils.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>

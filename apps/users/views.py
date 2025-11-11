@@ -23,6 +23,8 @@ from django.template.loader import render_to_string
 from django.db.models import Q
 from django.db import models
 from django.core.paginator import Paginator
+from web_project import TemplateLayout
+from web_project.template_helpers.theme import TemplateHelper
 
 
 #generic view for basic operation
@@ -308,7 +310,7 @@ class LoginView(View):
             response.set_cookie(
                 "access_token", access,
                 httponly=True, secure=not settings.DEBUG,
-                samesite="Lax", max_age=60*15
+                samesite="Lax", max_age=60*60
             )
             response.set_cookie(
                 "refresh_token", str(refresh),
