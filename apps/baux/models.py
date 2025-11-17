@@ -521,6 +521,19 @@ class RevetementExts(models.Model):
         libelle = self.libelle.upper()
         return f"{libelle}"
 
+
+# statut de la batisse :
+class StatutBatisse(models.Model):
+    libelle = models.CharField(max_length=500)
+    description = models.TextField(blank=True, null=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
+
+    # return text
+    def __str__(self):
+        libelle = self.libelle.upper()
+        return f"{libelle}"
+
 # Element de description pour un immeuble ex : garage, jardin, piscine etc
 class ElementDeDescription(models.Model):
     libelle = models.CharField(max_length=500, unique=True)
@@ -570,7 +583,7 @@ class Immeubles (models.Model):
     Quartier = models.CharField(max_length=50,null=True, blank=True)
     Coordonee_gps = models.CharField(max_length=200, null=True, blank=True)
     # etat physique du batiment
-    Situation_de_la_batisse = models.CharField(choices=STATUT_BATISSE, max_length=1, null=True)
+    Situation_de_la_batisse = models.ForeignKey(StatutBatisse, on_delete=models.CASCADE, null=True, related_name="statut_batisse")
     Revetement_interieure = models.ForeignKey(RevetementInts, on_delete=models.CASCADE, null=True, related_name="revetement_interieure")
     Revetement_exterieure = models.ForeignKey(RevetementExts, on_delete=models.CASCADE, null=True, related_name="revetement_exterieure")
     observation = models.CharField(max_length=200, null=True, blank=True)

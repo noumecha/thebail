@@ -66,9 +66,9 @@ urlpatterns = [
     path("contrat/print/<int:pk>/", ContratView.print_contrat, name='contrat_print'),
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
     path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
-    path("structures/", views.get_structures, name='get_structures'),  # for filtering structures based on administration <int:administration_id>
-    path("agent/", views.get_agent_name, name='get_agent_name'), # getting agent collecte base on his matricule
-    path("arrondissement/", views.get_localisation_datas, name='get_localisation_datas'), # localisation data base on arraondissement
+    path("structures/", views.get_structures, name='get_structures'),
+    path("agent/", views.get_agent_name, name='get_agent_name'),
+    path("arrondissement/", views.get_localisation_datas, name='get_localisation_datas'),
     # consultation :
     path("consultation", ConsultationView.as_view(template_name="baux/consultation.html"), name='consultation'),
     # Statistiques :
@@ -82,4 +82,5 @@ urlpatterns = [
     path("collecte/delete/<int:pk>/", CollecteDeleteView.as_view(), name='collecte_delete'),
     path("collecte/update/<int:pk>/", CollecteView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
+    path("/api/add-choice/", add_dynamic_choice, name="add_dynamic_choice"),
 ]

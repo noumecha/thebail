@@ -17,6 +17,11 @@
       </table>
     </div>
   {% endfor %}
+
+  <div class="ps-2 d-flex" id="{{ add_wrapper_id }}">
+    <input type="text" class="form-control form-control-sm" placeholder="Autre ..." id="{{ new_input_id }}">
+    <button type="button" class="btn btn-outline-primary btn-sm" id="{{ add_btn_id }}">+</button>
+  </div>
 </div>
 
 <script>

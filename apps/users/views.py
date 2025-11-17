@@ -350,7 +350,7 @@ class LoginAPIView(TokenObtainPairView):
                 httponly=True,
                 secure=not settings.DEBUG,
                 samesite='Lax',
-                max_age=60 * 15  # 15 min
+                max_age=60 * 60  # 15 min
             )
             res.set_cookie(
                 'refresh_token',

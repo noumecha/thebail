@@ -1,5 +1,6 @@
 <div class="d-flex justify-content-evenly flex-wrap">
-  <div id="{{ list_id }}" class="flex-row gap-3 list-group flex-wrap">
+
+  <div id="{{ list_id }}" class="flex-row gap-3 list-group flex-wrap" data-model="{{ model }}">
     {% for choice in choices %}
       <label class="d-flex align-items-center gap-2 dynamic-option">
         <input
@@ -12,12 +13,12 @@
         <span class="fw-bold">{{ choice.libelle }}</span>
       </label>
     {% endfor %}
-
     <input type="hidden" name="{{ hidden_name }}" id="{{ hidden_id }}">
   </div>
 
-  <div class="d-flex" id="{{ add_wrapper_id }}">
-    <input type="text" class="form-control form-control-sm" placeholder="Autre ..." id="{{ new_input_id }}">
-    <button type="button" class="btn btn-outline-primary btn-sm" id="{{ add_btn_id }}">+</button>
+  <div class="ps-2 d-flex" id="{{ add_wrapper_id }}">
+      <input type="text" class="form-control form-control-sm" placeholder="Autre ..." id="{{ new_input_id }}">
+      <button type="button" class="btn btn-outline-primary btn-sm" id="{{ add_btn_id }}">+</button>
   </div>
+
 </div>

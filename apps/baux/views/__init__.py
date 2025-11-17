@@ -6,3 +6,4 @@ from .autocomplete_views import *
 from .revetement_views import *
 from .views_base import *
 from .partial_form_views import *
+from .dynamic_choice_views import *

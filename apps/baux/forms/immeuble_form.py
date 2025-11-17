@@ -423,13 +423,40 @@ class ImmeublesForm(forms.ModelForm):
             required=False,
             widget=forms.HiddenInput()
         )
+        # statutbatisse :
+        if "Situation_de_la_batisse" in self.fields:
+            del self.fields["Situation_de_la_batisse"]
+        self.statut_batisses = StatutBatisse.objects.all()
+        self.fields["statut_batisse_choice"] = forms.CharField(
+            required=False,
+            widget=forms.HiddenInput()
+        )
+        # revetement interieure
+        if "Revetement_interieure" in self.fields:
+            del self.fields["Revetement_interieure"]
+        self.revetement_interieures = RevetementInts.objects.all()
+        self.fields["revetement_interieure_choice"] = forms.CharField(
+            required=False,
+            widget=forms.HiddenInput()
+        )
+        # revetemetn extérieure
+        if "Revetement_exterieure" in self.fields:
+            del self.fields["Revetement_exterieure"]
+        self.revetement_exterieures = RevetementExts.objects.all()
+        self.fields["revetement_exterieure_choice"] = forms.CharField(
+            required=False,
+            widget=forms.HiddenInput()
+        )
 
         return render_to_string(
             "baux/forms/immeuble_form_layout.html",
             {
                 "form": self, "element_groups": self.element_groups,
                 "type_constructions" : self.construction_choices,
-                "type_locations" : self.type_locations
+                "type_locations" : self.type_locations,
+                "statut_batisses" : self.statut_batisses,
+                "revetement_interieures" : self.revetement_interieures,
+                "revetement_exterieures" : self.revetement_exterieures,
             },
         )
 

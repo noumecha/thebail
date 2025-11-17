@@ -17,7 +17,7 @@
           <label for="id_immeubles-0-Construction" class="fw-bold text-start form-check-label ms-1">b. - Construction</label>
         </td>
         <td class="text-start p-0">
-          {% include "baux/widgets/dynamic_choice_list.html" with list_id="construction-list" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction-choice-hidden" add_wrapper_id="new-construction-wrapper" new_input_id="new-construction-input" add_btn_id="add-construction-btn" choices=type_constructions selected=form.initial.construction_choice %}
+          {% include "baux/widgets/dynamic_choice_list.html" with list_id="construction-list" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction-choice-hidden" add_wrapper_id="new-construction-wrapper" new_input_id="new-construction-input" add_btn_id="add-construction-btn" choices=type_constructions selected=form.initial.construction_choice model="TypeConstructions" %}
         </td>
       </tr>
       <tr>
@@ -46,7 +46,7 @@
           <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Type de location</label>
         </td>
         <td class="text-start p-0">
-          {% include "baux/widgets/dynamic_choice_list.html" with list_id="type-location-list" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type-location-choice-hidden" add_wrapper_id="new-type-location-wrapper" new_input_id="new-type-location-input" add_btn_id="add-type-location-btn" choices=type_locations selected=form.initial.type_location_choice %}
+          {% include "baux/widgets/dynamic_choice_list.html" with list_id="type-location-list" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type-location-choice-hidden" add_wrapper_id="new-type-location-wrapper" new_input_id="new-type-location-input" add_btn_id="add-type-location-btn" choices=type_locations selected=form.initial.type_location_choice model="TypeLocations" %}
         </td>
       </tr>
     </tbody>
@@ -105,10 +105,54 @@
     </tbody>
   </table>
 
-  <h5 class='text-uppercase bg-secondary-subtle mt-2'>III. Localisation</h5>
-  <table class="table">
-
+  <h5 class='text-uppercase bg-secondary-subtle mt-2'>III. etat physique du batiment</h5>
+  <table class="table table-bordered align-middle text-center">
+    <tbody>
+      <tr>
+        <td >
+          {% include "baux/widgets/dynamic_choice_list.html" with list_id="statut-list" checkbox_name="statut_choice_checkbox" hidden_name="statut_choice" hidden_id="statut-choice-hidden" add_wrapper_id="new-statut-wrapper" new_input_id="new-statut-input" add_btn_id="add-statut-btn" choices=statut_batisses selected=form.initial.statut_choice model="StatutBatisse" %}
+        </td>
+      </tr>
+      <tr>
+        <td class="ps-1 d-flex align-items-center">
+          <ul class="mb-0">
+            <li type="square"><span class="fw-bold">Revêtement intérieure : </span></li>
+          </ul>
+          <ul class="ms-2 mb-0">
+            {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementinterieure-list" checkbox_name="revetementinterieure_choice_checkbox" hidden_name="revetementinterieure_choice" hidden_id="revetementinterieure-choice-hidden" add_wrapper_id="new-revetementinterieure-wrapper" new_input_id="new-revetementinterieure-input" add_btn_id="add-revetementinterieure-btn" choices=revetement_interieures selected=form.initial.revetementinterieure_choice model="RevetementInts" %}
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td class="ps-1 d-flex align-items-center">
+          <ul class="mb-0">
+            <li type="square"><span class="fw-bold">Revêtement extérieure : </span></li>
+          </ul>
+          <ul class="ms-2 mb-0">
+            {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementexterieure-list" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure-choice-hidden" add_wrapper_id="new-revetementexterieure-wrapper" new_input_id="new-revetementexterieure-input" add_btn_id="add-revetementexterieure-btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts"%}
+          </ul>
+        </td>
+      </tr>
+    </tbody>
   </table>
+
+  <h5 class='text-uppercase bg-secondary-subtle mt-2'>IV. description de la batisse</h5>
+  {% include "baux/widgets/immeuble_elements.html" with element_groups=element_groups %}
+
+  <h5 class='text-uppercase bg-secondary-subtle mt-2'>V. occupants actuels de l'immeuble</h5>
+  <div class="row">
+    <li>
+      <h6 class='text-uppercase mt-2'>occupation pour résidence</h6>
+    </li>
+    <table class="table">
+    </table>
+
+    <li>
+      <h6 class='text-uppercase mt-2'>occupation pour bureaux</h6>
+    </li>
+    <table class="table">
+    </table>
+  </div>
 
   {# Place for nested formsets (occupants) #}
   {% if form.occupants_residence_formset %}
