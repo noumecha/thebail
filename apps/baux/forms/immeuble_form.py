@@ -451,7 +451,8 @@ class ImmeublesForm(forms.ModelForm):
         return render_to_string(
             "baux/forms/immeuble_form_layout.html",
             {
-                "form": self, "element_groups": self.element_groups,
+                "form": self,
+                "element_groups": self.element_groups,
                 "type_constructions" : self.construction_choices,
                 "type_locations" : self.type_locations,
                 "statut_batisses" : self.statut_batisses,

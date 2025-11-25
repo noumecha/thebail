@@ -82,5 +82,5 @@ urlpatterns = [
     path("collecte/delete/<int:pk>/", CollecteDeleteView.as_view(), name='collecte_delete'),
     path("collecte/update/<int:pk>/", CollecteView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
-    path("/api/add-choice/", add_dynamic_choice, name="add_dynamic_choice"),
+    path("add-choice/", dynamic_choice_views.add_dynamic_choice, name="add_dynamic_choice"),
 ]

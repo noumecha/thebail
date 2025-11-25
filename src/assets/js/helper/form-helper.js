@@ -1,3 +1,14 @@
+function getCSRFToken() {
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    cookie = cookie.trim();
+    if (cookie.startsWith('csrftoken=')) {
+      return cookie.substring('csrftoken='.length);
+    }
+  }
+  return '';
+}
+
 function initDynamicChoiceList(listId, hiddenId, newInputId, addBtnId, url) {
   const $list = $('#' + listId);
   const $hidden = $('#' + hiddenId);
@@ -39,16 +50,21 @@ function initDynamicChoiceList(listId, hiddenId, newInputId, addBtnId, url) {
       .val()
       .trim();
     if (!val) return;
-    // If a URL is provided → save to DB
     if (url) {
-      $.post(url, {
-        label: val,
-        model: $('#' + listId).data('model')
+      $.post({
+        url: url,
+        data: {
+          label: val,
+          model: $('#' + listId).data('model')
+        },
+        headers: {
+          'X-CSRFToken': getCSRFToken()
+        }
       }).done(function (res) {
-        addToList(res.id, res.label);
+        addToList(res.id, res.label, listId);
       });
     } else {
-      addToList(null, val);
+      addToList(null, val, listId);
     }
     $('#' + newInputId).val('');
   });
@@ -65,6 +81,7 @@ function addToList(id, label, listId) {
       </label>
     `);
 
+  $list = $('#' + listId);
   $list.append($label);
   $label.find('.dynamic-check').change();
 }
@@ -76,34 +93,28 @@ $(function () {
     'construction-choice-hidden',
     'new-construction-input',
     'add-construction-btn',
-    '/api/add-choice/'
+    '/add-choice/'
   );
   initDynamicChoiceList(
     'type-location-list',
     'type-location-choice-hidden',
     'new-type-location-input',
     'add-type-location-btn',
-    '/api/add-choice/'
+    '/add-choice/'
   );
-  initDynamicChoiceList(
-    'statut-list',
-    'statut-choice-hidden',
-    'new-statut-input',
-    'add-statut-btn',
-    '/api/add-choice/'
-  );
+  initDynamicChoiceList('statut-list', 'statut-choice-hidden', 'new-statut-input', 'add-statut-btn', '/add-choice/');
   initDynamicChoiceList(
     'revetementinterieure-list',
     'revetementinterieure-choice-hidden',
     'new-revetementinterieure-input',
     'add-revetementinterieure-btn',
-    '/api/add-choice/'
+    '/add-choice/'
   );
   initDynamicChoiceList(
     'revetementexterieure-list',
     'revetementexterieure-choice-hidden',
     'new-revetementexterieure-input',
     'add-revetementexterieure-btn',
-    '/api/add-choice/'
+    '/add-choice/'
   );
 });
