@@ -2,14 +2,10 @@ $(function () {
   // Quand l'administration change
   $(document).on('change', '#id_occupants_bureau-0-Administration_correspondante', function () {
     var adminId = $(this).val();
-    // Trouve le champ Service dans le même formset
     var serviceField = $(this).closest('.form-row').find('#id_occupants_bureau-0-Service');
-    // Reconstruit l’URL de l’autocomplete avec administration_id
     var baseUrl = serviceField.data('autocomplete-light-url').split('?')[0];
     var newUrl = baseUrl + '?administration_id=' + adminId;
-    // Applique l’URL mise à jour
     serviceField.attr('data-autocomplete-light-url', newUrl);
-    // Réinitialise le champ Service
     serviceField.val(null).trigger('change');
   });
 
@@ -153,7 +149,7 @@ $(function () {
   );
   ajaxModal('#addBailleurModal', '#bailleur-form-content', '#bailleurForm', '/bailleur-partial-form/', '#id_Bailleur');
 
-  // element and pieces
+  // element and pieces dynamic add with modal
   ajaxModal(
     '#addElementModal',
     '#element-form-content',
@@ -168,6 +164,14 @@ $(function () {
     '#pieceForm',
     '/piece-collecte-partial-form/',
     '#pieces-collecte-container'
+  );
+
+  // element adn pieces dynamic add with no modal
+  addElementToList(
+    'elements-collecte-container',
+    'element-libelle',
+    'add-element-btn',
+    '/element-description-partial-form/'
   );
 
   // handle the show/hide logic

@@ -18,11 +18,11 @@
     </div>
   {% endfor %}
 
-  <div class="d-flex ps-2">
-    <form method="POST" id="element-immeuble-form">
+  <div class="ps-2">
+    <form method="POST" class="ps-2 d-flex" id="element-immeuble-form">
       {% csrf_token %}
-      <input type="text" id="new-element-input" class="form-control form-control-sm" placeholder="Ajouter un élément…" />
-      <button type="button" id="add-element-btn" class="btn btn-outline-primary btn-sm ms-2">+</button>
+      <input type="text" id="element-immeuble-input" class="form-control form-control-sm" placeholder="Autre ..." />
+      <button type="button" id="add-element-btn" class="btn btn-outline-primary btn-sm">+</button>
     </form>
   </div>
 </div>

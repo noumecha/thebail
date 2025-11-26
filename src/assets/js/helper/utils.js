@@ -77,6 +77,39 @@ function ajaxModal(modalId, formContainerId, formId, fetchUrl, selectItemId = nu
   });
 }
 
+// form for element inside another form
+function addElementToList(listId, newInputId, addBtnId, url) {
+  const selectContainer = $(listId);
+  $('#' + addBtnId).click(function () {
+    const val = $('#' + newInputId)
+      .val()
+      .trim();
+    if (!val) return;
+    if (url) {
+      $.post({
+        url: url,
+        data: {
+          label: val,
+          model: $('#' + listId).data('model')
+        },
+        headers: {
+          'X-CSRFToken': getCSRFToken()
+        }
+      }).done(function (res) {
+        if (data.html) {
+          addToList(res.id, res.label, listId);
+          appendToDynamicGroup(selectContainer, data.html);
+        }
+        $(formId).closest('form')[0].reset();
+      });
+    } else {
+      console.log('error');
+      addToList(val, val, listId);
+    }
+    $('#' + newInputId).val('');
+  });
+}
+
 // apppending dynamic group
 const GROUP_HEADERS = {
   element: `
