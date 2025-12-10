@@ -468,14 +468,6 @@ class CollectesForm(forms.ModelForm):
                 HTML("{% for form in immeubles_formset.forms %}{{ form.render_collecte_layout|safe }}{% endfor %}"),
                 css_class="p-3 pt-0"
             ),
-            Row(
-                Formset("occupants_residence_formset"),
-                css_class="p-3 pt-0"
-            ),
-            Row(
-                Formset("occupants_bureau_formset"),
-                css_class="p-3 pt-0"
-            ),
             # Pièces collectées
             Row(
                 Column(
@@ -488,12 +480,6 @@ class CollectesForm(forms.ModelForm):
                 Fieldset(
                     "Pieces Collectées",
                     HTML(html_content),
-                    HTML("""
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addPieceModal">
-                            Ajouter une pièce
-                        </button>
-                    </div>"""),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"
                 ),
                 css_class="p-3 pt-0"

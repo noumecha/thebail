@@ -475,7 +475,7 @@ class Localisation (models.Model):
 
 # type construction model
 class TypeConstructions(models.Model):
-    libelle = models.CharField(max_length=500)
+    libelle = models.CharField(max_length=500, unique=True)
     description = models.TextField(blank=True, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -487,7 +487,7 @@ class TypeConstructions(models.Model):
 
 # type construction model
 class TypeLocations(models.Model):
-    libelle = models.CharField(max_length=500)
+    libelle = models.CharField(max_length=500, unique=True)
     description = models.TextField(blank=True, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -499,7 +499,7 @@ class TypeLocations(models.Model):
 
 # type RevetementInt model
 class RevetementInts(models.Model):
-    libelle = models.CharField(max_length=500)
+    libelle = models.CharField(max_length=500, unique=True)
     description = models.TextField(blank=True, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -511,7 +511,7 @@ class RevetementInts(models.Model):
 
 # type RevetementExt model
 class RevetementExts(models.Model):
-    libelle = models.CharField(max_length=500)
+    libelle = models.CharField(max_length=500, unique=True)
     description = models.TextField(blank=True, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
@@ -524,7 +524,7 @@ class RevetementExts(models.Model):
 
 # statut de la batisse :
 class StatutBatisse(models.Model):
-    libelle = models.CharField(max_length=500)
+    libelle = models.CharField(max_length=500, unique=True)
     description = models.TextField(blank=True, null=True)
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)

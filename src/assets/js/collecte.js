@@ -151,14 +151,6 @@ $(function () {
 
   // element and pieces dynamic add with modal
   ajaxModal(
-    '#addElementModal',
-    '#element-form-content',
-    '#elementForm',
-    '/element-description-partial-form/',
-    '#elements-collecte-container'
-  );
-
-  ajaxModal(
     '#addPieceModal',
     '#piece-form-content',
     '#pieceForm',
@@ -166,9 +158,15 @@ $(function () {
     '#pieces-collecte-container'
   );
 
-  // element adn pieces dynamic add with no modal
+  // elements and pieces adding
   addElementToList(
-    'elements-collecte-container',
+    '#pieces-collecte-container',
+    'piece-collecte-input',
+    'add-piece-btn',
+    '/piece-collecte-partial-form/'
+  );
+  addElementToList(
+    '#elements-collecte-container',
     'element-immeuble-input',
     'add-element-btn',
     '/element-description-partial-form/'

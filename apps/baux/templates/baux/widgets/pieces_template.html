@@ -19,24 +19,15 @@
   {% endfor %}
 </div>
 
-<!--script>
-  const GROUP_HEADERS = {
-  element: `
-    <thead class="table-light">
-      <tr>
-        <th class="p-0">Existence</th>
-        <th class="bg-secondary-subtle p-0"></th>
-        <th class="p-0">Quantité</th>
-      </tr>
-    </thead>
-  `,
-  piece: `
-    <thead class="table-light">
-      <tr>
-        <th class="p-0">Désignation</th>
-        <th class="p-0">Quantité</th>
-      </tr>
-    </thead>
-  `
-  };
-</script-->
+<div class="row">
+  <div class="alert alert-success" style="display: none;" id="form-success"></div>
+  <div class="alert alert-danger" style="display: none;" id="form-error"></div>
+</div>
+
+<div class="ps-2">
+  <form method="POST" class="ps-2 d-flex" id="piece-collecte-form">
+    {% csrf_token %}
+    <input type="text" id="piece-collecte-input" name="libelle" class="form-control form-control-sm" placeholder="Ajouter une autre pièce ..." />
+    <button type="button" id="add-piece-btn" class="btn btn-outline-primary btn-sm">+</button>
+  </form>
+</div>

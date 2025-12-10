@@ -140,35 +140,29 @@
   {% include "baux/widgets/immeuble_elements.html" with element_groups=element_groups %}
 
   <h5 class='text-uppercase bg-secondary-subtle mt-2'>V. occupants actuels de l'immeuble</h5>
-  <div class="row">
-    <li>
-      <h6 class='text-uppercase mt-2'>occupation pour résidence</h6>
-    </li>
-    <table class="table">
-    </table>
 
-    <li>
-      <h6 class='text-uppercase mt-2'>occupation pour bureaux</h6>
-    </li>
-    <table class="table">
-    </table>
+  <div id="occupants-bureau-formset-wrapper">
+    {{ occupants_residence_formset.management_form }}
+
+    {% for form in occupants_residence_formset %}
+        <div class="formset-form mb-4 p-3 border rounded">
+            {% crispy form %}
+        </div>
+    {% empty %}
+        <p>Aucun occupant ajouté.</p>
+    {% endfor %}
   </div>
 
-  {# Place for nested formsets (occupants) #}
-  {% if form.occupants_residence_formset %}
-    <h5 class="text-uppercase bg-secondary-subtle p-2 mt-3">IV. Occupants (Résidence)</h5>
-    {{ form.occupants_residence_formset.management_form }}
-    {% for subform in form.occupants_residence_formset.forms %}
-      {{ subform.as_p }}
-    {% endfor %}
-  {% endif %}
+  <div id="occupants-bureau-formset-wrapper">
+    {{ occupants_bureau_formset.management_form }}
 
-  {% if form.occupants_bureau_formset %}
-    <h5 class="text-uppercase bg-secondary-subtle p-2 mt-3">V. Occupants (Bureaux)</h5>
-    {{ form.occupants_bureau_formset.management_form }}
-    {% for subform in form.occupants_bureau_formset.forms %}
-      {{ subform.as_p }}
+    {% for form in occupants_bureau_formset %}
+        <div class="formset-form mb-4 p-3 border rounded">
+            {% crispy form %}
+        </div>
+    {% empty %}
+        <p>Aucun occupant ajouté.</p>
     {% endfor %}
-  {% endif %}
+  </div>
 
 </div>

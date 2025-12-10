@@ -1,0 +1,51 @@
+<table id="occupantbureau-collecte-table" class='bg-white table table-bordered mt-2'>
+    <thead class='thead-dark'>
+        <tr>
+            {% for field in formset.forms.0.visible_fields %}
+                <th>{{ field.label }}</th>
+            {% endfor %}
+            {% if show_actions %}
+                <th style="width: 80px;">Actions</th>
+            {% endif %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {{ formset.management_form }}
+
+        {% for form in formset.forms %}
+            <tr>
+                {% for field in form.visible_fields %}
+                    <td>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+
+                {% if show_actions %}
+                    <td>
+                        {% if form.can_delete %}
+                            <button class="btn btn-sm btn-danger" type="button"
+                                    onclick="removeFormRow(this)">
+                                Supprimer
+                            </button>
+                        {% endif %}
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function removeFormRow(btn) {
+    const tr = btn.closest("tr");
+    const deleteInput = tr.querySelector("input[type='checkbox'][name$='-DELETE']");
+    if (deleteInput) {
+      deleteInput.checked = true;
+      tr.style.display = "none";
+    }
+}
+</script>

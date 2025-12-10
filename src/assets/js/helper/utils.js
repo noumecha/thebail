@@ -77,41 +77,6 @@ function ajaxModal(modalId, formContainerId, formId, fetchUrl, selectItemId = nu
   });
 }
 
-// form for element inside another form
-function addElementToList(listId, newInputId, addBtnId, url) {
-  const selectContainer = $(listId);
-  console.log(`variables : listid = ${listId} newinputId = ${newInputId} addBtnId = ${addBtnId} url = ${url}`);
-  $('#' + addBtnId).click(function () {
-    const val = $('#' + newInputId)
-      .val()
-      .trim();
-    if (!val) return;
-    if (url) {
-      $.post({
-        url: url,
-        data: {
-          label: val,
-          model: $('#' + listId).data('model')
-        },
-        headers: {
-          'X-CSRFToken': getCSRFToken()
-        }
-      }).done(function (res) {
-        console.log('res: ', res);
-        if (data.html) {
-          addToList(res.id, res.label, listId);
-          appendToDynamicGroup(selectContainer, data.html);
-        }
-        $(formId).closest('form')[0].reset();
-      });
-    } else {
-      console.log('error');
-      addToList(val, val, listId);
-    }
-    $('#' + newInputId).val('');
-  });
-}
-
 // apppending dynamic group
 const GROUP_HEADERS = {
   element: `
@@ -134,9 +99,51 @@ const GROUP_HEADERS = {
   `
 };
 
+// form for element inside another form
+function addElementToList(listId, newInputId, addBtnId, url) {
+  const selectContainer = $(listId);
+  $('#' + addBtnId).click(function () {
+    const val = $('#' + newInputId)
+      .val()
+      .trim();
+    if (!val) return;
+    console.log('select container : ', selectContainer);
+    console.log(`variables : listid = ${listId}
+      newinputId = ${newInputId}; addBtnId = ${addBtnId}; url = ${url}; val = ${val}`);
+    if (url) {
+      $.post({
+        url: url,
+        data: {
+          libelle: val,
+          model: selectContainer.data('model')
+        },
+        headers: {
+          'X-CSRFToken': getCSRFToken()
+        }
+      }).done(function (data) {
+        console.log('data : ', data);
+        if (data.html) {
+          appendToDynamicGroup(listId, data.html);
+        }
+        if (data.success) {
+          showAlertMessage(data.message, '#form-success');
+        } else {
+          showAlertMessage(data.errors, '#form-error');
+        }
+      });
+    } else {
+      console.log('error');
+      showAlertMessage(data.message, '#form-error');
+    }
+    $('#' + newInputId).val('');
+  });
+}
+
 function appendToDynamicGroup(containerSelector, newRowHtml) {
   const $container = $(containerSelector);
+  console.log('container : ', $container);
   const groupType = $container.data('group-type');
+  console.log('group type : ', groupType);
   const maxItems = parseInt($container.data('max-items')) || 9;
 
   // Find last group

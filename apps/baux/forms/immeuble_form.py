@@ -221,7 +221,7 @@ class ImmeublesForm(forms.ModelForm):
                 widget=forms.CheckboxInput(attrs={"class": "form-check-input statut-checkbox", "data-group": f"element_{el.pk}"}),
             )
             self.fields[nombre_name] = forms.IntegerField(
-                required=False, min_value=0, initial=0, label="",
+                required=False, min_value=0, initial=0, label="", widget=forms.NumberInput(attrs={"class": "form-control"}),
             )
 
             # Valeurs initiales (si instance)
@@ -440,7 +440,7 @@ class ImmeublesForm(forms.ModelForm):
             required=False,
             widget=forms.HiddenInput()
         )
-        # revetemetn extérieure
+        # revetement extérieure
         if "Revetement_exterieure" in self.fields:
             del self.fields["Revetement_exterieure"]
         self.revetement_exterieures = RevetementExts.objects.all()
@@ -459,6 +459,8 @@ class ImmeublesForm(forms.ModelForm):
                 "statut_batisses" : self.statut_batisses,
                 "revetement_interieures" : self.revetement_interieures,
                 "revetement_exterieures" : self.revetement_exterieures,
+                "occupants_residence_formset" : self.occupants_residence_formset,
+                "occupants_bureau_formset" : self.occupants_bureau_formset,
             },
         )
 
