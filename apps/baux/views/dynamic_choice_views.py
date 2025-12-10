@@ -22,3 +22,7 @@ def add_dynamic_choice(request):
         "label": obj.libelle,
         "created": created
     })
+
+def add_dynamic_element(request):
+    if request.method == 'GET':
+        return JsonResponse({"message": "Cette url n'accepte que la méthode POST."}, status=200)

@@ -21,7 +21,7 @@
   <div class="ps-2">
     <form method="POST" class="ps-2 d-flex" id="element-immeuble-form">
       {% csrf_token %}
-      <input type="text" id="element-immeuble-input" class="form-control form-control-sm" placeholder="Autre ..." />
+      <input type="text" id="element-immeuble-input" name="libelle" class="form-control form-control-sm" placeholder="Autre ..." />
       <button type="button" id="add-element-btn" class="btn btn-outline-primary btn-sm">+</button>
     </form>
   </div>

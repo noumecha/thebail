@@ -169,7 +169,7 @@ $(function () {
   // element adn pieces dynamic add with no modal
   addElementToList(
     'elements-collecte-container',
-    'element-libelle',
+    'element-immeuble-input',
     'add-element-btn',
     '/element-description-partial-form/'
   );

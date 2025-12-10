@@ -407,6 +407,7 @@ class ImmeublesForm(forms.ModelForm):
                     widget.attrs["class"] = "form-select"
                 else:
                     widget.attrs["class"] = "form-control"
+
         # type constructions :
         if "Construction" in self.fields:
             del self.fields["Construction"]

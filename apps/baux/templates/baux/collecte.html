@@ -9,22 +9,21 @@
 
 {% block content %}
     <div class="card p-3">
-
-        <h2 class="text-center">
-            {% if is_update %}
-                Mise à jour du contrat "{{ form.instance }}"
-            {% else %}
-                Collecte d'informations sur les contrats de logements administratifs
-            {% endif %}
-        </h2>
-        <form method="post" enctype="multipart/form-data" id="collecte-form" action="{% url 'baux:collecte_create' %}">
-            {% crispy form %}
-            {{ form.media }}
-            <div class="mt-2 alert alert-success" style="display: none;" id="form-success-collecte"></div>
-            <div class="mt-2 alert alert-danger" style="display: none;" id="form-error-collecte"></div>
-        </form>
-
+      <h2 class="text-center">
+        {% if is_update %}
+          Mise à jour du contrat "{{ form.instance }}"
+        {% else %}
+          Collecte d'informations sur les contrats de logements administratifs
+        {% endif %}
+      </h2>
+      <form method="post" enctype="multipart/form-data" id="collecte-form" action="{% url 'baux:collecte_create' %}">
+        {% crispy form %}
+        {{ form.media }}
+        <div class="mt-2 alert alert-success" style="display: none;" id="form-success-collecte"></div>
+        <div class="mt-2 alert alert-danger" style="display: none;" id="form-error-collecte"></div>
+      </form>
     </div>
+
     <!-- typecontrat modal -->
     <div class="modal fade" id="addTypeContratModal" tabindex="-1" aria-labelledby="addaddTypeContratModal">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -47,6 +46,7 @@
             </div>
         </div>
     </div>
+
     <!-- revetement intérieure -->
     <div class="modal fade" id="addRevetementInterieureModal" tabindex="-1" aria-labelledby="addRevetementInterieureLabel">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -69,6 +69,7 @@
             </div>
         </div>
     </div>
+
     <!-- revetement extérieure -->
     <div class="modal fade" id="addRevetementExterieureModal" tabindex="-1" aria-labelledby="addRevetementExterieureLabel">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -181,8 +182,6 @@
             </div>
         </div>
     </div>
-
-
     <!-- Avenant table template -->
     <div id="avenant-template" style="display: none;">
         <div class="avenant-entry mb-3 border p-2 rounded bg-light position-relative">

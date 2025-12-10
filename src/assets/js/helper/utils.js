@@ -80,6 +80,7 @@ function ajaxModal(modalId, formContainerId, formId, fetchUrl, selectItemId = nu
 // form for element inside another form
 function addElementToList(listId, newInputId, addBtnId, url) {
   const selectContainer = $(listId);
+  console.log(`variables : listid = ${listId} newinputId = ${newInputId} addBtnId = ${addBtnId} url = ${url}`);
   $('#' + addBtnId).click(function () {
     const val = $('#' + newInputId)
       .val()
@@ -96,6 +97,7 @@ function addElementToList(listId, newInputId, addBtnId, url) {
           'X-CSRFToken': getCSRFToken()
         }
       }).done(function (res) {
+        console.log('res: ', res);
         if (data.html) {
           addToList(res.id, res.label, listId);
           appendToDynamicGroup(selectContainer, data.html);
