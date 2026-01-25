@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib import admin
 from .views import *
 from django.urls import re_path as url
+from rest_framework.routers import DefaultRouter
+from .views.fichecollecteviews import FicheCollecteViewSet, FicheCollecteFormView
 
 app_name = 'baux'
 
@@ -17,6 +19,10 @@ def get_crud_urls(view_class, prefix, name):
         path(f"{prefix}/update/<int:pk>", view_class.as_view(), {'action': 'update'}, name=f'{name}_update'),
         path(f"{prefix}/delete/<int:pk>", view_class.as_view(), {'action': 'delete'}, name=f'{name}_delete'),
     ]
+
+# api routes
+router = DefaultRouter()
+router.register("fiches", FicheCollecteViewSet)
 
 # partial form helper urls
 def partial_form_urls(view_func, prefix, name):
@@ -74,7 +80,7 @@ urlpatterns = [
     # Statistiques :
     path("stats", StatsView.as_view(template_name="baux/stats.html"), name='stats'),
     # collecte :
-    path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
+    #path('collecte/add/', CollecteView.as_view(template_name="baux/collecte.html"), name='collecte'),
     path("collecte/list/", CollecteView.as_view(template_name="baux/collecte_list.html"), name='collecte_list'),
     path("collecte/create", collecte_create, name='collecte_create'),
     path("collecte/print/<int:pk>/", CollecteView.print, name='collecte_print'),
@@ -83,4 +89,7 @@ urlpatterns = [
     path("collecte/update/<int:pk>/", CollecteView.as_view(template_name="baux/collecte.html"), name='collecte_update'),
     path("", HomeView.as_view(template_name="baux/index.html"), name='Index'),
     path("add-choice/", dynamic_choice_views.add_dynamic_choice, name="add_dynamic_choice"),
+    # fiche collecte new approach
+    path("collecte/add/", FicheCollecteFormView.as_view(), name="fiche_collecte_form"),
 ]
+urlpatterns += router.urls

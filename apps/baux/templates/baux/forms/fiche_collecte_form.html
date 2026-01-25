@@ -1,0 +1,329 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Collecte{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<link href="bootstrap.min.css" rel="stylesheet">
+
+<form id="ficheCollecteForm" class="container-fluid" method="post">
+  {% csrf_token %}
+
+  <!-- ===================== -->
+  <!-- CHAMPS FICHE COLLECTE -->
+  <!-- ===================== -->
+
+  <div class="container-fluid p-0">
+    <div class="row">
+      <div class="col-12">
+        <table class="w-100">
+          <thead>
+            <tr>
+              <th scope="col" colspan="3">
+                <h1 class="d-flex justify-content-center bg-secondary text-center p-2 text-uppercase">
+                  Fiche de collecte N° <input type="text" class="form-control w-25" id="ficheNumber" readonly disabled>
+                </h1>
+              </th>
+            </tr>
+            <tr>
+              <th scope="col" colspan="3">
+                <h4 class="d-flex justify-content-center bg-secondary-subtle text-center p-0 text-uppercase">
+                  Collecte d'information sur les contrats de logements administratifs
+                </h4>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="d-flex justify-content-center align-items-center">
+              <td class="d-flex justify-content-center align-items-center">
+                <label class="text-uppercase">Agent de collecte : </label>
+                <input type="text" class="form-control w-50" id="agentCollecte">
+              </td>
+              <td class="d-flex justify-content-center align-items-center">
+                <label class="text-uppercase">Matricule de l'agent : </label>
+                <input type="text" class="form-control w-50" id="matriculeAgent">
+              </td>
+              <td class="d-flex justify-content-center align-items-center">
+                <label class="text-uppercase">Date de collecte : </label>
+                <input type="date" class="form-control w-50" id="dateCollecte">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== -->
+  <!-- ACCORDION -->
+  <!-- ===================== -->
+
+  <div class="accordion mt-3" id="accordionCollecte">
+
+    <!-- SECTION 1 -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#immeubleSection">
+          Section 1.- Informations sur l’immeuble
+        </button>
+      </h2>
+
+      <div id="immeubleSection" class="accordion-collapse collapse show">
+        <div class="accordion-body">
+          <h5 class='text-uppercase mt-3'>I. Identification</h5>
+          <table class="table table-bordered align-middle text-center">
+            <tbody>
+              <tr>
+                <td class="text-start p-0">
+                  <label for="id_immeubles-0-Designation" class="fw-bold text-start form-check-label ms-1">a. - Désignation du bien</label>
+                </td>
+                <td class="text-start p-0">
+                  {% include "baux/widgets/field_widget.html" with input_id="designationBien" input_label="Désignation du bien" input_type="text" input_name="designation_bien" variant="html_no_label" %}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-start p-0">
+                  <label for="id_immeubles-0-Construction" class="fw-bold text-start form-check-label ms-1">b. - Construction</label>
+                </td>
+                <td class="text-start p-0">
+                  {% include "baux/widgets/dynamic_choice_list.html" with list_id="construction-list" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction-choice-hidden" add_wrapper_id="new-construction-wrapper" new_input_id="new-construction-input" add_btn_id="add-construction-btn" choices=type_constructions selected=form.initial.construction_choice model="TypeConstructions" %}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-start pt-0 pb-0 ps-0">
+                  <label for="id_immeubles-0-Date_Construction" class="fw-bold text-start form-check-label ms-1">c. - Caractéristiques</label>
+                </td>
+                <td class="text-start">
+                  <div class="row">
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with input_id="dateConstruction" input_label="Date construction" input_type="date" input_name="date_construction" variant="html_only" %}
+                    </div>
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with input_id="nombrePieces" input_label="Nombre de pièces" input_type="number" input_name="nombre_pieces" variant="html_only" %}
+                    </div>
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with input_id="superficieLouer" input_label="Superficie louée" input_type="number" input_name="superficie_louer" variant="html_only" %}
+                    </div>
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with input_id="norme" input_label="Norme" input_type="text" input_name="norme" variant="html_only" %}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-start p-0">
+                  <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Type de location</label>
+                </td>
+                <td class="text-start p-0">
+                  {% include "baux/widgets/dynamic_choice_list.html" with list_id="type-location-list" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type-location-choice-hidden" add_wrapper_id="new-type-location-wrapper" new_input_id="new-type-location-input" add_btn_id="add-type-location-btn" choices=type_locations selected=form.initial.type_location_choice model="TypeLocations" %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5 class='text-uppercase mt-3'>II. Localisation</h5>
+          <table class="table table-bordered align-middle text-center">
+            <tbody>
+              <tr>
+                <td class="text-start pt-0 pb-0 ps-0">
+                  <label for="id_immeubles-0-pays" class="fw-bold text-start form-check-label ms-1">a. - Représentation Diplomatique</label>
+                </td>
+                <td class="text-start">
+                  <div class="row">
+                    <div class="col-md-4">
+                      {% include "baux/widgets/field_widget.html" with list_label="Pays" list_id="pays-list" list_options=pays variant="html_list" %}
+                    </div>
+                    <div class="col-md-4">
+                      {% include "baux/widgets/field_widget.html" with input_id="ville" input_label="Ville" input_type="text" input_name="ville" variant="html_only" %}
+                    </div>
+                    <div class="col-md-4">
+                      {% include "baux/widgets/field_widget.html" with input_id="rue" input_label="Rue" input_type="text" input_name="rue" variant="html_only" %}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-start pt-0 pb-0 ps-0">
+                  <label for="id_immeubles-0-pays" class="fw-bold text-start form-check-label ms-1">b. - National</label>
+                </td>
+                <td class="text-start">
+                  <div class="row">
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with list_label="Région" list_id="region-list" list_options=regions variant="html_list" %}
+                    </div>
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with list_label="Departement" list_id="departement-list" list_options=departements variant="html_list" %}
+                    </div>
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with list_label="Arrondissement" list_id="arrondissement-list" list_options=arrondissements variant="html_list" %}
+                    </div>
+                    <div class="col-md-6">
+                      {% include "baux/widgets/field_widget.html" with input_id="quartier" input_label="Quartier" input_type="text" input_name="quartier" variant="html_only" %}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-start p-0">
+                  <label for="id_immeubles-0-Coordonee_gps" class="fw-bold text-start form-check-label ms-1">c. - Coordonnées GPS</label>
+                </td>
+                <td class="text-start p-0">
+                  {% include "baux/widgets/field_widget.html" with field=form.Coordonee_gps %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5 class='text-uppercase mt-3'>III. etat physique du batiment</h5>
+          <table class="table table-bordered align-middle text-center">
+            <tbody>
+              <tr>
+                <td >
+                  {% include "baux/widgets/dynamic_choice_list.html" with list_id="statut-list" checkbox_name="statut_choice_checkbox" hidden_name="statut_choice" hidden_id="statut-choice-hidden" add_wrapper_id="new-statut-wrapper" new_input_id="new-statut-input" add_btn_id="add-statut-btn" choices=statut_batisses selected=form.initial.statut_choice model="StatutBatisse" %}
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-1 d-flex align-items-center">
+                  <ul class="mb-0">
+                    <li type="square"><span class="fw-bold">Revêtement intérieure : </span></li>
+                  </ul>
+                  <ul class="ms-2 mb-0">
+                    {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementinterieure-list" checkbox_name="revetementinterieure_choice_checkbox" hidden_name="revetementinterieure_choice" hidden_id="revetementinterieure-choice-hidden" add_wrapper_id="new-revetementinterieure-wrapper" new_input_id="new-revetementinterieure-input" add_btn_id="add-revetementinterieure-btn" choices=revetement_interieures selected=form.initial.revetementinterieure_choice model="RevetementInts" %}
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-1 d-flex align-items-center">
+                  <ul class="mb-0">
+                    <li type="square"><span class="fw-bold">Revêtement extérieure : </span></li>
+                  </ul>
+                  <ul class="ms-2 mb-0">
+                    {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementexterieure-list" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure-choice-hidden" add_wrapper_id="new-revetementexterieure-wrapper" new_input_id="new-revetementexterieure-input" add_btn_id="add-revetementexterieure-btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts" %}
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="accordion-item mt-3">
+      <h2 class="accordion-header">
+        <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contratSection">
+          Section 2.- Informations contractuelles
+        </button>
+      </h2>
+
+      <div id="contratSection" class="accordion-collapse collapse">
+        <div class="accordion-body">
+
+          <!-- TYPE CONTRAT -->
+          <div class="mb-3">
+            <strong>Type de contrat</strong>
+            <div id="typeContratList"></div>
+            <button class="btn btn-sm btn-outline-primary">
+              + Ajouter type
+            </button>
+          </div>
+
+          <!-- CONTRAT INITIAL -->
+          <div class="mb-3">
+            <label>Contrat initial</label>
+            <select class="form-select"></select>
+            <button class="btn btn-sm btn-outline-primary mt-1">
+              + Ajouter contrat initial
+            </button>
+          </div>
+
+          <!-- AVENANTS -->
+          <h6>Avenants</h6>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Référence</th>
+                <th>Date signature</th>
+                <th>Ancien bailleur</th>
+                <th>Nouveau bailleur</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="avenantTable"></tbody>
+          </table>
+
+          <button class="btn btn-sm btn-outline-primary">
+            + Ajouter avenant
+          </button>
+
+          <!-- NON MANDATEMENT -->
+          <h6 class="mt-4">Non-mandatement</h6>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Exercice</th>
+                <th>Loyer</th>
+                <th>Mois non mandatés</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="nonMandatementTable"></tbody>
+          </table>
+
+          <button class="btn btn-sm btn-outline-primary">
+            + Ajouter non-mandatement
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="accordion-item mt-3">
+      <h2 class="accordion-header">
+        <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pieceSection">
+          Section 3.- Pièces collectées
+        </button>
+      </h2>
+
+      <div id="pieceSection" class="accordion-collapse collapse">
+        <div class="accordion-body">
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>✔</th>
+                <th>Libellé</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody id="pieceCollecteTable">
+              <!-- JS injecte -->
+            </tbody>
+          </table>
+
+          <button class="btn btn-sm btn-outline-primary">
+            + Ajouter pièce
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="mt-3">
+    <button type="submit" class="btn btn-primary">Soumettre</button>
+  </div>
+</form>
+
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'js/collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/fiche.js' %}"></script>
+{% endblock %}

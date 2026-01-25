@@ -9,6 +9,30 @@
     {{ field }}
     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
   </div>
+{% elif variant == "html_only" %}
+  {# Render nothing, only the field's HTML is needed #}
+  {# there is no field object to render, just render and html field with label, name, id, etc. #}
+  <div class="d-flex align-items-center mb-2">
+    <label for="{{ input_id }}" class="fw-bold me-2">{{ input_label }} :</label>
+    <input type="{{ input_type }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
+  </div>
+{% elif variant == "html_no_label" %}
+  {# Render nothing, only the field's HTML is needed #}
+  <div class="d-flex align-items-center mb-2">
+    <input type="{{ input_type }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
+  </div>
+{% elif variant == "html_list" %}
+  {# Render the html list directly with label #}
+  <div class="d-flex align-items-center mb-2">
+    <label class="fw-bold me-2">{{ list_label }} :</label>
+    {# select option list #}
+    {# the list must be searchable, we done it with select2 in the js #}
+    <select class="form-select" id="{{ list_id }}">
+      {% for option in list_options %}
+        <option value="{{ option.value }}">{{ option.display }}</option>
+      {% endfor %}
+    </select>
+  </div>
 {% else %}
   {{ field }}
 {% endif %}
