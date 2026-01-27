@@ -45,6 +45,9 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["localisations"] = Localisation.objects.all()
         # iterable list
         context["devises"] = DEVISES
+        context["agentcollectes"] = transform_queryset_to_listable(AgentCollecte.objects.all()[:30])
+        # return only the list of matricule of agentcollectes entity
+        context["matriculesagents"] = list(AgentCollecte.objects.values_list('Matricule', flat=True)[:30])
         context["structures"] = transform_queryset_to_listable(Structures.objects.all()[:30])
         context["administrations"] = transform_queryset_to_listable(Administrations.objects.all()[:30])
         context["bailleurs"] = transform_queryset_to_listable(Bailleurs.objects.all()[:30])

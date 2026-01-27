@@ -41,11 +41,11 @@
           <tbody>
             <tr class="d-flex justify-content-center align-items-center">
               <td class="d-flex justify-content-center align-items-center">
-                <label class="text-uppercase">Agent de collecte : </label>
+                <label class="text-uppercase">Responsable de collecte : </label>
                 <input type="text" class="form-control w-50" id="agentCollecte">
               </td>
               <td class="d-flex justify-content-center align-items-center">
-                <label class="text-uppercase">Matricule de l'agent : </label>
+                <label class="text-uppercase">Matricule du responsable : </label>
                 <input type="text" class="form-control w-50" id="matriculeAgent">
               </td>
               <td class="d-flex justify-content-center align-items-center">
@@ -353,6 +353,7 @@
 
       <div id="contratSection" class="accordion-collapse collapse">
         <div class="accordion-body">
+            <!-- éléments juridiques -->
             <h5 class='text-uppercase mt-3'>I. Elements juridiques</h5>
             <table class="table table-bordered align-middle text-center">
               <tbody>
@@ -412,40 +413,36 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="text-start">
+                  <td class="text-start" colspan="2">
                     <div class="row">
                       <div class="col-md-6">
-                        <!-- avenant du contrat inital -->
-                        <table class="table">
+                        <!-- avenant 1 du contrat inital -->
+                        <table class="table table-borderless">
                           <tr>
-                            <td class="text-start p-0">
+                            <td class="text-start p-0" colspan="2">
                               {% include "baux/widgets/field_widget.html" with input_id="reference_avenant_1" input_label="Référence de l'avenant N° 01" input_type="text" input_name="reference_avenant_1" variant="html_only" %}
                             </td>
                           </tr>
                           <tr>
-                            <td>
-                              <div class="row">
-                                <div class="col-md-6">
-                                  {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_1" input_type="date" input_label="Date signature" input_name="date_signature_avenant_1" variant="html_only" %}
-                                </div>
-                                <div class="col-md-6">
-                                  {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_1" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_1" variant="html_only" %}
-                                </div>
-                              </div>
+                            <td class="text-start p-0 pe-1">
+                              {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_1" input_type="date" input_label="Date signature" input_name="date_signature_avenant_1" variant="html_only" %}
+                            </td>
+                            <td class="text-start p-0 ps-1">
+                              {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_1" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_1" variant="html_only" %}
                             </td>
                           </tr>
                           <tr>
-                            <td>
-                              <table class="table table-borderless">
+                            <td colspan="2" class="p-0">
+                              <table class="table table-bordered">
                                 <thead>
                                   <tr>
-                                    <th>
+                                    <th class="text-center text-capitalize p-0">
                                       <i>Avenant N°01</i>
                                     </th>
-                                    <th>
+                                    <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
                                       Ancienne valeur
                                     </th>
-                                    <th>
+                                    <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
                                       Nouvelle valeur
                                     </th>
                                   </tr>
@@ -455,10 +452,10 @@
                                     <td>
                                       Nom & prénoms ou raison sociale du bailleur
                                     </td>
-                                    <td>
+                                    <td class="p-0">
                                       {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
                                     </td>
-                                    <td>
+                                    <td class="p-0">
                                       {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
                                     </td>
                                   </tr>
@@ -466,21 +463,21 @@
                                     <td>
                                       Montant Loyer Mensuel (TTC)
                                     </td>
-                                    <td>
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancienmontant_loyer_mensuel" input_type="text" input_name="avenant_1_ancienmontant_loyer_mensuel" variant="html_no_label" %}
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_1_ancienmontant_loyer_mensuel" variant="html_no_label" %}
                                     </td>
-                                    <td>
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveaumontant_loyer_mensuel" input_type="text" input_name="avenant_1_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_1_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
                                     </td>
                                   </tr>
                                   <tr>
                                     <td>
                                       Attestation domicilliation bancaire
                                     </td>
-                                    <td>
+                                    <td class="p-0">
                                       {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancienattestation_domicilliation_bancaire" input_type="text" input_name="avenant_1_ancienattestation_domicilliation_bancaire" variant="html_no_label" %}
                                     </td>
-                                    <td>
+                                    <td class="p-0">
                                       {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveauattestation_domicilliation_bancaire" input_type="text" input_name="avenant_1_nouveauattestation_domicilliation_bancaire" variant="html_no_label" %}
                                     </td>
                                   </tr>
@@ -488,10 +485,10 @@
                                     <td>
                                       Durée du contrat
                                     </td>
-                                    <td>
+                                    <td class="p-0">
                                       {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancien_duree_contrat" input_type="text" input_name="avenant_1_ancien_duree_contrat" variant="html_no_label" %}
                                     </td>
-                                    <td>
+                                    <td class="p-0">
                                       {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveau_duree_contrat" input_type="text" input_name="avenant_1_nouveau_duree_contrat" variant="html_no_label" %}
                                     </td>
                                   </tr>
@@ -502,7 +499,87 @@
                         </table>
                       </div>
                       <div class="col-md-6">
-
+                        <!-- avenant 2 du contrat inital -->
+                        <table class="table table-borderless">
+                          <tr>
+                            <td class="text-start p-0" colspan="2">
+                              {% include "baux/widgets/field_widget.html" with input_id="reference_avenant_2" input_label="Référence de l'avenant N° 02" input_type="text" input_name="reference_avenant_2" variant="html_only" %}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-start p-0 pe-1">
+                              {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_2" input_type="date" input_label="Date signature" input_name="date_signature_avenant_2" variant="html_only" %}
+                            </td>
+                            <td class="text-start p-0 ps-1">
+                              {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_2" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_2" variant="html_only" %}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="p-0">
+                              <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center text-capitalize p-0">
+                                      <i>Avenant N°02</i>
+                                    </th>
+                                    <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
+                                      Ancienne valeur
+                                    </th>
+                                    <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
+                                      Nouvelle valeur
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      Nom & prénoms ou raison sociale du bailleur
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      Montant Loyer Mensuel (TTC)
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_2_ancienmontant_loyer_mensuel" variant="html_no_label" %}
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_2_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      Attestation domicilliation bancaire
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancienattestation_domicilliation_bancaire" input_type="text" input_name="avenant_2_ancienattestation_domicilliation_bancaire" variant="html_no_label" %}
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveauattestation_domicilliation_bancaire" input_type="text" input_name="avenant_2_nouveauattestation_domicilliation_bancaire" variant="html_no_label" %}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      Durée du contrat
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancien_duree_contrat" input_type="text" input_name="avenant_2_ancien_duree_contrat" variant="html_no_label" %}
+                                    </td>
+                                    <td class="p-0">
+                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveau_duree_contrat" input_type="text" input_name="avenant_2_nouveau_duree_contrat" variant="html_no_label" %}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
                       </div>
                     </div>
                   </td>
@@ -517,6 +594,46 @@
                 </tr>
               </tbody>
             </table>
+
+            <!-- bailleur -->
+            <h5 class='text-uppercase mt-3'>II. Bailleur</h5>
+            <table class="table table-bordered align-middle text-center">
+              <tbody>
+                <tr>
+                  <td class="text-start p-0" rowspan="6">
+                    <label class="fw-bold text-start form-check-label ms-1">a. - Identification</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                </tr>
+                <tr>
+                  <td class="text-start p-0">
+                    <label class="fw-bold text-start form-check-label ms-1">b. - Références Bancaires</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-start p-0">
+                    <label class="fw-bold text-start form-check-label ms-1">c. - Ayants Droits du Bailleur</label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Non mandatements -->
+            <h5 class='text-uppercase mt-3'>III. Attestation de non-mandatement(non-encore payé)</h5>
         </div>
       </div>
     </div>

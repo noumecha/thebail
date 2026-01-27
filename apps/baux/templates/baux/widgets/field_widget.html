@@ -14,7 +14,8 @@
   {# there is no field object to render, just render and html field with label, name, id, etc. #}
   <div class="d-flex align-items-center mb-2">
     <label for="{{ input_id }}" class="fw-bold me-2">{{ input_label }} :</label>
-    <input type="{{ input_type }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
+    {# if input_type is date spcify the style value :  width: 35% !important; #}
+    <input type="{{ input_type }}" style="{% if input_type == 'date' %}width: 150px !important{% endif %}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
   </div>
 {% elif variant == "html_no_label" %}
   {# Render nothing, only the field's HTML is needed #}
