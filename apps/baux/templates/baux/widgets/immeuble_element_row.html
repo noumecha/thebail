@@ -1,14 +1,18 @@
 <tr data-el-id="{{ el.id }}">
   <td class="d-flex ps-0 pe-0">
     <div class="form-check form-check-inline">
-      {{ el.statut_oui }}
+      <input type="checkbox" class="form-check-input" {% if el.statut_oui.attrs.checked %}checked{% endif %}>
       <label class="form-check-label ms-1">Oui</label>
     </div>
     <div class="form-check form-check-inline">
-      {{ el.statut_non }}
+      <input type="checkbox" class="form-check-input" {% if el.statut_non.attrs.checked %}checked{% endif %}>
       <label class="form-check-label ms-1">Non</label>
     </div>
   </td>
-  <td class="p-0 align-items-center text-start">{{ el.libelle }}</td>
-  <td class="p-0 align-items-center" style="width: 80px;">{{ el.nombre_input }}</td>
+  <td class="p-0 align-items-center justify-content-center text-start">
+    <label class="text-capitalize">{{ el.libelle|capfirst }}</label>
+  </td>
+  <td class="p-0 align-items-center" style="width: 80px;">
+    <input type="number" class="form-control form-control-sm" value="{{ el.nombre_input.value }}">
+  </td>
 </tr>

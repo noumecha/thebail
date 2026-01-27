@@ -169,6 +169,11 @@
             <div class="text-truncate" data-i18n="Basic Inputs">types de contrat</div>
           </a>
         </li>
+        <li class="menu-item {% if '/contrat/periodiciterels/' == request.path %}active{% endif %}">
+          <a href="{% url 'baux:periodiciterel_list' %}" class="menu-link">
+            <div class="text-truncate" data-i18n="Basic Inputs">Periodicité de réglement</div>
+          </a>
+        </li>
       </ul>
     </li>
     <!-- Localisation -->

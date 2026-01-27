@@ -373,6 +373,29 @@ class TypeContratsForm(forms.ModelForm):
 
         return instance
 
+class PeriodiciteReglementForm(forms.ModelForm):
+    class Meta:
+        model = PeriodiciteReglement
+
+        fields = ('libelle', 'description')
+        labels = {
+            'libelle' : 'Libelle',
+            'description' : 'Description'
+        }
+        widgets = {
+            'description': forms.Textarea(attrs={'rows':20, 'cols':10}),
+        }
+
+        def __init__(self, *args, **kwargs):
+            super(TypeContratsForm, self).__init__(*args, **kwargs)
+            self.helper =  FormHelper()
+            self.helper.layout = Layout(
+                Row(
+                    Column(FloatingField("libelle"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                    Column(FloatingField("description"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                    css_class="form-row",
+                ),
+            )
 
 # Exercice form
 class ExercicesForm(forms.ModelForm):

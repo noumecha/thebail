@@ -798,6 +798,15 @@ class Collectes (models.Model):
     def __str__(self):
         return f" Collecte du  {self.Date_collecte}  du  {self.contrat}  "
 
+# classe for periodicite_regrelement management
+class PeriodiciteReglement(models.Model):
+    libelle = models.CharField(max_length=500, unique=True)
+    description = models.TextField(blank=True, null=True)
+    Date_creation = models.DateTimeField(default=timezone.now)
+    Date_miseajour = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f"{self.libelle}"
+
 # Contrats model
 class Contrats (models.Model):
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur")
@@ -806,15 +815,14 @@ class Contrats (models.Model):
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
     Administration_beneficiaire = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "administration_beneficiaire", blank=True)
     Structure = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "structure")
-    #Superficie_louer = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Duree_Contrat = models.CharField(max_length=10, null=False)
     Signataire = models.CharField(max_length=50, null=False)
-    #FonctionSignataire = models.CharField(max_length=50, null=False)
     Devise = models.CharField(choices=DEVISES, max_length=5, null=True)
     Date_Signature = models.DateField(null=True)
     Date_Debut = models.DateField(null=True)
     #Ref_contrat = models.CharField(max_length=50, null=True)
-    Periodicite_Reglement = models.CharField(choices=PERIODICITE_LOYER, max_length=1, null=True)
+    Existance_avenant = models.BooleanField(default=False, null=True, blank=True)
+    Periodicite_Reglement = models.ForeignKey(PeriodiciteReglement, on_delete=models.CASCADE, null=True, related_name= "periodicite_reglement")
     Montant_Charges_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_Taxe_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Rabattement = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)

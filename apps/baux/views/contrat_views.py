@@ -20,7 +20,16 @@ class TypeContratView(BaseCRUDView):
     context_object_name = 'typecontrats'
     search_fields = ['libelle', 'description']
 
-# contrat view 
+class PeriodiciteReglementView(BaseCRUDView):
+    model = PeriodiciteReglement
+    form_class = PeriodiciteReglementForm
+    list_route = 'periodiciterel_list'
+    list_template = 'baux/periodiciterel_list.html'
+    partial_template = 'baux/partials/periodiciterel_partial.html'
+    context_object_name = 'periodiciterels'
+    search_fields = ['libelle', 'description']
+
+# contrat view
 class ContratView(TemplateView):
     #predefined functiion
     def get_context_data(self, **kwargs):

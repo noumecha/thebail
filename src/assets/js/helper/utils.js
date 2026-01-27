@@ -284,6 +284,7 @@ function submitForm(formId, url, fetchUrl) {
     const form = $(this);
     const formData = form.serialize();
     const saveUrl = $('#save-btn').text() === 'Mettre à jour' ? url + 'update/' : url;
+    console.log(saveUrl);
     const updateId = $('#update-id').val();
     // Send AJAX request
     $.ajax({

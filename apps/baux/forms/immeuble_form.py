@@ -377,20 +377,6 @@ class ImmeublesForm(forms.ModelForm):
                 ),
                 css_class='form-row'
             ),
-            #Row(
-            #    Fieldset(
-            #        "Occupants Pour résidence",
-            #        Formset("occupants_residence_formset"),
-            #        css_class="bg-white line__text border p-2 pt-4"
-            #    )
-            #),
-            #Row(
-            #    Fieldset(
-            #        "Occupants Pour bureaux",
-            #        Formset("occupants_bureau_formset"),
-            #        css_class="bg-white line__text border p-2 pt-4"
-            #    )
-            #)
         )
         self.fields['Date_Construction'].required = False
 
