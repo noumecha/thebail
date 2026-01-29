@@ -45,7 +45,7 @@ class ImmeublesForm(forms.ModelForm):
             # idenfification fields
             "Designation","Construction","Date_Construction","Type_location","Nombre_de_pieces", "Norme","Superficie_louer",
             # localisation fields
-            "Type_localisation","pays","Ville","Rue","region","departement","arrondissement","Quartier","Coordonee_gps",
+            "pays","Ville","Rue","region","departement","arrondissement","Quartier","Coordonee_gps",
             # etat physique du batiement fields
             "Situation_de_la_batisse","Revetement_interieure","Revetement_exterieure", "observation","images"
         )
@@ -64,7 +64,6 @@ class ImmeublesForm(forms.ModelForm):
             "observation" : "Observation",
             "Situation_de_la_batisse" : "Etat de la batisse",
             # localisation labels
-            "Type_localisation" : "Type de localisation",
             "pays" : "Pays",
             "Ville" : "Ville",
             "Rue" : "Rue",
@@ -132,8 +131,6 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "II. Localisation",
                     Row(
-                        #Column(FloatingField("Localisation"), css_class='overflow-hidden form-group col-md-12 mb-0'),
-                        Column(FloatingField("Type_localisation"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("pays"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Ville"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Rue"), css_class='overflow-hidden form-group col-md-6 mb-0'),
@@ -290,7 +287,6 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "Localisation",
                     Row(
-                        Column(FloatingField("Type_localisation"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("pays"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Ville"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Rue"), css_class='overflow-hidden form-group col-md-3 mb-0'),
@@ -379,76 +375,6 @@ class ImmeublesForm(forms.ModelForm):
             ),
         )
         self.fields['Date_Construction'].required = False
-
-    def render_collecte_layout(self):
-        """Render the full layout from the external template."""
-        # manage fields
-        self.fields["Designation"].label = ""
-        self.fields["Coordonee_gps"].label = ""
-        #
-        for name, field in self.fields.items():
-            widget = field.widget
-            if not widget.attrs.get("class"):
-                if isinstance(widget, forms.Select):
-                    widget.attrs["class"] = "form-select"
-                else:
-                    widget.attrs["class"] = "form-control"
-
-        # type constructions :
-        if "Construction" in self.fields:
-            del self.fields["Construction"]
-        self.construction_choices = TypeConstructions.objects.all()
-        self.fields["construction_choice"] = forms.CharField(
-            required=False,
-            widget=forms.HiddenInput()
-        )
-        # type de locations :
-        if "Type_location" in self.fields:
-            del self.fields["Type_location"]
-        self.type_locations = TypeLocations.objects.all()
-        self.fields["type_location_choice"] = forms.CharField(
-            required=False,
-            widget=forms.HiddenInput()
-        )
-        # statutbatisse :
-        if "Situation_de_la_batisse" in self.fields:
-            del self.fields["Situation_de_la_batisse"]
-        self.statut_batisses = StatutBatisse.objects.all()
-        self.fields["statut_batisse_choice"] = forms.CharField(
-            required=False,
-            widget=forms.HiddenInput()
-        )
-        # revetement interieure
-        if "Revetement_interieure" in self.fields:
-            del self.fields["Revetement_interieure"]
-        self.revetement_interieures = RevetementInts.objects.all()
-        self.fields["revetement_interieure_choice"] = forms.CharField(
-            required=False,
-            widget=forms.HiddenInput()
-        )
-        # revetement extérieure
-        if "Revetement_exterieure" in self.fields:
-            del self.fields["Revetement_exterieure"]
-        self.revetement_exterieures = RevetementExts.objects.all()
-        self.fields["revetement_exterieure_choice"] = forms.CharField(
-            required=False,
-            widget=forms.HiddenInput()
-        )
-
-        return render_to_string(
-            "baux/forms/immeuble_form_layout.html",
-            {
-                "form": self,
-                "element_groups": self.element_groups,
-                "type_constructions" : self.construction_choices,
-                "type_locations" : self.type_locations,
-                "statut_batisses" : self.statut_batisses,
-                "revetement_interieures" : self.revetement_interieures,
-                "revetement_exterieures" : self.revetement_exterieures,
-                "occupants_residence_formset" : self.occupants_residence_formset,
-                "occupants_bureau_formset" : self.occupants_bureau_formset,
-            },
-        )
 
     def clean(self):
         cleaned = super().clean()

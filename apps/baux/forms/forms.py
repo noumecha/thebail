@@ -426,37 +426,3 @@ class ExercicesForm(forms.ModelForm):
                 css_class="form-row",
             ),
         )
-
-
-# collectes formset
-AvenantsFormSet = inlineformset_factory(
-    Collectes, Avenants, form=AvenantsForm,
-    extra=1, can_delete=True
-)
-
-ImmeublesFormSet = inlineformset_factory(
-    Collectes, Immeubles, form=ImmeublesForm,
-    extra=1, can_delete=True
-)
-
-# Bailleurs formset
-NonMandatementFormSet = inlineformset_factory(
-    Bailleurs, Non_Mandatement, form=NonMandatementForm,
-    extra=1, can_delete=True
-)
-
-AyantDroitsFormSet = inlineformset_factory(
-    Bailleurs, Ayant_droits, form=AyantDroitsForm,
-    extra=1, can_delete=True
-)
-
-# occupants formset
-OccupantsFormSet = inlineformset_factory(
-    Immeubles, Occupants, form=OccupantsForm,
-    extra=1, can_delete=True
-)
-
-OccupantBureauxFormSet = inlineformset_factory(
-    Immeubles, OccupantBureaux, form=OccupantBureauxForm,
-    extra=1, max_num=1, can_delete=True
-)

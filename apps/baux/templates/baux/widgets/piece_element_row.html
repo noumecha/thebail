@@ -1,15 +1,17 @@
 <tr>
   <td class="d-flex ps-2 pe-0">
     <div class="d-flex form-check form-check-inline">
-      {{ el.statut_input }}
+      <input type="checkbox" class="form-check-input" id="{{ el.id }}">
       <label class="form-check-label text-start ms-1">{{ el.libelle }}</label>
     </div>
   </td>
-  <td class="p-0 align-items-center" style="width: 80px;">{{ el.nombre_input }}</td>
+  <td class="p-0 align-items-center" style="width: 80px;">
+    <input type="number" value="" class="form-control">
+  </td>
   <td class="p-0 align-items-center">
     <div class="file-upload-wrapper">
-      {{ el.images_input }}
-      <label class="file-upload-label p-1">0 fich.</label>
+      <input class="form-control" type="file" id="formFileMultiple" multiple>
+      <label for="formFileMultiple" class="file-upload-label p-1">0 fich.</label>
     </div>
   </td>
 </tr>

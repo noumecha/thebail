@@ -11,671 +11,799 @@
 
 <link href="bootstrap.min.css" rel="stylesheet">
 
-<form id="ficheCollecteForm" class="p-0 container-fluid" method="post">
-  {% csrf_token %}
+<div class="card">
+  <div class="card-body">
+    <form id="ficheCollecteForm" class="p-0 container-fluid" method="post">
+      {% csrf_token %}
 
-  <!-- ===================== -->
-  <!-- CHAMPS FICHE COLLECTE -->
-  <!-- ===================== -->
+      <!-- ===================== -->
+      <!-- CHAMPS FICHE COLLECTE -->
+      <!-- ===================== -->
 
-  <div class="container-fluid p-0">
-    <div class="row">
-      <div class="col-12">
-        <table class="w-100">
-          <thead>
-            <tr>
-              <th scope="col" colspan="3">
-                <h1 class="d-flex justify-content-center bg-secondary text-center p-2 text-uppercase">
-                  Fiche de collecte N° <input type="text" class="form-control w-25" id="ficheNumber" readonly disabled>
-                </h1>
-              </th>
-            </tr>
-            <tr>
-              <th scope="col" colspan="3">
-                <h4 class="d-flex justify-content-center bg-secondary-subtle text-center p-0 text-uppercase">
-                  Collecte d'information sur les contrats de logements administratifs
-                </h4>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="d-flex justify-content-center align-items-center">
-              <td class="d-flex justify-content-center align-items-center">
-                <label class="text-uppercase">Responsable de collecte : </label>
-                <input type="text" class="form-control w-50" id="agentCollecte">
-              </td>
-              <td class="d-flex justify-content-center align-items-center">
-                <label class="text-uppercase">Matricule du responsable : </label>
-                <input type="text" class="form-control w-50" id="matriculeAgent">
-              </td>
-              <td class="d-flex justify-content-center align-items-center">
-                <label class="text-uppercase">Date de collecte : </label>
-                <input type="date" class="form-control w-50" id="dateCollecte">
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== -->
-  <!-- ACCORDION -->
-  <!-- ===================== -->
-
-  <div class="accordion mt-3" id="accordionCollecte">
-
-    <!-- SECTION 1 -->
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#immeubleSection">
-          Section 1.- Informations sur l’immeuble
-        </button>
-      </h2>
-
-      <div id="immeubleSection" class="accordion-collapse collapse show">
-        <div class="accordion-body">
-          <h5 class='text-uppercase mt-3'>I. Identification</h5>
-          <table class="table table-bordered align-middle text-center">
-            <tbody>
-              <tr>
-                <td class="text-start p-0">
-                  <label for="designationBien" class="fw-bold text-start form-check-label ms-1">a. - Désignation du bien</label>
-                </td>
-                <td class="text-start p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="designationBien" input_type="text" input_name="designation_bien" variant="html_no_label" %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-start p-0">
-                  <label for="id_immeubles-0-Construction" class="fw-bold text-start form-check-label ms-1">b. - Construction</label>
-                </td>
-                <td class="text-start p-0">
-                  {% include "baux/widgets/dynamic_choice_list.html" with list_id="construction-list" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction-choice-hidden" add_wrapper_id="new-construction-wrapper" new_input_id="new-construction-input" add_btn_id="add-construction-btn" choices=type_constructions selected=form.initial.construction_choice model="TypeConstructions" %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-start pt-0 pb-0 ps-0">
-                  <label for="id_immeubles-0-Date_Construction" class="fw-bold text-start form-check-label ms-1">c. - Caractéristiques</label>
-                </td>
-                <td class="text-start">
-                  <div class="row">
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="dateConstruction" input_label="Date construction" input_type="date" input_name="date_construction" variant="html_only" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="nombrePieces" input_label="Nombre de pièces" input_type="number" input_name="nombre_pieces" variant="html_only" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="superficieLouer" input_label="Superficie louée" input_type="number" input_name="superficie_louer" variant="html_only" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="norme" input_label="Norme" input_type="text" input_name="norme" variant="html_only" %}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-start p-0">
-                  <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Type de location</label>
-                </td>
-                <td class="text-start p-0">
-                  {% include "baux/widgets/dynamic_choice_list.html" with list_id="type-location-list" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type-location-choice-hidden" add_wrapper_id="new-type-location-wrapper" new_input_id="new-type-location-input" add_btn_id="add-type-location-btn" choices=type_locations selected=form.initial.type_location_choice model="TypeLocations" %}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h5 class='text-uppercase mt-3'>II. Localisation</h5>
-          <table class="table table-bordered align-middle text-center">
-            <tbody>
-              <tr>
-                <td class="text-start pt-0 pb-0 ps-0">
-                  <label for="id_immeubles-0-pays" class="fw-bold text-start form-check-label ms-1">a. - Représentation Diplomatique</label>
-                </td>
-                <td class="text-start">
-                  <div class="row">
-                    <div class="col-md-4">
-                      {% include "baux/widgets/field_widget.html" with list_label="Pays" list_id="pays-list" list_options=pays variant="html_list" %}
-                    </div>
-                    <div class="col-md-4">
-                      {% include "baux/widgets/field_widget.html" with input_id="ville" input_label="Ville" input_type="text" input_name="ville" variant="html_only" %}
-                    </div>
-                    <div class="col-md-4">
-                      {% include "baux/widgets/field_widget.html" with input_id="rue" input_label="Rue" input_type="text" input_name="rue" variant="html_only" %}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-start pt-0 pb-0 ps-0">
-                  <label for="id_immeubles-0-pays" class="fw-bold text-start form-check-label ms-1">b. - National</label>
-                </td>
-                <td class="text-start">
-                  <div class="row">
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with list_label="Région" list_id="region-list" list_options=regions variant="html_list" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with list_label="Departement" list_id="departement-list" list_options=departements variant="html_list" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with list_label="Arrondissement" list_id="arrondissement-list" list_options=arrondissements variant="html_list" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="quartier" input_label="Quartier" input_type="text" input_name="quartier" variant="html_only" %}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-start p-0">
-                  <label for="coordonee_gps" class="fw-bold text-start form-check-label ms-1">c. - Coordonnées GPS</label>
-                </td>
-                <td class="text-start p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="coordonee_gps" input_type="text" input_name="coordonee_gps" variant="html_no_label" %}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h5 class='text-uppercase mt-3'>III. etat physique du batiment</h5>
-          <table class="table table-bordered align-middle text-center">
-            <tbody>
-              <tr>
-                <td>
-                  {% include "baux/widgets/dynamic_choice_list.html" with list_id="statut-list" checkbox_name="statut_choice_checkbox" hidden_name="statut_choice" hidden_id="statut-choice-hidden" add_wrapper_id="new-statut-wrapper" new_input_id="new-statut-input" add_btn_id="add-statut-btn" choices=statut_batisses selected=form.initial.statut_choice model="StatutBatisse" %}
-                </td>
-              </tr>
-              <tr>
-                <td class="ps-1 d-flex align-items-center">
-                  <ul class="mb-0">
-                    <li type="square"><span class="fw-bold">Revêtement intérieure : </span></li>
-                  </ul>
-                  <ul class="ms-2 mb-0">
-                    {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementinterieure-list" checkbox_name="revetementinterieure_choice_checkbox" hidden_name="revetementinterieure_choice" hidden_id="revetementinterieure-choice-hidden" add_wrapper_id="new-revetementinterieure-wrapper" new_input_id="new-revetementinterieure-input" add_btn_id="add-revetementinterieure-btn" choices=revetement_interieures selected=form.initial.revetementinterieure_choice model="RevetementInts" %}
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td class="ps-1 d-flex align-items-center">
-                  <ul class="mb-0">
-                    <li type="square"><span class="fw-bold">Revêtement extérieure : </span></li>
-                  </ul>
-                  <ul class="ms-2 mb-0">
-                    {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementexterieure-list" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure-choice-hidden" add_wrapper_id="new-revetementexterieure-wrapper" new_input_id="new-revetementexterieure-input" add_btn_id="add-revetementexterieure-btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts" %}
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td class="" colspan="2">
-                  {% include "baux/widgets/field_widget.html" with input_id="observation" input_type="text" input_name="observation" input_label="Observation" variant="html_text_area" %}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h5 class='text-uppercase mt-3'>IV. description de la batisse</h5>
-          {% include "baux/widgets/immeuble_elements.html" %}
-
-          <h5 class='text-uppercase mt-3'>V. occupants actuels de l'immeuble</h5>
-          <!-- occupant pour résidence -->
-          <ul class="mb-0">
-            <li type="square"><span class="fw-bold">Occupation pour résidence</span></li>
-          </ul>
-          <table class="table table-bordered align-middle text-center">
-            <thead>
-              <tr>
-                <th>
-                  Noms & prénoms
-                </th>
-                <th>
-                  Administration de tutelle de l'occupant
-                </th>
-                <th>
-                  Fonction ou qualité de l'occupant
-                </th>
-                <th>
-                  Matricule ou NIU
-                </th>
-                <th>
-                  Référence de l'acte juridique d'attribution
-                </th>
-                <th>
-                  Date de prise d'effet de l'acte
-                </th>
-                <th>
-                  Numero de téléphone
-                </th>
-                <th>
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="nom_prenom" input_type="text" input_name="nom_prenom" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with list_id="administration-list" list_options=administrations variant="html_list_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="fonction_occupant" input_type="text" input_name="fonction_occupant" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="matricule_occupant" input_type="text" input_name="matricule_occupant" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="reference_acte_juridique" input_type="text" input_name="reference_acte_juridique" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="date_prise_effet_acte" input_type="date" input_name="date_prise_effet_acte" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="telephone_occupant" input_type="text" input_name="telephone_occupant" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  actions
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- occupant pour bureaux -->
-          <ul class="mb-0">
-            <li type="square"><span class="fw-bold">Occupation pour bureaux</span></li>
-          </ul>
-          <table class="table table-bordered align-middle text-center">
-            <thead>
-              <tr>
-                <th>
-                  Intitulé du Service administratif
-                </th>
-                <th>
-                  Administration correspondante
-                </th>
-                <th>
-                  Fonction du plus haut responsable du service
-                </th>
-                <th>
-                  Référence de l'acte juridique d'attribution du MINDCAF
-                </th>
-                <th>
-                  Numero (Numéro Camtel du service)
-                </th>
-                <th>
-                  Date initial d'occupation
-                </th>
-                <th>
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with list_id="structure-list" list_options=structures variant="html_list_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with list_id="administration-list" list_options=administrations variant="html_list_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="fonction_responsable" input_type="text" input_name="fonction_responsable" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="reference_acte_attribution" input_type="text" input_name="reference_acte_attribution" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="numero_camtel" input_type="text" input_name="numero_camtel" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  {% include "baux/widgets/field_widget.html" with input_id="date_initial_occupation" input_type="date" input_name="date_initial_occupation" variant="html_no_label" %}
-                </td>
-                <td class="p-0">
-                  actions
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 2 -->
-    <div class="accordion-item mt-3">
-      <h2 class="accordion-header">
-        <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contratSection">
-          Section 2.- Informations contractuelles
-        </button>
-      </h2>
-
-      <div id="contratSection" class="accordion-collapse collapse">
-        <div class="accordion-body">
-            <!-- éléments juridiques -->
-            <h5 class='text-uppercase mt-3'>I. Elements juridiques</h5>
-            <table class="table table-bordered align-middle text-center">
+      <div class="container-fluid p-0">
+        <div class="row">
+          <div class="table-borderless table col-12 mb-0">
+            <table class="w-100">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="3">
+                    <h1 class="d-flex justify-content-center bg-secondary text-center p-2 text-uppercase">
+                      Fiche de collecte N° <input type="text" class="form-control w-25" id="ficheNumber" readonly disabled>
+                    </h1>
+                  </th>
+                </tr>
+                <tr>
+                  <th scope="col" colspan="3">
+                    <h4 class="d-flex justify-content-center text-center p-0 text-uppercase">
+                      Collecte d'information sur les contrats des baux administratifs
+                    </h4>
+                  </th>
+                </tr>
+              </thead>
               <tbody>
-                <tr>
-                  <td class="text-start p-0">
-                    <label class="fw-bold text-start form-check-label ms-1">a. - Typologie</label>
+                <tr class="p-0">
+                  <td class="">
+                    {% include "baux/widgets/field_widget.html" with style="width: 300px !important" label_class="text-uppercase" list_label="Responsable de collecte" list_id="responsable_collecte" list_options=agentcollectes variant="html_list" %}
                   </td>
-                  <td class="text-start p-0">
-                    {% include "baux/widgets/dynamic_choice_list.html" with list_id="typecontrat-list" checkbox_name="typecontrat_choice_checkbox" hidden_name="typecontrat_choice" hidden_id="typecontrat-choice-hidden" add_wrapper_id="new-typecontrat-wrapper" new_input_id="new-typecontrat-input" add_btn_id="add-typecontrat-btn" choices=type_contrats selected=form.initial.construction_choice model="TypeContrats" %}
+                  <td class="">
+                    {% include "baux/widgets/field_widget.html" with style="width: 100px !important" label_class="text-uppercase" list_label="Matricule du responsable" list_id="matricule_responsable_collecte" list_options=matriculesagents variant="html_list" %}
                   </td>
-                </tr>
-                <tr>
-                  <td class="text-start p-0">
-                    <label for="id_immeubles-0-Construction" class="fw-bold text-start form-check-label ms-1">b. - Contrat Initial</label>
-                  </td>
-                  <td class="text-start">
-                  <div class="row">
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="numero_contrat" input_label="Référence ou Numéro du Contrat" input_type="text" input_name="numero_contrat" variant="html_only" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="date_signature_contrat" input_label="Date Signature" input_type="date" input_name="date_signature_contrat" variant="html_only" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="fonction_signataire_contrat" input_label="Qualité ou fonction du Signataire du Contrat" input_type="text" input_name="fonction_signataire_contrat" variant="html_only" %}
-                    </div>
-                    <div class="col-md-6">
-                      {% include "baux/widgets/field_widget.html" with input_id="date_effet_contrat" input_label="Date d'effet" input_type="date" input_name="date_signature_contrat" variant="html_only" %}
-                    </div>
-                    <div class="col-md-4">
-                      {% include "baux/widgets/field_widget.html" with input_id="regime_fiscal_contrat" input_label="Régime fiscal" input_type="text" input_name="regime_fiscal_contrat" variant="html_only" %}
-                    </div>
-                    <div class="col-md-4">
-                      {% include "baux/widgets/field_widget.html" with input_id="montant_ttc_contrat" input_label="Montant loyer mensuel (TTC)" input_type="number" input_name="montant_ttc_contrat" variant="html_only" %}
-                    </div>
-                    <div class="col-md-4">
-                      {% include "baux/widgets/field_widget.html" with list_id="devise-list" list_options=devises variant="html_simple_list" label="Devise" %}
-                    </div>
-                  </div>
-                </td>
-                </tr>
-                <tr>
-                  <td rowspan="3" class="text-start pt-0 pb-0 ps-0">
-                    <label for="id_immeubles-0-Date_Construction" class="fw-bold text-start form-check-label ms-1">c. - Avenants liés au Contrat Inital</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-start">
-                    <div class="row d-flex align-items-center">
-                      <div class="col-md-6">
-                        {% include "baux/widgets/field_widget.html" with input_id="existance_avenant" input_label="Existence d'au moins un avenant ?" input_name="existance_avenant" variant="html_checkbox" %}
-                      </div>
-                      <div class="col-md-6">
-                        {% include "baux/widgets/field_widget.html" with input_id="existence_visa" input_label="Existence du visa bugétaire ?" input_name="existence_visa" variant="html_checkbox" %}
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-start" colspan="2">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <!-- avenant 1 du contrat inital -->
-                        <table class="table table-borderless">
-                          <tr>
-                            <td class="text-start p-0" colspan="2">
-                              {% include "baux/widgets/field_widget.html" with input_id="reference_avenant_1" input_label="Référence de l'avenant N° 01" input_type="text" input_name="reference_avenant_1" variant="html_only" %}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-start p-0 pe-1">
-                              {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_1" input_type="date" input_label="Date signature" input_name="date_signature_avenant_1" variant="html_only" %}
-                            </td>
-                            <td class="text-start p-0 ps-1">
-                              {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_1" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_1" variant="html_only" %}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colspan="2" class="p-0">
-                              <table class="table table-bordered">
-                                <thead>
-                                  <tr>
-                                    <th class="text-center text-capitalize p-0">
-                                      <i>Avenant N°01</i>
-                                    </th>
-                                    <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
-                                      Ancienne valeur
-                                    </th>
-                                    <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
-                                      Nouvelle valeur
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>
-                                      Nom & prénoms ou raison sociale du bailleur
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      Montant Loyer Mensuel (TTC)
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_1_ancienmontant_loyer_mensuel" variant="html_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_1_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      Attestation domicilliation bancaire
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancienattestation_domicilliation_bancaire" input_type="text" input_name="avenant_1_ancienattestation_domicilliation_bancaire" variant="html_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveauattestation_domicilliation_bancaire" input_type="text" input_name="avenant_1_nouveauattestation_domicilliation_bancaire" variant="html_no_label" %}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      Durée du contrat
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancien_duree_contrat" input_type="text" input_name="avenant_1_ancien_duree_contrat" variant="html_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveau_duree_contrat" input_type="text" input_name="avenant_1_nouveau_duree_contrat" variant="html_no_label" %}
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                      <div class="col-md-6">
-                        <!-- avenant 2 du contrat inital -->
-                        <table class="table table-borderless">
-                          <tr>
-                            <td class="text-start p-0" colspan="2">
-                              {% include "baux/widgets/field_widget.html" with input_id="reference_avenant_2" input_label="Référence de l'avenant N° 02" input_type="text" input_name="reference_avenant_2" variant="html_only" %}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-start p-0 pe-1">
-                              {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_2" input_type="date" input_label="Date signature" input_name="date_signature_avenant_2" variant="html_only" %}
-                            </td>
-                            <td class="text-start p-0 ps-1">
-                              {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_2" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_2" variant="html_only" %}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colspan="2" class="p-0">
-                              <table class="table table-bordered">
-                                <thead>
-                                  <tr>
-                                    <th class="text-center text-capitalize p-0">
-                                      <i>Avenant N°02</i>
-                                    </th>
-                                    <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
-                                      Ancienne valeur
-                                    </th>
-                                    <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
-                                      Nouvelle valeur
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>
-                                      Nom & prénoms ou raison sociale du bailleur
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      Montant Loyer Mensuel (TTC)
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_2_ancienmontant_loyer_mensuel" variant="html_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_2_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      Attestation domicilliation bancaire
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancienattestation_domicilliation_bancaire" input_type="text" input_name="avenant_2_ancienattestation_domicilliation_bancaire" variant="html_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveauattestation_domicilliation_bancaire" input_type="text" input_name="avenant_2_nouveauattestation_domicilliation_bancaire" variant="html_no_label" %}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      Durée du contrat
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancien_duree_contrat" input_type="text" input_name="avenant_2_ancien_duree_contrat" variant="html_no_label" %}
-                                    </td>
-                                    <td class="p-0">
-                                      {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveau_duree_contrat" input_type="text" input_name="avenant_2_nouveau_duree_contrat" variant="html_no_label" %}
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-start p-0">
-                    <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Périodicité de règlement selon le contrat</label>
-                  </td>
-                  <td class="text-start p-0">
-                    {% include "baux/widgets/dynamic_choice_list.html" with list_id="periodicitereglement" checkbox_name="periodicitereglement_choice_checkbox" hidden_name="periodicitereglement_choice" hidden_id="periodicitereglement-choice-hidden" add_wrapper_id="new-periodicitereglement-wrapper" new_input_id="new-periodicitereglement-input" add_btn_id="add-periodicitereglement-btn" choices=periodicite_reglements model="PeriodiciteReglement" %}
+                  <td class="">
+                    {% include "baux/widgets/field_widget.html" with label_class="text-uppercase" input_id="dateCollecte" input_label="Date de collecte" input_type="date" input_name="date_collecte" variant="html_only" %}
                   </td>
                 </tr>
               </tbody>
             </table>
-
-            <!-- bailleur -->
-            <h5 class='text-uppercase mt-3'>II. Bailleur</h5>
-            <table class="table table-bordered align-middle text-center">
-              <tbody>
-                <tr>
-                  <td class="text-start p-0" rowspan="6">
-                    <label class="fw-bold text-start form-check-label ms-1">a. - Identification</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                </tr>
-                <tr>
-                  <td class="text-start p-0">
-                    <label class="fw-bold text-start form-check-label ms-1">b. - Références Bancaires</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-start p-0">
-                    <label class="fw-bold text-start form-check-label ms-1">c. - Ayants Droits du Bailleur</label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <!-- Non mandatements -->
-            <h5 class='text-uppercase mt-3'>III. Attestation de non-mandatement(non-encore payé)</h5>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- SECTION 3 -->
-    <div class="accordion-item mt-3">
-      <h2 class="accordion-header">
-        <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pieceSection">
-          Section 3.- Pièces collectées
-        </button>
-      </h2>
+      <!-- ===================== -->
+      <!-- ACCORDION -->
+      <!-- ===================== -->
 
-      <div id="pieceSection" class="accordion-collapse collapse">
-        <div class="accordion-body">
+      <div class="accordion mt-3" id="accordionCollecte">
 
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>✔</th>
-                <th>Libellé</th>
-                <th>Nombre</th>
-              </tr>
-            </thead>
-            <tbody id="pieceCollecteTable">
-              <!-- JS injecte -->
-            </tbody>
-          </table>
+        <!-- SECTION 1 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#immeubleSection">
+              Section 1.- Informations sur l’immeuble
+            </button>
+          </h2>
 
-          <button class="btn btn-sm btn-outline-primary">
-            + Ajouter pièce
-          </button>
+          <div id="immeubleSection" class="accordion-collapse collapse show">
+            <div class="accordion-body">
+              <h5 class='text-uppercase mt-3'>I. Identification</h5>
+              <table class="table table-bordered align-middle text-center">
+                <tbody>
+                  <tr>
+                    <td class="text-start pt-0 pb-0 ps-0">
+                      <label for="designation_bien" class="fw-bold text-start form-check-label ms-1">a. - Désignation du bien</label>
+                    </td>
+                    <td class="text-start p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="designation_bien" input_type="text" input_name="designation_bien" variant="html_no_label" %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-start pt-0 pb-0 ps-0">
+                      <label for="id_immeubles-0-Construction" class="fw-bold text-start form-check-label ms-1">b. - Type de construction</label>
+                    </td>
+                    <td class="text-start p-0">
+                      {% include "baux/widgets/dynamic_choice_list.html" with list_id="construction_list" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction_choice_hidden" add_wrapper_id="new_construction_wrapper" new_input_id="new_construction_input" add_btn_id="add_construction_btn" choices=type_constructions selected=form.initial.construction_choice model="TypeConstructions" %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-start pt-0 pb-0 ps-0">
+                      <label for="date_construction" class="fw-bold text-start form-check-label ms-1">c. - Caractéristiques</label>
+                    </td>
+                    <td class="text-start">
+                      <div class="row">
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with input_id="dateConstruction" input_label="Date construction" input_type="date" input_name="date_construction" variant="html_only" %}
+                        </div>
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with style="width: 100px !important" input_id="nombre_pieces_immeuble" input_label="Nombre Total de pièces" input_type="number" input_name="nombre_pieces_immeuble" variant="html_only" %}
+                        </div>
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id="superficie_louer" input_label="Superficie louée(m<sup>2</sup>) (Cf. contrat)" input_type="number" input_name="superficie_louer" variant="html_only" %}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-start p-0">
+                      <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Type de location</label>
+                    </td>
+                    <td class="text-start p-0">
+                      {% include "baux/widgets/dynamic_choice_list.html" with list_id="type_location_list" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type_location_choice_hidden" add_wrapper_id="new_type_location_wrapper" new_input_id="new_type_location_input" add_btn_id="add_type_location_btn" choices=type_locations selected=form.initial.type_location_choice model="TypeLocations" %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
+              <h5 class='text-uppercase mt-5'>II. Localisation</h5>
+              <table class="table table-bordered align-middle text-center">
+                <tbody>
+                  <!-- localisation géographique -->
+                  <tr>
+                    <td class="text-start pt-0 pb-0 ps-0" rowspan="3">
+                      <label for="id_immeubles-0-pays" class="fw-bold text-start form-check-label ms-1">a. - Localisation géographique</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">
+                      <div class="row">
+                        <div class="col-md-4">
+                          {% include "baux/widgets/field_widget.html" with style="width: 250px !important" list_label="Pays" list_id="pays_list" list_options=pays variant="html_list" %}
+                        </div>
+                        <div class="col-md-4">
+                          {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id="ville" input_label="Ville" input_type="text" input_name="ville" variant="html_only" %}
+                        </div>
+                        <div class="col-md-4">
+                          {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id="rue" input_label="Rue" input_type="text" input_name="rue" variant="html_only" %}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">
+                      <div class="row">
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Région" list_id="region_list" list_options=regions variant="html_list" %}
+                        </div>
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Departement" list_id="departement_list" list_options=departements variant="html_list" %}
+                        </div>
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Arrondissement" list_id="arrondissement_list" list_options=arrondissements variant="html_list" %}
+                        </div>
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="quartier" input_label="Quartier" input_type="text" input_name="quartier" variant="html_only" %}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- coordonnées GPS -->
+                  <tr>
+                    <td class="text-start p-0">
+                      <label for="coordonee_gps" class="fw-bold text-start form-check-label ms-1">c. - Coordonnées GPS</label>
+                    </td>
+                    <td class="text-start p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="coordonee_gps" input_type="text" input_name="coordonee_gps" variant="html_no_label" %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h5 class='text-uppercase mt-5'>III. etat physique du batiment</h5>
+              <table class="table table-bordered align-middle text-center">
+                <tbody>
+                  <tr>
+                    <td>
+                      {% include "baux/widgets/dynamic_choice_list.html" with list_id="statut_list" checkbox_name="statut_choice_checkbox" hidden_name="statut_choice" hidden_id="statut_choice_hidden" add_wrapper_id="new_statut_wrapper" new_input_id="new_statut_input" add_btn_id="add_statut_btn" choices=statut_batisses selected=form.initial.statut_choice model="StatutBatisse" %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="ps-1 d-flex align-items-center">
+                      <ul class="mb-0">
+                        <li type="square"><span class="fw-bold">Revêtement intérieure : </span></li>
+                      </ul>
+                      <ul class="ms-2 mb-0">
+                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementinterieure_list" checkbox_name="revetementinterieure_choice_checkbox" hidden_name="revetementinterieure_choice" hidden_id="revetementinterieure_choice_hidden" add_wrapper_id="new_revetementinterieure_wrapper" new_input_id="new_revetementinterieure_input" add_btn_id="add_revetementinterieure_btn" choices=revetement_interieures selected=form.initial.revetementinterieure_choice model="RevetementInts" %}
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="ps-1 d-flex align-items-center">
+                      <ul class="mb-0">
+                        <li type="square"><span class="fw-bold">Revêtement extérieure : </span></li>
+                      </ul>
+                      <ul class="ms-2 mb-0">
+                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementexterieure-list" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure_choice_hidden" add_wrapper_id="new_revetementexterieure_wrapper" new_input_id="new_revetementexterieure_input" add_btn_id="add_revetementexterieure_btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts" %}
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="" colspan="2">
+                      {% include "baux/widgets/field_widget.html" with input_id="observation_immeuble" input_type="text" input_name="observation_immeuble" input_label="Observation" variant="html_text_area" %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h5 class='text-uppercase mt-5'>IV. description de la batisse</h5>
+              {% include "baux/widgets/immeuble_elements.html" %}
+
+              <h5 class='text-uppercase mt-5'>V. occupants actuels de l'immeuble</h5>
+              <!-- occupant pour résidence -->
+              <ul class="mb-0">
+                <li type="square"><span class="fw-bold">Logements</span></li>
+              </ul>
+              <table class="table table-bordered align-middle text-center">
+                <thead>
+                  <tr>
+                    <th>
+                      Noms & prénoms
+                    </th>
+                    <th>
+                      Administration de rattachement(Ministère)
+                    </th>
+                    <th>
+                      Fonction ou qualité de l'occupant
+                    </th>
+                    <th>
+                      Matricule
+                    </th>
+                    <th>
+                      Référence de l'acte juridique d'attribution
+                    </th>
+                    <th>
+                      Date de signature de l'acte
+                    </th>
+                    <th>
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="nom_prenom" input_type="text" input_name="nom_prenom" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with list_id="administration_list" list_options=administrations variant="html_list_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="fonction_occupant" input_type="text" input_name="fonction_occupant" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="matricule_occupant" input_type="text" input_name="matricule_occupant" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="reference_acte_juridique" input_type="text" input_name="reference_acte_juridique" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="date_prise_effet_acte" input_type="date" input_name="date_prise_effet_acte" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      actions
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- chekcbox input for adding or not new line for another occupant -->
+              <div class="d-flex align-item-center justify-content-center">
+                <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
+                <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
+                  <i>y-a til d'autre occupant pour le même contrat ?</i>
+                </label>
+              </div>
+
+              <!-- occupant pour bureaux -->
+              <ul class="mb-0">
+                <li type="square"><span class="fw-bold">Bureaux</span></li>
+              </ul>
+              <table class="table table-bordered align-middle text-center">
+                <thead>
+                  <tr>
+                    <th>
+                      Service adminisratif Occupant
+                    </th>
+                    <th>
+                      Administration (Ministère)
+                    </th>
+                    <th>
+                      Fonction du plus haut responsable du service
+                    </th>
+                    <th>
+                      Référence de l'acte juridique d'attribution du MINDCAF
+                    </th>
+                    <th>
+                      Date signature de l'acte
+                    </th>
+                    <th>
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with list_id="structure-list" list_options=structures variant="html_list_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with list_id="administration-list" list_options=administrations variant="html_list_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="fonction_responsable" input_type="text" input_name="fonction_responsable" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="reference_acte_attribution" input_type="text" input_name="reference_acte_attribution" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      {% include "baux/widgets/field_widget.html" with input_id="date_initial_occupation" input_type="date" input_name="date_initial_occupation" variant="html_no_label" %}
+                    </td>
+                    <td class="p-0">
+                      actions
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- chekcbox input for adding or not new line for another occupant bureaux -->
+              <div class="d-flex align-item-center justify-content-center">
+                <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
+                <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
+                  <i>y-a til d'autres Services occupants le même immeuble ?</i>
+                </label>
+              </div>
+
+            </div>
+          </div>
         </div>
+
+        <!-- SECTION 2 -->
+        <div class="accordion-item mt-3">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contratSection">
+              Section 2.- Informations contractuelles
+            </button>
+          </h2>
+
+          <div id="contratSection" class="accordion-collapse collapse">
+            <div class="accordion-body overflow-auto">
+                <!-- éléments juridiques -->
+                <h5 class='text-uppercase mt-3'>I. Elements juridiques</h5>
+                <table class="table table-bordered align-middle text-center">
+                  <tbody>
+                    <tr>
+                      <td class="text-start ps-0 pt-0 pb-0">
+                        <label class="fw-bold text-start form-check-label ms-1">a. - Typologie</label>
+                      </td>
+                      <td class="text-start p-0">
+                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="typecontrat_list" checkbox_name="typecontrat_choice_checkbox" hidden_name="typecontrat_choice" hidden_id="typecontrat_choice_hidden" add_wrapper_id="new_typecontrat_wrapper" new_input_id="new_typecontrat_input" add_btn_id="add_typecontrat_btn" choices=type_contrats selected=form.initial.construction_choice model="TypeContrats" %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-start  ps-0 pt-0 pb-0" rowspan="2">
+                        <label for="id_immeubles-0-Construction" class="fw-bold text-start form-check-label ms-1">b. - Contrat</label>
+                      </td>
+                      <td class="text-start">
+                      <div class="row">
+                        <div class="col-md-8">
+                          {% include "baux/widgets/field_widget.html" with style="width: 500px !important" input_id="numero_contrat" input_label="Référence ou Numéro du Contrat" input_type="text" input_name="numero_contrat" variant="html_only" %}
+                        </div>
+                        <div class="col-md-4">
+                          {% include "baux/widgets/field_widget.html" with input_id="date_signature_contrat" input_label="Date Signature" input_type="date" input_name="date_signature_contrat" variant="html_only" %}
+                        </div>
+                        <div class="col-md-8">
+                          {% include "baux/widgets/field_widget.html" with style="width: 400px !important" input_id="fonction_signataire_contrat" input_label="Qualité, fonction, ou sigles du ou des Signataires" input_type="text" input_name="fonction_signataire_contrat" variant="html_only" %}
+                        </div>
+                        <div class="col-md-4">
+                          {% include "baux/widgets/field_widget.html" with input_id="date_effet_contrat" input_label="Date d'effet" input_type="date" input_name="date_signature_contrat" variant="html_only" %}
+                        </div>
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with input_id="existance_visa_bugetaire_contrat" input_label="Existence du visa bugetaire sur le Contrat ?" input_name="existance_visa_bugetaire_contrat" variant="html_checkbox" %}
+                        </div>
+                        <div class="col-md-3">
+                          {% include "baux/widgets/field_widget.html" with style="width: 120px !important" input_id="duree_contrat" input_type="number" input_label="Durée du contrat" input_name="duree_contrat" variant="html_only" %}
+                        </div>
+                        <div class="col-md-3">
+                          {% include "baux/widgets/field_widget.html" with input_id="tacite_reconduction" input_label="Tacite reconduction ?" input_name="tacite_reconduction" variant="html_checkbox" %}
+                        </div>
+                        <div class="col-md-6">
+                          {% include "baux/widgets/field_widget.html" with input_id="regime_fiscal_contrat" input_label="Régime fiscal applicable" input_type="text" input_name="regime_fiscal_contrat" variant="html_only" %}
+                        </div>
+                        <div class="col-md-3">
+                          {% include "baux/widgets/field_widget.html" with style="width: 120px !important" input_id="montant_ttc_contrat" input_label="Montant loyer mensuel (TTC)" input_type="number" input_name="montant_ttc_contrat" variant="html_only" %}
+                        </div>
+                        <div class="col-md-3">
+                          {% include "baux/widgets/field_widget.html" with style="width: 120px !important" list_id="devise_list" list_options=devises variant="html_simple_list" label="Devise" %}
+                        </div>
+                        <div class="col-md-12">
+                          {% include "baux/widgets/field_widget.html" with input_id="existence_avenant_contrat" input_label="Existence d'au moins un avenant attaché au présent contrat ?" input_name="existence_avenant_contrat" variant="html_checkbox" %}
+                        </div>
+                      </div>
+                    </td>
+                    </tr>
+                    <tr>
+                      <td class="text-start">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <!-- avenant 1 du contrat inital -->
+                            <table class="table table-borderless">
+                              <tr>
+                                <td class="text-start p-0" colspan="2">
+                                  {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="reference_avenant_1" input_label="Référence de l'avenant N° 01" input_type="text" input_name="reference_avenant_1" variant="html_only" %}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-start p-0 pe-1">
+                                  {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_1" input_type="date" input_label="Date signature" input_name="date_signature_avenant_1" variant="html_only" %}
+                                </td>
+                                <td class="text-start p-0 ps-1">
+                                  {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_1" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_1" variant="html_only" %}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2" class="p-0">
+                                  <table class="table table-bordered">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center text-capitalize p-0">
+                                          <i>Avenant N°01</i>
+                                        </th>
+                                        <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
+                                          Ancienne valeur
+                                        </th>
+                                        <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
+                                          Nouvelle valeur
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          Nom & prénoms ou raison sociale du bailleur
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Montant Loyer Mensuel (TTC)
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_1_ancienmontant_loyer_mensuel" variant="html_no_label" %}
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_1_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                          <div class="col-md-6">
+                            <!-- avenant 2 du contrat inital -->
+                            <table class="table table-borderless">
+                              <tr>
+                                <td class="text-start p-0" colspan="2">
+                                  {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="reference_avenant_2" input_label="Référence de l'avenant N° 02" input_type="text" input_name="reference_avenant_2" variant="html_only" %}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-start p-0 pe-1">
+                                  {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_2" input_type="date" input_label="Date signature" input_name="date_signature_avenant_2" variant="html_only" %}
+                                </td>
+                                <td class="text-start p-0 ps-1">
+                                  {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_2" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_2" variant="html_only" %}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2" class="p-0">
+                                  <table class="table table-bordered">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center text-capitalize p-0">
+                                          <i>Avenant N°02</i>
+                                        </th>
+                                        <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
+                                          Ancienne valeur
+                                        </th>
+                                        <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
+                                          Nouvelle valeur
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          Nom & prénoms ou raison sociale du bailleur
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Montant Loyer Mensuel (TTC)
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_2_ancienmontant_loyer_mensuel" variant="html_no_label" %}
+                                        </td>
+                                        <td class="p-0">
+                                          {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_2_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-start ps-0 pt-0 pb-0">
+                        <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Périodicité de règlement selon le contrat</label>
+                      </td>
+                      <td class="text-start p-0">
+                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="periodicitereglement" checkbox_name="periodicitereglement_choice_checkbox" hidden_name="periodicitereglement_choice" hidden_id="periodicitereglement-choice-hidden" add_wrapper_id="new-periodicitereglement-wrapper" new_input_id="new-periodicitereglement-input" add_btn_id="add-periodicitereglement-btn" choices=periodicite_reglements model="PeriodiciteReglement" %}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- bailleur -->
+                <h5 class='text-uppercase mt-5'>II. Bailleur</h5>
+                <table class="table table-bordered align-middle text-center">
+                  <tbody>
+                    <tr>
+                      <td class="text-start p-0">
+                        <label class="fw-bold text-start form-check-label ms-1">a. - Identification</label>
+                      </td>
+                      <td>
+                        <div class="row">
+                          <div class="col-md-12">
+                            {% include "baux/widgets/field_widget.html" with list_options=type_personnes variant="html_simple_checkbox_list" %}
+                          </div>
+                          <div class="col-md-12">
+                            {% include "baux/widgets/field_widget.html" with style="width: 700px !important" input_id="nom_prenom_raison_sociale" input_label="Noms & prénoms/Raison Socaiale" input_type="text" input_name="nom_prenom_raison_sociale" variant="html_only" %}
+                          </div>
+                          <div class="col-md-6">
+                            {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="representant_bailleur" input_label="Représenté par" input_type="text" input_name="representant_bailleur" variant="html_only" %}
+                          </div>
+                          <div class="col-md-6">
+                            {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="domicilliation_siege_sociale_bailleur" input_label="Domicilliation/Siège Social" input_type="text" input_name="domicilliation_siege_sociale_bailleur" variant="html_only" %}
+                          </div>
+                          <div class="col-md-6">
+                            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" input_id="niu_bailleur" input_label="NIU" input_name="niu_bailleur" variant="html_only" %}
+                          </div>
+                          <div class="col-md-6">
+                            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" input_id="telephone_bailleur" input_type="text" input_label="Téléphone Bailleur" input_name="telephone_bailleur" variant="html_only" %}
+                          </div>
+                          <div class="col-md-6">
+                            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" input_id="cni_bailleur" input_label="CNI Bailleur" input_type="text" input_name="cni_bailleur" variant="html_only" %}
+                          </div>
+                          <div class="col-md-6">
+                            {% include "baux/widgets/field_widget.html" with input_id="date_delivrance_cni" input_label="Date délivrance CNI" input_type="date" input_name="date_delivrance_cni" variant="html_only" %}
+                          </div>
+                          <div class="col-md-12">
+                            {% include "baux/widgets/field_widget.html" with list_options=statut_bailleur variant="html_simple_checkbox_list" %}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-start p-0">
+                        <label class="fw-bold text-start form-check-label ms-1">b. - Références Bancaires Valides</label>
+                      </td>
+                      <td class="">
+                        <div class="row">
+                          <div class="col-md-4">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important" list_options=banques list_id="banque_bailleur" list_label="Libelle Banque" input_type="text" input_name="banque_bailleur" variant="html_list" %}
+                          </div>
+                          <div class="col-md-8">
+                            {% include "baux/widgets/field_widget.html" with style="width: 600px !important" input_id="numero_rib_bailleur" input_label="Numéro RIB" input_type="text" input_name="numero_rib_bailleur" variant="html_only" %}
+                          </div>
+                          <div class="col-md-12">
+                            {% include "baux/widgets/field_widget.html" with style="width: 700px !important" input_id="intitulle_compte_bailleur" input_label="Intitulé du Compte" input_type="text" input_name="intitulle_compte_bailleur" variant="html_only" %}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-start p-0">
+                        <label class="fw-bold text-start form-check-label ms-1">c. - Ayants Droits du Bailleur</label>
+                      </td>
+                      <td class="p-0">
+                        <div>
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>N°</th>
+                                <th>Noms & prénoms</th>
+                                <th>Contact</th>
+                                <th>Référence Grosse</th>
+                                <th>Date de délivrance grosse</th>
+                                <th>Reférence Certificat non appel</th>
+                                <th>Date délivrance Certificat</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="">1</td>
+                                <td class="p-0">
+                                  {% include "baux/widgets/field_widget.html" with input_id="nom_prenom_avenant" input_type="text" input_name="nom_prenom_avenant" variant="html_no_label" %}
+                                </td>
+                                <td class="p-0">
+                                  {% include "baux/widgets/field_widget.html" with input_id="contact_avenant" input_type="text" input_name="contact_avenant" variant="html_no_label" %}
+                                </td>
+                                <td class="p-0">
+                                  {% include "baux/widgets/field_widget.html" with input_id="reference_grosse_avenant" input_type="text" input_name="reference_grosse_avenant" variant="html_no_label" %}
+                                </td>
+                                <td class="p-0">
+                                  {% include "baux/widgets/field_widget.html" with input_id="date_delivrance_grosse" input_type="date" input_name="date_delivrance_grosse" variant="html_no_label" %}
+                                </td>
+                                <td class="p-0">
+                                  {% include "baux/widgets/field_widget.html" with input_id="reference_certificat_non_appel_avenant" input_type="text" input_name="reference_certificat_non_appel_avenant" variant="html_no_label" %}
+                                </td>
+                                <td class="p-0">
+                                  {% include "baux/widgets/field_widget.html" with input_id="date_delivrance_certificat_non_appel" input_type="date" input_name="date_delivrance_certificat_non_appel" variant="html_no_label" %}
+                                </td>
+                                <td class="">
+                                  modifier,supprimer
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Non mandatements -->
+                <h5 class='text-uppercase mt-5'>III. Attestation de non-mandatement(non-encore payé)</h5>
+                <table id="nonmandatement-collecte-table" class='table-responsive bg-white table table-bordered mt-2'>
+                  <thead class='thead-dark'>
+                    <tr>
+                      <th rowspan="2">
+                          Exercice
+                      </th>
+                      <th rowspan="2">
+                          Loyer Mensuel
+                      </th>
+                      <th rowspan="2">
+                          Reference de l'attestation de non mandatement
+                      </th>
+                      <th rowspan="2">
+                          Date de signature
+                      </th>
+                      <th colspan="12">
+                          Mois non-mandatatés
+                      </th>
+                      <th rowspan="2">
+                          Montant Total par exercice
+                      </th>
+                      <th rowspan="2">
+                          Visa budgétaire / Signature CF ?
+                      </th>
+                      <th rowspan="2">
+                          Reference Contrat / Avenant
+                      </th>
+                      <th rowspan="2">
+                          Action
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>
+                          J
+                      </th>
+                      <th>
+                          F
+                      </th>
+                      <th>
+                          M
+                      </th>
+                      <th>
+                          A
+                      </th>
+                      <th>
+                          M
+                      </th>
+                      <th>
+                          J
+                      </th>
+                      <th>
+                          J
+                      </th>
+                      <th>
+                          A
+                      </th>
+                      <th>
+                          S
+                      </th>
+                      <th>
+                          O
+                      </th>
+                      <th>
+                          N
+                      </th>
+                      <th>
+                          D
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr id='empty-ayantdroit-row'>
+                      <td class="p-0">
+                        {% include "baux/widgets/field_widget.html" with list_options=exercices list_id="exercice_non_mandatement" variant="html_list_no_label" %}
+                      </td>
+                      <td class="p-0">
+                        {% include "baux/widgets/field_widget.html" with input_id="loyer_mensuel_non_mandatement" input_type="text" input_name="loyer_mensuel_non_mandatement" variant="html_no_label" %}
+                      </td>
+                      <td class="p-0">
+                        {% include "baux/widgets/field_widget.html" with input_id="reference_attestation_nonmandatement" input_type="text" input_name="reference_attestation_nonmandatement" variant="html_no_label" %}
+                      </td>
+                      <td class="p-0">
+                        {% include "baux/widgets/field_widget.html" with input_id="date_signature_attestation_non_mandatement" input_type="date" input_name="date_signature_attestation_non_mandatement" variant="html_no_label" %}
+                      </td>
+                      <!-- showing months -->
+                      {% include "baux/widgets/checkbox_widget.html" with label="non_mandatement" options=non_mandatement_months %}
+                      <td class="p-0">
+                        {% include "baux/widgets/field_widget.html" with input_id="montant_total_par_exercice_non_mandatement" input_type="number" input_name="montant_total_par_exercice_non_mandatement" variant="html_no_label" %}
+                      </td>
+                      <td class="p-0">
+                        {% include "baux/widgets/field_widget.html" with input_id="visa_budgetaire" input_type="text" input_name="visa_budgetaire" variant="html_no_label" %}
+                      </td>
+                      <td class="p-0">
+                        {% include "baux/widgets/field_widget.html" with input_id="reference_contrat" input_type="text" input_name="reference_contrat" variant="html_no_label" %}
+                      </td>
+                      <!-- td colspan="30">Aucune attestation de non mandatement ajouter ...</td -->
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3 -->
+        <div class="accordion-item mt-3">
+          <h2 class="accordion-header">
+            <button class="accordion-button bg-secondary-subtle text-left text-black fs-4 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pieceSection">
+              Section 3.- Pièces collectées
+            </button>
+          </h2>
+
+          <div id="pieceSection" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <div class="mt-3">
+                {% include "baux/widgets/pieces_template.html" with piece_groups=piece_groups %}
+              </div>
+              <div class="mt-3">
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <td class="p-0">
+                        <div class="row">
+                          <div class="col-md-8 d-flex flex-column">
+                            <h6 class="text-decoration-underline text-start mb-1" for="{{ observation_collecte }}">Observation Générale</h6>
+                            {% include "baux/widgets/field_widget.html" with style="width: 900px !important" input_id="observation_collecte" input_name="observation_collecte" variant="html_text_area" %}
+                          </div>
+                          <div class="col-md-4 flex-column">
+                            <h6 class="text-decoration-underline text-start mb-1" for="{{ signature_reponsable }}">Signature du responsable</h6>
+                            {% include "baux/widgets/field_widget.html" with input_id="signature_reponsable" input_name="signature_reponsable" variant="html_text_area" %}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-    </div>
-
+      <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </form>
   </div>
-  <div class="mt-3">
-    <button type="submit" class="btn btn-primary">Soumettre</button>
-  </div>
-</form>
-
+</div>
 {% endblock %}
 {% block extra_js %}
     <script src="{% static 'js/collecte.js' %}"></script>

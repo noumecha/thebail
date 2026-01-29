@@ -11,13 +11,22 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-def transform_queryset_to_listable(q):
+def transform_queryset_to_listable(q, id_field='id', name_field='__str__'):
     listable = []
     for item in q:
-        listable.append({
-            "id": item.id,
-            "name": str(item)
-        })
+        if isinstance(item, str):  # Si c'est déjà une string (values_list flat)
+            listable.append({"id": item, "name": item})
+        # case where q is a tuple
+        elif isinstance(item, tuple):
+            listable.append({
+                "id": item[0],
+                "name": item[1]
+            })
+        else:  # Si c'est un objet model
+            listable.append({
+                "id": item.id,
+                "name": str(item)
+            })
     return listable
 
 class FicheCollecteViewSet(ModelViewSet):
@@ -33,7 +42,6 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["type_constructions"] = TypeConstructions.objects.all()
         context["type_contrats"] = TypeContrats.objects.all()
         context["periodicite_reglements"] = PeriodiciteReglement.objects.all()
-        context["exercices"] = Exercice.objects.all()
         context["locataires"] = Locataires.objects.all()
         context["immeubles"] = Immeubles.objects.all()
         context["recensements"] = Recensements.objects.all()
@@ -45,9 +53,12 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["localisations"] = Localisation.objects.all()
         # iterable list
         context["devises"] = DEVISES
+        context["exercices"] = transform_queryset_to_listable(Exercice.objects.all()[:30])
+        context["banques"] = transform_queryset_to_listable(Banques.objects.all()[:30])
+        context["type_personnes"] = transform_queryset_to_listable(TYPE_PERSONNE)
+        context["statut_bailleur"] = transform_queryset_to_listable(STATUT_BAILLEUR)
         context["agentcollectes"] = transform_queryset_to_listable(AgentCollecte.objects.all()[:30])
-        # return only the list of matricule of agentcollectes entity
-        context["matriculesagents"] = list(AgentCollecte.objects.values_list('Matricule', flat=True)[:30])
+        context["matriculesagents"] = transform_queryset_to_listable(AgentCollecte.objects.values_list('Matricule', flat=True)[:30])
         context["structures"] = transform_queryset_to_listable(Structures.objects.all()[:30])
         context["administrations"] = transform_queryset_to_listable(Administrations.objects.all()[:30])
         context["bailleurs"] = transform_queryset_to_listable(Bailleurs.objects.all()[:30])
@@ -59,6 +70,11 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["revetement_ints"] = transform_queryset_to_listable(RevetementInts.objects.all()[:30])
         context["pieces"] = transform_queryset_to_listable(Pieces.objects.all())
 
+        # months for non_mndatement template
+        context["non_mandatement_months"] = [
+            'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+        ]
         # Prepare element groups for the template
         elements = list(ElementDeDescription.objects.all())
         element_groups = []
@@ -72,6 +88,20 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
                 element_groups.append(group)
                 group = []
         context["element_groups"] = element_groups
+
+        # prepares pieces groups for the template
+        pieces = list(Pieces.objects.all())
+        piece_groups = []
+        group = []
+        for index, el in enumerate(pieces, start=1):
+            group.append({
+                "id": el.pk,
+                "libelle": str(el),
+            })
+            if index % 9 == 0 or index == len(pieces):
+                piece_groups.append(group)
+                group = []
+        context["piece_groups"] = piece_groups
 
         context["api_url"] = "/api/fiches/"
 

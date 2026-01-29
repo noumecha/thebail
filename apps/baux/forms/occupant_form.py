@@ -10,7 +10,7 @@ class OccupantBureauxForm(forms.ModelForm):
     class Meta:
         model = OccupantBureaux
         fields = (
-            "Service","Administration_correspondante","Fonction","Ref_ActeJuridique_attribution","Contact","Date_initial_acte_occupation","Immeuble",
+            "Service","Administration_correspondante","Fonction","Ref_ActeJuridique_attribution","Contact","Date_signature_acte_attribution","Immeuble",
         )
         labels = {
             "Service" : "Intitulé du service administratif",
@@ -18,19 +18,19 @@ class OccupantBureauxForm(forms.ModelForm):
             "Fonction" : "Fonction du plus haut responsable du service",
             "Ref_ActeJuridique_attribution" : "Référence de l'acte juridique d'attribution du MINDCAF",
             "Contact" : "Numéro de service",
-            "Date_initial_acte_occupation" : "Date initiale d'occupation (jj/mm/aa)",
+            "Date_signature_acte_attribution" : "Date initiale d'occupation (jj/mm/aa)",
             "Immeuble" : "Imeuble",
         }
 
         widgets = {
-            'Date_initial_acte_occupation' : forms.TextInput(attrs={'type': 'date'}),
+            'Date_signature_acte_attribution' : forms.TextInput(attrs={'type': 'date'}),
             'Administration_correspondante': autocomplete.ModelSelect2(url='baux:administration_beneficiaire_autocomplete'),
             'Service': autocomplete.ModelSelect2(
                 url='baux:service_autocomplete',
                 forward=['Administration_correspondante'],
             ),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super(OccupantBureauxForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
@@ -44,7 +44,7 @@ class OccupantBureauxForm(forms.ModelForm):
                         Column(FloatingField("Fonction"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Contact"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                        Column(FloatingField("Date_initial_acte_occupation"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Date_signature_acte_attribution"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(
                             HTML("""
@@ -113,16 +113,16 @@ class OccupantsForm(forms.ModelForm):
     class Meta:
         model = Occupants
         fields = (
-            "Nom_Prenom","Administration_tutelle","Fonction","Matricule","NIU","Ref_ActeJuridique",
+            "Nom_Prenom","Administration_rattachement","Fonction","Matricule","NIU","Ref_ActeJuridique_attribution",
             "Date_Signature_acte_juridique","Telephone","Immeuble",
         )
         labels = {
             "Nom_Prenom" : "Noms & Prénoms",
-            "Administration_tutelle" : "Administration de tutelle de l'occupant",
+            "Administration_rattachement" : "Administration de rattachement",
             "Fonction" : "Fonction ou qualité de l'occupant",
             "Matricule" : "Matricule de l'occupant",
             "NIU" : "NIU de l'occupant",
-            "Ref_ActeJuridique" : "Référence de l'acte juridique d'attribution",
+            "Ref_ActeJuridique_attribution" : "Référence de l'acte juridique d'attribution",
             "Date_Signature_acte_juridique" : "Date de prise d'effet de l'acte(jj/mm/aa)",
             "Telephone" : "Numéro de téléphone",
             "Immeuble" : "Imeuble",
@@ -130,9 +130,9 @@ class OccupantsForm(forms.ModelForm):
 
         widgets = {
             'Date_Signature_acte_juridique' : forms.TextInput(attrs={'type': 'date'}),
-            'Administration_tutelle': autocomplete.ModelSelect2(url='baux:administration_beneficiaire_autocomplete'),
+            'Administration_rattachement': autocomplete.ModelSelect2(url='baux:administration_beneficiaire_autocomplete'),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super(OccupantsForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
@@ -142,11 +142,11 @@ class OccupantsForm(forms.ModelForm):
                     "Occupation pour résidence",
                     Row(
                         Column(FloatingField("Nom_Prenom"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Administration_tutelle"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Administration_rattachement"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Fonction"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Matricule"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Ref_ActeJuridique"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Date_Signature_acte_juridique"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Telephone"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-3 mb-0'),
@@ -207,7 +207,7 @@ class OccupantsForm(forms.ModelForm):
                             ),
                             css_class='overflow-hidden form-group col-md-12 mb-0'
                         ),
-                        css_class='form-row' 
+                        css_class='form-row'
                         """ ,label_class='text-decoration-none' """
                     ),
                     css_class="bg-secondary-subtle line__text border p-2 pt-4"

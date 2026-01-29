@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
 {% if variant == "left_label" %}
   <div class="d-flex align-items-center mb-2">
-    <label for="{{ field.id_for_label }}" class="fw-bold me-2">{{ field.label }} :</label>
+    <label for="{{ field.id_for_label }}" class="fw-bold me-2 {{ label_class }}">{{ field.label }} :</label>
     {{ field }}
   </div>
 {% elif variant == "inline_label" %}
@@ -13,28 +13,30 @@
   {# Render nothing, only the field's HTML is needed #}
   {# there is no field object to render, just render and html field with label, name, id, etc. #}
   <div class="d-flex align-items-center mb-2">
-    <label for="{{ input_id }}" class="fw-bold me-2">{{ input_label }} :</label>
+    <label for="{{ input_id }}" class="fw-bold me-2 {{ label_class }}">{{ input_label }} :</label>
     {# if input_type is date spcify the style value :  width: 35% !important; #}
-    <input type="{{ input_type }}" style="{% if input_type == 'date' %}width: 150px !important{% endif %}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
+    <input type="{{ input_type }}" style="{% if input_type == 'date' %}width: 150px !important{% endif %} {{ style }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
   </div>
 {% elif variant == "html_no_label" %}
   {# Render nothing, only the field's HTML is needed #}
   <div class="d-flex align-items-center">
-    <input type="{{ input_type }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
+    <input type="{{ input_type }}" style="{{ style }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
   </div>
 {% elif variant == "html_text_area" %}
   {# Render nothing, only the field's HTML is needed #}
   <div class="d-flex align-items-center">
-    <label for="{{ input_id }}" class="fw-bold w-20 text-start me-2">{{ input_label }} :</label>
-    <textarea class="form-control" id="{{ input_id }}" name="{{ input_name }}" rows="3"></textarea>
+    {% if input_label %}
+      <label for="{{ input_id }}" class="fw-bold w-20 text-start me-2 {{ label_class }}">{{ input_label }} :</label>
+    {% endif %}
+    <textarea class="form-control" id="{{ input_id }}" style="{{ style }}" name="{{ input_name }}" rows="3"></textarea>
   </div>
 {% elif variant == "html_list" %}
   {# Render the html list directly with label #}
   <div class="d-flex align-items-center mb-2">
-    <label class="fw-bold me-2">{{ list_label }} :</label>
+    <label class="fw-bold me-2 {{ label_class }}">{{ list_label }} :</label>
     {# select option list #}
     {# the list must be searchable, we done it with select2 in the js #}
-    <select class="form-select" id="{{ list_id }}">
+    <select class="form-select" style="{{ style }}" id="{{ list_id }}">
       {% for option in list_options %}
         <option value="{{ option.id }}">{{ option.name }}</option>
       {% endfor %}
@@ -44,8 +46,8 @@
   {# Render the html list directly with label #}
   {# the list is a tuple so just render it with select #}
   <div class="d-flex align-items-center mb-2">
-    <label class="fw-bold me-2">{{ label }} :</label>
-    <select class="form-select" id="{{ list_id }}">
+    <label class="fw-bold me-2 {{ label_class }}">{{ label }} :</label>
+    <select class="form-select" style="{{ style }}" id="{{ list_id }}">
       {% for value, display in list_options %}
         <option value="{{ value }}">{{ display }}</option>
       {% endfor %}
@@ -54,20 +56,30 @@
 {% elif variant == "html_checkbox" %}
   {# show the label with two checkbox, one with the label oui and another with the label non #}
   <div class="d-flex align-items-center mb-2">
-    <label for="{{ input_id }}-oui" class="fw-bold me-2">{{ input_label }} </label>
+    <label for="{{ input_id }}-oui" class="fw-bold {{ label_class }} me-2">{{ input_label }} </label>
     <div class="form-check form-check-inline">
-      <input type="checkbox" class="form-check-input" id="{{ input_id }}-oui">
+      <input type="checkbox" style="{{ style }}" class="form-check-input" id="{{ input_id }}-oui">
       <label class="form-check-label ms-1">Oui</label>
     </div>
     <div class="form-check form-check-inline">
-      <input type="checkbox" class="form-check-input" id="{{ input_id }}-non">
+      <input type="checkbox" style="{{ style }}" class="form-check-input" id="{{ input_id }}-non">
       <label class="form-check-label ms-1">Non</label>
     </div>
+  </div>
+{% elif variant == "html_simple_checkbox_list" %}
+  {# show only one checkbox with label #}
+  <div class="d-flex align-items-center justify-content-center mb-2">
+    {% for option in list_options %}
+      <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="{{ option.id }}">
+        <label class="form-check-label ms-1">{{ option.name }}</label>
+      </div>
+    {% endfor %}
   </div>
 {% elif variant == "html_list_no_label" %}
   {# Render the html list directly without label #}
   {# select option list #}
-  <select class="form-select" id="{{ list_id }}">
+  <select class="form-select" style="{{ style }}" id="{{ list_id }}">
     {% for option in list_options %}
       <option value="{{ option.id }}">{{ option.name }}</option>
     {% endfor %}

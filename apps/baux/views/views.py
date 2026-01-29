@@ -102,10 +102,6 @@ class BailleurView(BaseCRUDView):
     partial_template = 'baux/partials/bailleurs_partial.html'
     context_object_name = 'bailleurs'
     search_fields = ['Nom_prenom', 'Raison_social']
-    formsets_classes = {
-        "ayants_droits_formset": AyantDroitsFormSet,
-        "non_mandatements_formset": NonMandatementFormSet,
-    }
 
 # immeuble views
 class ImmeubleView(BaseCRUDView):
@@ -116,11 +112,6 @@ class ImmeubleView(BaseCRUDView):
     partial_template = 'baux/partials/immeubles_partial.html'
     context_object_name = 'immeubles'
     search_fields = ['Designation']
-    # Ajout des formsets spécifiques à cette vue
-    formsets_classes = {
-        "occupants_residence_formset": OccupantsFormSet,
-        "occupants_bureau_formset": OccupantBureauxFormSet
-    }
 
 # recensements views
 class RecensementView(BaseCRUDView):
