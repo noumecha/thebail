@@ -78,7 +78,6 @@ urlpatterns = [
     path("contrat/delete/<int:pk>/", ContratDeleteView.as_view(), name='contrat_delete'),
     path("contrat/update/<int:pk>/", ContratView.as_view(template_name="baux/contrat.html"), name='contrat_update'),
     path("structures/", views.get_structures, name='get_structures'),
-    path("agent/", views.get_agent_name, name='get_agent_name'),
     path("arrondissement/", views.get_localisation_datas, name='get_localisation_datas'),
 
     # consultation :
@@ -99,5 +98,17 @@ urlpatterns = [
 
     # fiche collecte new approach
     path("collecte/add/", FicheCollecteFormView.as_view(), name="fiche_collecte_form"),
+
+    # api endpoints
+    path('api/search-agents/', AgentNomSelect2().get, name='api_agents'),
+    path('api/search-matricule-agents/', AgentMatriculeSelect2().get, name='api_matricules_agents'),
+    path("api/get-agent-name/", api_views.get_agent_name, name='get_agent_name'),
+    path("api/get-pays/", PaysSelect2().get, name='api_pays'),
+    path("api/get-regions/", RegionSelect2().get, name="api_regions"),
+    path("api/get-departement/", DepartementSelect2().get, name="api_departement"),
+    path("api/get-arrondissement/", ArrondissemntSelect2().get, name="api_arrondissement"),
+    path("api/get-administrations/", AdminisrationsSelect2().get, name="api_adminisration"),
+    path("api/get-structures/", StructuresSelect2().get, name="api_structures"),
+    path("api/get-bailleurs/", BailleursSelect2().get, name="api_bailleurs"),
 ]
 urlpatterns += router.urls

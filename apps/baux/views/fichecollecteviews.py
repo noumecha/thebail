@@ -30,7 +30,7 @@ def transform_queryset_to_listable(q, id_field='id', name_field='__str__'):
     return listable
 
 class FicheCollecteViewSet(ModelViewSet):
-    queryset = FicheCollecte.objects.all()
+    queryset = Collectes.objects.all()
     serializer_class = FicheCollecteSerializer
     permission_classes = [IsAuthenticated]
 
@@ -38,20 +38,23 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
     template_name = "baux/forms/fiche_collecte_form.html"
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
-        context["normes"] = Normes.objects.all()
+
+        # elements for selections in template
+        context["immeubles"] = Immeubles.objects.all()
+        context["occupants"] = Occupants.objects.all()
+        context["occupantsbureaux"] = OccupantBureaux.objects.all()
+        context["contrats"] = Contrats.objects.all()
+        context["non_mandatements"] = Non_Mandatement.objects.all()
+        context["bailleurs"] = transform_queryset_to_listable(Bailleurs.objects.all()[:30])
+
+        # iterable list
         context["type_constructions"] = TypeConstructions.objects.all()
         context["type_contrats"] = TypeContrats.objects.all()
         context["periodicite_reglements"] = PeriodiciteReglement.objects.all()
-        context["locataires"] = Locataires.objects.all()
-        context["immeubles"] = Immeubles.objects.all()
-        context["recensements"] = Recensements.objects.all()
-        context["non_mandatements"] = Non_Mandatement.objects.all()
-        context["type_locations"] = TypeLocations.objects.all()
-        context["statut_batisses"] = StatutBatisse.objects.all()
         context["revetement_interieures"] = RevetementInts.objects.all()
         context["revetement_exterieures"] = RevetementExts.objects.all()
-        context["localisations"] = Localisation.objects.all()
-        # iterable list
+        context["statut_batisses"] = StatutBatisse.objects.all()
+        context["type_locations"] = TypeLocations.objects.all()
         context["devises"] = DEVISES
         context["exercices"] = transform_queryset_to_listable(Exercice.objects.all()[:30])
         context["banques"] = transform_queryset_to_listable(Banques.objects.all()[:30])
@@ -61,20 +64,17 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["matriculesagents"] = transform_queryset_to_listable(AgentCollecte.objects.values_list('Matricule', flat=True)[:30])
         context["structures"] = transform_queryset_to_listable(Structures.objects.all()[:30])
         context["administrations"] = transform_queryset_to_listable(Administrations.objects.all()[:30])
-        context["bailleurs"] = transform_queryset_to_listable(Bailleurs.objects.all()[:30])
         context["pays"] = transform_queryset_to_listable(Pays.objects.all()[:30])
         context["regions"] = transform_queryset_to_listable(Regions.objects.all()[:30])
         context["departements"] = transform_queryset_to_listable(Departements.objects.all()[:30])
         context["arrondissements"] = transform_queryset_to_listable(Arrondissemements.objects.all()[:30])
-        context["revetement_exts"] = transform_queryset_to_listable(RevetementExts.objects.all()[:30])
-        context["revetement_ints"] = transform_queryset_to_listable(RevetementInts.objects.all()[:30])
-        context["pieces"] = transform_queryset_to_listable(Pieces.objects.all())
 
         # months for non_mndatement template
         context["non_mandatement_months"] = [
             'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
             'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
         ]
+
         # Prepare element groups for the template
         elements = list(ElementDeDescription.objects.all())
         element_groups = []
@@ -103,6 +103,7 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
                 group = []
         context["piece_groups"] = piece_groups
 
+        # api url for submission
         context["api_url"] = "/api/fiches/"
 
         return context

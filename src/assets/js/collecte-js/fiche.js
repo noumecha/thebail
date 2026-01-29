@@ -2,63 +2,86 @@ function getCSRFToken() {
   return document.querySelector('[name=csrfmiddlewaretoken]').value;
 }
 
-let index = 0;
+// fetching agent :
+// Dans votre fichier JS principal
+$(function () {
+  // Initialiser tous les select avec la classe select2-ajax
+  $('.select2-ajax').each(function () {
+    const $select = $(this);
+    const ajaxUrl = $select.data('ajax-url');
+    const ajaxPlacholder = $select.data('ajax-placeholder');
 
-document.getElementById('addDocument').addEventListener('click', () => {
-  index++;
+    $select.select2({
+      ajax: {
+        url: ajaxUrl,
+        dataType: 'json',
+        delay: 250, // Délai avant la recherche (évite trop de requêtes)
+        data: function (params) {
+          return {
+            q: params.term, // Terme de recherche
+            page: params.page || 1
+          };
+        },
+        processResults: function (data, params) {
+          params.page = params.page || 1;
 
-  document.getElementById('documentsContainer').insertAdjacentHTML(
-    'beforeend',
-    `
-    <div class="card mt-3 p-3 document-item">
-      <strong>Document ${index}</strong>
-
-      <input class="form-control mt-2 doc-titre" placeholder="Titre" required>
-      <input class="form-control mt-2 doc-type" placeholder="Type" required>
-      <input type="file" class="form-control mt-2 doc-file" required>
-    </div>
-    `
-  );
-});
-
-document.getElementById('ficheCollecteForm').addEventListener('submit', async e => {
-  e.preventDefault();
-
-  const formData = new FormData();
-  const apiUrl = document.getElementById('apiUrl').value;
-
-  formData.append('objet', document.getElementById('objet').value);
-  formData.append('date_collecte', document.getElementById('date_collecte').value);
-  formData.append('statut', 'brouillon');
-
-  formData.append(
-    'metadonnees',
-    JSON.stringify({
-      source: document.getElementById('source').value,
-      responsable: document.getElementById('responsable').value
-    })
-  );
-
-  document.querySelectorAll('.document-item').forEach((doc, i) => {
-    formData.append(`documents[${i}][titre]`, doc.querySelector('.doc-titre').value);
-    formData.append(`documents[${i}][type_document]`, doc.querySelector('.doc-type').value);
-    formData.append(`documents[${i}][fichier]`, doc.querySelector('.doc-file').files[0]);
+          return {
+            results: data.results,
+            pagination: {
+              more: data.pagination.more
+            }
+          };
+        },
+        cache: true
+      },
+      placeholder: ajaxPlacholder,
+      minimumInputLength: 2,
+      language: {
+        inputTooShort: function () {
+          return 'Veuillez saisir au moins 2 caractères';
+        },
+        searching: function () {
+          return 'Recherche en cours...';
+        },
+        noResults: function () {
+          return 'Aucun résultat trouvé';
+        }
+      }
+    });
   });
+  // Gérer les changements
+  $(document).on('change', '#matricule_responsable_collecte', function () {
+    let matricule = $(this).val();
+    if (matricule) {
+      $.ajax({
+        url: '/api/get-agent-name/',
+        data: { matricule_agent: matricule },
+        success: function (data) {
+          if (data.success) {
+            // Mettre à jour le premier select
+            let agentName = data.agent;
+            let agentId = matricule;
 
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    body: formData,
-    headers: {
-      'X-CSRFToken': getCSRFToken()
+            // Mettre à jour le premier select
+            $('#responsable_collecte').val(agentId).trigger('change');
+
+            // Mettre à jour le nom dans le premier select
+            let $select = $('#responsable_collecte');
+            let $option = $select.find('option[value="' + agentId + '"]');
+
+            if ($option.length) {
+              $option.text(agentName);
+            } else {
+              // Ajouter un nouvel option
+              $select.append(new Option(agentName, agentId, true, true));
+              $select.trigger('change');
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Error getting Agent :', error);
+        }
+      });
     }
   });
-
-  const result = await response.json();
-
-  if (!response.ok) {
-    alert(JSON.stringify(result, null, 2));
-    return;
-  }
-
-  alert('Fiche créée avec succès !');
 });

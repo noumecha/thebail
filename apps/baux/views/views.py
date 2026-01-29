@@ -148,20 +148,6 @@ def get_localisation_datas(request):
             return JsonResponse({'error': 'Arrondissement selectionné incorrect' + ValueError, 'success': False}, status=400)
     return JsonResponse({'error': 'Invalid request', 'success': False}, status=400)
 
-# getting agent name base on the selected or entry matricule
-def get_agent_name(request):
-    if request.method == 'GET':
-        agent_id = request.GET.get('agent_id')
-        if not agent_id:
-            return JsonResponse({'error': 'Aucun locataire selectionné'}, status=400)
-        try:
-            agent_id = int(agent_id)
-            agent = get_object_or_404(AgentCollecte, pk=agent_id)
-            name = agent.Nom + " " + agent.Prenom
-            return JsonResponse({'agent': name, 'success': True}, safe=False, status=200)
-        except (ValueError, Administrations.DoesNotExist):
-            return JsonResponse({'error': 'Matricule de l\'agent incorrect' + ValueError, 'success': False}, status=400)
-    return JsonResponse({'error': 'Invalid request', 'success': False}, status=400)
 
 # filtering structure base on administration
 def get_structures(request):

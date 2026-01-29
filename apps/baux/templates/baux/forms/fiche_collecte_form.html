@@ -28,7 +28,8 @@
                 <tr>
                   <th scope="col" colspan="3">
                     <h1 class="d-flex justify-content-center bg-secondary text-center p-2 text-uppercase">
-                      Fiche de collecte N° <input type="text" class="form-control w-25" id="ficheNumber" readonly disabled>
+                      Fiche de collecte N°
+                      {% include "baux/widgets/field_widget.html" with settings="readonly disabled" input_id="numero_fiche_collecte" input_type="text" input_name="numero_fiche_collecte" variant="html_no_label" %}
                     </h1>
                   </th>
                 </tr>
@@ -43,13 +44,13 @@
               <tbody>
                 <tr class="p-0">
                   <td class="">
-                    {% include "baux/widgets/field_widget.html" with style="width: 300px !important" label_class="text-uppercase" list_label="Responsable de collecte" list_id="responsable_collecte" list_options=agentcollectes variant="html_list" %}
+                    {% include "baux/widgets/field_widget.html" with settings="readonly disabled" style="width: 300px !important" label_style="font-size: 13px !important;" label_class="text-uppercase" list_label="Responsable de collecte" list_id="responsable_collecte" list_api_url='/api/search-agents/' placeholder="Rechercher un agent ..." variant="html_list_ajax" %}
                   </td>
                   <td class="">
-                    {% include "baux/widgets/field_widget.html" with style="width: 100px !important" label_class="text-uppercase" list_label="Matricule du responsable" list_id="matricule_responsable_collecte" list_options=matriculesagents variant="html_list" %}
+                    {% include "baux/widgets/field_widget.html" with style="width: 100px !important" label_style="font-size: 13px !important;" label_class="text-uppercase" list_label="Matricule du responsable" list_id="matricule_responsable_collecte" list_api_url='/api/search-matricule-agents/' placeholder="Rechercher un matricule ..." variant="html_list_ajax" %}
                   </td>
                   <td class="">
-                    {% include "baux/widgets/field_widget.html" with label_class="text-uppercase" input_id="dateCollecte" input_label="Date de collecte" input_type="date" input_name="date_collecte" variant="html_only" %}
+                    {% include "baux/widgets/field_widget.html" with label_style="font-size: 13px !important;" label_class="text-uppercase" input_id="dateCollecte" input_label="Date de collecte" input_type="date" input_name="date_collecte" variant="html_only" %}
                   </td>
                 </tr>
               </tbody>
@@ -135,7 +136,7 @@
                     <td class="text-start">
                       <div class="row">
                         <div class="col-md-4">
-                          {% include "baux/widgets/field_widget.html" with style="width: 250px !important" list_label="Pays" list_id="pays_list" list_options=pays variant="html_list" %}
+                          {% include "baux/widgets/field_widget.html" with style="width: 250px !important" list_label="Pays" list_id="pays_list" list_api_url='/api/get-pays/' placeholder="Rechercher un pays ..." variant="html_list_ajax" %}
                         </div>
                         <div class="col-md-4">
                           {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id="ville" input_label="Ville" input_type="text" input_name="ville" variant="html_only" %}
@@ -150,13 +151,13 @@
                     <td class="text-start">
                       <div class="row">
                         <div class="col-md-6">
-                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Région" list_id="region_list" list_options=regions variant="html_list" %}
+                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Région" list_id="region_list" list_api_url='/api/get-regions/' placeholder="Rechercher une région ..." variant="html_list_ajax" %}
                         </div>
                         <div class="col-md-6">
-                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Departement" list_id="departement_list" list_options=departements variant="html_list" %}
+                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Departement" list_id="departement_list" list_api_url='/api/get-departement/' placeholder="Rechercher un département ..." variant="html_list_ajax" %}
                         </div>
                         <div class="col-md-6">
-                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Arrondissement" list_id="arrondissement_list" list_options=arrondissements variant="html_list" %}
+                          {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Arrondissement" list_id="arrondissement_list" list_api_url='/api/get-arrondissement/' placeholder="Rechercher un arrondissement ..." variant="html_list_ajax" %}
                         </div>
                         <div class="col-md-6">
                           {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="quartier" input_label="Quartier" input_type="text" input_name="quartier" variant="html_only" %}
@@ -252,7 +253,7 @@
                       {% include "baux/widgets/field_widget.html" with input_id="nom_prenom" input_type="text" input_name="nom_prenom" variant="html_no_label" %}
                     </td>
                     <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with list_id="administration_list" list_options=administrations variant="html_list_no_label" %}
+                      {% include "baux/widgets/field_widget.html" with list_id="occupant_administration_list" list_api_url='/api/get-administrations/' placeholder="Rechercher une adminisration ..." variant="html_list_ajax" %}
                     </td>
                     <td class="p-0">
                       {% include "baux/widgets/field_widget.html" with input_id="fonction_occupant" input_type="text" input_name="fonction_occupant" variant="html_no_label" %}
@@ -310,10 +311,10 @@
                 <tbody>
                   <tr>
                     <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with list_id="structure-list" list_options=structures variant="html_list_no_label" %}
+                      {% include "baux/widgets/field_widget.html" with list_id="structure_list" list_api_url='/api/get-structures/' placeholder="Rechercher un service ..." variant="html_list_ajax" %}
                     </td>
                     <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with list_id="administration-list" list_options=administrations variant="html_list_no_label" %}
+                      {% include "baux/widgets/field_widget.html" with list_id="occupant_burreau_administration_list" list_api_url='/api/get-administrations/' placeholder="Rechercher une adminisration ..." variant="html_list_ajax" %}
                     </td>
                     <td class="p-0">
                       {% include "baux/widgets/field_widget.html" with input_id="fonction_responsable" input_type="text" input_name="fonction_responsable" variant="html_no_label" %}
@@ -447,10 +448,10 @@
                                           Nom & prénoms ou raison sociale du bailleur
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_1_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_1_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_1_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                       </tr>
                                       <tr>
@@ -508,10 +509,10 @@
                                           Nom & prénoms ou raison sociale du bailleur
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_ancien_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_2_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="bailleurs-list" input_name="avenant_2_nouveau_bailleur" list_options=bailleurs variant="html_list_no_label" %}
+                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_2_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                       </tr>
                                       <tr>
