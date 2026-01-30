@@ -14,7 +14,6 @@ def add_dynamic_choice(request):
 
     # Dynamically load the model by its name
     Model = apps.get_model("baux", model_name)
-
     obj, created = Model.objects.get_or_create(libelle=label)
 
     return JsonResponse({

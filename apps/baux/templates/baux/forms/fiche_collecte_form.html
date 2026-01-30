@@ -201,7 +201,7 @@
                         <li type="square"><span class="fw-bold">Revêtement extérieure : </span></li>
                       </ul>
                       <ul class="ms-2 mb-0">
-                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementexterieure-list" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure_choice_hidden" add_wrapper_id="new_revetementexterieure_wrapper" new_input_id="new_revetementexterieure_input" add_btn_id="add_revetementexterieure_btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts" %}
+                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetementexterieure_list" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure_choice_hidden" add_wrapper_id="new_revetementexterieure_wrapper" new_input_id="new_revetementexterieure_input" add_btn_id="add_revetementexterieure_btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts" %}
                       </ul>
                     </td>
                   </tr>
@@ -384,13 +384,13 @@
                           {% include "baux/widgets/field_widget.html" with input_id="date_effet_contrat" input_label="Date d'effet" input_type="date" input_name="date_signature_contrat" variant="html_only" %}
                         </div>
                         <div class="col-md-6">
-                          {% include "baux/widgets/field_widget.html" with input_id="existance_visa_bugetaire_contrat" input_label="Existence du visa bugetaire sur le Contrat ?" input_name="existance_visa_bugetaire_contrat" variant="html_checkbox" %}
+                          {% include "baux/widgets/field_widget.html" with input_id="existance_visa_bugetaire_contrat" checkbox_name="existance_visa_bugetaire_contrat" input_label="Existence du visa bugetaire sur le Contrat ?" input_name="existance_visa_bugetaire_contrat" variant="html_checkbox" %}
                         </div>
                         <div class="col-md-3">
                           {% include "baux/widgets/field_widget.html" with style="width: 120px !important" input_id="duree_contrat" input_type="number" input_label="Durée du contrat" input_name="duree_contrat" variant="html_only" %}
                         </div>
                         <div class="col-md-3">
-                          {% include "baux/widgets/field_widget.html" with input_id="tacite_reconduction" input_label="Tacite reconduction ?" input_name="tacite_reconduction" variant="html_checkbox" %}
+                          {% include "baux/widgets/field_widget.html" with input_id="tacite_reconduction" checkbox_name="tacite_reconduction" input_label="Tacite reconduction ?" input_name="tacite_reconduction" variant="html_checkbox" %}
                         </div>
                         <div class="col-md-6">
                           {% include "baux/widgets/field_widget.html" with input_id="regime_fiscal_contrat" input_label="Régime fiscal applicable" input_type="text" input_name="regime_fiscal_contrat" variant="html_only" %}
@@ -402,7 +402,7 @@
                           {% include "baux/widgets/field_widget.html" with style="width: 120px !important" list_id="devise_list" list_options=devises variant="html_simple_list" label="Devise" %}
                         </div>
                         <div class="col-md-12">
-                          {% include "baux/widgets/field_widget.html" with input_id="existence_avenant_contrat" input_label="Existence d'au moins un avenant attaché au présent contrat ?" input_name="existence_avenant_contrat" variant="html_checkbox" %}
+                          {% include "baux/widgets/field_widget.html" with input_id="existence_avenant_contrat" checkbox_name="existence_avenant_contrat" input_label="Existence d'au moins un avenant attaché au présent contrat ?" input_name="existence_avenant_contrat" variant="html_checkbox" %}
                         </div>
                       </div>
                     </td>
@@ -540,7 +540,7 @@
                         <label for="id_immeubles-0-Type_location" class="fw-bold text-start form-check-label ms-1">d. - Périodicité de règlement selon le contrat</label>
                       </td>
                       <td class="text-start p-0">
-                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="periodicitereglement" checkbox_name="periodicitereglement_choice_checkbox" hidden_name="periodicitereglement_choice" hidden_id="periodicitereglement-choice-hidden" add_wrapper_id="new-periodicitereglement-wrapper" new_input_id="new-periodicitereglement-input" add_btn_id="add-periodicitereglement-btn" choices=periodicite_reglements model="PeriodiciteReglement" %}
+                        {% include "baux/widgets/dynamic_choice_list.html" with list_id="periodicitereglement" checkbox_name="periodicitereglement_choice_checkbox" hidden_name="periodicitereglement_choice" hidden_id="periodicitereglement_choice_hidden" add_wrapper_id="new_periodicitereglement_wrapper" new_input_id="new_periodicitereglement_input" add_btn_id="add_periodicitereglement_btn" choices=periodicite_reglements model="PeriodiciteReglement" %}
                       </td>
                     </tr>
                   </tbody>
@@ -557,7 +557,7 @@
                       <td>
                         <div class="row">
                           <div class="col-md-12">
-                            {% include "baux/widgets/field_widget.html" with list_options=type_personnes variant="html_simple_checkbox_list" %}
+                            {% include "baux/widgets/field_widget.html" with list_id="types_personnes_list" checkbox_name="types_personnes_choice_checkbox" hidden_name="types_personnes_choice" hidden_id="types_personnes_choice_hidden" list_options=type_personnes variant="html_simple_checkbox_list" %}
                           </div>
                           <div class="col-md-12">
                             {% include "baux/widgets/field_widget.html" with style="width: 700px !important" input_id="nom_prenom_raison_sociale" input_label="Noms & prénoms/Raison Socaiale" input_type="text" input_name="nom_prenom_raison_sociale" variant="html_only" %}
@@ -581,7 +581,7 @@
                             {% include "baux/widgets/field_widget.html" with input_id="date_delivrance_cni" input_label="Date délivrance CNI" input_type="date" input_name="date_delivrance_cni" variant="html_only" %}
                           </div>
                           <div class="col-md-12">
-                            {% include "baux/widgets/field_widget.html" with list_options=statut_bailleur variant="html_simple_checkbox_list" %}
+                            {% include "baux/widgets/field_widget.html" with list_id="statut_bailleur_list" checkbox_name="statut_bailleur_choice_checkbox" hidden_name="statut_bailleur_choice" hidden_id="statut_bailleur_choice_hidden" list_options=statut_bailleur variant="html_simple_checkbox_list" %}
                           </div>
                         </div>
                       </td>

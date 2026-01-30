@@ -74,24 +74,47 @@
   {# show the label with two checkbox, one with the label oui and another with the label non #}
   <div class="d-flex align-items-center mb-2">
     <label for="{{ input_id }}-oui" class="fw-bold {{ label_class }} me-2">{{ input_label }} </label>
-    <div class="form-check form-check-inline">
-      <input type="checkbox" style="{{ style }}" class="form-check-input" id="{{ input_id }}-oui">
-      <label class="form-check-label ms-1">Oui</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input type="checkbox" style="{{ style }}" class="form-check-input" id="{{ input_id }}-non">
-      <label class="form-check-label ms-1">Non</label>
+    <div id="{{ input_id }}">
+      <div class="form-check form-check-inline">
+        <label class="d-flex align-items-center gap-2 dynamic-option">
+          <input
+            name="{{ checkbox_name }}"
+            type="checkbox"
+            style="{{ style }}"
+            class="form-check-input dynamic-check"
+            id="{{ input_id }}-oui">
+          <span class="fw-bold">Oui</span>
+        </label>
+      </div>
+      <div class="form-check form-check-inline">
+        <label class="d-flex align-items-center gap-2 dynamic-option">
+          <input
+            name="{{ checkbox_name }}"
+            type="checkbox"
+            style="{{ style }}"
+            class="form-check-input dynamic-check"
+            id="{{ input_id }}-non">
+          <span class="fw-bold">Oui</span>
+        </label>
+      </div>
     </div>
   </div>
 {% elif variant == "html_simple_checkbox_list" %}
   {# show only one checkbox with label #}
   <div class="d-flex align-items-center justify-content-center mb-2">
-    {% for option in list_options %}
-      <div class="form-check form-check-inline">
-        <input type="checkbox" class="form-check-input" id="{{ option.id }}">
-        <label class="form-check-label ms-1">{{ option.name }}</label>
-      </div>
-    {% endfor %}
+    <div id="{{ list_id }}" class="flex-row gap-3 list-group flex-wrap">
+      {% for option in list_options %}
+        <label class="d-flex align-items-center gap-2 dynamic-option">
+          <input
+            type="checkbox"
+            name="{{ checkbox_name }}"
+            class="form-check-input dynamic-check"
+          >
+          <span class="fw-bold">{{ option.name }}</span>
+        </label>
+      {% endfor %}
+      <input type="hidden" name="{{ hidden_name }}" id="{{ option.id }}">
+    </div>
   </div>
 {% elif variant == "html_list_no_label" %}
   {# Render the html list directly without label #}

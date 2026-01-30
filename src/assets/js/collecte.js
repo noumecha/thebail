@@ -114,7 +114,7 @@ $(function () {
     '/piece-collecte-partial-form/'
   );
   addElementToList(
-    '#elements-collecte-container',
+    '#elements-immeuble-container',
     'element-immeuble-input',
     'add-element-btn',
     '/element-description-partial-form/'

@@ -1,4 +1,4 @@
-<div class="row" id="elements-collecte-container" data-group-type="element" data-max-items="9">
+<div class="row" id="elements-immeuble-container" data-group-type="element" data-max-items="9">
   {% for group in element_groups %}
     <div class="col-md-4 col-block mb-4">
       <table class="table align-middle text-center">
@@ -9,7 +9,7 @@
             <th class="bg-secondary-subtle text-capitalize p-0">Quantité</th>
           </tr>
         </thead>
-        <tbody id="elements-collecte-container-tbody" class="elements-collecte-container-tbody">
+        <tbody id="elements-immeuble-container-tbody" class="elements-immeuble-container-tbody">
           {% for el in group %}
             {% include "baux/widgets/immeuble_element_row.html" with el=el %}
           {% endfor %}

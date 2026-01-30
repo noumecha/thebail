@@ -7,9 +7,7 @@
         <input
           type="checkbox"
           name="{{ checkbox_name }}"
-          value="{{ choice.pk }}"
           class="form-check-input dynamic-check"
-          {% if choice.libelle == selected %}checked{% endif %}
         >
         <span class="fw-bold">{{ choice.libelle }}</span>
       </label>

@@ -9,39 +9,53 @@ function getCSRFToken() {
   return '';
 }
 
+function updateHidden(value, hiddenId) {
+  $('#' + hiddenId).val(value);
+}
+
+function toggleCheck({ listId, checkbox, dynamicCheckClass, dynamicOptionClass, dynamicInputClass, hiddenId }) {
+  const $list = $('#' + listId);
+  const $cb = $(checkbox);
+  const label = $cb.val();
+
+  const $container = $cb.closest('.' + dynamicOptionClass);
+  const $xInput = $container.find('.' + dynamicInputClass);
+
+  // 1️⃣ décocher les autres
+  $list
+    .find('.' + dynamicCheckClass)
+    .not($cb)
+    .prop('checked', false)
+    .closest('.' + dynamicOptionClass)
+    .find('.' + dynamicInputClass)
+    .addClass('d-none');
+
+  // 2️⃣ logique métier
+  if ($cb.is(':checked') && $xInput.length && label.includes('Etage R+')) {
+    $xInput.removeClass('d-none').focus();
+
+    // évite les handlers multiples
+    $xInput.off('input').on('input', function () {
+      updateHidden(`Etage R+${$(this).val()}`, hiddenId);
+    });
+  } else {
+    updateHidden($cb.is(':checked') ? label : '', hiddenId);
+    $xInput.addClass('d-none');
+  }
+}
+
 function initDynamicChoiceList(listId, hiddenId, newInputId, addBtnId, url) {
   const $list = $('#' + listId);
-  const $hidden = $('#' + hiddenId);
-
-  function updateHidden(value) {
-    $hidden.val(value);
-  }
 
   $list.on('change', '.dynamic-check', function () {
-    const $cb = $(this);
-    const label = $cb.val();
-    const $container = $cb.closest('.dynamic-option');
-    const $xInput = $container.find('.dynamic-x-input');
-
-    // uncheck others
-    $list
-      .find('.dynamic-check')
-      .not($cb)
-      .prop('checked', false)
-      .closest('.dynamic-option')
-      .find('.dynamic-x-input')
-      .addClass('d-none');
-
-    if ($xInput.length && label.includes('Etage R+')) {
-      if ($cb.is(':checked')) {
-        $xInput.removeClass('d-none').focus();
-        $xInput.on('input', function () {
-          updateHidden(`Etage R+${$(this).val()}`);
-        });
-      }
-    } else {
-      updateHidden($cb.is(':checked') ? label : '');
-    }
+    toggleCheck({
+      listId: listId,
+      checkbox: this,
+      dynamicCheckClass: 'dynamic-check',
+      dynamicOptionClass: 'dynamic-option',
+      dynamicInputClass: 'dynamic-x-input',
+      hiddenId: hiddenId
+    });
   });
 
   // save option to db and add to the list
@@ -85,36 +99,3 @@ function addToList(id, label, listId) {
   $list.append($label);
   $label.find('.dynamic-check').change();
 }
-
-// init examples
-$(function () {
-  initDynamicChoiceList(
-    'construction-list',
-    'construction-choice-hidden',
-    'new-construction-input',
-    'add-construction-btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList(
-    'type-location-list',
-    'type-location-choice-hidden',
-    'new-type-location-input',
-    'add-type-location-btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList('statut-list', 'statut-choice-hidden', 'new-statut-input', 'add-statut-btn', '/add-choice/');
-  initDynamicChoiceList(
-    'revetementinterieure-list',
-    'revetementinterieure-choice-hidden',
-    'new-revetementinterieure-input',
-    'add-revetementinterieure-btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList(
-    'revetementexterieure-list',
-    'revetementexterieure-choice-hidden',
-    'new-revetementexterieure-input',
-    'add-revetementexterieure-btn',
-    '/add-choice/'
-  );
-});
