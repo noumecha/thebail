@@ -1,0 +1,52 @@
+{# baux/widgets/occupant_logement_row.html #}
+<tr class="occupant-row" data-row-id="{{ row_id }}">
+  <td class="p-1">
+    <input type="text"
+      class="form-control form-control-sm occupant-field"
+      name="occupant_{{ row_id }}_nom_prenom"
+      placeholder="Nom & Prénoms"
+      data-field="nom_prenom">
+  </td>
+  <td class="p-1">
+    <select class="form-select form-select-sm select2-ajax occupant-field"
+      name="occupant_{{ row_id }}_administration"
+      data-ajax-url="/api/get-administrations/"
+      data-ajax-placeholder="Rechercher une administration..."
+      data-field="administration">
+    </select>
+  </td>
+  <td class="p-1">
+    <input type="text"
+      class="form-control form-control-sm occupant-field"
+      name="occupant_{{ row_id }}_fonction"
+      placeholder="Fonction"
+      data-field="fonction">
+  </td>
+  <td class="p-1">
+    <input type="text"
+      class="form-control form-control-sm occupant-field"
+      name="occupant_{{ row_id }}_matricule"
+      placeholder="Matricule"
+      data-field="matricule">
+  </td>
+  <td class="p-1">
+    <input type="text"
+      class="form-control form-control-sm occupant-field"
+      name="occupant_{{ row_id }}_reference"
+      placeholder="Référence"
+      data-field="reference">
+  </td>
+  <td class="p-1">
+    <input type="date"
+      class="form-control form-control-sm occupant-field"
+      name="occupant_{{ row_id }}_date"
+      data-field="date">
+  </td>
+  <td class="p-1">
+    <div class="btn-group btn-group-sm" role="group">
+      <button type="button" class="btn btn-outline-danger delete-occupant-row" title="Supprimer">
+        <i class="bx bx-trash"></i>
+      </button>
+    </div>
+  </td>
+</tr>

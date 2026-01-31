@@ -247,7 +247,10 @@
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="occupants-logements-tbody">
+                  <!-- La première ligne sera ajoutée par JS -->
+                </tbody>
+                <!--tbody>
                   <tr>
                     <td class="p-0">
                       {% include "baux/widgets/field_widget.html" with input_id="nom_prenom" input_type="text" input_name="nom_prenom" variant="html_no_label" %}
@@ -271,18 +274,28 @@
                       actions
                     </td>
                   </tr>
-                </tbody>
+                </tbody -->
               </table>
-              <!-- chekcbox input for adding or not new line for another occupant -->
-              <div class="d-flex align-item-center justify-content-center">
-                <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
-                <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
-                  <i>y-a til d'autre occupant pour le même contrat ?</i>
-                </label>
+              <!-- Boutons d'action -->
+              <div class="d-flex align-items-center justify-content-between mt-2">
+                <button type="button" class="btn btn-sm btn-primary" id="add-occupant-row">
+                  <i class="bx bx-plus"></i> Ajouter un occupant
+                </button>
+                <div class="d-flex align-item-center justify-content-center">
+                  <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
+                  <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
+                    <i>y-a til d'autre occupant pour le même contrat ?</i>
+                  </label>
+                </div>
+                <small class="text-muted">
+                  <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement après remplissage
+                </small>
               </div>
+              <!-- chekcbox input for adding or not new line for another occupant -->
+
 
               <!-- occupant pour bureaux -->
-              <ul class="mb-0">
+              <ul class="mb-0 mt-3">
                 <li type="square"><span class="fw-bold">Bureaux</span></li>
               </ul>
               <table class="table table-bordered align-middle text-center">
@@ -734,7 +747,7 @@
                         {% include "baux/widgets/field_widget.html" with list_options=exercices list_id="exercice_non_mandatement" variant="html_list_no_label" %}
                       </td>
                       <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with input_id="loyer_mensuel_non_mandatement" input_type="text" input_name="loyer_mensuel_non_mandatement" variant="html_no_label" %}
+                        {% include "baux/widgets/field_widget.html" with input_id="loyer_mensuel_non_mandatement" input_type="number" input_name="loyer_mensuel_non_mandatement" variant="html_no_label" %}
                       </td>
                       <td class="p-0">
                         {% include "baux/widgets/field_widget.html" with input_id="reference_attestation_nonmandatement" input_type="text" input_name="reference_attestation_nonmandatement" variant="html_no_label" %}
@@ -753,7 +766,9 @@
                       <td class="p-0">
                         {% include "baux/widgets/field_widget.html" with input_id="reference_contrat" input_type="text" input_name="reference_contrat" variant="html_no_label" %}
                       </td>
-                      <!-- td colspan="30">Aucune attestation de non mandatement ajouter ...</td -->
+                      <td class="">
+                        actions
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -808,5 +823,6 @@
 {% endblock %}
 {% block extra_js %}
     <script src="{% static 'js/collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/occupants-collecte.js' %}"></script>
     <script src="{% static 'js/collecte-js/fiche.js' %}"></script>
 {% endblock %}
