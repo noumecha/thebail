@@ -1,10 +1,72 @@
-function getCSRFToken() {
-  return document.querySelector('[name=csrfmiddlewaretoken]').value;
-}
-
-// fetching agent :
-// Dans votre fichier JS principal
 $(function () {
+  // gestion dynamique avec pour les modals et les éléments de types list avec checkbox
+  const ajax_modal_objects = [
+    {
+      modalId: '#addTypeContratModal',
+      formContainerId: '#typecontrat-form-content',
+      formId: '#typecontratForm',
+      fetchUrl: '/type-contrat-partial-form/',
+      selectItemId: '#id_TypeContrat'
+    },
+    {
+      modalId: '#addRevetementInterieureModal',
+      formContainerId: '#revetementint-form-content',
+      formId: '#revetementintForm',
+      fetchUrl: '/revetement-int-partial-form/',
+      selectItemId: '#id_immeubles-0-Revetement_interieure'
+    },
+    {
+      modalId: '#addRevetementExterieureModal',
+      formContainerId: '#revetementext-form-content',
+      formId: '#revetementextForm',
+      fetchUrl: '/revetement-ext-partial-form/',
+      selectItemId: '#id_immeubles-0-Revetement_exterieure'
+    },
+    {
+      modalId: '#addExerciceModal',
+      formContainerId: '#exercice-form-content',
+      formId: '#exerciceForm',
+      fetchUrl: '/exercice-partial-form/',
+      selectItemId: '#id_non_mandatements-0-Exercice'
+    },
+    {
+      modalId: '#addBailleurModal',
+      formContainerId: '#bailleur-form-content',
+      formId: '#bailleurForm',
+      fetchUrl: '/bailleur-partial-form/',
+      selectItemId: '#id_Bailleur'
+    },
+    {
+      modalId: '#addPieceModal',
+      formContainerId: '#piece-form-content',
+      formId: '#pieceForm',
+      fetchUrl: '/piece-collecte-partial-form/',
+      selectItemId: '#pieces-collecte-container'
+    }
+  ];
+  ajax_modal_objects.forEach(obj => {
+    ajaxModal(obj.modalId, obj.formContainerId, obj.formId, obj.fetchUrl, obj.selectItemId);
+  });
+
+  // elements and pieces adding
+  const add_to_list_object = [
+    {
+      list_container: '#pieces-collecte-container',
+      list_input: 'piece-collecte-input',
+      list_btn: 'add-piece-btn',
+      list_url: '/piece-collecte-partial-form/'
+    },
+    {
+      list_container: '#elements-immeuble-container',
+      list_input: 'element-immeuble-input',
+      list_btn: 'add-element-btn',
+      list_url: '/element-description-partial-form/'
+    }
+  ];
+  add_to_list_object.forEach(obj => {
+    addElementToList(obj.list_container, obj.list_input, obj.list_btn, obj.list_url);
+  });
+
   // Initialiser tous les select avec la classe select2-ajax
   $('.select2-ajax').each(function () {
     const $select = $(this);
@@ -49,7 +111,7 @@ $(function () {
       }
     });
   });
-  // Gérer les changements
+  // maj du champ responsable de collecte à partir du champ matricule du responsable
   $(document).on('change', '#matricule_responsable_collecte', function () {
     let matricule = $(this).val();
     if (matricule) {
@@ -86,49 +148,61 @@ $(function () {
   });
 
   // gestion des éléments dynamique pour l'ajout des éléments à la liste dynamique
-  initDynamicChoiceList(
-    'construction_list',
-    'construction_choice_hidden',
-    'new_construction_input',
-    'add_construction_btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList(
-    'type_location_list',
-    'type_location_choice_hidden',
-    'new_type_location_input',
-    'add_type_location_btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList('statut_list', 'statut_choice_hidden', 'new_statut_input', 'add_statut_btn', '/add-choice/');
-  initDynamicChoiceList(
-    'revetementinterieure_list',
-    'revetementinterieure_choice_hidden',
-    'new_revetementinterieure_input',
-    'add_revetementinterieure_btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList(
-    'revetementexterieure_list',
-    'revetementexterieure_choice_hidden',
-    'new_revetementexterieure_input',
-    'add_revetementexterieure_btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList(
-    'typecontrat_list',
-    'typecontrat_choice_hidden',
-    'new_typecontrat_input',
-    'add_typecontrat_btn',
-    '/add-choice/'
-  );
-  initDynamicChoiceList(
-    'periodicitereglement',
-    'periodicitereglement_choice_hidden',
-    'new_periodicitereglement_input',
-    'add_periodicitereglement_btn',
-    '/add-choice/'
-  );
+  const dynamic_choices_list_objects = [
+    {
+      listId: 'construction_list',
+      hiddenId: 'construction_choice_hidden',
+      newInputId: 'new_construction_input',
+      addButtonId: 'add_construction_btn',
+      ajaxUrl: '/add-choice/'
+    },
+    {
+      listId: 'type_location_list',
+      hiddenId: 'type_location_choice_hidden',
+      newInputId: 'new_type_location_input',
+      addButtonId: 'add_type_location_btn',
+      ajaxUrl: '/add-choice/'
+    },
+    {
+      listId: 'statut_list',
+      hiddenId: 'statut_choice_hidden',
+      newInputId: 'new_statut_input',
+      addButtonId: 'add_statut_btn',
+      ajaxUrl: '/add-choice/'
+    },
+    {
+      listId: 'revetementinterieure_list',
+      hiddenId: 'revetementinterieure_choice_hidden',
+      newInputId: 'new_revetementinterieure_input',
+      addButtonId: 'add_revetementinterieure_btn',
+      ajaxUrl: '/add-choice/'
+    },
+    {
+      listId: 'revetementexterieure_list',
+      hiddenId: 'revetementexterieure_choice_hidden',
+      newInputId: 'new_revetementexterieure_input',
+      addButtonId: 'add_revetementexterieure_btn',
+      ajaxUrl: '/add-choice/'
+    },
+    {
+      listId: 'typecontrat_list',
+      hiddenId: 'typecontrat_choice_hidden',
+      newInputId: 'new_typecontrat_input',
+      addButtonId: 'add_typecontrat_btn',
+      ajaxUrl: '/add-choice/'
+    },
+    {
+      listId: 'periodicitereglement',
+      hiddenId: 'periodicitereglement_choice_hidden',
+      newInputId: 'new_periodicitereglement_input',
+      addButtonId: 'add_periodicitereglement_btn',
+      ajaxUrl: '/add-choice/'
+    }
+  ];
+  dynamic_choices_list_objects.forEach(obj => {
+    initDynamicChoiceList(obj.listId, obj.hiddenId, obj.newInputId, obj.addButtonId, obj.ajaxUrl);
+  });
+
   // dynamic toogle non object elements
   const object_to_toggle = [
     { listId: 'types_personnes_list', hiddenId: 'types_personnes_choice' },
@@ -149,6 +223,7 @@ $(function () {
       });
     });
   });
+
   // Gérer TOUS les éléments de description avec un seul événement
   $('#elements-immeuble-container').on('change', '.dynamic-check', function () {
     const $checkbox = $(this);

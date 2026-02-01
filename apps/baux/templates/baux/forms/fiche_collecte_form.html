@@ -74,7 +74,7 @@
           </h2>
 
           <div id="immeubleSection" class="accordion-collapse collapse show">
-            <div class="accordion-body">
+            <div class="accordion-body overflow-auto">
               <h5 class='text-uppercase mt-3'>I. Identification</h5>
               <table class="table table-bordered align-middle text-center">
                 <tbody>
@@ -221,64 +221,22 @@
               <ul class="mb-0">
                 <li type="square"><span class="fw-bold">Logements</span></li>
               </ul>
-              <table class="table table-bordered align-middle text-center">
+              <table class="table table-bordered align-middle text-center" id="occupants-logements-table">
                 <thead>
                   <tr>
-                    <th>
-                      Noms & prénoms
-                    </th>
-                    <th>
-                      Administration de rattachement(Ministère)
-                    </th>
-                    <th>
-                      Fonction ou qualité de l'occupant
-                    </th>
-                    <th>
-                      Matricule
-                    </th>
-                    <th>
-                      Référence de l'acte juridique d'attribution
-                    </th>
-                    <th>
-                      Date de signature de l'acte
-                    </th>
-                    <th>
-                      Actions
-                    </th>
+                    <th>Noms & prénoms</th>
+                    <th>Administration de rattachement(Ministère)</th>
+                    <th>Fonction ou qualité de l'occupant</th>
+                    <th>Matricule</th>
+                    <th>Référence de l'acte juridique d'attribution</th>
+                    <th>Date de signature de l'acte</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody id="occupants-logements-tbody">
-                  <!-- La première ligne sera ajoutée par JS -->
-                </tbody>
-                <!--tbody>
-                  <tr>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="nom_prenom" input_type="text" input_name="nom_prenom" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with list_id="occupant_administration_list" list_api_url='/api/get-administrations/' placeholder="Rechercher une adminisration ..." variant="html_list_ajax" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="fonction_occupant" input_type="text" input_name="fonction_occupant" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="matricule_occupant" input_type="text" input_name="matricule_occupant" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="reference_acte_juridique" input_type="text" input_name="reference_acte_juridique" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="date_prise_effet_acte" input_type="date" input_name="date_prise_effet_acte" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      actions
-                    </td>
-                  </tr>
-                </tbody -->
+                <tbody id="occupants-logements-tbody"></tbody>
               </table>
-              <!-- Boutons d'action -->
               <div class="d-flex align-items-center justify-content-between mt-2">
-                <button type="button" class="btn btn-sm btn-primary" id="add-occupant-row">
+                <button type="button" class="btn btn-sm btn-primary" id="add-occupant-logement-row">
                   <i class="bx bx-plus"></i> Ajouter un occupant
                 </button>
                 <div class="d-flex align-item-center justify-content-center">
@@ -288,68 +246,40 @@
                   </label>
                 </div>
                 <small class="text-muted">
-                  <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement après remplissage
+                  <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement
                 </small>
               </div>
-              <!-- chekcbox input for adding or not new line for another occupant -->
-
 
               <!-- occupant pour bureaux -->
               <ul class="mb-0 mt-3">
                 <li type="square"><span class="fw-bold">Bureaux</span></li>
               </ul>
-              <table class="table table-bordered align-middle text-center">
+              <table class="table table-bordered align-middle text-center" id="occupants-bureaux-table">
                 <thead>
                   <tr>
-                    <th>
-                      Service adminisratif Occupant
-                    </th>
-                    <th>
-                      Administration (Ministère)
-                    </th>
-                    <th>
-                      Fonction du plus haut responsable du service
-                    </th>
-                    <th>
-                      Référence de l'acte juridique d'attribution du MINDCAF
-                    </th>
-                    <th>
-                      Date signature de l'acte
-                    </th>
-                    <th>
-                      Actions
-                    </th>
+                    <th>Service administratif Occupant</th>
+                    <th>Administration (Ministère)</th>
+                    <th>Fonction du plus haut responsable du service</th>
+                    <th>Référence de l'acte juridique d'attribution du MINDCAF</th>
+                    <th>Date signature de l'acte</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with list_id="structure_list" list_api_url='/api/get-structures/' placeholder="Rechercher un service ..." variant="html_list_ajax" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with list_id="occupant_burreau_administration_list" list_api_url='/api/get-administrations/' placeholder="Rechercher une adminisration ..." variant="html_list_ajax" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="fonction_responsable" input_type="text" input_name="fonction_responsable" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="reference_acte_attribution" input_type="text" input_name="reference_acte_attribution" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      {% include "baux/widgets/field_widget.html" with input_id="date_initial_occupation" input_type="date" input_name="date_initial_occupation" variant="html_no_label" %}
-                    </td>
-                    <td class="p-0">
-                      actions
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody id="occupants-bureaux-tbody"></tbody>
               </table>
-              <!-- chekcbox input for adding or not new line for another occupant bureaux -->
-              <div class="d-flex align-item-center justify-content-center">
-                <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
-                <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
-                  <i>y-a til d'autres Services occupants le même immeuble ?</i>
-                </label>
+              <div class="d-flex align-items-center justify-content-between mt-2">
+                <button type="button" class="btn btn-sm btn-primary" id="add-occupant-bureau-row">
+                  <i class="bx bx-plus"></i> Ajouter un occupant
+                </button>
+                <div class="d-flex align-item-center justify-content-center">
+                  <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
+                  <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
+                    <i>y-a til d'autres services occupants le même immeuble ?</i>
+                  </label>
+                </div>
+                <small class="text-muted">
+                  <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement
+                </small>
               </div>
 
             </div>
@@ -606,7 +536,7 @@
                       <td class="">
                         <div class="row">
                           <div class="col-md-4">
-                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important" list_options=banques list_id="banque_bailleur" list_label="Libelle Banque" input_type="text" input_name="banque_bailleur" variant="html_list" %}
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important" list_label="Libellé Banque" list_id="banque_bailleur_list" list_api_url='/api/get-banques/' placeholder="Rechercher une banque ..." variant="html_list_ajax" %}
                           </div>
                           <div class="col-md-8">
                             {% include "baux/widgets/field_widget.html" with style="width: 600px !important" input_id="numero_rib_bailleur" input_label="Numéro RIB" input_type="text" input_name="numero_rib_bailleur" variant="html_only" %}
@@ -623,46 +553,30 @@
                       </td>
                       <td class="p-0">
                         <div>
-                          <table class="table table-bordered">
+                          <table class="table table-bordered" id="ayants-droit-table">
                             <thead>
                               <tr>
-                                <th>N°</th>
+                                <th style="width: 50px;">N°</th>
                                 <th>Noms & prénoms</th>
                                 <th>Contact</th>
                                 <th>Référence Grosse</th>
                                 <th>Date de délivrance grosse</th>
-                                <th>Reférence Certificat non appel</th>
+                                <th>Référence Certificat non appel</th>
                                 <th>Date délivrance Certificat</th>
-                                <th>Actions</th>
+                                <th style="width: 80px;">Actions</th>
                               </tr>
                             </thead>
-                            <tbody>
-                              <tr>
-                                <td class="">1</td>
-                                <td class="p-0">
-                                  {% include "baux/widgets/field_widget.html" with input_id="nom_prenom_avenant" input_type="text" input_name="nom_prenom_avenant" variant="html_no_label" %}
-                                </td>
-                                <td class="p-0">
-                                  {% include "baux/widgets/field_widget.html" with input_id="contact_avenant" input_type="text" input_name="contact_avenant" variant="html_no_label" %}
-                                </td>
-                                <td class="p-0">
-                                  {% include "baux/widgets/field_widget.html" with input_id="reference_grosse_avenant" input_type="text" input_name="reference_grosse_avenant" variant="html_no_label" %}
-                                </td>
-                                <td class="p-0">
-                                  {% include "baux/widgets/field_widget.html" with input_id="date_delivrance_grosse" input_type="date" input_name="date_delivrance_grosse" variant="html_no_label" %}
-                                </td>
-                                <td class="p-0">
-                                  {% include "baux/widgets/field_widget.html" with input_id="reference_certificat_non_appel_avenant" input_type="text" input_name="reference_certificat_non_appel_avenant" variant="html_no_label" %}
-                                </td>
-                                <td class="p-0">
-                                  {% include "baux/widgets/field_widget.html" with input_id="date_delivrance_certificat_non_appel" input_type="date" input_name="date_delivrance_certificat_non_appel" variant="html_no_label" %}
-                                </td>
-                                <td class="">
-                                  modifier,supprimer
-                                </td>
-                              </tr>
-                            </tbody>
+                            <tbody id="ayants-droit-tbody"></tbody>
                           </table>
+
+                          <div class="d-flex align-items-center justify-content-between mt-2">
+                            <button type="button" class="btn btn-sm btn-primary" id="add-ayant-droit-row">
+                              <i class="bx bx-plus"></i> Ajouter un ayant droit
+                            </button>
+                            <small class="text-muted">
+                              <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement
+                            </small>
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -674,104 +588,32 @@
                 <table id="nonmandatement-collecte-table" class='table-responsive bg-white table table-bordered mt-2'>
                   <thead class='thead-dark'>
                     <tr>
-                      <th rowspan="2">
-                          Exercice
-                      </th>
-                      <th rowspan="2">
-                          Loyer Mensuel
-                      </th>
-                      <th rowspan="2">
-                          Reference de l'attestation de non mandatement
-                      </th>
-                      <th rowspan="2">
-                          Date de signature
-                      </th>
-                      <th colspan="12">
-                          Mois non-mandatatés
-                      </th>
-                      <th rowspan="2">
-                          Montant Total par exercice
-                      </th>
-                      <th rowspan="2">
-                          Visa budgétaire / Signature CF ?
-                      </th>
-                      <th rowspan="2">
-                          Reference Contrat / Avenant
-                      </th>
-                      <th rowspan="2">
-                          Action
-                      </th>
+                      <th rowspan="2">Exercice</th>
+                      <th rowspan="2">Loyer Mensuel</th>
+                      <th rowspan="2">Reference de l'attestation de non mandatement</th>
+                      <th rowspan="2">Date de signature</th>
+                      <th colspan="12">Mois non-mandatatés</th>
+                      <th rowspan="2">Montant Total par exercice</th>
+                      <th rowspan="2">Visa budgétaire / Signature CF ?</th>
+                      <th rowspan="2">Reference Contrat / Avenant</th>
+                      <th rowspan="2">Action</th>
                     </tr>
                     <tr>
-                      <th>
-                          J
-                      </th>
-                      <th>
-                          F
-                      </th>
-                      <th>
-                          M
-                      </th>
-                      <th>
-                          A
-                      </th>
-                      <th>
-                          M
-                      </th>
-                      <th>
-                          J
-                      </th>
-                      <th>
-                          J
-                      </th>
-                      <th>
-                          A
-                      </th>
-                      <th>
-                          S
-                      </th>
-                      <th>
-                          O
-                      </th>
-                      <th>
-                          N
-                      </th>
-                      <th>
-                          D
-                      </th>
+                      <th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th>
+                      <th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr id='empty-ayantdroit-row'>
-                      <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with list_options=exercices list_id="exercice_non_mandatement" variant="html_list_no_label" %}
-                      </td>
-                      <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with input_id="loyer_mensuel_non_mandatement" input_type="number" input_name="loyer_mensuel_non_mandatement" variant="html_no_label" %}
-                      </td>
-                      <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with input_id="reference_attestation_nonmandatement" input_type="text" input_name="reference_attestation_nonmandatement" variant="html_no_label" %}
-                      </td>
-                      <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with input_id="date_signature_attestation_non_mandatement" input_type="date" input_name="date_signature_attestation_non_mandatement" variant="html_no_label" %}
-                      </td>
-                      <!-- showing months -->
-                      {% include "baux/widgets/checkbox_widget.html" with label="non_mandatement" options=non_mandatement_months %}
-                      <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with input_id="montant_total_par_exercice_non_mandatement" input_type="number" input_name="montant_total_par_exercice_non_mandatement" variant="html_no_label" %}
-                      </td>
-                      <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with input_id="visa_budgetaire" input_type="text" input_name="visa_budgetaire" variant="html_no_label" %}
-                      </td>
-                      <td class="p-0">
-                        {% include "baux/widgets/field_widget.html" with input_id="reference_contrat" input_type="text" input_name="reference_contrat" variant="html_no_label" %}
-                      </td>
-                      <td class="">
-                        actions
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="nonmandatement-collecte-tbody"></tbody>
                 </table>
+
+                <div class="d-flex align-items-center justify-content-between mt-2">
+                  <button type="button" class="btn btn-sm btn-primary" id="add-nonmandatement-row">
+                    <i class="bx bx-plus"></i> Ajouter un non-mandatement
+                  </button>
+                  <small class="text-muted">
+                    <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement
+                  </small>
+                </div>
             </div>
           </div>
         </div>
@@ -823,6 +665,6 @@
 {% endblock %}
 {% block extra_js %}
     <script src="{% static 'js/collecte.js' %}"></script>
-    <script src="{% static 'js/collecte-js/occupants-collecte.js' %}"></script>
+    <script src="{% static 'js/collecte-js/dynamic-table.js' %}"></script>
     <script src="{% static 'js/collecte-js/fiche.js' %}"></script>
 {% endblock %}

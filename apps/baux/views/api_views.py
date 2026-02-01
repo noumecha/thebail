@@ -135,6 +135,22 @@ class BailleursSelect2(Select2SearchView):
     extra_fields = []
     order_by = "Nom_prenom"
 
+class ExercicesSelect2(Select2SearchView):
+    model = Exercice
+    search_fields = ["annee", "LibelleFR"]
+    id_field = "id"
+    text_template = "Exercice budgetaire {annee}"
+    extra_fields = ["annee"]
+    order_by = "-annee"
+
+class BanquesSelect2(Select2SearchView):
+    model = Banques
+    search_fields = ["codeBanque","sigle","denominationFR","denominationUS","denominationES","siege","adresse","telephone","fax","email"]
+    id_field = "id"
+    text_template = "{sigle}"
+    extra_fields = []
+    order_by = "sigle"
+
 def get_agent_name(request):
     """API pour récupérer le nom complet d'un agent par matricule"""
     if request.method == 'GET':

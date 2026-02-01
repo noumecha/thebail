@@ -60,14 +60,6 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["banques"] = transform_queryset_to_listable(Banques.objects.all()[:30])
         context["type_personnes"] = transform_queryset_to_listable(TYPE_PERSONNE)
         context["statut_bailleur"] = transform_queryset_to_listable(STATUT_BAILLEUR)
-        context["agentcollectes"] = transform_queryset_to_listable(AgentCollecte.objects.all()[:30])
-        context["matriculesagents"] = transform_queryset_to_listable(AgentCollecte.objects.values_list('Matricule', flat=True)[:30])
-        context["structures"] = transform_queryset_to_listable(Structures.objects.all()[:30])
-        context["administrations"] = transform_queryset_to_listable(Administrations.objects.all()[:30])
-        context["pays"] = transform_queryset_to_listable(Pays.objects.all()[:30])
-        context["regions"] = transform_queryset_to_listable(Regions.objects.all()[:30])
-        context["departements"] = transform_queryset_to_listable(Departements.objects.all()[:30])
-        context["arrondissements"] = transform_queryset_to_listable(Arrondissemements.objects.all()[:30])
 
         # months for non_mndatement template
         context["non_mandatement_months"] = [

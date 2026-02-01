@@ -412,7 +412,3 @@ $(document).on('change', 'input[type="file"][multiple]', function () {
     label.text(`${count} fich.`);
   }
 });
-
-$(document).on('click', '.file-upload-label', function () {
-  $(this).siblings('input[type="file"]').trigger('click');
-});

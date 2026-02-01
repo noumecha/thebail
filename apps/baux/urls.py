@@ -110,5 +110,7 @@ urlpatterns = [
     path("api/get-administrations/", AdminisrationsSelect2().get, name="api_adminisration"),
     path("api/get-structures/", StructuresSelect2().get, name="api_structures"),
     path("api/get-bailleurs/", BailleursSelect2().get, name="api_bailleurs"),
+    path("api/get-banques/", BanquesSelect2().get, name="api_bailleurs"),
+    path("api/get-exercices/", ExercicesSelect2().get, name="api_exercices"),
 ]
 urlpatterns += router.urls
