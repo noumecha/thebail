@@ -292,13 +292,21 @@ class FicheCollecteFormHandler {
       const fullField = prefix ? `${prefix}.${field}` : field;
 
       if (Array.isArray(value)) {
-        // C'est un tableau d'erreurs
-        value.forEach(err => {
-          flatErrors.push({
-            field: fullField,
-            message: err
+        // Vérifier si c'est un tableau d'objets d'erreurs (comme pour avenants)
+        if (value.length > 0 && typeof value === 'object' && value !== null) {
+          // C'est un tableau d'objets d'erreurs
+          value.forEach((item, index) => {
+            flatErrors.push(...this.flattenErrors(item, `${fullField}[${index}]`));
           });
-        });
+        } else {
+          // C'est un tableau de messages d'erreurs simples
+          value.forEach(err => {
+            flatErrors.push({
+              field: fullField,
+              message: err
+            });
+          });
+        }
       } else if (typeof value === 'object' && value !== null) {
         // C'est un objet imbriqué, récursion
         flatErrors.push(...this.flattenErrors(value, fullField));

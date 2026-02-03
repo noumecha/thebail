@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ..serializers.fiche_collecte_serializers import FicheCollecteSerializer
+from ..serializers import FicheCollecteSerializer
 from django.db import transaction
 import logging
 import json
@@ -206,7 +206,7 @@ def create_fiche_collecte(request):
                 'message': 'Fiche de collecte créée avec succès',
                 'data': {
                     'fiche_id': fiche.id,
-                    'numero_fiche': fiche.numero_fiche_collecte
+                    'numero_fiche': fiche.Numero_fiche_de_collecte
                 }
             }, status=status.HTTP_201_CREATED)
 

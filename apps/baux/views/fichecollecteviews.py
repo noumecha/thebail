@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from web_project import TemplateLayout
 from ..models import *
-from ..serializers.fiche_collecte_serializers import FicheCollecteSerializer
+from ..serializers import FicheCollecteSerializer
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
