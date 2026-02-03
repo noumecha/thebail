@@ -120,21 +120,14 @@ $(function () {
         data: { matricule_agent: matricule },
         success: function (data) {
           if (data.success) {
-            // Mettre à jour le premier select
             let agentName = data.agent;
             let agentId = matricule;
-
-            // Mettre à jour le premier select
             $('#responsable_collecte').val(agentId).trigger('change');
-
-            // Mettre à jour le nom dans le premier select
             let $select = $('#responsable_collecte');
             let $option = $select.find('option[value="' + agentId + '"]');
-
             if ($option.length) {
               $option.text(agentName);
             } else {
-              // Ajouter un nouvel option
               $select.append(new Option(agentName, agentId, true, true));
               $select.trigger('change');
             }
@@ -205,11 +198,19 @@ $(function () {
 
   // dynamic toogle non object elements
   const object_to_toggle = [
-    { listId: 'types_personnes_list', hiddenId: 'types_personnes_choice' },
-    { listId: 'statut_bailleur_list', hiddenId: 'statut_bailleur_choice' },
-    { listId: 'existance_visa_bugetaire_contrat', hiddenId: null },
+    { listId: 'Type_personne', hiddenId: 'types_personnes_choice' },
+    { listId: 'Statut_bailleur', hiddenId: 'statut_bailleur_choice' },
+    { listId: 'Existence_visa_budgétaire', hiddenId: null },
     { listId: 'tacite_reconduction', hiddenId: null },
-    { listId: 'existence_avenant_contrat', hiddenId: null }
+    { listId: 'Existence_avenant', hiddenId: null },
+    { listId: 'type_construction_id', hiddenId: null },
+    { listId: 'TypeContrat', hiddenId: null },
+    { listId: 'Periodicite_Reglement_id', hiddenId: null },
+    { listId: 'type_location_id', hiddenId: null },
+    { listId: 'statut_batisse_id', hiddenId: null },
+    { listId: 'revetement_int_id', hiddenId: null },
+    { listId: 'revetement_ext_id', hiddenId: null },
+    { listId: 'Tacite_reconduction_contrat', hiddenId: null }
   ];
   object_to_toggle.forEach(obj => {
     $('#' + obj.listId).on('change', '.dynamic-check', function () {

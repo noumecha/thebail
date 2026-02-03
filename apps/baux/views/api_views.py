@@ -2,6 +2,8 @@
 from django.http import JsonResponse
 from django.db.models import Q
 from ..models import *
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_http_methods
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -9,7 +11,7 @@ from rest_framework.response import Response
 from ..serializers.fiche_collecte_serializers import FicheCollecteSerializer
 from django.db import transaction
 import logging
-
+import json
 
 class Select2SearchView:
     """
@@ -87,7 +89,7 @@ class AgentNomSelect2(Select2SearchView):
 class PaysSelect2(Select2SearchView):
     model = Pays
     search_fields = ["LibelleFR", "AbreviationFr"]
-    id_field = "LibelleFR"
+    id_field = "pk"
     text_template = "{LibelleFR} ({AbreviationFr})"
     extra_fields = []
     order_by = "LibelleFR"
@@ -95,7 +97,7 @@ class PaysSelect2(Select2SearchView):
 class RegionSelect2(Select2SearchView):
     model = Regions
     search_fields = ["Libelle","code","AbreviationFr"]
-    id_field = "Libelle"
+    id_field = "pk"
     text_template = "{Libelle} ({AbreviationFr})"
     extra_fields = []
     order_by = "Libelle"
@@ -103,7 +105,7 @@ class RegionSelect2(Select2SearchView):
 class DepartementSelect2(Select2SearchView):
     model = Departements
     search_fields = ["LibelleFR","AbreviationFr","code"]
-    id_field = "LibelleFR"
+    id_field = "pk"
     text_template = "{LibelleFR} ({AbreviationFr})"
     extra_fields = []
     order_by = "LibelleFR"
@@ -111,7 +113,7 @@ class DepartementSelect2(Select2SearchView):
 class ArrondissemntSelect2(Select2SearchView):
     model = Arrondissemements
     search_fields = ["LibelleFR","code","AbreviationFr"]
-    id_field = "LibelleFR"
+    id_field = "pk"
     text_template = "{LibelleFR} ({AbreviationFr})"
     extra_fields = []
     order_by = "LibelleFR"
@@ -119,7 +121,7 @@ class ArrondissemntSelect2(Select2SearchView):
 class AdminisrationsSelect2(Select2SearchView):
     model = Administrations
     search_fields = ["LibelleFr","AbreviationFr","code"]
-    id_field = "LibelleFr"
+    id_field = "pk"
     text_template = "{LibelleFr}"
     extra_fields = []
     order_by = "LibelleFr"
@@ -127,7 +129,7 @@ class AdminisrationsSelect2(Select2SearchView):
 class StructuresSelect2(Select2SearchView):
     model = Structures
     search_fields = ["LibelleFr","CodeFr"]
-    id_field = "LibelleFr"
+    id_field = "pk"
     text_template = "{LibelleFr}"
     extra_fields = []
     order_by = "LibelleFr"
@@ -135,7 +137,7 @@ class StructuresSelect2(Select2SearchView):
 class BailleursSelect2(Select2SearchView):
     model = Bailleurs
     search_fields = ["Nom_prenom","Raison_social","NIU","Maticule","Nom_Prenom_Representant"]
-    id_field = "Nom_prenom"
+    id_field = "pk"
     text_template = "{Nom_prenom} {Raison_social}"
     extra_fields = []
     order_by = "Nom_prenom"
@@ -143,7 +145,7 @@ class BailleursSelect2(Select2SearchView):
 class ExercicesSelect2(Select2SearchView):
     model = Exercice
     search_fields = ["annee", "LibelleFR"]
-    id_field = "id"
+    id_field = "pk"
     text_template = "Exercice budgetaire {annee}"
     extra_fields = ["annee"]
     order_by = "-annee"
@@ -151,7 +153,7 @@ class ExercicesSelect2(Select2SearchView):
 class BanquesSelect2(Select2SearchView):
     model = Banques
     search_fields = ["codeBanque","sigle","denominationFR","denominationUS","denominationES","siege","adresse","telephone","fax","email"]
-    id_field = "id"
+    id_field = "pk"
     text_template = "{sigle}"
     extra_fields = []
     order_by = "sigle"
@@ -178,7 +180,9 @@ logger = logging.getLogger(__name__)
 @permission_classes([IsAuthenticated])
 def create_fiche_collecte(request):
     """Créer une fiche de collecte avec gestion complète des erreurs"""
-
+    # ✅ DEBUG : Afficher les données reçues
+    print("📥 Données reçues:")
+    print(json.dumps(request.data, indent=2, ensure_ascii=False))
     serializer = FicheCollecteSerializer(data=request.data)
 
     if not serializer.is_valid():
@@ -195,7 +199,7 @@ def create_fiche_collecte(request):
             fiche = serializer.save()
 
             # Log de succès
-            logger.info(f"Fiche {fiche.numero_fiche_collecte} créée par {request.user}")
+            logger.info(f"Fiche {fiche.Numero_fiche_de_collecte} créée par {request.user}")
 
             return Response({
                 'success': True,
@@ -213,3 +217,57 @@ def create_fiche_collecte(request):
             'message': 'Erreur lors de la création de la fiche',
             'errors': {'non_field_errors': [str(e)]}
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# generate numero fiche collecte
+@require_http_methods(["GET"])
+def generate_fiche_collecte_number(request):
+    """
+    Générer un numéro de fiche de collecte basé sur l'arrondissement
+    Format: RR-DDD-AAA-NNNN
+    - RR: 2 premiers caractères de la région
+    - DDD: 3 premiers caractères du département
+    - AAA: 3 premiers caractères de l'arrondissement
+    - NNNN: Numéro séquentiel sur 4 chiffres
+    """
+    arrondissement_id = request.GET.get('arrondissement_id')
+    if not arrondissement_id:
+        return JsonResponse({
+            'error': 'L\'ID de l\'arrondissement est requis',
+            'success': False
+        }, status=400)
+    try:
+        arrondissement = get_object_or_404(Arrondissemements, pk=arrondissement_id)
+        departement = arrondissement.departement
+        region = departement.Region
+        count = Immeubles.objects.filter(region=region, departement=departement, collecte_immeuble__isnull=False).count()
+        numero_sequence = count + 1
+        region_code = region.Libelle[:2].upper()
+        dept_code = departement.LibelleFR[:3].upper()
+        arr_code = arrondissement.LibelleFR[:3].upper()
+        numero_collecte = f"{region_code}{dept_code}{arr_code}{numero_sequence:04d}"
+
+        return JsonResponse({
+            'numero_collecte': numero_collecte,
+            'region_id' : region.id,
+            'dpt_id' : departement.id,
+            'region': region.Libelle,
+            'departement': departement.LibelleFR,
+            'sequence': numero_sequence,
+            'success': True
+        }, status=200)
+
+    except Arrondissemements.DoesNotExist:
+        return JsonResponse({
+            'error': 'Arrondissement introuvable',
+            'success': False
+        }, status=404)
+    except AttributeError as e:
+        return JsonResponse({
+            'error': f'Erreur de structure de données: {str(e)}',
+            'success': False
+        }, status=500)
+    except Exception as e:
+        return JsonResponse({
+            'error': f'Erreur lors de la génération: {str(e)}',
+            'success': False
+        }, status=500)

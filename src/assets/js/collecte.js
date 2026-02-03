@@ -10,6 +10,12 @@ class FicheCollecteFormHandler {
       e.preventDefault();
       this.handleSubmit();
     });
+    $('#arrondissement').on('select2:select', e => {
+      const arrondissementId = e.params.data.id;
+      if (arrondissementId) {
+        this.generateFicheCollecte(arrondissementId);
+      }
+    });
   }
 
   // Collecter toutes les données du formulaire
@@ -19,27 +25,22 @@ class FicheCollecteFormHandler {
       console.error('TableManagers not initialized');
       throw new Error('Les gestionnaires de tableaux ne sont pas initialisés');
     }
-    return {
-      // Champs de la fiche
+    const data = {
       Numero_fiche_de_collecte: this.getValue('Numero_fiche_de_collecte'),
       agent_collecte_id: this.getValue('responsable_collecte'),
       matricule_agent: this.getValue('matricule_responsable_collecte'),
       Date_de_collecte: this.getValue('Date_de_collecte'),
-
-      // Immeuble
       immeuble: {
         Designation: this.getValue('Designation'),
-        Construction: this.getValue('construction_choice_hidden'),
-        Type_location: this.getValue('type_location_choice_hidden'),
+        type_construction_id: this.getDynamicChoiceValue('type_construction_id'),
+        type_location_id: this.getDynamicChoiceValue('type_location_id'),
         Date_Construction: this.getValue('Date_Construction'),
         Nombre_de_pieces: this.getValue('Nombre_de_pieces'),
         Superficie_louer: this.getValue('Superficie_louer'),
-        Situation_de_la_batisse: this.getValue('statut_choice_hidden'),
-        Revetement_interieure: this.getValue('revetementinterieure_choice_hidden'),
-        Revetement_exterieure: this.getValue('revetementexterieure_choice_hidden'),
+        statut_batisse_id: this.getDynamicChoiceValue('statut_batisse_id'),
+        revetement_int_id: this.getDynamicChoiceValue('revetement_int_id'),
+        revetement_ext_id: this.getDynamicChoiceValue('revetement_ext_id'),
         observation: this.getValue('observation'),
-
-        // Localisation
         localisation: {
           pays: this.getValue('pays'),
           Ville: this.getValue('Ville'),
@@ -50,18 +51,12 @@ class FicheCollecteFormHandler {
           Quartier: this.getValue('Quartier'),
           Coordonee_gps: this.getValue('Coordonee_gps')
         },
-
-        // Éléments de description
         elements_description: this.collectElementsDescription(),
-
-        // Occupants
         occupants_residents: window.TableManagers.logementsManager?.collectData() || [],
         occupants_bureaux: window.TableManagers.bureauxManager?.collectData() || []
       },
-
-      // Contrat
       contrat: {
-        TypeContrat: this.getValue('typecontrat_choice_hidden'),
+        TypeContrat: this.getDynamicChoiceValue('TypeContrat'),
         Numero_contrat: this.getValue('Numero_contrat'),
         Date_Signature_contrat: this.getValue('Date_Signature_contrat'),
         Fonction_signataire_contrat: this.getValue('Fonction_signataire_contrat'),
@@ -72,12 +67,10 @@ class FicheCollecteFormHandler {
         Regime_fiscal_contrat: this.getValue('Regime_fiscal_contrat'),
         Montant_loyer_mensuel: this.getValue('Montant_loyer_mensuel'),
         Devise: this.getValue('Devise'),
-        periodicite_reglement_id: this.getValue('periodicitereglement_choice_hidden'),
+        Periodicite_Reglement_id: this.getDynamicChoiceValue('Periodicite_Reglement_id'),
         Existence_avenant: this.getCheckboxValue('Existence_avenant'),
-
-        // Bailleur
         bailleur: {
-          Type_personne: this.getValue('types_personnes_choice_hidden'),
+          Type_personne: this.getDynamicChoiceValue('Type_personne'),
           Raison_social: this.getValue('Raison_social'),
           Nom_Prenom_Representant: this.getValue('Nom_Prenom_Representant'),
           Domicille_siege_social_bailleur: this.getValue('Domicille_siege_social_bailleur'),
@@ -85,30 +78,41 @@ class FicheCollecteFormHandler {
           Telephone: this.getValue('Telephone'),
           Num_doc: this.getValue('Num_doc'),
           Date_delivrance_doc: this.getValue('Date_delivrance_doc'),
-          Statut_bailleur: this.getValue('statut_bailleur_choice_hidden'),
+          Statut_bailleur: this.getDynamicChoiceValue('Statut_bailleur'),
           Banque: this.getValue('Banque'),
           RIB: this.getValue('RIB'),
           Intitule_compte: this.getValue('Intitule_compte'),
-
-          // Ayants droit
           ayants_droit: window.TableManagers.ayantsDroitManager?.collectData() || []
         },
-
-        // Avenants
         avenants: this.collectAvenants(),
-
-        // Non-mandatements
         non_mandatements: window.TableManagers.nonMandatementManager?.collectData() || []
       },
-
-      // Pièces collectées
       pieces_collectees: this.collectPiecesCollectees()
     };
+    return data;
   }
 
+  // getting values method
   getValue(fieldId) {
     const field = document.getElementById(fieldId);
     return field ? field.value : null;
+  }
+
+  getDynamicChoiceValue(listId, returnId = true) {
+    const $list = document.getElementById(listId);
+    if (!$list) return null;
+
+    const checkedCheckbox = $list.querySelector('.dynamic-check:checked');
+    if (!checkedCheckbox) return null;
+
+    if (returnId) {
+      // ✅ Retourner l'ID pour Django
+      return checkedCheckbox.getAttribute('data-choice-id') || checkedCheckbox.value;
+    } else {
+      // Retourner le libellé
+      const label = checkedCheckbox.closest('.dynamic-option');
+      return label ? label.querySelector('span').textContent.trim() : null;
+    }
   }
 
   getCheckboxValue(fieldId) {
@@ -215,7 +219,7 @@ class FicheCollecteFormHandler {
       errors.push('La désignation du bien est requise');
     }
 
-    if (!data.immeuble.Construction) {
+    if (!data.immeuble.type_construction_id) {
       errors.push('Le type de construction est requis');
     }
 
@@ -335,31 +339,13 @@ class FicheCollecteFormHandler {
   // ✅ Messages d'erreur personnalisés
   getCustomErrorMessage(field, originalMessage) {
     // Mapping des erreurs génériques vers des messages personnalisés
-    const customMessages = {
-      // Erreurs par champ spécifique
-      'immeuble.type_construction_id': 'Veuillez sélectionner un type de construction',
-      'immeuble.type_location_id': 'Veuillez sélectionner un type de location',
-      'immeuble.statut_batisse_id': 'Veuillez sélectionner un statut de bâtisse',
-      'immeuble.revetement_int_id': 'Veuillez sélectionner un type de revêtement intérieur',
-      'immeuble.revetement_ext_id': 'Veuillez sélectionner un type de revêtement extérieur',
-      'immeuble.Designation': 'Veuillez saisir la désignation du bien',
-      'contrat.bailleur.Type_personne': 'Veuillez sélectionner le type de personne du bailleur',
-      'contrat.Duree_Contrat': 'Veuillez saisir la durée du contrat'
-    };
-
+    const customMessages = window.configs.customMessages;
     // Si un message personnalisé existe pour ce champ
     if (customMessages[field]) {
       return customMessages[field];
     }
-
     // Sinon, traduire les messages génériques
-    const genericMessages = {
-      'Un nombre entier valide est requis.': 'Veuillez sélectionner une option valide',
-      'Ce champ est obligatoire.': 'Ce champ est requis',
-      'This field is required.': 'Ce champ est requis',
-      'A valid integer is required.': 'Veuillez sélectionner une option valide',
-      'Enter a valid email address.': 'Veuillez saisir une adresse email valide'
-    };
+    const genericMessages = window.configs.genericMessages;
 
     return genericMessages[originalMessage] || originalMessage;
   }
@@ -406,6 +392,76 @@ class FicheCollecteFormHandler {
     return labels[field] || field.split('.').pop();
   }
 
+  // ✅ Générer le numéro de fiche de collecte
+  async generateFicheCollecte(arrondissementId) {
+    try {
+      const response = await fetch(`/api/fiches/numero/?arrondissement_id=${arrondissementId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': this.getCsrfToken()
+        }
+      });
+      const result = await response.json();
+      if (response.ok && result.success) {
+        const numeroField = document.getElementById('Numero_fiche_de_collecte');
+        if (numeroField) {
+          numeroField.value = result.numero_collecte;
+          this.showNotification('Numéro de fiche généré automatiquement', 'success');
+        }
+        // also set automatically region an departement values
+        const region_select = $('#region');
+        const departement_select = $('#departement');
+
+        let regionId = result.region_id;
+        let departementId = result.dpt_id;
+        let region_libelle = result.region;
+        let departement_libelle = result.departement;
+
+        region_select.val(regionId).trigger('change');
+        departement_select.val(departementId).trigger('change');
+
+        let $region_option = region_select.find('option[value="' + regionId + '"]');
+        let $departement_option = departement_select.find('option[value="' + departementId + '"]');
+
+        if ($region_option.length) {
+          $region_option.text(region_libelle);
+        } else {
+          region_select.append(new Option(region_libelle, regionId, true, true));
+          region_select.trigger('change');
+        }
+
+        if ($departement_option.length) {
+          $departement_option.text(departement_libelle);
+        } else {
+          departement_select.append(new Option(departement_libelle, departementId, true, true));
+          departement_select.trigger('change');
+        }
+      } else {
+        console.error('Erreur génération numéro:', result.error);
+        this.showNotification(result.error || 'Erreur lors de la génération du numéro', 'warning');
+      }
+    } catch (error) {
+      console.error('❌ Erreur génération numéro:', error);
+      this.showNotification('Erreur lors de la génération du numéro de fiche', 'danger');
+    }
+  }
+
+  // Utilitaires
+  getCsrfToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+  }
+
+  // message an ux tips
+  showLoader() {
+    // Afficher un spinner ou désactiver le bouton
+    const submitBtn = this.form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enregistrement...';
+    }
+  }
+
   showErrors(errors) {
     // Supprimer les anciennes alertes
     const oldAlerts = this.form.querySelectorAll('.alert-danger');
@@ -425,20 +481,6 @@ class FicheCollecteFormHandler {
 
     this.form.insertAdjacentHTML('afterbegin', alertHtml);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // Utilitaires
-  getCsrfToken() {
-    return document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-  }
-
-  showLoader() {
-    // Afficher un spinner ou désactiver le bouton
-    const submitBtn = this.form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enregistrement...';
-    }
   }
 
   hideLoader() {
@@ -467,6 +509,32 @@ class FicheCollecteFormHandler {
     setTimeout(() => {
       window.location.href = `/collecte/${ficheId}/`;
     }, 3000);
+  }
+
+  // ✅ Notification discrète (toast)
+  showNotification(message, type = 'info') {
+    const toastHtml = `
+      <div class="toast align-items-center text-white bg-${type} border-0 position-fixed top-0 end-0 m-3"
+        role="alert"
+        style="z-index: 9999;">
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+    const toastElement = document.querySelector('.toast:last-child');
+    const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+    toast.show();
+
+    // Supprimer après affichage
+    toastElement.addEventListener('hidden.bs.toast', () => {
+      toastElement.remove();
+    });
   }
 }
 

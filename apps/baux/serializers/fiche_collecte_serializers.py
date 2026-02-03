@@ -41,22 +41,82 @@ class OccupantBureauxSerializer(serializers.ModelSerializer):
         model = OccupantBureaux
         fields = '__all__'
 
-class ImmeubleSerializer(serializers.ModelSerializer):
-    localisation = LocalisationSerializer()
-    elements_description = ElementDescriptionLinkSerializer(many=True, write_only=True)
-    occupants_residents = OccupantResidentSerializer(many=True, required=False)
-    occupants_bureaux = OccupantBureauxSerializer(many=True, required=False)
+# serializers/fiche_collecte_serializers.py
+class LocalisationSerializer(serializers.Serializer):
+    """Serializer pour les données de localisation (pas un modèle séparé)"""
+    pays_id = serializers.IntegerField(required=False, allow_null=True)
+    ville = serializers.CharField(required=False, allow_blank=True)
+    rue = serializers.CharField(required=False, allow_blank=True)
+    region_id = serializers.IntegerField(required=False, allow_null=True)
+    departement_id = serializers.IntegerField(required=False, allow_null=True)
+    arrondissement_id = serializers.IntegerField(required=False, allow_null=True)
+    quartier = serializers.CharField(required=False, allow_blank=True)
+    coordonnees_gps = serializers.CharField(required=False, allow_blank=True)
 
-    # Relations simples (FK)
-    type_construction_id = serializers.IntegerField()
-    type_location_id = serializers.IntegerField()
-    statut_batisse_id = serializers.IntegerField()
-    revetement_int_id = serializers.IntegerField(required=False, allow_null=True)
-    revetement_ext_id = serializers.IntegerField(required=False, allow_null=True)
+class ImmeubleSerializer(serializers.ModelSerializer):
+    # ✅ Champs imbriqués
+    localisation = LocalisationSerializer(write_only=True)
+    elements_description = ElementDescriptionLinkSerializer(many=True, write_only=True, required=False)
+    occupants_residents = OccupantResidentSerializer(many=True, required=False, write_only=True)
+    occupants_bureaux = OccupantBureauxSerializer(many=True, required=False, write_only=True)
+
+    # ✅ Mapper les noms frontend vers les noms du modèle Django - pour le FK
+    type_construction_id = serializers.IntegerField(source='Construction_id', required=False, allow_null=True)
+    type_location_id = serializers.IntegerField(source='Type_location_id', required=False, allow_null=True)
+    statut_batisse_id = serializers.IntegerField(source='Situation_batisse_id', required=False, allow_null=True)
+    revetement_int_id = serializers.IntegerField(source='Revetement_interieure_id', required=False, allow_null=True)
+    revetement_ext_id = serializers.IntegerField(source='Revetement_exterieure_id', required=False, allow_null=True)
 
     class Meta:
         model = Immeubles
         fields = '__all__'
+
+    def create(self, validated_data):
+        """Créer l'immeuble avec toutes ses relations"""
+        # ✅ Extraire les données imbriquées
+        localisation_data = validated_data.pop('localisation', {})
+        elements_data = validated_data.pop('elements_description', [])
+        occupants_residents_data = validated_data.pop('occupants_residents', [])
+        occupants_bureaux_data = validated_data.pop('occupants_bureaux', [])
+
+        # ✅ Ajouter les données de localisation directement dans l'immeuble
+        if localisation_data:
+            validated_data['pays_id'] = localisation_data.get('pays_id')
+            validated_data['Ville'] = localisation_data.get('ville')
+            validated_data['Rue'] = localisation_data.get('rue')
+            validated_data['region_id'] = localisation_data.get('region_id')
+            validated_data['departement_id'] = localisation_data.get('departement_id')
+            validated_data['arrondissement_id'] = localisation_data.get('arrondissement_id')
+            validated_data['Quartier'] = localisation_data.get('quartier')
+            validated_data['Coordonee_gps'] = localisation_data.get('coordonnees_gps')
+
+        # ✅ Créer l'immeuble
+        immeuble = Immeubles.objects.create(**validated_data)
+
+        # ✅ Créer les liens avec les éléments de description
+        for element_data in elements_data:
+            ImmeubleElement.objects.create(
+                immeuble=immeuble,
+                element_id=element_data['element_id'],
+                statut=element_data['statut'],
+                nombre=element_data['nombre']
+            )
+
+        # ✅ Créer les occupants résidents
+        for occupant_data in occupants_residents_data:
+            Occupants.objects.create(
+                immeuble=immeuble,
+                **occupant_data
+            )
+
+        # ✅ Créer les occupants bureaux
+        for occupant_data in occupants_bureaux_data:
+            OccupantBureaux.objects.create(
+                immeuble=immeuble,
+                **occupant_data
+            )
+
+        return immeuble
 
 class AyantDroitSerializer(serializers.ModelSerializer):
     class Meta:
@@ -119,17 +179,7 @@ class AvenantSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ContratSerializer(serializers.ModelSerializer):
-    bailleur = BailleurSerializer()
-    avenants = serializers.ListField(
-        child=serializers.DictField(),
-        required=False,
-        allow_empty=True
-    )
-    non_mandatements = serializers.ListField(
-        child=serializers.DictField(),
-        required=False,
-        allow_empty=True
-    )
+    Periodicite_Reglement_id = serializers.IntegerField()
 
     class Meta:
         model = Contrats
@@ -160,87 +210,7 @@ class ContratSerializer(serializers.ModelSerializer):
 
         return data
 
-
-class PieceCollecteSerializer(serializers.Serializer):
-    """Pour la table intermédiaire FicheCollecte-Piece"""
-    piece_id = serializers.IntegerField()
-    statut = serializers.BooleanField()
-    nombre = serializers.IntegerField(default=0)
-
-class FicheCollecteSerializer(serializers.ModelSerializer):
-    immeuble = ImmeubleSerializer()
-    contrat = ContratSerializer()
-    pieces_collectees = PieceCollecteSerializer(many=True)
-
-    class Meta:
-        model = Collectes
-        fields = '__all__'
-
-    def create(self, validated_data):
-        """Création avec gestion des relations imbriquées"""
-        # Extraire les données imbriquées
-        immeuble_data = validated_data.pop('immeuble')
-        contrat_data = validated_data.pop('contrat')
-        pieces_data = validated_data.pop('pieces_collectees', [])
-
-        # Créer la fiche de collecte
-        fiche = Collectes.objects.create(**validated_data)
-
-        # Créer l'immeuble
-        immeuble = self._create_immeuble(immeuble_data, fiche)
-
-        # Créer le contrat
-        contrat = self._create_contrat(contrat_data, fiche)
-
-        # Créer les pièces collectées
-        self._create_pieces_collectees(pieces_data, fiche)
-
-        return fiche
-
-    def _create_immeuble(self, immeuble_data, fiche):
-        """Créer l'immeuble avec toutes ses relations"""
-        # Extraire les données imbriquées
-        localisation_data = immeuble_data.pop('localisation')
-        elements_data = immeuble_data.pop('elements_description', [])
-        occupants_residents_data = immeuble_data.pop('occupants_residents', [])
-        occupants_bureaux_data = immeuble_data.pop('occupants_bureaux', [])
-
-        # Créer la localisation
-        localisation = Localisation.objects.create(**localisation_data)
-
-        # Créer l'immeuble
-        immeuble = Immeubles.objects.create(
-            fiche_collecte=fiche,
-            localisation=localisation,
-            **immeuble_data
-        )
-
-        # Créer les liens avec ElementDescription
-        for element_data in elements_data:
-            ImmeubleElement.objects.create(
-                immeuble=immeuble,
-                element_id=element_data['element_id'],
-                statut=element_data['statut'],
-                nombre=element_data['nombre']
-            )
-
-        # Créer les occupants résidents
-        for occupant_data in occupants_residents_data:
-            Occupants.objects.create(
-                immeuble=immeuble,
-                **occupant_data
-            )
-
-        # Créer les occupants bureaux
-        for occupant_data in occupants_bureaux_data:
-            OccupantBureaux.objects.create(
-                immeuble=immeuble,
-                **occupant_data
-            )
-
-        return immeuble
-
-    def _create_contrat(self, contrat_data, fiche):
+    def create(self, contrat_data):
         """Créer le contrat avec toutes ses relations"""
         # Extraire les données imbriquées
         bailleur_data = contrat_data.pop('bailleur')
@@ -254,14 +224,13 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
         # Créer les ayants droit
         for ayant_data in ayants_droit_data:
             Ayant_droits.objects.create(
-                bailleur=bailleur,
+                Bailleur=bailleur,
                 **ayant_data
             )
 
         # Créer le contrat
         contrat = Contrats.objects.create(
-            fiche_collecte=fiche,
-            bailleur=bailleur,
+            Bailleur=bailleur,
             **contrat_data
         )
 
@@ -280,10 +249,55 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
                 **nm_data
             )
 
-            # Créer les liens avec les mois
-
         return contrat
 
+class PieceCollecteSerializer(serializers.Serializer):
+    """Pour la table intermédiaire FicheCollecte-Piece"""
+    piece_id = serializers.IntegerField()
+    statut = serializers.BooleanField()
+    nombre = serializers.IntegerField(default=0)
+
+    class Meta:
+        model = PieceCollectes
+        fields = '__all__'
+
+class FicheCollecteSerializer(serializers.ModelSerializer):
+    immeuble = ImmeubleSerializer()
+    contrat = ContratSerializer()
+    pieces_collectees = PieceCollecteSerializer(many=True, required=False)
+
+    class Meta:
+        model = Collectes
+        fields = '__all__'
+
+    def create(self, validated_data):
+        """Création avec gestion des relations imbriquées"""
+        # Extraire les données imbriquées
+        immeuble_data = validated_data.pop('immeuble')
+        contrat_data = validated_data.pop('contrat')
+        pieces_data = validated_data.pop('pieces_collectees', [])
+
+        # Créer l'immeuble
+        immeuble_serializer = ImmeubleSerializer()
+        immeuble = immeuble_serializer.create(immeuble_data)
+
+        # Créer le contrat
+        contrat_serializer = ContratSerializer()
+        contrat = contrat_serializer.create(contrat_data)
+
+        # Créer la fiche de collecte
+        fiche = Collectes.objects.create(
+            Immeuble=immeuble,
+            Contrat=contrat,
+            **validated_data
+        )
+
+        # Créer les pièces collectées
+        self._create_pieces_collectees(pieces_data, fiche)
+
+        return fiche
+
+    # Créer les pièces collectées
     def _create_pieces_collectees(self, pieces_data, fiche):
         """Créer les pièces collectées"""
         for piece_data in pieces_data:

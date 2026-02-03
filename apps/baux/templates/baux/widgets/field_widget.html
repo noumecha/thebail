@@ -15,7 +15,9 @@
   <div class="d-flex align-items-center mb-2">
     <label for="{{ input_id }}" class="fw-bold me-2 {{ label_class }}" style="{{ label_style }}">{{ input_label }} :</label>
     {# if input_type is date spcify the style value :  width: 35% !important; #}
-    <input type="{{ input_type }}" style="{% if input_type == 'date' %}width: 150px !important{% endif %} {{ style }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}">
+    <input type="{{ input_type }}"
+      style="{% if input_type == 'date' %}width: 150px !important{% endif %} {{ style }}"
+      class="form-control" id="{{ input_id }}" name="{{ input_name }}" {{ settings }}>
   </div>
 {% elif variant == "html_no_label" %}
   {# Render nothing, only the field's HTML is needed #}
@@ -108,7 +110,10 @@
           <input
             type="checkbox"
             name="{{ checkbox_name }}"
+            value="{{ option.id }}"
             class="form-check-input dynamic-check"
+            data-choice-id="{{ option.id }}"
+            data-choice-label="{{ option.name }}"
           >
           <span class="fw-bold">{{ option.name }}</span>
         </label>
@@ -117,8 +122,6 @@
     </div>
   </div>
 {% elif variant == "html_list_no_label" %}
-  {# Render the html list directly without label #}
-  {# select option list #}
   <select class="form-select" style="{{ style }}" id="{{ list_id }}">
     {% for option in list_options %}
       <option value="{{ option.id }}">{{ option.name }}</option>

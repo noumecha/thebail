@@ -557,7 +557,9 @@ class ImmeubleElement(models.Model):
     Date_miseajour = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        unique_together = ("immeuble", "element")  # éviter les doublons
+        unique_together = ('immeuble', 'element')
+        verbose_name = 'Élément de description de l\'immeuble'
+        verbose_name_plural = 'Éléments de description de l\'immeuble'
 
     def __str__(self):
         return f"{self.immeuble.Designation} - {self.element.libelle} ({self.nombre})"
@@ -582,7 +584,7 @@ class Immeubles (models.Model):
     Quartier = models.CharField(max_length=50,null=True, blank=True)
     Coordonee_gps = models.CharField(max_length=200, null=True, blank=True)
     # etat physique du batiment
-    Situation_de_la_batisse = models.ForeignKey(StatutBatisse, on_delete=models.CASCADE, null=True, related_name="statut_batisse")
+    Situation_batisse = models.ForeignKey(StatutBatisse, on_delete=models.CASCADE, null=True, related_name="statut_batisse_immeuble")
     Revetement_interieure = models.ForeignKey(RevetementInts, on_delete=models.CASCADE, null=True, related_name="revetement_interieure")
     Revetement_exterieure = models.ForeignKey(RevetementExts, on_delete=models.CASCADE, null=True, related_name="revetement_exterieure")
     observation = models.TextField(blank = True,null= True)
@@ -762,7 +764,7 @@ class PeriodiciteReglement(models.Model):
 # Contrats model
 class Contrats (models.Model):
     TypeContrat = models.ForeignKey(TypeContrats, on_delete=models.CASCADE, null=True, related_name= "type_contrat")
-    Numero_contrat = models.IntegerField(null=True, blank=True, unique=True)
+    Numero_contrat = models.CharField(max_length=255, null=True, blank=True, unique=True)
     Date_Signature_contrat = models.DateField(null=True)
     Fonction_signataire_contrat = models.TextField(null=True, blank=True)
     Date_effet_contrat = models.DateField(null=True)

@@ -47,7 +47,7 @@ class ImmeublesForm(forms.ModelForm):
             # localisation fields
             "pays","Ville","Rue","region","departement","arrondissement","Quartier","Coordonee_gps",
             # etat physique du batiement fields
-            "Situation_de_la_batisse","Revetement_interieure","Revetement_exterieure", "observation","images"
+            "Situation_batisse","Revetement_interieure","Revetement_exterieure", "observation","images"
         )
         labels = {
             # idenfification labels
@@ -62,7 +62,7 @@ class ImmeublesForm(forms.ModelForm):
             "Revetement_interieure" : "Revetement interieur",
             "Revetement_exterieure" : "Revetement exterieur",
             "observation" : "Observation",
-            "Situation_de_la_batisse" : "Etat de la batisse",
+            "Situation_batisse" : "Etat de la batisse",
             # localisation labels
             "pays" : "Pays",
             "Ville" : "Ville",
@@ -149,7 +149,7 @@ class ImmeublesForm(forms.ModelForm):
                 Fieldset(
                     "III. Etat physique du batiment",
                     Row(
-                        Column(FloatingField("Situation_de_la_batisse"), css_class='overflow-hidden form-group col-md-12 mb-0'),
+                        Column(FloatingField("Situation_batisse"), css_class='overflow-hidden form-group col-md-12 mb-0'),
                         Column(FloatingField("Revetement_interieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Revetement_exterieure"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("observation"), css_class='overflow-hidden form-group col-md-12 mb-0'),

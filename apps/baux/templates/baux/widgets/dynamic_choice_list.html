@@ -7,7 +7,10 @@
         <input
           type="checkbox"
           name="{{ checkbox_name }}"
+          value="{{ choice.id }}"
           class="form-check-input dynamic-check"
+          data-choice-id="{{ choice.id }}"
+          data-choice-label="{{ choice.libelle }}"
         >
         <span class="fw-bold">{{ choice.libelle }}</span>
       </label>
