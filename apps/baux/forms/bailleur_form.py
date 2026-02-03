@@ -13,7 +13,7 @@ class BailleursForm(forms.ModelForm):
     class Meta:
         model = Bailleurs
 
-        fields = ( 
+        fields = (
             # information d'identifications
             "Type_personne",
             "Nom_prenom",
@@ -21,6 +21,7 @@ class BailleursForm(forms.ModelForm):
             "NIU",
             "Maticule",
             "Telephone",
+            "Domicille_siege_social_bailleur",
             "Type_id_bailleur",
             "Num_doc",
             "Date_delivrance_doc",
@@ -46,6 +47,7 @@ class BailleursForm(forms.ModelForm):
             "Raison_social" : "Raison Sociale",
             "NIU" : "NIU",
             "Maticule" : "Matricule",
+            "Domicille_siege_social_bailleur" : "Domicille/siège sociale",
             "Telephone" : "Téléphone",
             "Type_id_bailleur" : "Type de pièce d'identité",
             "Num_doc" : "Numéro de la pièce d'identité",
@@ -79,30 +81,31 @@ class BailleursForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_personne'),
                         Column(FloatingField("Nom_prenom"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_nom_prenom'),
                         #Column(FloatingField("Nationalite_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Raison_social"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_date_creation_ent'),
                         Column(FloatingField("Maticule"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_raison_social'),
+                        Column(FloatingField("Domicille_siege_social_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_niu'),
                         Column(FloatingField("Type_id_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_niu'),
                         Column(FloatingField("Num_doc"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_registre_commerce'),
                         Column(FloatingField("Date_delivrance_doc"), css_class='overflow-hidden form-group col-md-6 mb-0'),
-                        Column(FloatingField("Document_identification"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_id'),  
+                        Column(FloatingField("Document_identification"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_id'),
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone_representant"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_num_cni'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
                 ),
-                css_class="p-3 pt-0" 
+                css_class="p-3 pt-0"
             ),
         )
         return self.helper
 
     def __init__(self, *args, **kwargs):
-        super(BailleursForm, self).__init__(*args, **kwargs)   
+        super(BailleursForm, self).__init__(*args, **kwargs)
         self.helper =  FormHelper()
         self.helper.layout = Layout(
             Row(
@@ -116,7 +119,7 @@ class BailleursForm(forms.ModelForm):
                 Fieldset(
                     "Identification",
                     Row(
-                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_personne'),   
+                        Column(FloatingField("Type_personne"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_personne'),
                         Column(FloatingField("Nom_prenom"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_nom_prenom'),
                         #Column(FloatingField("Nationalite_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Raison_social"), css_class='overflow-hidden form-group col-md-6 mb-0'),
@@ -126,14 +129,14 @@ class BailleursForm(forms.ModelForm):
                         Column(FloatingField("Type_id_bailleur"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_niu'),
                         Column(FloatingField("Num_doc"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_registre_commerce'),
                         Column(FloatingField("Date_delivrance_doc"), css_class='overflow-hidden form-group col-md-6 mb-0'),
-                        Column(FloatingField("Document_identification"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_id'),  
+                        Column(FloatingField("Document_identification"), css_class='overflow-hidden form-group col-md-12 mb-0 bailleur_type_id'),
                         Column(FloatingField("Nom_Prenom_Representant"), css_class='overflow-hidden form-group col-md-6 mb-0'),
                         Column(FloatingField("Telephone_representant"), css_class='overflow-hidden form-group col-md-6 mb-0 bailleur_num_cni'),
                         css_class="form-row",
                     ),
                     css_class="line__text border p-2 pt-4",
                 ),
-                css_class="p-3 pt-0" 
+                css_class="p-3 pt-0"
             ),
             Row(
                 Column(
@@ -165,7 +168,7 @@ class BailleursForm(forms.ModelForm):
             ),"""
         )
         self.helper.form_tag = False;self.fields['NIU'].required = False
-        self.fields['Registre_commerce'].required = False; self.fields['Nom_Prenom_Representant'].required = False        
-        self.fields['Num_doc'].required = False;self.fields['Date_delivrance_doc'].required = False 
+        self.fields['Registre_commerce'].required = False; self.fields['Nom_Prenom_Representant'].required = False
+        self.fields['Num_doc'].required = False;self.fields['Date_delivrance_doc'].required = False
         self.fields['Document_identification'].required = False
         self.fields['Telephone_representant'].required = False

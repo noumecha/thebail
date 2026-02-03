@@ -2,9 +2,14 @@
 from django.http import JsonResponse
 from django.db.models import Q
 from ..models import *
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from ..serializers.fiche_collecte_serializers import FicheCollecteSerializer
+from django.db import transaction
+import logging
 
-from django.http import JsonResponse
-from django.db.models import Q
 
 class Select2SearchView:
     """
@@ -166,3 +171,45 @@ def get_agent_name(request):
         except Exception as e:
             return JsonResponse({'error': 'Erreur lors de la récupération de l\'agent', 'success': False}, status=500)
     return JsonResponse({'error': 'Requête invalide', 'success': False}, status=400)
+
+# api view for collecte form
+logger = logging.getLogger(__name__)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_fiche_collecte(request):
+    """Créer une fiche de collecte avec gestion complète des erreurs"""
+
+    serializer = FicheCollecteSerializer(data=request.data)
+
+    if not serializer.is_valid():
+        logger.error(f"Validation errors: {serializer.errors}")
+        return Response({
+            'success': False,
+            'message': 'Données invalides',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        with transaction.atomic():
+            # Sauvegarder avec rollback automatique en cas d'erreur
+            fiche = serializer.save()
+
+            # Log de succès
+            logger.info(f"Fiche {fiche.numero_fiche_collecte} créée par {request.user}")
+
+            return Response({
+                'success': True,
+                'message': 'Fiche de collecte créée avec succès',
+                'data': {
+                    'fiche_id': fiche.id,
+                    'numero_fiche': fiche.numero_fiche_collecte
+                }
+            }, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        logger.exception(f"Error creating fiche: {str(e)}")
+        return Response({
+            'success': False,
+            'message': 'Erreur lors de la création de la fiche',
+            'errors': {'non_field_errors': [str(e)]}
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

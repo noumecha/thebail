@@ -9,13 +9,13 @@ class AyantDroitsForm(forms.ModelForm):
     class Meta:
         model = Ayant_droits
         fields = (
-            "Nom_Prenom","Contact","Reference_Grosse",
+            "Nom_Prenom_ayant_droit","Contact_ayant_droit","Reference_Grosse_ayant_droit",
             "Date_delivrance_grosse","Reference_certificat_non_appel","Date_delivrance_certificat_non_appel"
         )
         labels = {
-            "Nom_Prenom" : "Noms & Prénoms",
-            "Contact" : "Contact",
-            "Reference_Grosse" : "Référence Grosse",
+            "Nom_Prenom_ayant_droit" : "Noms & Prénoms",
+            "Contact_ayant_droit" : "Contact",
+            "Reference_Grosse_ayant_droit" : "Référence Grosse",
             "Date_delivrance_grosse" : "Date de délivrance Grosse",
             "Reference_certificat_non_appel" : "Référence certificat non appel",
             "Date_delivrance_certificat_non_appel" : "Date de prise effect certificat de non appel",
@@ -33,9 +33,9 @@ class AyantDroitsForm(forms.ModelForm):
                 Fieldset(
                     "Ayants Droits du Bailleurs",
                     Row(
-                        Column(FloatingField("Nom_Prenom"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Contact"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Reference_Grosse"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Nom_Prenom_ayant_droit"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Contact_ayant_droit"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Reference_Grosse_ayant_droit"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Date_delivrance_grosse"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Reference_certificat_non_effet"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Date_delivrance_certificat_non_appel"), css_class='overflow-hidden form-group col-md-3 mb-0'),

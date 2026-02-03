@@ -348,6 +348,7 @@ class Bailleurs(models.Model):
     NIU = models.CharField(max_length=14, null=True, blank=True, unique=True)
     Maticule = models.CharField(max_length=14, null=True, blank=True)
     Telephone = models.CharField(max_length=20, null=True)
+    Domicille_siege_social_bailleur = models.CharField(max_length=200, null=True, blank=True)
     Type_id_bailleur = models.CharField(choices=TYPE_IDENTIFICATION, max_length=255, null=True, blank=True)
     Num_doc = models.CharField(max_length=50, null=True)
     Date_delivrance_doc = models.DateField(null=True, blank=True)
@@ -633,11 +634,11 @@ class Recensements(models.Model):
 
 # type occupant bureaux
 class OccupantBureaux (models.Model):
-    Service = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "intitulle_service")
+    Service_occupant_bureau = models.ForeignKey(Structures, on_delete=models.CASCADE, null=True, blank=True, related_name= "intitulle_service")
     Administration_correspondante = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "administration_correspondante")
-    Fonction = models.CharField(max_length=50,null=True)
+    Fonction_occupant_bureau = models.CharField(max_length=50,null=True)
     Ref_ActeJuridique_attribution = models.CharField(max_length=50,null=True)
-    Contact = models.CharField(max_length=20,null=True, blank=True)
+    Contact_occupant_bureau = models.CharField(max_length=20,null=True, blank=True)
     Date_signature_acte_attribution = models.CharField(max_length=50,null=True)
     # generic fields
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment_occ_bureaux")
@@ -649,27 +650,27 @@ class OccupantBureaux (models.Model):
 
 # type occupant résidence
 class Occupants (models.Model):
-    Nom_Prenom = models.CharField(max_length=50,null=True, unique=True)
+    Nom_Prenom_occupant_residence = models.CharField(max_length=50,null=True, unique=True)
     Administration_rattachement = models.ForeignKey(Administrations, on_delete=models.CASCADE, null=True, related_name= "tutelle")
-    Fonction = models.CharField(max_length=50,null=True)
-    Matricule = models.CharField(max_length=7,null=True)
+    Fonction_occupant_residence = models.CharField(max_length=50,null=True)
+    Matricule_occupant_residence = models.CharField(max_length=7,null=True)
     Ref_ActeJuridique_attribution = models.CharField(max_length=50,null=True)
     Date_Signature_acte_juridique = models.CharField(max_length=50,null=True)
-    Telephone = models.CharField(max_length=20,null=True)
-    NIU = models.CharField(max_length=50,null=True)
+    Telephone_occupant_residence = models.CharField(max_length=20,null=True)
+    NIU_occupant_residence = models.CharField(max_length=50,null=True)
     # generic fields
     Immeuble = models.ForeignKey(Immeubles, on_delete=models.CASCADE, null=True, related_name="batiment_occ_residence")
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
     def __str__(self):
-        return f" logés : {self.Nom_Prenom} "
+        return f" logés : {self.Nom_Prenom_occupant} "
 
 # Ayant_froit model
 class Ayant_droits (models.Model):
     # specific fields
-    Nom_Prenom = models.CharField(max_length=200, null=True, blank=True)
-    Contact = models.CharField(max_length=200, null=True, blank=True)
-    Reference_Grosse = models.CharField(max_length=50, null=True, blank=True)
+    Nom_Prenom_ayant_droit = models.CharField(max_length=200, null=True, blank=True)
+    Contact_ayant_droit = models.CharField(max_length=200, null=True, blank=True)
+    Reference_Grosse_ayant_droit = models.CharField(max_length=50, null=True, blank=True)
     Date_delivrance_grosse = models.CharField(max_length=50,null=True)
     Reference_certificat_non_appel = models.CharField(max_length=50, null=True, blank=True)
     Date_delivrance_certificat_non_appel = models.CharField(max_length=50,null=True)
@@ -681,7 +682,7 @@ class Ayant_droits (models.Model):
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
     def __str__(self):
-        return f" Ayant droit : {self.Nom_Prenom} du bailleur {self.Bailleur} "
+        return f" Ayant droit : {self.Nom_Prenom_ayant_droit} du bailleur {self.Bailleur} "
 
 # type contrat model
 class TypeContrats(models.Model):

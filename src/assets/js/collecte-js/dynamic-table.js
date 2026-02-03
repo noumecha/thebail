@@ -1,3 +1,6 @@
+// exposition des managers
+window.TableManagers = window.TableManagers || {};
+
 // Gestionnaire générique de tableaux dynamiques
 function DynamicTableManager(config) {
   const {
@@ -223,6 +226,7 @@ function DynamicTableManager(config) {
     }
   });
 
+  // Ajouter cette méthode au DynamicTableManager
   this.collectData = function () {
     const data = [];
     $tbody.find('.dynamic-row').each(function () {
@@ -231,11 +235,29 @@ function DynamicTableManager(config) {
       const rowData = {};
 
       fields.forEach(field => {
-        const value = $row.find(`[name="${rowPrefix}_${rowId}_${field.name}"]`).val();
-        rowData[field.name] = value;
+        if (field.type === 'checkbox-group') {
+          // Pour les checkboxes (mois non-mandatés)
+          const checkedValues = [];
+          $row.find(`[data-field="${field.name}"]:checked`).each(function () {
+            checkedValues.push({
+              mois_numero: parseInt($(this).val()),
+              statut: true
+            });
+          });
+          rowData[field.name] = checkedValues;
+        } else {
+          const value = $row.find(`[name="${rowPrefix}_${rowId}_${field.name}"]`).val();
+          rowData[field.name] = value;
+        }
       });
 
-      if (Object.values(rowData).some(v => v && v.trim() !== '')) {
+      // N'ajouter que les lignes avec des données
+      const hasData = Object.values(rowData).some(v => {
+        if (Array.isArray(v)) return v.length > 0;
+        return v && v.toString().trim() !== '';
+      });
+
+      if (hasData) {
         data.push(rowData);
       }
     });
@@ -249,7 +271,7 @@ function DynamicTableManager(config) {
 $(function () {
   // tableaux dynamique d'ajouts d'éléments
   // Initialiser le tableau des ayants droit (avec numérotation)
-  const ayantsDroitManager = new DynamicTableManager({
+  window.TableManagers.ayantsDroitManager = new DynamicTableManager({
     tbodyId: 'ayants-droit-tbody',
     addButtonId: 'add-ayant-droit-row',
     tableId: 'ayants-droit-table',
@@ -258,16 +280,16 @@ $(function () {
     minRows: 1,
     showRowNumber: true, // ✅ Activer la numérotation
     fields: [
-      { name: 'nom_prenom', type: 'text', placeholder: 'Nom & Prénoms' },
-      { name: 'contact', type: 'text', placeholder: 'Contact' },
-      { name: 'reference_grosse', type: 'text', placeholder: 'Référence Grosse' },
-      { name: 'date_delivrance_grosse', type: 'date' },
-      { name: 'reference_certificat', type: 'text', placeholder: 'Référence Certificat' },
-      { name: 'date_delivrance_certificat', type: 'date' }
+      { name: 'Nom_Prenom_ayant_droit', type: 'text', placeholder: 'Nom & Prénoms' },
+      { name: 'Contact_ayant_droit', type: 'text', placeholder: 'Contact' },
+      { name: 'Reference_Grosse_ayant_droit', type: 'text', placeholder: 'Référence Grosse' },
+      { name: 'Date_delivrance_grosse', type: 'date' },
+      { name: 'Reference_certificat_non_appel', type: 'text', placeholder: 'Référence Certificat' },
+      { name: 'Date_delivrance_certificat_non_appel', type: 'date' }
     ]
   });
 
-  const logementsManager = new DynamicTableManager({
+  window.TableManagers.logementsManager = new DynamicTableManager({
     tbodyId: 'occupants-logements-tbody',
     addButtonId: 'add-occupant-logement-row',
     tableId: 'occupants-logements-table',
@@ -276,21 +298,21 @@ $(function () {
     minRows: 1,
     showRowNumber: false, // ✅ Pas de numérotation
     fields: [
-      { name: 'nom_prenom', type: 'text', placeholder: 'Nom & Prénoms' },
+      { name: 'Nom_Prenom_occupant_residence', type: 'text', placeholder: 'Nom & Prénoms' },
       {
-        name: 'administration',
+        name: 'Administration_rattachement',
         type: 'select2',
         ajaxUrl: '/api/get-administrations/',
         placeholder: 'Rechercher une administration...'
       },
-      { name: 'fonction', type: 'text', placeholder: 'Fonction' },
-      { name: 'matricule', type: 'text', placeholder: 'Matricule' },
-      { name: 'reference', type: 'text', placeholder: 'Référence' },
-      { name: 'date', type: 'date' }
+      { name: 'Fonction_occupant_residence', type: 'text', placeholder: 'Fonction' },
+      { name: 'Matricule_occupant_residence', type: 'text', placeholder: 'Matricule' },
+      { name: 'Ref_ActeJuridique_attribution', type: 'text', placeholder: 'Référence' },
+      { name: 'Date_Signature_acte_juridique', type: 'date' }
     ]
   });
 
-  const bureauxManager = new DynamicTableManager({
+  window.TableManagers.bureauxManager = new DynamicTableManager({
     tbodyId: 'occupants-bureaux-tbody',
     addButtonId: 'add-occupant-bureau-row',
     tableId: 'occupants-bureaux-table',
@@ -299,16 +321,21 @@ $(function () {
     minRows: 1,
     showRowNumber: false, // ✅ Pas de numérotation
     fields: [
-      { name: 'service', type: 'select2', ajaxUrl: '/api/get-structures/', placeholder: 'Rechercher un service...' },
       {
-        name: 'administration',
+        name: 'Service_occupant_bureau',
+        type: 'select2',
+        ajaxUrl: '/api/get-structures/',
+        placeholder: 'Rechercher un service...'
+      },
+      {
+        name: 'Administration_correspondante',
         type: 'select2',
         ajaxUrl: '/api/get-administrations/',
         placeholder: 'Rechercher une administration...'
       },
-      { name: 'fonction_responsable', type: 'text', placeholder: 'Fonction du responsable' },
-      { name: 'reference_acte', type: 'text', placeholder: 'Référence' },
-      { name: 'date_signature', type: 'date' }
+      { name: 'Fonction_occupant_bureau', type: 'text', placeholder: 'Fonction du responsable' },
+      { name: 'Ref_ActeJuridique_attribution', type: 'text', placeholder: 'Référence' },
+      { name: 'Date_signature_acte_attribution', type: 'date' }
     ]
   });
 
@@ -405,7 +432,7 @@ $(function () {
   }
 
   // Initialiser le tableau Non-Mandatement
-  const nonMandatementManager = new DynamicTableManager({
+  window.TableManagers.nonMandatementManager = new DynamicTableManager({
     tbodyId: 'nonmandatement-collecte-tbody',
     addButtonId: 'add-nonmandatement-row',
     tableId: 'nonmandatement-collecte-table',

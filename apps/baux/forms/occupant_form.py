@@ -10,14 +10,15 @@ class OccupantBureauxForm(forms.ModelForm):
     class Meta:
         model = OccupantBureaux
         fields = (
-            "Service","Administration_correspondante","Fonction","Ref_ActeJuridique_attribution","Contact","Date_signature_acte_attribution","Immeuble",
+            "Service_occupant_bureau","Administration_correspondante","Fonction_occupant_bureau","Ref_ActeJuridique_attribution",
+            "Contact_occupant_bureau","Date_signature_acte_attribution","Immeuble",
         )
         labels = {
-            "Service" : "Intitulé du service administratif",
+            "Service_occupant_bureau" : "Intitulé du service administratif",
             "Administration_correspondante" : "Administration correspondante",
-            "Fonction" : "Fonction du plus haut responsable du service",
+            "Fonction_occupant_bureau" : "Fonction du plus haut responsable du service",
             "Ref_ActeJuridique_attribution" : "Référence de l'acte juridique d'attribution du MINDCAF",
-            "Contact" : "Numéro de service",
+            "Contact_occupant_bureau" : "Numéro de service",
             "Date_signature_acte_attribution" : "Date initiale d'occupation (jj/mm/aa)",
             "Immeuble" : "Imeuble",
         }
@@ -25,7 +26,7 @@ class OccupantBureauxForm(forms.ModelForm):
         widgets = {
             'Date_signature_acte_attribution' : forms.TextInput(attrs={'type': 'date'}),
             'Administration_correspondante': autocomplete.ModelSelect2(url='baux:administration_beneficiaire_autocomplete'),
-            'Service': autocomplete.ModelSelect2(
+            'Service_occupant_bureau': autocomplete.ModelSelect2(
                 url='baux:service_autocomplete',
                 forward=['Administration_correspondante'],
             ),
@@ -40,10 +41,10 @@ class OccupantBureauxForm(forms.ModelForm):
                     "Occupation pour bureaux",
                     Row(
                         Column(FloatingField("Administration_correspondante"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                        Column(FloatingField("Service"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Service_occupant_bureau"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Fonction_occupant_bureau"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='overflow-hidden form-group col-md-4 mb-0'),
-                        Column(FloatingField("Contact"), css_class='overflow-hidden form-group col-md-4 mb-0'),
+                        Column(FloatingField("Contact_occupant_bureau"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Date_signature_acte_attribution"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-4 mb-0'),
                         Column(
@@ -113,18 +114,24 @@ class OccupantsForm(forms.ModelForm):
     class Meta:
         model = Occupants
         fields = (
-            "Nom_Prenom","Administration_rattachement","Fonction","Matricule","NIU","Ref_ActeJuridique_attribution",
-            "Date_Signature_acte_juridique","Telephone","Immeuble",
+            "Nom_Prenom_occupant_residence",
+            "Administration_rattachement",
+            "Fonction_occupant_residence",
+            "Matricule_occupant_residence",
+            "Ref_ActeJuridique_attribution",
+            "Date_Signature_acte_juridique",
+            "Telephone_occupant_residence",
+            "NIU_occupant_residence","Immeuble",
         )
         labels = {
-            "Nom_Prenom" : "Noms & Prénoms",
+            "Nom_Prenom_occupant_residence" : "Noms & Prénoms",
             "Administration_rattachement" : "Administration de rattachement",
-            "Fonction" : "Fonction ou qualité de l'occupant",
-            "Matricule" : "Matricule de l'occupant",
-            "NIU" : "NIU de l'occupant",
+            "Fonction_occupant_residence" : "Fonction ou qualité de l'occupant",
+            "Matricule_occupant_residence" : "Matricule de l'occupant",
+            "NIU_occupant_residence" : "NIU de l'occupant",
             "Ref_ActeJuridique_attribution" : "Référence de l'acte juridique d'attribution",
             "Date_Signature_acte_juridique" : "Date de prise d'effet de l'acte(jj/mm/aa)",
-            "Telephone" : "Numéro de téléphone",
+            "Telephone_occupant_residence" : "Numéro de téléphone",
             "Immeuble" : "Imeuble",
         }
 
@@ -141,14 +148,14 @@ class OccupantsForm(forms.ModelForm):
                 Fieldset(
                     "Occupation pour résidence",
                     Row(
-                        Column(FloatingField("Nom_Prenom"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Nom_Prenom_occupant_residence"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Administration_rattachement"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Fonction"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Matricule"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("NIU"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Fonction_occupant_residence"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Matricule_occupant_residence"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("NIU_occupant_residence"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Ref_ActeJuridique_attribution"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Date_Signature_acte_juridique"), css_class='overflow-hidden form-group col-md-3 mb-0'),
-                        Column(FloatingField("Telephone"), css_class='overflow-hidden form-group col-md-3 mb-0'),
+                        Column(FloatingField("Telephone_occupant_residence"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(FloatingField("Immeuble"), css_class='overflow-hidden form-group col-md-3 mb-0'),
                         Column(
                             HTML("""

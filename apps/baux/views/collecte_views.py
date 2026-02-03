@@ -59,36 +59,6 @@ class CollecteView(TemplateView):
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context["collecteList"] = Collectes.objects.all().order_by('-Date_creation')
-        pieces = Pieces.objects.all()
-        elements = ElementDeDescription.objects.all()
-        pk = kwargs.get('pk', None)
-        if pk:
-            collecte = get_object_or_404(Collectes, pk=pk)
-            form = CollectesForm(instance=collecte)
-        else:
-            form = CollectesForm()
-        context['avenants_formset'] = AvenantsFormSet(prefix="avenants")
-        context['immeubles_formset'] = ImmeublesFormSet(prefix="immeubles")
-        for immeuble_form in context['immeubles_formset'].forms:
-            immeuble_instance = immeuble_form.instance
-
-            immeuble_form.occupants_residence_formset = OccupantsFormSet(
-                prefix=f"res_{immeuble_instance.pk or 'new'}",
-                instance=immeuble_instance,
-            )
-
-            immeuble_form.occupants_bureau_formset = OccupantBureauxFormSet(
-                prefix=f"bur_{immeuble_instance.pk or 'new'}",
-                instance=immeuble_instance,
-            )
-        context['ayants_droits_formset'] = AyantDroitsFormSet(prefix="ayants_droits")
-        context['occupants_residence_formset'] = OccupantsFormSet(prefix="occupants_residence")
-        context['occupants_bureau_formset'] = OccupantBureauxFormSet(prefix="occupants_bureau")
-        context['non_mandatements_formset'] = NonMandatementFormSet(prefix="non_mandatements")
-        context["form"] = form
-        context["pieces"] = pieces
-        context["elements"] = elements
-        context["is_update"] = pk is not None
         return context
 
     def print(request, pk):

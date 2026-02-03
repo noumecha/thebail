@@ -112,5 +112,6 @@ urlpatterns = [
     path("api/get-bailleurs/", BailleursSelect2().get, name="api_bailleurs"),
     path("api/get-banques/", BanquesSelect2().get, name="api_bailleurs"),
     path("api/get-exercices/", ExercicesSelect2().get, name="api_exercices"),
+    path('api/fiches/create/', api_views.create_fiche_collecte, name='create_fiche_collecte'),
 ]
 urlpatterns += router.urls
