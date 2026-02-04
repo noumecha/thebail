@@ -10,12 +10,108 @@ class FicheCollecteFormHandler {
       e.preventDefault();
       this.handleSubmit();
     });
+    // generate numero collecte
     $('#arrondissement').on('select2:select', e => {
       const arrondissementId = e.params.data.id;
       if (arrondissementId) {
         this.generateFicheCollecte(arrondissementId);
       }
     });
+    // init pieces an elements states
+    this.initElementsImmeuble();
+    this.initPiecesCollectees();
+  }
+
+  initPiecesCollectees() {
+    const $container = $('.pieces-collecte-container-tbody');
+    $container.find('input[type="number"]').each(function () {
+      $(this).prop('disabled', true).val('');
+    });
+    $container.find('input[type="file"]').each(function () {
+      $(this).prop('disabled', true).val('');
+    });
+    $container.on('change', '.piece-checkbox', function () {
+      const $checkbox = $(this);
+      const $row = $checkbox.closest('tr');
+      const elementId = $row.data('piece-id');
+      const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
+      const $fileInput = $row.find(`#piece_image_input_${elementId}`);
+
+      if ($checkbox.is(':checked')) {
+        $numberInput.prop('disabled', false).focus();
+        $fileInput.prop('disabled', false).focus();
+      } else {
+        $numberInput.prop('disabled', true).val('');
+        $fileInput.prop('disabled', true).val('');
+      }
+    });
+  }
+
+  validatePiecesCollectees() {
+    const errors = [];
+    const $container = $('#pieces-collecte-container-tbody');
+    $container.find('tr[data-piece-id]').each(function () {
+      const $row = $(this);
+      const elementId = $row.data('piece-id');
+      const $checkbox = $row.find(`#piece_${elementId}`);
+      const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
+      const $imageInput = $row.find(`#piece_image_input_${elementId}`);
+      const elementLabel = $row.find('label.form-check-label').text().trim();
+      if ($checkbox.is(':checked')) {
+        const quantity = $numberInput.val();
+        const images = $imageInput.val();
+        if (!quantity || quantity.trim() === '' || parseInt(quantity) <= 0) {
+          errors.push(`${elementLabel}: La quantité est obligatoire lorsque l'élément est coché`);
+        }
+        if (!images || images.length <= 0) {
+          errors.push(`${elementLabel}: Les images sont obligatoires lorsque l'élément est coché`);
+        }
+      }
+    });
+    return errors;
+  }
+
+  initElementsImmeuble() {
+    const $container = $('#elements-immeuble-container');
+    $container.find('input[type="number"]').each(function () {
+      $(this).prop('disabled', true).val('');
+    });
+
+    $container.on('change', '.dynamic-check', function () {
+      const $checkbox = $(this);
+      const $row = $checkbox.closest('tr');
+      const elementId = $row.data('el-id');
+      const $numberInput = $row.find(`#nombre_input_${elementId}`);
+      const checkboxValue = $checkbox.val();
+
+      if ($checkbox.is(':checked') && checkboxValue === 'oui') {
+        $numberInput.prop('disabled', false).focus();
+      } else {
+        $numberInput.prop('disabled', true).val('');
+      }
+    });
+  }
+
+  validateElementsImmeuble() {
+    const errors = [];
+    const $container = $('#elements-immeuble-container');
+
+    $container.find('tr[data-el-id]').each(function () {
+      const $row = $(this);
+      const elementId = $row.data('el-id');
+      const $ouiCheckbox = $row.find(`#element_${elementId}_oui`);
+      const $numberInput = $row.find(`#nombre_input_${elementId}`);
+      const elementLabel = $row.find('label.text-capitalize').text().trim();
+
+      if ($ouiCheckbox.is(':checked')) {
+        const quantity = $numberInput.val();
+        if (!quantity || quantity.trim() === '' || parseInt(quantity) <= 0) {
+          errors.push(`${elementLabel}: La quantité est obligatoire lorsque "Oui" est sélectionné`);
+        }
+      }
+    });
+
+    return errors;
   }
 
   // Collecter toutes les données du formulaire
@@ -123,7 +219,7 @@ class FicheCollecteFormHandler {
   // Collecter les éléments de description
   collectElementsDescription() {
     const elements = [];
-    document.querySelectorAll('.elements-collecte-container-tbody tr').forEach(row => {
+    document.querySelectorAll('.elements-immeuble-container-tbody tr').forEach(row => {
       const elementId = row.dataset.elId;
       const ouiChecked = row.querySelector(`#element_${elementId}_oui`)?.checked;
       const nonChecked = row.querySelector(`#element_${elementId}_non`)?.checked;
@@ -231,6 +327,17 @@ class FicheCollecteFormHandler {
       errors.push('Le nom du bailleur est requis');
     }
 
+    // valider les pièces collectées
+    const pieceErrors = this.validatePiecesCollectees();
+    if (pieceErrors.length > 0) {
+      errors.push(...pieceErrors);
+    }
+    // Valider les éléments d'immeuble
+    const elementErrors = this.validateElementsImmeuble();
+    if (elementErrors.length > 0) {
+      errors.push(...elementErrors);
+    }
+
     return errors;
   }
 
@@ -292,21 +399,13 @@ class FicheCollecteFormHandler {
       const fullField = prefix ? `${prefix}.${field}` : field;
 
       if (Array.isArray(value)) {
-        // Vérifier si c'est un tableau d'objets d'erreurs (comme pour avenants)
-        if (value.length > 0 && typeof value === 'object' && value !== null) {
-          // C'est un tableau d'objets d'erreurs
-          value.forEach((item, index) => {
-            flatErrors.push(...this.flattenErrors(item, `${fullField}[${index}]`));
+        // C'est un tableau d'erreurs
+        value.forEach(err => {
+          flatErrors.push({
+            field: fullField,
+            message: err
           });
-        } else {
-          // C'est un tableau de messages d'erreurs simples
-          value.forEach(err => {
-            flatErrors.push({
-              field: fullField,
-              message: err
-            });
-          });
-        }
+        });
       } else if (typeof value === 'object' && value !== null) {
         // C'est un objet imbriqué, récursion
         flatErrors.push(...this.flattenErrors(value, fullField));
@@ -500,6 +599,10 @@ class FicheCollecteFormHandler {
   }
 
   showSuccess(message, ficheId) {
+    // Supprimer les anciennes alertes
+    const oldAlerts = this.form.querySelectorAll('.alert-danger');
+    oldAlerts.forEach(alert => alert.remove());
+
     // Créer une alerte de succès
     const alertHtml = `
       <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -515,7 +618,7 @@ class FicheCollecteFormHandler {
 
     // Rediriger après 3 secondes
     setTimeout(() => {
-      window.location.href = `/collecte/${ficheId}/`;
+      window.location.href = `/collecte/list/`;
     }, 3000);
   }
 

@@ -1,17 +1,30 @@
-<tr class="piece-row">
+<tr class="piece-row" data-piece-id="{{ el.id }}">
   <td class="d-flex ps-2 pe-0">
     <div class="d-flex form-check form-check-inline">
-      <input type="checkbox" class="piece-checkbox form-check-input" id="{{ el.id }}">
+      <input type="checkbox"
+        class="piece-checkbox form-check-input"
+        id="piece_{{ el.id }}"
+        name="piece_{{ el.id }}_statut"
+      >
       <label class="form-check-label text-start ms-1">{{ el.libelle }}</label>
     </div>
   </td>
   <td class="p-0 align-items-center" style="width: 80px;">
-    <input type="number" value="" class="piece-nombre form-control">
+    <input type="number"
+      id="piece_nombre_input_{{ el.id }}"
+      name="piece_nombre_input_{{ el.id }}"
+      value=""
+      class="piece-nombre form-control"
+    >
   </td>
   <td class="p-0 align-items-center">
     <div class="file-upload-wrapper">
-      <input class="form-control piece-files" type="file" id="formFileMultiple" multiple>
-      <label for="formFileMultiple" class="file-upload-label p-1">0 fich.</label>
+      <input class="form-control piece-files"
+        type="file"
+        id="piece_image_input_{{ el.id }}"
+        name="piece_image_input_{{ el.id }}"
+        multiple>
+      <label for="piece_image_input_{{ el.id }}" class="file-upload-label p-1">0 fich.</label>
     </div>
   </td>
 </tr>

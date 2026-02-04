@@ -57,14 +57,14 @@ class ImmeubleSerializer(serializers.ModelSerializer):
         # ✅ Créer les occupants résidents
         for occupant_data in occupants_residents_data:
             Occupants.objects.create(
-                immeuble=immeuble,
+                Immeuble=immeuble,
                 **occupant_data
             )
 
         # ✅ Créer les occupants bureaux
         for occupant_data in occupants_bureaux_data:
             OccupantBureaux.objects.create(
-                immeuble=immeuble,
+                Immeuble=immeuble,
                 **occupant_data
             )
 

@@ -391,10 +391,10 @@
                                           Nom & prénoms ou raison sociale du bailleur
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_1_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_1_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                       </tr>
                                       <tr>
@@ -452,10 +452,10 @@
                                           Nom & prénoms ou raison sociale du bailleur
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_2_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                         <td class="p-0">
-                                          {% include "baux/widgets/field_widget.html" with list_id="avenant_2_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
                                         </td>
                                       </tr>
                                       <tr>
@@ -540,7 +540,7 @@
                             {% include "baux/widgets/field_widget.html" with style="width: 200px !important" list_label="Libellé Banque" list_id="Banque" list_api_url='/api/get-banques/' placeholder="Rechercher une banque ..." variant="html_list_ajax" %}
                           </div>
                           <div class="col-md-8">
-                            {% include "baux/widgets/field_widget.html" with style="width: 600px !important" input_id="RIB" input_label="Numéro RIB" input_type="text" input_name="RIB" variant="html_only" %}
+                            {% include "baux/widgets/field_widget.html" with settings="maxlength='26'" style="width: 600px !important" input_id="RIB" input_label="Numéro RIB" input_type="text" input_name="RIB" variant="html_only" %}
                           </div>
                           <div class="col-md-12">
                             {% include "baux/widgets/field_widget.html" with style="width: 700px !important" input_id="Intitule_compte" input_label="Intitulé du Compte" input_type="text" input_name="Intitule_compte" variant="html_only" %}

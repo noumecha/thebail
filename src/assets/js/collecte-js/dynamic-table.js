@@ -13,7 +13,8 @@ function DynamicTableManager(config) {
     minRows = 1,
     showRowNumber = false,
     customTemplate = null, // ✅ Template personnalisé
-    onRowCreated = null // ✅ Callback après création de ligne
+    onRowCreated = null, // ✅ Callback après création de ligne
+    customCollectData = null // ✅ Nouveau paramètre
   } = config;
 
   let rowCounter = 0;
@@ -39,7 +40,7 @@ function DynamicTableManager(config) {
 
       if (field.type === 'select2') {
         rowHtml += `
-          <select style="width: 100% !important;"
+          <select style="width: 300px !important;"
             class="form-select form-select-sm select2-ajax dynamic-field"
             name="${rowPrefix}_${rowId}_${field.name}"
             data-ajax-url="${field.ajaxUrl}"
@@ -68,6 +69,7 @@ function DynamicTableManager(config) {
             class="form-control form-control-sm dynamic-field ${extraClass}"
             name="${rowPrefix}_${rowId}_${field.name}"
             placeholder="${field.placeholder || ''}"
+            ${field.settings || ''}
             data-field="${field.name}"
             ${readonly}>
         `;
@@ -228,6 +230,10 @@ function DynamicTableManager(config) {
 
   // Ajouter cette méthode au DynamicTableManager
   this.collectData = function () {
+    // utiliser la fonction personnalisée
+    if (customCollectData && typeof customCollectData === 'function') {
+      return customCollectData();
+    }
     const data = [];
     $tbody.find('.dynamic-row').each(function () {
       const $row = $(this);
@@ -306,7 +312,7 @@ $(function () {
         placeholder: 'Rechercher une administration...'
       },
       { name: 'Fonction_occupant_residence', type: 'text', placeholder: 'Fonction' },
-      { name: 'Matricule_occupant_residence', type: 'text', placeholder: 'Matricule' },
+      { name: 'Matricule_occupant_residence', type: 'text', placeholder: 'Matricule', settings: "maxlength='7'" },
       { name: 'Ref_ActeJuridique_attribution', type: 'text', placeholder: 'Référence' },
       { name: 'Date_Signature_acte_juridique', type: 'date' }
     ]
@@ -347,7 +353,7 @@ $(function () {
     return `
     <tr class="dynamic-row" data-row-id="${rowId}">
       <td class="p-0">
-        <select style="width: 100% !important;"
+        <select style="width: 150px !important;"
           class="form-select form-select-sm select2-ajax dynamic-field"
           name="${rowPrefix}_${rowId}_exercice"
           data-ajax-url="/api/get-exercices/"
@@ -431,6 +437,42 @@ $(function () {
     $row.find('.montant-total').val(montantTotal.toFixed(2));
   }
 
+  // collecte non mandatement data
+  function collectNonMandatementData() {
+    const data = [];
+
+    $('#nonmandatement-collecte-tbody .dynamic-row').each(function () {
+      const $row = $(this);
+
+      const moisNonMandates = [];
+      $row.find('.month-checkbox:checked').each(function () {
+        moisNonMandates.push({
+          mois_numero: parseInt($(this).val()),
+          statut: true
+        });
+      });
+
+      // Construire l'objet ligne
+      const rowData = {
+        exercice: $row.find('[data-field="exercice"]').val(),
+        loyer_mensuel: parseFloat($row.find('.loyer-mensuel').val()) || 0,
+        reference: $row.find('[data-field="reference"]').val(),
+        date_signature: $row.find('[data-field="date_signature"]').val(),
+        mois_non_mandates: moisNonMandates,
+        montant_total: parseFloat($row.find('.montant-total').val()) || 0,
+        visa: $row.find('[data-field="visa"]').val(),
+        reference_contrat: $row.find('[data-field="reference_contrat"]').val()
+      };
+
+      // N'ajouter que si au moins un mois est coché
+      if (moisNonMandates.length > 0) {
+        data.push(rowData);
+      }
+    });
+
+    return data;
+  }
+
   // Initialiser le tableau Non-Mandatement
   window.TableManagers.nonMandatementManager = new DynamicTableManager({
     tbodyId: 'nonmandatement-collecte-tbody',
@@ -443,18 +485,17 @@ $(function () {
     customTemplate: getNonMandatementTemplate,
     onRowCreated: function ($row, rowId) {
       // ✅ Attacher les événements de calcul après création de ligne
-
       // Calculer quand le loyer mensuel change
       $row.find('.loyer-mensuel').on('input change', function () {
         calculateMontantTotal($row);
       });
-
       // Calculer quand on coche/décoche un mois
       $row.find('.month-checkbox').on('change', function () {
         calculateMontantTotal($row);
       });
     },
-    fields: [] // Pas besoin car on utilise customTemplate
+    fields: [],
+    customCollectData: collectNonMandatementData
   });
 
   // Attacher les événements sur le tbody pour les lignes existantes et futures

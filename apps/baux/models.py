@@ -344,7 +344,7 @@ class Bailleurs(models.Model):
     # specifics fields
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
     Nom_prenom = models.CharField(max_length=50, null=True, blank=True, unique=True)
-    Raison_social = models.CharField(max_length=200, null=True, blank=True)#, unique=True
+    Raison_social = models.CharField(max_length=200, null=True, blank=True)
     NIU = models.CharField(max_length=14, null=True, blank=True, unique=True)
     Maticule = models.CharField(max_length=14, null=True, blank=True)
     Telephone = models.CharField(max_length=20, null=True)
@@ -847,7 +847,7 @@ class Non_Mandatement (models.Model):
     # spefics fields
     Exercice = models.ForeignKey(Exercice, on_delete=models.CASCADE, null=True, related_name= "exercice")
     Loyer_Mensuel = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Ref_Attestattion = models.CharField(max_length=50, null=True, blank=True)
+    Ref_Attestattion = models.CharField(max_length=50, null=True, blank=True, unique=True)
     Date_signature =  models.CharField(max_length=50,null=True)
     janvier = models.BooleanField(default=False, verbose_name="Janvier")
     fevrier = models.BooleanField(default=False, verbose_name="Février")

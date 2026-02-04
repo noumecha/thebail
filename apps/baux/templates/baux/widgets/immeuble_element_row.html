@@ -27,6 +27,7 @@
     <label class="text-capitalize">{{ el.libelle|capfirst }}</label>
   </td>
   <td class="p-0 align-items-center" style="width: 80px;">
-    <input type="number" class="form-control form-control-sm" value="{{ el.nombre_input.value }}">
+    <input type="number" id="nombre_input_{{ el.id }}" name="nombre_input_{{ el.id }}"
+      class="form-control form-control-sm" value="{{ el.nombre_input.value }}">
   </td>
 </tr>

@@ -111,6 +111,7 @@ $(function () {
       }
     });
   });
+
   // maj du champ responsable de collecte à partir du champ matricule du responsable
   $(document).on('change', '#matricule_responsable_collecte', function () {
     let matricule = $(this).val();
