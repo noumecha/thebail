@@ -869,6 +869,7 @@ class Non_Mandatement (models.Model):
     Fichier_nonmandatement = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=None, blank=True, null=True)
 
     # relationship
+    Contrat = models.ForeignKey(Contrats, on_delete=models.CASCADE, null=True, related_name="contrat_non_mandatement")
     Bailleur = models.ForeignKey(Bailleurs, on_delete=models.CASCADE, null=True, related_name= "bailleur_non_mandatement")
 
     # generics fields

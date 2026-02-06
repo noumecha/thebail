@@ -239,11 +239,11 @@ def generate_fiche_collecte_number(request):
         arrondissement = get_object_or_404(Arrondissemements, pk=arrondissement_id)
         departement = arrondissement.departement
         region = departement.Region
-        count = Immeubles.objects.filter(region=region, departement=departement, collecte_immeuble__isnull=False).count()
+        count = Collectes.objects.filter(Immeuble__region=region,Immeuble__departement=departement,Immeuble__arrondissement=arrondissement).count()
         numero_sequence = count + 1
         region_code = region.Libelle[:2].upper()
         dept_code = departement.LibelleFR[:3].upper()
-        arr_code = arrondissement.LibelleFR[:3].upper()
+        arr_code = get_arrondissement_code(arrondissement.LibelleFR)
         numero_collecte = f"{region_code}{dept_code}{arr_code}{numero_sequence:04d}"
 
         return JsonResponse({
@@ -271,3 +271,22 @@ def generate_fiche_collecte_number(request):
             'error': f'Erreur lors de la génération: {str(e)}',
             'success': False
         }, status=500)
+
+
+def get_arrondissement_code(libelle: str) -> str:
+    """
+    Extrait le code AAA d'un arrondissement
+    Exemple:
+    - "Commune de BAMUSO" -> "BAM"
+    - "YAOUNDE 3" -> "YAO"
+    """
+    if not libelle:
+        return ""
+
+    libelle = libelle.strip().upper()
+
+    prefix = "COMMUNE DE "
+    if libelle.startswith(prefix):
+        libelle = libelle[len(prefix):].strip()
+
+    return libelle[:3]

@@ -242,31 +242,31 @@ class FicheCollecteFormHandler {
 
     // Avenant 1
     const avenant1 = {
-      reference: this.getValue('reference_avenant_1'),
-      date_signature: this.getValue('date_signature_avenant_1'),
-      date_effet: this.getValue('date_effet_avenant_1'),
-      ancien_bailleur_id: this.getValue('avenant_1_ancien_bailleurs_list'),
-      nouveau_bailleur_id: this.getValue('avenant_1_nouveau_bailleurs_list'),
-      ancien_loyer_mensuel: this.getValue('avenant_1_ancienmontant_loyer_mensuel'),
-      nouveau_loyer_mensuel: this.getValue('avenant_1_nouveaumontant_loyer_mensuel')
+      Ref_Avenant: this.getValue('reference_avenant_1'),
+      Date_Signature: this.getValue('date_signature_avenant_1'),
+      Date_effet: this.getValue('date_effet_avenant_1'),
+      Ancien_bailleur: this.getValue('avenant_1_ancien_bailleurs_list'),
+      Nouveau_bailleur: this.getValue('avenant_1_nouveau_bailleurs_list'),
+      Montant_TTC_Mensuel_ancien: this.getValue('avenant_1_ancienmontant_loyer_mensuel'),
+      Montant_TTC_Mensuel_Nouveau: this.getValue('avenant_1_nouveaumontant_loyer_mensuel')
     };
 
-    if (avenant1.reference) {
+    if (avenant1.Ref_Avenant) {
       avenants.push(avenant1);
     }
 
     // Avenant 2
     const avenant2 = {
-      reference: this.getValue('reference_avenant_2'),
-      date_signature: this.getValue('date_signature_avenant_2'),
-      date_effet: this.getValue('date_effet_avenant_2'),
-      ancien_bailleur_id: this.getValue('avenant_2_ancien_bailleurs_list'),
-      nouveau_bailleur_id: this.getValue('avenant_2_nouveau_bailleurs_list'),
-      ancien_loyer_mensuel: this.getValue('avenant_2_ancienmontant_loyer_mensuel'),
-      nouveau_loyer_mensuel: this.getValue('avenant_2_nouveaumontant_loyer_mensuel')
+      Ref_Avenant: this.getValue('reference_avenant_2'),
+      Date_Signature: this.getValue('date_signature_avenant_2'),
+      Date_effet: this.getValue('date_effet_avenant_2'),
+      Ancien_bailleur: this.getValue('avenant_2_ancien_bailleurs_list'),
+      Nouveau_bailleur: this.getValue('avenant_2_nouveau_bailleurs_list'),
+      Montant_TTC_Mensuel_ancien: this.getValue('avenant_2_ancienmontant_loyer_mensuel'),
+      Montant_TTC_Mensuel_Nouveau: this.getValue('avenant_2_nouveaumontant_loyer_mensuel')
     };
 
-    if (avenant2.reference) {
+    if (avenant2.Ref_Avenant) {
       avenants.push(avenant2);
     }
 
@@ -377,7 +377,7 @@ class FicheCollecteFormHandler {
       console.log('📥 Réponse serveur:', result);
 
       if (response.ok && result.success) {
-        this.showSuccess(result.message, result.fiche_id);
+        this.showSuccess(result.message, result.data?.numero_fiche);
       } else {
         this.showErrors([result.message || 'Erreur lors de la soumission']);
         this.handleServerErrors(result);

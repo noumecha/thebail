@@ -454,14 +454,14 @@ $(function () {
 
       // Construire l'objet ligne
       const rowData = {
-        exercice: $row.find('[data-field="exercice"]').val(),
-        loyer_mensuel: parseFloat($row.find('.loyer-mensuel').val()) || 0,
-        reference: $row.find('[data-field="reference"]').val(),
-        date_signature: $row.find('[data-field="date_signature"]').val(),
+        Exercice: $row.find('[data-field="exercice"]').val(),
+        Loyer_Mensuel: parseFloat($row.find('.loyer-mensuel').val()) || 0,
+        Ref_Attestattion: $row.find('[data-field="reference"]').val(),
+        Date_signature: $row.find('[data-field="date_signature"]').val(),
         mois_non_mandates: moisNonMandates,
-        montant_total: parseFloat($row.find('.montant-total').val()) || 0,
-        visa: $row.find('[data-field="visa"]').val(),
-        reference_contrat: $row.find('[data-field="reference_contrat"]').val()
+        Montant_total_exercice: parseFloat($row.find('.montant-total').val()) || 0,
+        Visa_budgétaire: $row.find('[data-field="visa"]').val(),
+        Ref_contrat_avenant: $row.find('[data-field="reference_contrat"]').val()
       };
 
       // N'ajouter que si au moins un mois est coché

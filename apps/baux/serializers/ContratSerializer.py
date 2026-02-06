@@ -73,11 +73,34 @@ class ContratSerializer(serializers.ModelSerializer):
             )
 
         # Créer les non-mandatements
+        MONTH_MAP = {
+            1: "janvier",
+            2: "fevrier",
+            3: "mars",
+            4: "avril",
+            5: "mai",
+            6: "juin",
+            7: "juillet",
+            8: "aout",
+            9: "septembre",
+            10: "octobre",
+            11: "novembre",
+            12: "decembre",
+        }
+
         for nm_data in non_mandatements_data:
-            mois_data = nm_data.pop('mois_non_mandates', [])
-            non_mandatement = Non_Mandatement.objects.create(
-                contrat=contrat,
-                **nm_data
+            mois_data = nm_data.pop("mois_non_mandates", [])
+            mois_flags = {field: False for field in MONTH_MAP.values()}
+            for mois in mois_data:
+                mois_numero = mois.get("mois_numero")
+                if mois_numero in MONTH_MAP:
+                    mois_flags[MONTH_MAP[mois_numero]] = True
+
+            Non_Mandatement.objects.create(
+                Contrat=contrat,
+                **nm_data,
+                **mois_flags
             )
+
 
         return contrat
