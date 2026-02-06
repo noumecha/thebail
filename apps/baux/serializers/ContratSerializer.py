@@ -42,8 +42,6 @@ class ContratSerializer(serializers.ModelSerializer):
     def create(self, contrat_data):
         """Créer le contrat avec toutes ses relations"""
         # Extraire les données imbriquées
-        # Check if bailleur exists in the data
-        print("bailleur data", contrat_data)
         bailleur_data = contrat_data.pop('bailleur')
         avenants_data = contrat_data.pop('avenants', [])
         non_mandatements_data = contrat_data.pop('non_mandatements', [])

@@ -1,13 +1,19 @@
 from rest_framework import serializers
 from ..models import *
-import json
 
-class PieceCollecteSerializer(serializers.Serializer):
-    """Pour la table intermédiaire FicheCollecte-Piece"""
-    piece_id = serializers.IntegerField()
-    statut = serializers.BooleanField()
-    nombre = serializers.IntegerField(default=0)
+class ImagePieceCollecteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImagePieceCollecte
+        fields = ['image', 'legende', 'ordre']
+
+class PieceCollecteSerializer(serializers.ModelSerializer):
+    piece_id = serializers.IntegerField(source='Piece')
+    images = serializers.ListField(
+        child=serializers.DictField(),
+        write_only=True,
+        required=False
+    )
 
     class Meta:
         model = PieceCollectes
-        fields = '__all__'
+        fields = ['piece_id', 'statut', 'nombre', 'images']

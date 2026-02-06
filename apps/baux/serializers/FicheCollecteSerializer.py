@@ -3,6 +3,10 @@ from ..models import *
 from .ImmeubleSerializer  import ImmeubleSerializer
 from .ContratSerializer  import ContratSerializer
 from .PieceCollecteSerializer import PieceCollecteSerializer
+from django.core.files.base import ContentFile
+import base64
+import uuid
+import json
 
 class FicheCollecteSerializer(serializers.ModelSerializer):
     immeuble = ImmeubleSerializer()
@@ -42,11 +46,42 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
 
     # Créer les pièces collectées
     def _create_pieces_collectees(self, pieces_data, fiche):
-        """Créer les pièces collectées"""
+        """Créer les pièces collectées avec leurs images"""
         for piece_data in pieces_data:
-            PieceCollectes.objects.create(
-                fiche_collecte=fiche,
-                piece_id=piece_data['piece_id'],
+            # Extraire les images
+            images_data = piece_data.pop('images', [])
+
+            # Créer la pièce collectée
+            piece_collecte = PieceCollectes.objects.create(
+                Collecte=fiche,
+                Piece_id=piece_data['Piece'],
                 statut=piece_data['statut'],
                 nombre=piece_data['nombre']
             )
+
+            # ✅ Créer les images associées
+            for index, image_data in enumerate(images_data):
+                try:
+                    # Décoder le base64
+                    format, imgstr = image_data['content'].split(';base64,')
+                    ext = format.split('/')[-1]
+
+                    # Générer un nom de fichier unique
+                    filename = f"{uuid.uuid4()}.{ext}"
+
+                    # Créer le fichier
+                    image_file = ContentFile(
+                        base64.b64decode(imgstr),
+                        name=filename
+                    )
+
+                    # Créer l'enregistrement image
+                    ImagePieceCollecte.objects.create(
+                        piece_collecte=piece_collecte,
+                        image=image_file,
+                        ordre=index + 1
+                    )
+
+                except Exception as e:
+                    print(f"Erreur lors du traitement de l'image {index}: {str(e)}")
+                    continue

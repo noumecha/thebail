@@ -115,7 +115,7 @@ class FicheCollecteFormHandler {
   }
 
   // Collecter toutes les données du formulaire
-  collectFormData() {
+  async collectFormData() {
     // Vérifier que les managers sont disponibles
     if (!window.TableManagers) {
       console.error('TableManagers not initialized');
@@ -183,7 +183,7 @@ class FicheCollecteFormHandler {
         avenants: this.collectAvenants(),
         non_mandatements: window.TableManagers.nonMandatementManager?.collectData() || []
       },
-      pieces_collectees: this.collectPiecesCollectees()
+      pieces_collectees: await this.collectPiecesCollectees()
     };
     return data;
   }
@@ -273,25 +273,71 @@ class FicheCollecteFormHandler {
     return avenants;
   }
 
-  // Collecter les pièces collectées
-  collectPiecesCollectees() {
+  // ✅ Collecter les pièces collectées avec conversion base64
+  async collectPiecesCollectees() {
     const pieces = [];
-    document.querySelectorAll('.piece-row').forEach(row => {
-      const pieceId = row.dataset.pieceId;
-      const checkbox = row.querySelector('.piece-checkbox');
-      const nombreInput = row.querySelector('.piece-nombre');
-      const files = row.querySelector('.piece-files');
+    const rows = document.querySelectorAll('.piece-row');
 
-      if (checkbox?.checked) {
-        pieces.push({
-          piece_id: parseInt(pieceId),
-          statut: true,
-          nombre: parseInt(nombreInput?.value || 1),
-          images: Array.from(files.files).map(file => URL.createObjectURL(file))
-        });
-      }
-    });
+    // Utiliser Promise.all pour traiter toutes les lignes en parallèle
+    await Promise.all(
+      Array.from(rows).map(async row => {
+        const pieceId = row.dataset.pieceId;
+        const checkbox = row.querySelector('.piece-checkbox');
+        const nombreInput = row.querySelector('.piece-nombre');
+        const filesInput = row.querySelector('.piece-files');
+
+        if (checkbox?.checked) {
+          const images = [];
+
+          // Convertir chaque fichier en base64
+          if (filesInput && filesInput.files.length > 0) {
+            for (let i = 0; i < filesInput.files.length; i++) {
+              const file = filesInput.files[i];
+
+              try {
+                // Convertir le fichier en base64
+                const base64 = await this.fileToBase64(file);
+
+                images.push({
+                  filename: file.name,
+                  content: base64,
+                  content_type: file.type,
+                  size: file.size
+                });
+              } catch (error) {
+                console.error(`Erreur conversion fichier ${file.name}:`, error);
+              }
+            }
+          }
+
+          pieces.push({
+            piece_id: parseInt(pieceId),
+            statut: true,
+            nombre: parseInt(nombreInput?.value || 1),
+            images: images
+          });
+        }
+      })
+    );
+
     return pieces;
+  }
+
+  // ✅ Fonction utilitaire pour convertir un fichier en base64
+  fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = error => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 
   // Valider les données avant soumission
@@ -348,7 +394,7 @@ class FicheCollecteFormHandler {
       this.showLoader();
 
       // Collecter les données
-      const formData = this.collectFormData();
+      const formData = await this.collectFormData();
 
       // ✅ DEBUG : Afficher les données avant envoi
       console.log('📤 Données envoyées:', JSON.stringify(formData, null, 2));

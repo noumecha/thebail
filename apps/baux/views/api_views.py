@@ -181,8 +181,8 @@ logger = logging.getLogger(__name__)
 def create_fiche_collecte(request):
     """Créer une fiche de collecte avec gestion complète des erreurs"""
     # ✅ DEBUG : Afficher les données reçues
-    print("📥 Données reçues:")
-    print(json.dumps(request.data, indent=2, ensure_ascii=False))
+    #print("📥 Données reçues:")
+    #print(json.dumps(request.data, indent=2, ensure_ascii=False))
     serializer = FicheCollecteSerializer(data=request.data)
 
     if not serializer.is_valid():
@@ -230,28 +230,53 @@ def generate_fiche_collecte_number(request):
     - NNNN: Numéro séquentiel sur 4 chiffres
     """
     arrondissement_id = request.GET.get('arrondissement_id')
+
     if not arrondissement_id:
         return JsonResponse({
             'error': 'L\'ID de l\'arrondissement est requis',
             'success': False
         }, status=400)
+
     try:
         arrondissement = get_object_or_404(Arrondissemements, pk=arrondissement_id)
         departement = arrondissement.departement
         region = departement.Region
-        count = Collectes.objects.filter(Immeuble__region=region,Immeuble__departement=departement,Immeuble__arrondissement=arrondissement).count()
-        numero_sequence = count + 1
+
+        # Générer les codes
         region_code = region.Libelle[:2].upper()
         dept_code = departement.LibelleFR[:3].upper()
         arr_code = get_arrondissement_code(arrondissement.LibelleFR)
-        numero_collecte = f"{region_code}{dept_code}{arr_code}{numero_sequence:04d}"
+
+        # Préfixe du numéro
+        prefix = f"{region_code}{dept_code}{arr_code}"
+
+        # ✅ Utiliser un verrou pour éviter les doublons
+        with transaction.atomic():
+            # Trouver le dernier numéro avec ce préfixe
+            last_collecte = Collectes.objects.filter(
+                Numero_fiche_de_collecte__startswith=prefix
+            ).select_for_update().order_by('-Numero_fiche_de_collecte').first()
+
+            if last_collecte:
+                # Extraire le numéro séquentiel
+                last_number = last_collecte.Numero_fiche_de_collecte[-4:]
+                try:
+                    numero_sequence = int(last_number) + 1
+                except ValueError:
+                    numero_sequence = 1
+            else:
+                numero_sequence = 1
+
+            numero_collecte = f"{prefix}{numero_sequence:04d}"
 
         return JsonResponse({
             'numero_collecte': numero_collecte,
-            'region_id' : region.id,
-            'dpt_id' : departement.id,
+            'region_id': region.id,
+            'dpt_id': departement.id,
+            'arrondissement_id': arrondissement.id,
             'region': region.Libelle,
             'departement': departement.LibelleFR,
+            'arrondissement': arrondissement.LibelleFR,
             'sequence': numero_sequence,
             'success': True
         }, status=200)
@@ -261,11 +286,6 @@ def generate_fiche_collecte_number(request):
             'error': 'Arrondissement introuvable',
             'success': False
         }, status=404)
-    except AttributeError as e:
-        return JsonResponse({
-            'error': f'Erreur de structure de données: {str(e)}',
-            'success': False
-        }, status=500)
     except Exception as e:
         return JsonResponse({
             'error': f'Erreur lors de la génération: {str(e)}',

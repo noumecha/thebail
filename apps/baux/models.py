@@ -704,18 +704,33 @@ class PieceCollectes(models.Model):
     Piece = models.ForeignKey("Pieces", on_delete=models.CASCADE, related_name="piece")
     statut = models.BooleanField(null=True, blank=True)
     nombre = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to="immeubles/")
     # timestamps
     Date_creation = models.DateTimeField(default=timezone.now)
     Date_miseajour = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name = "Pièce d'une collecte"
-        verbose_name_plural = "Pièces d'un collecte"
-        unique_together = ("Collecte", "Piece")  # éviter les doublons
+        verbose_name_plural = "Pièces d'une collecte"
+        unique_together = ("Collecte", "Piece")
 
     def __str__(self):
         return f"{self.Collecte.Numero_fiche_de_collecte} - {self.Piece.libelle}"
+
+class ImagePieceCollecte(models.Model):
+    piece_collecte = models.ForeignKey(PieceCollectes,on_delete=models.CASCADE,related_name="images")
+    image = models.ImageField(upload_to="pieces_collectees/%Y/%m/%d/")
+    legende = models.CharField(max_length=255, blank=True, null=True)
+    ordre = models.PositiveIntegerField(default=0)
+
+    Date_creation = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Image de pièce collectée"
+        verbose_name_plural = "Images de pièces collectées"
+        ordering = ['ordre', 'Date_creation']
+
+    def __str__(self):
+        return f"Image {self.ordre} - {self.piece_collecte}"
 
 class Pieces(models.Model):
     libelle = models.CharField(max_length=255, blank=True, null=True, unique=True)
@@ -862,7 +877,7 @@ class Non_Mandatement (models.Model):
     novembre = models.BooleanField(default=False, verbose_name="Novembre")
     decembre = models.BooleanField(default=False, verbose_name="Decembre")
     Montant_total_exercice = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Visa_budgétaire = models.BooleanField(null=True, blank=True)
+    Visa_budgétaire = models.CharField(max_length=50, null=True, blank=True)
     Ref_contrat_avenant = models.CharField(max_length=50, null=True, blank=True)
 
     # others
