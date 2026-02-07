@@ -1,13 +1,11 @@
 from rest_framework import serializers
 from ..models import *
-from .LocalisationSerializer import LocalisationSerializer
 from .ElementDescriptionLinkSerializer import ElementDescriptionLinkSerializer
 from .OccupantBureauxSerializer import OccupantBureauxSerializer
 from .OccupantResidentSerializer import OccupantResidentSerializer
 
 class ImmeubleSerializer(serializers.ModelSerializer):
     # ✅ Champs imbriqués
-    localisation = LocalisationSerializer(write_only=True)
     elements_description = ElementDescriptionLinkSerializer(many=True, write_only=True, required=False)
     occupants_residents = OccupantResidentSerializer(many=True, required=False, write_only=True)
     occupants_bureaux = OccupantBureauxSerializer(many=True, required=False, write_only=True)
@@ -26,21 +24,9 @@ class ImmeubleSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Créer l'immeuble avec toutes ses relations"""
         # ✅ Extraire les données imbriquées
-        localisation_data = validated_data.pop('localisation', {})
         elements_data = validated_data.pop('elements_description', [])
         occupants_residents_data = validated_data.pop('occupants_residents', [])
         occupants_bureaux_data = validated_data.pop('occupants_bureaux', [])
-
-        # ✅ Ajouter les données de localisation directement dans l'immeuble
-        if localisation_data:
-            validated_data['pays_id'] = localisation_data.get('pays_id')
-            validated_data['Ville'] = localisation_data.get('ville')
-            validated_data['Rue'] = localisation_data.get('rue')
-            validated_data['region_id'] = localisation_data.get('region_id')
-            validated_data['departement_id'] = localisation_data.get('departement_id')
-            validated_data['arrondissement_id'] = localisation_data.get('arrondissement_id')
-            validated_data['Quartier'] = localisation_data.get('quartier')
-            validated_data['Coordonee_gps'] = localisation_data.get('coordonnees_gps')
 
         # ✅ Créer l'immeuble
         immeuble = Immeubles.objects.create(**validated_data)
@@ -72,49 +58,62 @@ class ImmeubleSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Mettre à jour un immeuble"""
-        localisation_data = validated_data.pop('localisation', None)
         elements_data = validated_data.pop('elements_description', None)
         occupants_residents_data = validated_data.pop('occupants_residents', None)
         occupants_bureaux_data = validated_data.pop('occupants_bureaux', None)
+
         # Mettre à jour les champs simples
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        # Mettre à jour la localisation
-        if localisation_data:
-            for attr, value in localisation_data.items():
-                setattr(instance, attr, value)
-            instance.save()
-
-        # Mettre à jour les éléments de description
+        # ✅ Mettre à jour les éléments (update_or_create au lieu de delete)
         if elements_data is not None:
-            # Supprimer les anciens liens
-            ImmeubleElement.objects.filter(immeuble=instance).delete()
-            # Créer les nouveaux
+            existing_element_ids = []
             for element_data in elements_data:
-                ImmeubleElement.objects.create(
+                ImmeubleElement.objects.update_or_create(
                     immeuble=instance,
                     element_id=element_data['element_id'],
-                    statut=element_data['statut'],
-                    nombre=element_data['nombre']
+                    defaults={
+                        'statut': element_data['statut'],
+                        'nombre': element_data['nombre']
+                    }
                 )
+                existing_element_ids.append(element_data['element_id'])
 
-        # Mettre à jour les occupants résidents
+            # Supprimer uniquement ceux qui ne sont plus présents
+            ImmeubleElement.objects.filter(
+                immeuble=instance
+            ).exclude(
+                element_id__in=existing_element_ids
+            ).delete()
+
+        # ✅ Mettre à jour les occupants résidents (update_or_create)
         if occupants_residents_data is not None:
-            Occupants.objects.filter(immeuble=instance).delete()
+            existing_occupant_ids = []
             for occupant_data in occupants_residents_data:
-                Occupants.objects.create(
-                    immeuble=instance,
-                    **occupant_data
+                nom_prenom = occupant_data.get('Nom_Prenom_occupant_residence')
+                occupant, created = Occupants.objects.update_or_create(
+                    Immeuble=instance,
+                    Nom_Prenom_occupant_residence=nom_prenom,
+                    defaults=occupant_data
                 )
+                existing_occupant_ids.append(occupant.id)
 
-        # Mettre à jour les occupants bureaux
+            # Supprimer ceux qui ne sont plus présents
+            Occupants.objects.filter(
+                Immeuble=instance
+            ).exclude(
+                id__in=existing_occupant_ids
+            ).delete()
+
+        # ✅ Mettre à jour les occupants bureaux (update_or_create)
         if occupants_bureaux_data is not None:
-            OccupantBureaux.objects.filter(immeuble=instance).delete()
+            # Supprimer et recréer (car pas de champ unique évident)
+            OccupantBureaux.objects.filter(Immeuble=instance).delete()
             for occupant_data in occupants_bureaux_data:
                 OccupantBureaux.objects.create(
-                    immeuble=instance,
+                    Immeuble=instance,
                     **occupant_data
                 )
 

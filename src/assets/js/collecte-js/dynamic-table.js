@@ -166,6 +166,23 @@ function DynamicTableManager(config) {
     return $newRow;
   }
 
+  this.addNewRow = function () {
+    return addNewRow();
+  };
+
+  this.clearAllRows = function () {
+    $tbody.find('.dynamic-row').each(function () {
+      const $row = $(this);
+      $row.find('.select2-ajax').each(function () {
+        if ($(this).hasClass('select2-hidden-accessible')) {
+          $(this).select2('destroy');
+        }
+      });
+    });
+    $tbody.empty();
+    rowCounter = 0;
+  };
+
   function isRowComplete($row) {
     let isComplete = true;
     $row.find('.dynamic-field').each(function () {

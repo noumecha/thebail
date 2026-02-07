@@ -492,7 +492,9 @@ function getCsrfToken() {
 // message an ux tips
 function showLoader(form = null) {
   // Afficher un message de chargement ou une animation
-  showNotification('Chargement des informations...', 'info');
+  if (!form) {
+    showNotification('Chargement des informations...', 'info');
+  }
   // Afficher un spinner ou désactiver le bouton de soumission pour indiquer que le formulaire est en cours de traitement
   if (form) {
     const submitBtn = form.querySelector('button[type="submit"]');

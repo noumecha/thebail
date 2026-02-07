@@ -4,6 +4,7 @@ from .views import *
 from django.urls import re_path as url
 from rest_framework.routers import DefaultRouter
 from .views.fichecollecteviews import FicheCollecteViewSet, FicheCollecteFormView, FicheEditView
+from django.conf.urls.static import static
 
 app_name = 'baux'
 
@@ -120,3 +121,5 @@ urlpatterns = [
     path('api/fiches/<int:fiche_id>/update/', update_fiche_collecte, name='update_fiche_collecte'),
 ]
 urlpatterns += router.urls
+if settings.DEBUG:
+    urlpatterns += static('/uploads/', document_root=os.path.join(settings.BASE_DIR, 'uploads'))

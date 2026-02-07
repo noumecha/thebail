@@ -61,12 +61,6 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["type_personnes"] = transform_queryset_to_listable(TYPE_PERSONNE)
         context["statut_bailleur"] = transform_queryset_to_listable(STATUT_BAILLEUR)
 
-        # months for non_mndatement template
-        context["non_mandatement_months"] = [
-            'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
-            'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
-        ]
-
         # Prepare element groups for the template
         elements = list(ElementDeDescription.objects.all())
         element_groups = []
@@ -105,7 +99,58 @@ class FicheEditView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        """ Préparer les données pour les listes et autres éléments de sélection dans le template """
+        # elements for selections in template
+        context["immeubles"] = Immeubles.objects.all()
+        context["occupants"] = Occupants.objects.all()
+        context["occupantsbureaux"] = OccupantBureaux.objects.all()
+        context["contrats"] = Contrats.objects.all()
+        context["non_mandatements"] = Non_Mandatement.objects.all()
+        context["bailleurs"] = transform_queryset_to_listable(Bailleurs.objects.all()[:30])
 
+        # iterable list
+        context["type_constructions"] = TypeConstructions.objects.all()
+        context["type_contrats"] = TypeContrats.objects.all()
+        context["periodicite_reglements"] = PeriodiciteReglement.objects.all()
+        context["revetement_interieures"] = RevetementInts.objects.all()
+        context["revetement_exterieures"] = RevetementExts.objects.all()
+        context["statut_batisses"] = StatutBatisse.objects.all()
+        context["type_locations"] = TypeLocations.objects.all()
+        context["devises"] = DEVISES
+        context["exercices"] = transform_queryset_to_listable(Exercice.objects.all()[:30])
+        context["banques"] = transform_queryset_to_listable(Banques.objects.all()[:30])
+        context["type_personnes"] = transform_queryset_to_listable(TYPE_PERSONNE)
+        context["statut_bailleur"] = transform_queryset_to_listable(STATUT_BAILLEUR)
+
+        # Prepare element groups for the template
+        elements = list(ElementDeDescription.objects.all())
+        element_groups = []
+        group = []
+        for index, el in enumerate(elements, start=1):
+            group.append({
+                "id": el.pk,
+                "libelle": str(el),
+            })
+            if index % 9 == 0 or index == len(elements):
+                element_groups.append(group)
+                group = []
+        context["element_groups"] = element_groups
+
+        # prepares pieces groups for the template
+        pieces = list(Pieces.objects.all())
+        piece_groups = []
+        group = []
+        for index, el in enumerate(pieces, start=1):
+            group.append({
+                "id": el.pk,
+                "libelle": str(el),
+            })
+            if index % 9 == 0 or index == len(pieces):
+                piece_groups.append(group)
+                group = []
+        context["piece_groups"] = piece_groups
+
+        """ Elément à éditer """
         fiche_id = self.kwargs.get('fiche_id')
         fiche = get_object_or_404(Collectes, pk=fiche_id)
 

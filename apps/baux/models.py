@@ -427,7 +427,7 @@ class Pays (models.Model):
     Continent = models.CharField(max_length=20, null=True)
 
     def __str__(self):
-        return f"Pays : {self.AbreviationFr} "
+        return f"Pays : {self.LibelleFR} "
 
 class Regions (models.Model):
     Libelle = models.CharField(max_length=50)
@@ -435,7 +435,7 @@ class Regions (models.Model):
     AbreviationFr = models.CharField(max_length=20, null=True)
 
     def __str__(self):
-        return f" {self.AbreviationFr} "
+        return f" {self.Libelle} "
 
 class Departements (models.Model):
     LibelleFR = models.CharField(max_length=50)
@@ -444,7 +444,7 @@ class Departements (models.Model):
     Region = models.ForeignKey(Regions, on_delete=models.CASCADE, null=False, related_name="region")
 
     def __str__(self):
-        return f"{self.AbreviationFr} "
+        return f"{self.LibelleFR} "
 
 class Arrondissemements (models.Model):
     LibelleFR = models.CharField(max_length=50)
@@ -453,7 +453,7 @@ class Arrondissemements (models.Model):
     departement = models.ForeignKey(Departements, on_delete=models.CASCADE, null=False, related_name="departement")
 
     def __str__(self):
-        return f" {self.AbreviationFr} "
+        return f" {self.LibelleFR} "
 
 class Localisation (models.Model):
     Quartier = models.CharField(max_length=50,null=True, blank=True)

@@ -105,7 +105,6 @@ class ContratSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Mettre à jour un contrat"""
-        # Extraire les données imbriquées
         bailleur_data = validated_data.pop('bailleur', None)
         avenants_data = validated_data.pop('avenants', None)
         non_mandatements_data = validated_data.pop('non_mandatements', None)
@@ -115,7 +114,7 @@ class ContratSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
-        # Mettre à jour le bailleur
+        # ✅ Mettre à jour le bailleur (update_or_create)
         if bailleur_data:
             ayants_droit_data = bailleur_data.pop('ayants_droit', None)
 
@@ -131,38 +130,64 @@ class ContratSerializer(serializers.ModelSerializer):
                 instance.Bailleur = bailleur
                 instance.save()
 
-            # Mettre à jour les ayants droit
+            # ✅ Mettre à jour les ayants droit (update_or_create)
             if ayants_droit_data is not None:
-                Ayant_droits.objects.filter(Bailleur=bailleur).delete()
+                existing_ayant_ids = []
                 for ayant_data in ayants_droit_data:
-                    Ayant_droits.objects.create(
+                    nom_prenom = ayant_data.get('Nom_Prenom_ayant_droit')
+                    ayant, created = Ayant_droits.objects.update_or_create(
                         Bailleur=bailleur,
-                        **ayant_data
+                        Nom_Prenom_ayant_droit=nom_prenom,
+                        defaults=ayant_data
                     )
+                    existing_ayant_ids.append(ayant.id)
 
-        # Mettre à jour les avenants
+                # Supprimer ceux qui ne sont plus présents
+                Ayant_droits.objects.filter(
+                    Bailleur=bailleur
+                ).exclude(
+                    id__in=existing_ayant_ids
+                ).delete()
+
+        # ✅ Mettre à jour les avenants (update_or_create)
         if avenants_data is not None:
-            Avenants.objects.filter(contrat=instance).delete()
+            existing_avenant_ids = []
             for avenant_data in avenants_data:
-                Avenants.objects.create(
+                ref_avenant = avenant_data.get('Ref_Avenant')
+                avenant, created = Avenants.objects.update_or_create(
                     contrat=instance,
-                    **avenant_data
+                    Ref_Avenant=ref_avenant,
+                    defaults=avenant_data
                 )
+                existing_avenant_ids.append(avenant.id)
 
-        # Mettre à jour les non-mandatements
+            # Supprimer ceux qui ne sont plus présents
+            Avenants.objects.filter(
+                contrat=instance
+            ).exclude(
+                id__in=existing_avenant_ids
+            ).delete()
+
+        # ✅ Mettre à jour les non-mandatements (update_or_create)
         if non_mandatements_data is not None:
-            Non_Mandatement.objects.filter(contrat=instance).delete()
-
-            MOIS_FIELDS = [
-                'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
-                'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
-            ]
-
+            existing_nm_ids = []
             for nm_data in non_mandatements_data:
-                Non_Mandatement.objects.create(
-                    contrat=instance,
-                    Bailleur=instance.Bailleur,
-                    **nm_data
+                ref_attestation = nm_data.get('Ref_Attestattion')
+                nm, created = Non_Mandatement.objects.update_or_create(
+                    Contrat=instance,
+                    Ref_Attestattion=ref_attestation,
+                    defaults={
+                        **nm_data,
+                        'Bailleur': instance.Bailleur
+                    }
                 )
+                existing_nm_ids.append(nm.id)
+
+            # Supprimer ceux qui ne sont plus présents
+            Non_Mandatement.objects.filter(
+                Contrat=instance
+            ).exclude(
+                id__in=existing_nm_ids
+            ).delete()
 
         return instance

@@ -3,7 +3,7 @@ class FicheCollecteFormHandler {
   constructor(formId, ficheId = null) {
     this.form = document.getElementById(formId);
     this.ficheId = ficheId;
-    this.isEditMode = ficheId !== null;
+    this.isEditMode = ficheId !== '';
     this.init();
   }
 
@@ -12,6 +12,9 @@ class FicheCollecteFormHandler {
       e.preventDefault();
       this.handleSubmit();
     });
+    // init pieces and elements states
+    this.initElementsImmeuble();
+    this.initPiecesCollectees();
     // mode :
     if (this.isEditMode) {
       await this.loadFicheData();
@@ -23,9 +26,14 @@ class FicheCollecteFormHandler {
         this.generateFicheCollecte(arrondissementId);
       }
     });
-    // init pieces and elements states
-    this.initElementsImmeuble();
-    this.initPiecesCollectees();
+    // change btn text value base on the mode :
+    const submitBtn = this.form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.innerHTML = this.isEditMode
+        ? '<i class="bx bx-edit"></i> Mettre à jour'
+        : '<i class="bx bx-save"></i> Enregistrer';
+      submitBtn.classList.add(this.isEditMode ? 'btn-warning' : 'btn-primary');
+    }
   }
 
   initPiecesCollectees() {
@@ -56,6 +64,7 @@ class FicheCollecteFormHandler {
   validatePiecesCollectees() {
     const errors = [];
     const $container = $('#pieces-collecte-container-tbody');
+
     $container.find('tr[data-piece-id]').each(function () {
       const $row = $(this);
       const elementId = $row.data('piece-id');
@@ -63,17 +72,24 @@ class FicheCollecteFormHandler {
       const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
       const $imageInput = $row.find(`#piece_image_input_${elementId}`);
       const elementLabel = $row.find('label.form-check-label').text().trim();
+
       if ($checkbox.is(':checked')) {
+        // ✅ Valider la quantité
         const quantity = $numberInput.val();
-        const images = $imageInput.val();
         if (!quantity || quantity.trim() === '' || parseInt(quantity) <= 0) {
           errors.push(`${elementLabel}: La quantité est obligatoire lorsque l'élément est coché`);
         }
-        if (!images || images.length <= 0) {
+
+        // ✅ Valider les images (nouvelles OU existantes)
+        const hasNewImages = $imageInput && $imageInput.files && $imageInput.files.length > 0;
+        const hasExistingImages = $row.find('.existing-image-item').length > 0;
+
+        if (!hasNewImages && !hasExistingImages) {
           errors.push(`${elementLabel}: Les images sont obligatoires lorsque l'élément est coché`);
         }
       }
     });
+
     return errors;
   }
 
@@ -143,16 +159,14 @@ class FicheCollecteFormHandler {
         revetement_int_id: this.getDynamicChoiceValue('revetement_int_id'),
         revetement_ext_id: this.getDynamicChoiceValue('revetement_ext_id'),
         observation: getValue('observation'),
-        localisation: {
-          pays: getValue('pays'),
-          Ville: getValue('Ville'),
-          Rue: getValue('Rue'),
-          region: getValue('region'),
-          departement: getValue('departement'),
-          arrondissement: getValue('arrondissement'),
-          Quartier: getValue('Quartier'),
-          Coordonee_gps: getValue('Coordonee_gps')
-        },
+        pays: getValue('pays'),
+        Ville: getValue('Ville'),
+        Rue: getValue('Rue'),
+        region: getValue('region'),
+        departement: getValue('departement'),
+        arrondissement: getValue('arrondissement'),
+        Quartier: getValue('Quartier'),
+        Coordonee_gps: getValue('Coordonee_gps'),
         elements_description: this.collectElementsDescription(),
         occupants_residents: window.TableManagers.logementsManager?.collectData() || [],
         occupants_bureaux: window.TableManagers.bureauxManager?.collectData() || []
@@ -273,7 +287,6 @@ class FicheCollecteFormHandler {
     const pieces = [];
     const rows = document.querySelectorAll('.piece-row');
 
-    // Utiliser Promise.all pour traiter toutes les lignes en parallèle
     await Promise.all(
       Array.from(rows).map(async row => {
         const pieceId = row.dataset.pieceId;
@@ -284,13 +297,26 @@ class FicheCollecteFormHandler {
         if (checkbox?.checked) {
           const images = [];
 
-          // Convertir chaque fichier en base64
+          // Récupérer les images existantes (en mode edit)
+          const existingImages = [];
+          const $existingImageItems = $(row).find('.existing-image-item');
+          $existingImageItems.each(function () {
+            const imageId = $(this).find('.delete-image').data('image-id');
+            if (imageId) {
+              existingImages.push({
+                id: imageId,
+                existing: true // Marquer comme existante
+              });
+            }
+          });
+          console.log('images existente: ', existingImages);
+
+          // Convertir les nouveaux fichiers en base64
           if (filesInput && filesInput.files.length > 0) {
             for (let i = 0; i < filesInput.files.length; i++) {
               const file = filesInput.files[i];
 
               try {
-                // Convertir le fichier en base64
                 const base64 = await fileToBase64(file);
 
                 images.push({
@@ -303,6 +329,9 @@ class FicheCollecteFormHandler {
                 console.error(`Erreur conversion fichier ${file.name}:`, error);
               }
             }
+          } else {
+            // ✅ Si pas de nouveaux fichiers, reprendre les existants
+            images.push(...existingImages);
           }
 
           pieces.push({
@@ -341,6 +370,20 @@ class FicheCollecteFormHandler {
 
     if (!data.immeuble.type_construction_id) {
       errors.push('Le type de construction est requis');
+    }
+
+    if (!data.immeuble.pays) {
+      errors.push('Le pays est requis');
+    }
+    if (!data.immeuble.region) {
+      errors.push('La région est requise');
+    }
+    if (!data.immeuble.departement) {
+      errors.push('Le département est requis');
+    }
+
+    if (!data.immeuble.arrondissement) {
+      errors.push("L'arrondissement est requis");
     }
 
     if (!data.contrat.Numero_contrat) {
@@ -497,8 +540,13 @@ class FicheCollecteFormHandler {
 
   // ✅ Générer le numéro de fiche de collecte
   async generateFicheCollecte(arrondissementId) {
+    const params = new URLSearchParams({
+      arrondissement_id: arrondissementId,
+      ...(this.isEditMode && { edit_mode: 'true', fiche_id: this.ficheId })
+    });
+    let url = `/api/fiches/numero/?${params.toString()}`;
     try {
-      const response = await fetch(`/api/fiches/numero/?arrondissement_id=${arrondissementId}`, {
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -575,7 +623,10 @@ class FicheCollecteFormHandler {
     const submitBtn = this.form.querySelector('button[type="submit"]');
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Enregistrer';
+      submitBtn.innerHTML = this.isEditMode
+        ? '<i class="bx bx-edit"></i> Mettre à jour'
+        : '<i class="bx bx-save"></i> Enregistrer';
+      submitBtn.classList.add(this.isEditMode ? 'btn-warning' : 'btn-primary');
     }
   }
 
@@ -621,7 +672,7 @@ class FicheCollecteFormHandler {
       if (response.ok && result.success) {
         await this.populateForm(result.data);
         console.log('datas :', result.data);
-        this.showNotification('Données chargées avec succès', 'success');
+        showNotification('Données chargées avec succès', 'success');
       } else {
         this.showErrors(['Erreur lors du chargement des données']);
       }
@@ -641,7 +692,7 @@ class FicheCollecteFormHandler {
 
     // Agent (Select2)
     await this.setSelect2Value('responsable_collecte', data.agent_collecte_id, data.Agent?.nom);
-    this.setValue('matricule_responsable_collecte', data.matricule_agent);
+    await this.setSelect2Value('matricule_responsable_collecte', data.matricule_agent, data.Agent?.matricule);
 
     // Immeuble
     if (data.immeuble) {
@@ -657,19 +708,18 @@ class FicheCollecteFormHandler {
       this.setDynamicChoice('statut_batisse_id', data.immeuble.statut_batisse_id);
       this.setDynamicChoice('revetement_int_id', data.immeuble.revetement_int_id);
       this.setDynamicChoice('revetement_ext_id', data.immeuble.revetement_ext_id);
-
-      // Localisation
-      if (data.immeuble.localisation) {
-        const loc = data.immeuble.localisation;
-        await this.setSelect2Value('pays', loc.pays_id);
-        this.setValue('Ville', loc.ville);
-        this.setValue('Rue', loc.rue);
-        await this.setSelect2Value('region', loc.region_id);
-        await this.setSelect2Value('departement', loc.departement_id);
-        await this.setSelect2Value('arrondissement', loc.arrondissement_id);
-        this.setValue('Quartier', loc.quartier);
-        this.setValue('Coordonee_gps', loc.coordonnees_gps);
-      }
+      await this.setSelect2Value('pays', data.immeuble.pays_id, data.immeuble.pays?.libelle);
+      this.setValue('Ville', data.immeuble.ville);
+      this.setValue('Rue', data.immeuble.rue);
+      await this.setSelect2Value('region', data.immeuble.region_id, data.immeuble.region?.libelle);
+      await this.setSelect2Value('departement', data.immeuble.departement_id, data.immeuble.departement?.libelle);
+      await this.setSelect2Value(
+        'arrondissement',
+        data.immeuble.arrondissement_id,
+        data.immeuble.arrondissement?.libelle
+      );
+      this.setValue('Quartier', data.immeuble.quartier);
+      this.setValue('Coordonee_gps', data.immeuble.coordonnees_gps);
 
       // Éléments de description
       if (data.immeuble.elements_description) {
@@ -804,24 +854,70 @@ class FicheCollecteFormHandler {
   // ✅ Remplir les occupants (logements ou bureaux)
   populateOccupants(managerName, occupants) {
     const manager = window.TableManagers[managerName];
-    if (!manager) return;
 
-    occupants.forEach(occupant => {
+    if (!manager) {
+      console.warn(`Manager ${managerName} non trouvé`);
+      return;
+    }
+
+    if (!occupants || occupants.length === 0) {
+      return;
+    }
+
+    // ✅ Mapping des noms de champs API vers les noms de champs du formulaire
+    const fieldMapping = {
+      // Pour les logements
+      nom_prenom: 'Nom_Prenom_occupant_residence',
+      administration_rattachement: 'Administration_rattachement',
+      fonction: 'Fonction_occupant_residence',
+      matricule: 'Matricule_occupant_residence',
+      ref_acte: 'Ref_ActeJuridique_attribution',
+      date_signature: 'Date_Signature_acte_juridique',
+
+      // Pour les bureaux
+      service_occupant_bureau: 'Service_occupant_bureau',
+      administration_correspondante: 'Administration_correspondante',
+      fonction_responsable: 'Fonction_occupant_bureau',
+      date_signature_bureau: 'Date_signature_acte_attribution'
+    };
+
+    // Vider les lignes existantes
+    if (manager.clearAllRows) {
+      manager.clearAllRows();
+    }
+
+    occupants.forEach((occupant, index) => {
       const $row = manager.addNewRow();
 
-      // Remplir les champs de la ligne
-      Object.entries(occupant).forEach(([key, value]) => {
-        const $field = $row.find(`[data-field="${key}"]`);
-        if ($field.length) {
-          if ($field.hasClass('select2-ajax')) {
-            // Pour les champs Select2
-            const option = new Option(value.text || value, value.id || value, true, true);
-            $field.append(option).trigger('change');
-          } else {
-            $field.val(value);
+      setTimeout(() => {
+        Object.entries(occupant).forEach(([apiKey, value]) => {
+          // ✅ Utiliser le mapping ou le nom original
+          const formFieldName = fieldMapping[apiKey] || apiKey;
+          const $field = $row.find(`[data-field="${formFieldName}"]`);
+
+          if ($field.length) {
+            if ($field.hasClass('select2-ajax')) {
+              let optionId, optionText;
+
+              if (typeof value === 'object' && value !== null) {
+                optionId = value.id || value.value;
+                optionText = value.text || value.label || value.libelle || optionId;
+              } else {
+                // Si c'est juste un ID, on l'utilise
+                optionId = value;
+                optionText = value;
+              }
+
+              if (optionId) {
+                const option = new Option(optionText, optionId, true, true);
+                $field.append(option).trigger('change');
+              }
+            } else {
+              $field.val(value);
+            }
           }
-        }
-      });
+        });
+      }, 200);
     });
   }
 
@@ -830,21 +926,25 @@ class FicheCollecteFormHandler {
     const manager = window.TableManagers.ayantsDroitManager;
     if (!manager) return;
 
+    // Vider les lignes existantes
+    if (manager.clearAllRows) {
+      manager.clearAllRows();
+    }
+
     ayantsDroit.forEach(ayant => {
       const $row = manager.addNewRow();
-
-      $row.find('[data-field="nom_prenom"]').val(ayant.Nom_Prenom);
-      $row.find('[data-field="contact"]').val(ayant.Contact);
-      $row.find('[data-field="ref_grosse"]').val(ayant.Ref_Grosse);
-      $row.find('[data-field="date_delivrance_grosse"]').val(ayant.Date_delivrance_Grosse);
-      $row.find('[data-field="ref_certificat"]').val(ayant.Ref_Certificat_non_appel);
-      $row.find('[data-field="date_delivrance_certificat"]').val(ayant.Date_delivrance_Certificat);
+      $row.find('[data-field="Nom_Prenom_ayant_droit"]').val(ayant.Nom_Prenom);
+      $row.find('[data-field="Contact_ayant_droit"]').val(ayant.Contact);
+      $row.find('[data-field="Reference_Grosse_ayant_droit"]').val(ayant.Ref_Grosse);
+      $row.find('[data-field="Date_delivrance_grosse"]').val(ayant.Date_delivrance_Grosse);
+      $row.find('[data-field="Reference_certificat_non_appel"]').val(ayant.Ref_Certificat_non_appel);
+      $row.find('[data-field="Date_delivrance_certificat_non_appel"]').val(ayant.Date_delivrance_Certificat);
     });
   }
 
   // ✅ Remplir les avenants
   populateAvenants(avenants) {
-    avenants.forEach((avenant, index) => {
+    avenants.forEach(async (avenant, index) => {
       const num = index + 1;
       if (num > 2) return; // Maximum 2 avenants dans le formulaire
 
@@ -853,12 +953,16 @@ class FicheCollecteFormHandler {
       this.setValue(`date_effet_avenant_${num}`, avenant.Date_effet);
 
       // Bailleurs
-      if (avenant.Ancien_bailleur) {
-        this.setSelect2Value(`avenant_${num}_ancien_bailleurs_list`, avenant.Ancien_bailleur);
-      }
-      if (avenant.Nouveau_bailleur) {
-        this.setSelect2Value(`avenant_${num}_nouveau_bailleurs_list`, avenant.Nouveau_bailleur);
-      }
+      await this.setSelect2Value(
+        `avenant_${num}_ancien_bailleurs_list`,
+        avenant.Ancien_bailleur,
+        avenant.Ancien_bailleur_object?.libelle
+      );
+      await this.setSelect2Value(
+        `avenant_${num}_nouveau_bailleurs_list`,
+        avenant.Nouveau_bailleur,
+        avenant.Nouveau_bailleur_object?.libelle
+      );
 
       this.setValue(`avenant_${num}_ancienmontant_loyer_mensuel`, avenant.Montant_TTC_Mensuel_ancien);
       this.setValue(`avenant_${num}_nouveaumontant_loyer_mensuel`, avenant.Montant_TTC_Mensuel_Nouveau);
@@ -869,6 +973,11 @@ class FicheCollecteFormHandler {
   populateNonMandatements(nonMandatements) {
     const manager = window.TableManagers.nonMandatementManager;
     if (!manager) return;
+
+    // Vider les lignes existantes
+    if (manager.clearAllRows) {
+      manager.clearAllRows();
+    }
 
     nonMandatements.forEach(nm => {
       const $row = manager.addNewRow();
@@ -919,18 +1028,17 @@ class FicheCollecteFormHandler {
       if (!$row.length) return;
 
       // Cocher la checkbox
-      $row.find('.piece-checkbox').prop('checked', true);
+      const $checkbox = $row.find('.piece-checkbox');
+      $checkbox.prop('checked', true);
 
-      // Activer et remplir le nombre
-      const $nombreInput = $row.find('.piece-nombre');
+      // Utiliser les MÊMES sélecteurs que dans initPiecesCollectees()
+      const elementId = piece.piece_id;
+      const $nombreInput = $row.find(`#piece_nombre_input_${elementId}`);
+      const $fileInput = $row.find(`#piece_image_input_${elementId}`);
+
       $nombreInput.prop('disabled', false).val(piece.nombre);
-
-      // Activer l'input fichier
-      const $fileInput = $row.find('.piece-files');
       $fileInput.prop('disabled', false);
 
-      // Note: Les images existantes ne peuvent pas être pré-chargées dans un input file
-      // Vous pouvez afficher une liste des images existantes à côté
       if (piece.images && piece.images.length > 0) {
         this.displayExistingImages($row, piece.images);
       }
@@ -962,7 +1070,6 @@ class FicheCollecteFormHandler {
       .join('');
 
     $row.find('.existing-images').html(`
-      <small class="text-muted d-block">Images existantes:</small>
       ${imagesHtml}
     `);
 

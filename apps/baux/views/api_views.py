@@ -230,6 +230,8 @@ def generate_fiche_collecte_number(request):
     - NNNN: Numéro séquentiel sur 4 chiffres
     """
     arrondissement_id = request.GET.get('arrondissement_id')
+    edit_mode = request.GET.get('edit_mode', 'false').lower() == 'true'
+    fiche_id = request.GET.get('fiche_id')
 
     if not arrondissement_id:
         return JsonResponse({
@@ -253,9 +255,15 @@ def generate_fiche_collecte_number(request):
         # ✅ Utiliser un verrou pour éviter les doublons
         with transaction.atomic():
             # Trouver le dernier numéro avec ce préfixe
-            last_collecte = Collectes.objects.filter(
-                Numero_fiche_de_collecte__startswith=prefix
-            ).select_for_update().order_by('-Numero_fiche_de_collecte').first()
+            # dans le cas ou edit mode est true on enleve la fiche de collecte du filter
+            if edit_mode and fiche_id:
+                last_collecte = Collectes.objects.filter(
+                    Numero_fiche_de_collecte__startswith=prefix
+                ).exclude(pk=fiche_id).select_for_update().order_by('-Numero_fiche_de_collecte').first()
+            else:
+                last_collecte = Collectes.objects.filter(
+                    Numero_fiche_de_collecte__startswith=prefix
+                ).select_for_update().order_by('-Numero_fiche_de_collecte').first()
 
             if last_collecte:
                 # Extraire le numéro séquentiel

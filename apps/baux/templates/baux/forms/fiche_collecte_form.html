@@ -493,7 +493,7 @@
 
                 <!-- bailleur -->
                 <h5 class='text-uppercase mt-5'>II. Bailleur</h5>
-                <table class="table table-bordered align-middle text-center">
+                <table class="table table-responsive table-bordered align-middle text-center">
                   <tbody>
                     <tr>
                       <td class="text-start p-0">
@@ -556,7 +556,7 @@
                       </td>
                       <td class="p-0">
                         <div>
-                          <table class="table table-bordered" id="ayants-droit-table">
+                          <table class="table table-responsive table-bordered" id="ayants-droit-table">
                             <thead>
                               <tr>
                                 <th style="width: 50px;">N°</th>
@@ -660,9 +660,7 @@
 
       </div>
       <div class="mt-3">
-        <button type="submit" class="btn btn-primary">
-          {% if fiche_id %}Mettre à jour{% else %}Enregistrer{% endif %}
-        </button>
+        <button type="submit" class="btn"></button>
         <a href="{% url 'baux:collecte_list' %}" class="btn btn-secondary">Annuler</a>
       </div>
     </form>

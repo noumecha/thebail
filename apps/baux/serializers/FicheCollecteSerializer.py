@@ -20,9 +20,11 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Création avec gestion des relations imbriquées"""
+        print("📥 Données reçues:")
+        print(validated_data)
         # Extraire les données imbriquées
-        immeuble_data = validated_data.pop('immeuble')
-        contrat_data = validated_data.pop('contrat')
+        immeuble_data = validated_data.pop('Immeuble')
+        contrat_data = validated_data.pop('Contrat')
         pieces_data = validated_data.pop('pieces_collectees', [])
 
         # Créer l'immeuble
@@ -33,10 +35,15 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
         contrat_serializer = ContratSerializer()
         contrat = contrat_serializer.create(contrat_data)
 
+        # liaison avec le responsable de collecte
+        matricule_agent = self.initial_data.get('agent_collecte_id')
+        agent = AgentCollecte.objects.get(Matricule=matricule_agent) if matricule_agent else None
+
         # Créer la fiche de collecte
         fiche = Collectes.objects.create(
             Immeuble=immeuble,
             Contrat=contrat,
+            Agent=agent,
             **validated_data
         )
 
@@ -47,28 +54,35 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Mise à jour avec gestion des relations imbriquées"""
+        print("📥 Données reçues pour update:")
+        print(json.dumps(self.initial_data, indent=2, ensure_ascii=False))
+
         # Extraire les données imbriquées
-        immeuble_data = validated_data.pop('immeuble', None)
-        contrat_data = validated_data.pop('contrat', None)
+        immeuble_data = validated_data.pop('Immeuble', None)  # ✅ Utiliser 'Immeuble' pas 'immeuble'
+        contrat_data = validated_data.pop('Contrat', None)    # ✅ Utiliser 'Contrat' pas 'contrat'
         pieces_data = validated_data.pop('pieces_collectees', None)
+
+        # Mettre à jour l'agent
+        agent_id = self.initial_data.get('agent_collecte_id')
+        if agent_id:
+            agent = AgentCollecte.objects.get(id=agent_id)
+            instance.Agent = agent
 
         # Mettre à jour les champs simples de la fiche
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        # Mettre à jour l'immeuble
+        # ✅ Mettre à jour l'immeuble (passer l'instance existante)
         if immeuble_data:
             immeuble_serializer = ImmeubleSerializer()
             if instance.Immeuble:
-                # Mettre à jour l'immeuble existant
                 immeuble_serializer.update(instance.Immeuble, immeuble_data)
             else:
-                # Créer un nouvel immeuble
                 instance.Immeuble = immeuble_serializer.create(immeuble_data)
                 instance.save()
 
-        # Mettre à jour le contrat
+        # ✅ Mettre à jour le contrat (passer l'instance existante)
         if contrat_data:
             contrat_serializer = ContratSerializer()
             if instance.Contrat:
@@ -79,10 +93,8 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
 
         # Mettre à jour les pièces collectées
         if pieces_data is not None:
-            # Supprimer les anciennes pièces
-            PieceCollectes.objects.filter(Collecte=instance).delete()
-            # Créer les nouvelles
-            self._create_pieces_collectees(pieces_data, instance)
+            # ✅ Ne pas supprimer, utiliser update_or_create
+            self._update_pieces_collectees(pieces_data, instance)
 
         return instance
 
@@ -112,6 +124,10 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
         # ✅ Ajouter l'immeuble avec toutes ses relations
         if instance.Immeuble:
             immeuble = instance.Immeuble
+            pays = Pays.objects.get(id=immeuble.pays_id).LibelleFR if immeuble.pays_id else None,
+            region = Regions.objects.get(id=immeuble.region_id).Libelle if immeuble.region_id else None,
+            departement = Departements.objects.get(id=immeuble.departement_id).LibelleFR if immeuble.departement_id else None,
+            arrondissement = Arrondissemements.objects.get(id=immeuble.arrondissement_id).LibelleFR if immeuble.arrondissement_id else None,
             immeuble_data = {
                 'id': immeuble.id,
                 'Designation': immeuble.Designation,
@@ -124,16 +140,30 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
                 'revetement_int_id': immeuble.Revetement_interieure_id,
                 'revetement_ext_id': immeuble.Revetement_exterieure_id,
                 'observation': immeuble.observation,
-                'localisation': {
-                    'pays_id': immeuble.pays_id,
-                    'ville': immeuble.Ville,
-                    'rue': immeuble.Rue,
-                    'region_id': immeuble.region_id,
-                    'departement_id': immeuble.departement_id,
-                    'arrondissement_id': immeuble.arrondissement_id,
-                    'quartier': immeuble.Quartier,
-                    'coordonnees_gps': immeuble.Coordonee_gps
+                'pays_id': immeuble.pays_id,
+                'pays': {
+                    'id': immeuble.pays_id,
+                    'libelle': pays
                 },
+                'ville': immeuble.Ville,
+                'rue': immeuble.Rue,
+                'region_id': immeuble.region_id,
+                'region': {
+                    'id': immeuble.region_id,
+                    'libelle': region
+                },
+                'departement_id': immeuble.departement_id,
+                'departement': {
+                    'id': immeuble.departement_id,
+                    'libelle': departement
+                },
+                'arrondissement_id': immeuble.arrondissement_id,
+                'arrondissement': {
+                    'id': immeuble.arrondissement_id,
+                    'libelle': arrondissement
+                },
+                'quartier': immeuble.Quartier,
+                'coordonnees_gps': immeuble.Coordonee_gps,
                 'elements_description': [],
                 'occupants_residents': [],
                 'occupants_bureaux': []
@@ -155,7 +185,11 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
             immeuble_data['occupants_residents'] = [
                 {
                     'nom_prenom': occ.Nom_Prenom_occupant_residence,
-                    'administration': occ.Administration_rattachement,
+                    'administration': occ.Administration_rattachement.id if occ.Administration_rattachement else None,
+                    'administration_rattachement': {
+                        'id': occ.Administration_rattachement.id if occ.Administration_rattachement else None,
+                        'libelle': occ.Administration_rattachement.LibelleFr if occ.Administration_rattachement else None
+                    },
                     'fonction': occ.Fonction_occupant_residence,
                     'matricule': occ.Matricule_occupant_residence,
                     'ref_acte': occ.Ref_ActeJuridique_attribution,
@@ -168,8 +202,16 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
             occupants_bur = OccupantBureaux.objects.filter(Immeuble=immeuble)
             immeuble_data['occupants_bureaux'] = [
                 {
-                    'service': occ.Service_occupant_bureau,
-                    'administration': occ.Administration_correspondante,
+                    'service': occ.Service_occupant_bureau.id if occ.Service_occupant_bureau else None,
+                    'service_occupant_bureau' : {
+                        'id': occ.Service_occupant_bureau.id if occ.Service_occupant_bureau else None,
+                        'libelle': occ.Service_occupant_bureau.LibelleFr if occ.Service_occupant_bureau else None
+                    },
+                    'administration': occ.Administration_correspondante.id if occ.Administration_correspondante else None,
+                    'administration_correspondante': {
+                        'id': occ.Administration_correspondante.id if occ.Administration_correspondante else None,
+                        'libelle': occ.Administration_correspondante.LibelleFr if occ.Administration_correspondante else None
+                    },
                     'fonction_responsable': occ.Fonction_occupant_bureau,
                     'ref_acte': occ.Ref_ActeJuridique_attribution,
                     'date_signature': occ.Date_signature_acte_attribution
@@ -244,7 +286,15 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
                     'Date_Signature': av.Date_Signature,
                     'Date_effet': av.Date_effet,
                     'Ancien_bailleur': av.Ancien_bailleur_id,
+                    'Ancien_bailleur_object': {
+                        'id': av.Ancien_bailleur_id,
+                        'libelle': av.Ancien_bailleur.Raison_social if av.Ancien_bailleur else None
+                    },
                     'Nouveau_bailleur': av.Nouveau_bailleur_id,
+                    'Nouveau_bailleur_object': {
+                        'id': av.Nouveau_bailleur_id,
+                        'libelle': av.Nouveau_bailleur.Raison_social if av.Nouveau_bailleur else None
+                    },
                     'Montant_TTC_Mensuel_ancien': str(av.Montant_TTC_Mensuel_ancien) if av.Montant_TTC_Mensuel_ancien else None,
                     'Montant_TTC_Mensuel_Nouveau': str(av.Montant_TTC_Mensuel_Nouveau) if av.Montant_TTC_Mensuel_Nouveau else None
                 }
@@ -304,7 +354,7 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
 
     # Créer les pièces collectées
     def _create_pieces_collectees(self, pieces_data, fiche):
-        """Créer les pièces collectées avec leurs images"""
+        #Créer les pièces collectées avec leurs images
         for piece_data in pieces_data:
             # Extraire les images
             images_data = piece_data.pop('images', [])
@@ -343,3 +393,67 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
                 except Exception as e:
                     print(f"Erreur lors du traitement de l'image {index}: {str(e)}")
                     continue
+
+    def _update_pieces_collectees(self, pieces_data, fiche):
+        """Mettre à jour les pièces collectées sans supprimer les existantes"""
+        existing_piece_ids = []
+
+        for piece_data in pieces_data:
+            images_data = piece_data.pop('images', [])
+            piece_id = piece_data['Piece']
+
+            # ✅ Mettre à jour ou créer la pièce
+            piece_collecte, created = PieceCollectes.objects.update_or_create(
+                Collecte=fiche,
+                Piece_id=piece_id,
+                defaults={
+                    'statut': piece_data['statut'],
+                    'nombre': piece_data['nombre']
+                }
+            )
+
+            existing_piece_ids.append(piece_id)
+
+            # ✅ Traiter les images
+            ordre = 1
+            for image_data in images_data:
+                if image_data.get('existing'):
+                    try:
+                        existing_image = ImagePieceCollecte.objects.get(
+                            id=image_data['id'],
+                            piece_collecte=piece_collecte
+                        )
+                        existing_image.ordre = ordre
+                        existing_image.save()
+                        ordre += 1
+                    except ImagePieceCollecte.DoesNotExist:
+                        print(f"Image existante {image_data['id']} non trouvée")
+                    continue
+
+                # Créer nouvelle image
+                try:
+                    format, imgstr = image_data['content'].split(';base64,')
+                    ext = format.split('/')[-1]
+                    filename = f"{uuid.uuid4()}.{ext}"
+
+                    image_file = ContentFile(
+                        base64.b64decode(imgstr),
+                        name=filename
+                    )
+
+                    ImagePieceCollecte.objects.create(
+                        piece_collecte=piece_collecte,
+                        image=image_file,
+                        ordre=ordre
+                    )
+                    ordre += 1
+                except Exception as e:
+                    print(f"Erreur lors du traitement de l'image: {str(e)}")
+                    continue
+
+        # ✅ Supprimer les pièces qui ne sont plus cochées
+        PieceCollectes.objects.filter(
+            Collecte=fiche
+        ).exclude(
+            Piece_id__in=existing_piece_ids
+        ).delete()
