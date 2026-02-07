@@ -1,15 +1,21 @@
 // collecte.js
 class FicheCollecteFormHandler {
-  constructor(formId) {
+  constructor(formId, ficheId = null) {
     this.form = document.getElementById(formId);
+    this.ficheId = ficheId;
+    this.isEditMode = ficheId !== null;
     this.init();
   }
 
-  init() {
+  async init() {
     this.form.addEventListener('submit', e => {
       e.preventDefault();
       this.handleSubmit();
     });
+    // mode :
+    if (this.isEditMode) {
+      await this.loadFicheData();
+    }
     // generate numero collecte
     $('#arrondissement').on('select2:select', e => {
       const arrondissementId = e.params.data.id;
@@ -17,7 +23,7 @@ class FicheCollecteFormHandler {
         this.generateFicheCollecte(arrondissementId);
       }
     });
-    // init pieces an elements states
+    // init pieces and elements states
     this.initElementsImmeuble();
     this.initPiecesCollectees();
   }
@@ -122,30 +128,30 @@ class FicheCollecteFormHandler {
       throw new Error('Les gestionnaires de tableaux ne sont pas initialisés');
     }
     const data = {
-      Numero_fiche_de_collecte: this.getValue('Numero_fiche_de_collecte'),
-      agent_collecte_id: this.getValue('responsable_collecte'),
-      matricule_agent: this.getValue('matricule_responsable_collecte'),
-      Date_de_collecte: this.getValue('Date_de_collecte'),
+      Numero_fiche_de_collecte: getValue('Numero_fiche_de_collecte'),
+      agent_collecte_id: getValue('responsable_collecte'),
+      matricule_agent: getValue('matricule_responsable_collecte'),
+      Date_de_collecte: getValue('Date_de_collecte'),
       immeuble: {
-        Designation: this.getValue('Designation'),
+        Designation: getValue('Designation'),
         type_construction_id: this.getDynamicChoiceValue('type_construction_id'),
         type_location_id: this.getDynamicChoiceValue('type_location_id'),
-        Date_Construction: this.getValue('Date_Construction'),
-        Nombre_de_pieces: this.getValue('Nombre_de_pieces'),
-        Superficie_louer: this.getValue('Superficie_louer'),
+        Date_Construction: getValue('Date_Construction'),
+        Nombre_de_pieces: getValue('Nombre_de_pieces'),
+        Superficie_louer: getValue('Superficie_louer'),
         statut_batisse_id: this.getDynamicChoiceValue('statut_batisse_id'),
         revetement_int_id: this.getDynamicChoiceValue('revetement_int_id'),
         revetement_ext_id: this.getDynamicChoiceValue('revetement_ext_id'),
-        observation: this.getValue('observation'),
+        observation: getValue('observation'),
         localisation: {
-          pays: this.getValue('pays'),
-          Ville: this.getValue('Ville'),
-          Rue: this.getValue('Rue'),
-          region: this.getValue('region'),
-          departement: this.getValue('departement'),
-          arrondissement: this.getValue('arrondissement'),
-          Quartier: this.getValue('Quartier'),
-          Coordonee_gps: this.getValue('Coordonee_gps')
+          pays: getValue('pays'),
+          Ville: getValue('Ville'),
+          Rue: getValue('Rue'),
+          region: getValue('region'),
+          departement: getValue('departement'),
+          arrondissement: getValue('arrondissement'),
+          Quartier: getValue('Quartier'),
+          Coordonee_gps: getValue('Coordonee_gps')
         },
         elements_description: this.collectElementsDescription(),
         occupants_residents: window.TableManagers.logementsManager?.collectData() || [],
@@ -153,31 +159,31 @@ class FicheCollecteFormHandler {
       },
       contrat: {
         TypeContrat: this.getDynamicChoiceValue('TypeContrat'),
-        Numero_contrat: this.getValue('Numero_contrat'),
-        Date_Signature_contrat: this.getValue('Date_Signature_contrat'),
-        Fonction_signataire_contrat: this.getValue('Fonction_signataire_contrat'),
-        Date_effet_contrat: this.getValue('Date_effet_contrat'),
-        Existence_visa_budgétaire: this.getCheckboxValue('Existence_visa_budgétaire'),
-        Duree_Contrat: this.getValue('Duree_Contrat'),
-        Tacite_reconduction_contrat: this.getCheckboxValue('Tacite_reconduction_contrat'),
-        Regime_fiscal_contrat: this.getValue('Regime_fiscal_contrat'),
-        Montant_loyer_mensuel: this.getValue('Montant_loyer_mensuel'),
-        Devise: this.getValue('Devise'),
+        Numero_contrat: getValue('Numero_contrat'),
+        Date_Signature_contrat: getValue('Date_Signature_contrat'),
+        Fonction_signataire_contrat: getValue('Fonction_signataire_contrat'),
+        Date_effet_contrat: getValue('Date_effet_contrat'),
+        Existence_visa_budgétaire: getCheckboxValue('Existence_visa_budgétaire'),
+        Duree_Contrat: getValue('Duree_Contrat'),
+        Tacite_reconduction_contrat: getCheckboxValue('Tacite_reconduction_contrat'),
+        Regime_fiscal_contrat: getValue('Regime_fiscal_contrat'),
+        Montant_loyer_mensuel: getValue('Montant_loyer_mensuel'),
+        Devise: getValue('Devise'),
         Periodicite_Reglement_id: this.getDynamicChoiceValue('Periodicite_Reglement_id'),
-        Existence_avenant: this.getCheckboxValue('Existence_avenant'),
+        Existence_avenant: getCheckboxValue('Existence_avenant'),
         bailleur: {
           Type_personne: this.getDynamicChoiceValue('Type_personne'),
-          Raison_social: this.getValue('Raison_social'),
-          Nom_Prenom_Representant: this.getValue('Nom_Prenom_Representant'),
-          Domicille_siege_social_bailleur: this.getValue('Domicille_siege_social_bailleur'),
-          NIU: this.getValue('NIU'),
-          Telephone: this.getValue('Telephone'),
-          Num_doc: this.getValue('Num_doc'),
-          Date_delivrance_doc: this.getValue('Date_delivrance_doc'),
+          Raison_social: getValue('Raison_social'),
+          Nom_Prenom_Representant: getValue('Nom_Prenom_Representant'),
+          Domicille_siege_social_bailleur: getValue('Domicille_siege_social_bailleur'),
+          NIU: getValue('NIU'),
+          Telephone: getValue('Telephone'),
+          Num_doc: getValue('Num_doc'),
+          Date_delivrance_doc: getValue('Date_delivrance_doc'),
           Statut_bailleur: this.getDynamicChoiceValue('Statut_bailleur'),
-          Banque: this.getValue('Banque'),
-          RIB: this.getValue('RIB'),
-          Intitule_compte: this.getValue('Intitule_compte'),
+          Banque: getValue('Banque'),
+          RIB: getValue('RIB'),
+          Intitule_compte: getValue('Intitule_compte'),
           ayants_droit: window.TableManagers.ayantsDroitManager?.collectData() || []
         },
         avenants: this.collectAvenants(),
@@ -186,12 +192,6 @@ class FicheCollecteFormHandler {
       pieces_collectees: await this.collectPiecesCollectees()
     };
     return data;
-  }
-
-  // getting values method
-  getValue(fieldId) {
-    const field = document.getElementById(fieldId);
-    return field ? field.value : null;
   }
 
   getDynamicChoiceValue(listId, returnId = true) {
@@ -209,11 +209,6 @@ class FicheCollecteFormHandler {
       const label = checkedCheckbox.closest('.dynamic-option');
       return label ? label.querySelector('span').textContent.trim() : null;
     }
-  }
-
-  getCheckboxValue(fieldId) {
-    const checkbox = document.getElementById(fieldId);
-    return checkbox ? checkbox.checked : false;
   }
 
   // Collecter les éléments de description
@@ -242,13 +237,13 @@ class FicheCollecteFormHandler {
 
     // Avenant 1
     const avenant1 = {
-      Ref_Avenant: this.getValue('reference_avenant_1'),
-      Date_Signature: this.getValue('date_signature_avenant_1'),
-      Date_effet: this.getValue('date_effet_avenant_1'),
-      Ancien_bailleur: this.getValue('avenant_1_ancien_bailleurs_list'),
-      Nouveau_bailleur: this.getValue('avenant_1_nouveau_bailleurs_list'),
-      Montant_TTC_Mensuel_ancien: this.getValue('avenant_1_ancienmontant_loyer_mensuel'),
-      Montant_TTC_Mensuel_Nouveau: this.getValue('avenant_1_nouveaumontant_loyer_mensuel')
+      Ref_Avenant: getValue('reference_avenant_1'),
+      Date_Signature: getValue('date_signature_avenant_1'),
+      Date_effet: getValue('date_effet_avenant_1'),
+      Ancien_bailleur: getValue('avenant_1_ancien_bailleurs_list'),
+      Nouveau_bailleur: getValue('avenant_1_nouveau_bailleurs_list'),
+      Montant_TTC_Mensuel_ancien: getValue('avenant_1_ancienmontant_loyer_mensuel'),
+      Montant_TTC_Mensuel_Nouveau: getValue('avenant_1_nouveaumontant_loyer_mensuel')
     };
 
     if (avenant1.Ref_Avenant) {
@@ -257,13 +252,13 @@ class FicheCollecteFormHandler {
 
     // Avenant 2
     const avenant2 = {
-      Ref_Avenant: this.getValue('reference_avenant_2'),
-      Date_Signature: this.getValue('date_signature_avenant_2'),
-      Date_effet: this.getValue('date_effet_avenant_2'),
-      Ancien_bailleur: this.getValue('avenant_2_ancien_bailleurs_list'),
-      Nouveau_bailleur: this.getValue('avenant_2_nouveau_bailleurs_list'),
-      Montant_TTC_Mensuel_ancien: this.getValue('avenant_2_ancienmontant_loyer_mensuel'),
-      Montant_TTC_Mensuel_Nouveau: this.getValue('avenant_2_nouveaumontant_loyer_mensuel')
+      Ref_Avenant: getValue('reference_avenant_2'),
+      Date_Signature: getValue('date_signature_avenant_2'),
+      Date_effet: getValue('date_effet_avenant_2'),
+      Ancien_bailleur: getValue('avenant_2_ancien_bailleurs_list'),
+      Nouveau_bailleur: getValue('avenant_2_nouveau_bailleurs_list'),
+      Montant_TTC_Mensuel_ancien: getValue('avenant_2_ancienmontant_loyer_mensuel'),
+      Montant_TTC_Mensuel_Nouveau: getValue('avenant_2_nouveaumontant_loyer_mensuel')
     };
 
     if (avenant2.Ref_Avenant) {
@@ -296,7 +291,7 @@ class FicheCollecteFormHandler {
 
               try {
                 // Convertir le fichier en base64
-                const base64 = await this.fileToBase64(file);
+                const base64 = await fileToBase64(file);
 
                 images.push({
                   filename: file.name,
@@ -321,23 +316,6 @@ class FicheCollecteFormHandler {
     );
 
     return pieces;
-  }
-
-  // ✅ Fonction utilitaire pour convertir un fichier en base64
-  fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        resolve(reader.result);
-      };
-
-      reader.onerror = error => {
-        reject(error);
-      };
-
-      reader.readAsDataURL(file);
-    });
   }
 
   // Valider les données avant soumission
@@ -391,7 +369,7 @@ class FicheCollecteFormHandler {
   async handleSubmit() {
     try {
       // Afficher un loader
-      this.showLoader();
+      showLoader(this.form);
 
       // Collecter les données
       const formData = await this.collectFormData();
@@ -408,11 +386,13 @@ class FicheCollecteFormHandler {
       }
 
       // Envoyer les données à l'API
-      const response = await fetch('/api/fiches/create/', {
-        method: 'POST',
+      const url = this.isEditMode ? `/api/fiches/${this.ficheId}/update/` : '/api/fiches/create/';
+      const method = this.isEditMode ? 'PUT' : 'POST';
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': this.getCsrfToken()
+          'X-CSRFToken': getCsrfToken()
         },
         body: JSON.stringify(formData)
       });
@@ -437,36 +417,6 @@ class FicheCollecteFormHandler {
     }
   }
 
-  // ✅ Fonction récursive pour aplatir les erreurs imbriquées
-  flattenErrors(errors, prefix = '') {
-    const flatErrors = [];
-
-    Object.entries(errors).forEach(([field, value]) => {
-      const fullField = prefix ? `${prefix}.${field}` : field;
-
-      if (Array.isArray(value)) {
-        // C'est un tableau d'erreurs
-        value.forEach(err => {
-          flatErrors.push({
-            field: fullField,
-            message: err
-          });
-        });
-      } else if (typeof value === 'object' && value !== null) {
-        // C'est un objet imbriqué, récursion
-        flatErrors.push(...this.flattenErrors(value, fullField));
-      } else {
-        // C'est une erreur simple
-        flatErrors.push({
-          field: fullField,
-          message: value
-        });
-      }
-    });
-
-    return flatErrors;
-  }
-
   // ✅ Gérer les erreurs du serveur de manière structurée
   handleServerErrors(result) {
     const errors = [];
@@ -477,7 +427,7 @@ class FicheCollecteFormHandler {
 
     if (result.errors) {
       // Aplatir les erreurs imbriquées
-      const flatErrors = this.flattenErrors(result.errors);
+      const flatErrors = flattenErrors(result.errors);
 
       flatErrors.forEach(({ field, message }) => {
         const label = this.getFieldLabel(field);
@@ -552,7 +502,7 @@ class FicheCollecteFormHandler {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': this.getCsrfToken()
+          'X-CSRFToken': getCsrfToken()
         }
       });
       const result = await response.json();
@@ -560,7 +510,7 @@ class FicheCollecteFormHandler {
         const numeroField = document.getElementById('Numero_fiche_de_collecte');
         if (numeroField) {
           numeroField.value = result.numero_collecte;
-          this.showNotification('Numéro de fiche généré automatiquement', 'success');
+          showNotification('Numéro de fiche généré automatiquement', 'success');
         }
         // also set automatically region an departement values
         const region_select = $('#region');
@@ -592,26 +542,11 @@ class FicheCollecteFormHandler {
         }
       } else {
         console.error('Erreur génération numéro:', result.error);
-        this.showNotification(result.error || 'Erreur lors de la génération du numéro', 'warning');
+        showNotification(result.error || 'Erreur lors de la génération du numéro', 'warning');
       }
     } catch (error) {
       console.error('❌ Erreur génération numéro:', error);
-      this.showNotification('Erreur lors de la génération du numéro de fiche', 'danger');
-    }
-  }
-
-  // Utilitaires
-  getCsrfToken() {
-    return document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-  }
-
-  // message an ux tips
-  showLoader() {
-    // Afficher un spinner ou désactiver le bouton
-    const submitBtn = this.form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enregistrement...';
+      showNotification('Erreur lors de la génération du numéro de fiche', 'danger');
     }
   }
 
@@ -668,34 +603,385 @@ class FicheCollecteFormHandler {
     }, 3000);
   }
 
-  // ✅ Notification discrète (toast)
-  showNotification(message, type = 'info') {
-    const toastHtml = `
-      <div class="toast align-items-center text-white bg-${type} border-0 position-fixed top-0 end-0 m-3"
-        role="alert"
-        style="z-index: 9999;">
-        <div class="d-flex">
-          <div class="toast-body">
-            ${message}
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
+  // edit mode functions
+  async loadFicheData() {
+    try {
+      showLoader();
+
+      const response = await fetch(`/api/fiches/${this.ficheId}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken()
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        await this.populateForm(result.data);
+        console.log('datas :', result.data);
+        this.showNotification('Données chargées avec succès', 'success');
+      } else {
+        this.showErrors(['Erreur lors du chargement des données']);
+      }
+    } catch (error) {
+      console.error('Erreur chargement:', error);
+      this.showErrors(['Erreur lors du chargement de la fiche']);
+    } finally {
+      this.hideLoader();
+    }
+  }
+
+  // ✅ Remplir le formulaire avec les données
+  async populateForm(data) {
+    // Champs simples de la fiche
+    this.setValue('Numero_fiche_de_collecte', data.Numero_fiche_de_collecte);
+    this.setValue('Date_de_collecte', data.Date_de_collecte);
+
+    // Agent (Select2)
+    await this.setSelect2Value('responsable_collecte', data.agent_collecte_id, data.Agent?.nom);
+    this.setValue('matricule_responsable_collecte', data.matricule_agent);
+
+    // Immeuble
+    if (data.immeuble) {
+      this.setValue('Designation', data.immeuble.Designation);
+      this.setValue('Date_Construction', data.immeuble.Date_Construction);
+      this.setValue('Nombre_de_pieces', data.immeuble.Nombre_de_pieces);
+      this.setValue('Superficie_louer', data.immeuble.Superficie_louer);
+      this.setValue('observation', data.immeuble.observation);
+
+      // Dynamic choices
+      this.setDynamicChoice('type_construction_id', data.immeuble.type_construction_id);
+      this.setDynamicChoice('type_location_id', data.immeuble.type_location_id);
+      this.setDynamicChoice('statut_batisse_id', data.immeuble.statut_batisse_id);
+      this.setDynamicChoice('revetement_int_id', data.immeuble.revetement_int_id);
+      this.setDynamicChoice('revetement_ext_id', data.immeuble.revetement_ext_id);
+
+      // Localisation
+      if (data.immeuble.localisation) {
+        const loc = data.immeuble.localisation;
+        await this.setSelect2Value('pays', loc.pays_id);
+        this.setValue('Ville', loc.ville);
+        this.setValue('Rue', loc.rue);
+        await this.setSelect2Value('region', loc.region_id);
+        await this.setSelect2Value('departement', loc.departement_id);
+        await this.setSelect2Value('arrondissement', loc.arrondissement_id);
+        this.setValue('Quartier', loc.quartier);
+        this.setValue('Coordonee_gps', loc.coordonnees_gps);
+      }
+
+      // Éléments de description
+      if (data.immeuble.elements_description) {
+        this.populateElementsDescription(data.immeuble.elements_description);
+      }
+
+      // Occupants
+      if (data.immeuble.occupants_residents) {
+        this.populateOccupants('logementsManager', data.immeuble.occupants_residents);
+      }
+      if (data.immeuble.occupants_bureaux) {
+        this.populateOccupants('bureauxManager', data.immeuble.occupants_bureaux);
+      }
+    }
+
+    // Contrat
+    if (data.contrat) {
+      this.setValue('Numero_contrat', data.contrat.Numero_contrat);
+      this.setValue('Date_Signature_contrat', data.contrat.Date_Signature_contrat);
+      this.setValue('Fonction_signataire_contrat', data.contrat.Fonction_signataire_contrat);
+      this.setValue('Date_effet_contrat', data.contrat.Date_effet_contrat);
+      this.setCheckboxValue('Existence_visa_budgétaire', data.contrat.Existence_visa_budgétaire);
+      this.setValue('Duree_Contrat', data.contrat.Duree_Contrat);
+      this.setCheckboxValue('Tacite_reconduction_contrat', data.contrat.Tacite_reconduction_contrat);
+      this.setValue('Regime_fiscal_contrat', data.contrat.Regime_fiscal_contrat);
+      this.setValue('Montant_loyer_mensuel', data.contrat.Montant_loyer_mensuel);
+      this.setValue('Devise', data.contrat.Devise);
+
+      this.setDynamicChoice('TypeContrat', data.contrat.TypeContrat);
+      this.setDynamicChoice('Periodicite_Reglement_id', data.contrat.Periodicite_Reglement_id);
+      this.setCheckboxValue('Existence_avenant', data.contrat.Existence_avenant);
+
+      // Bailleur
+      if (data.contrat.bailleur) {
+        const bailleur = data.contrat.bailleur;
+        this.setDynamicChoice('Type_personne', bailleur.Type_personne);
+        this.setValue('Raison_social', bailleur.Raison_social);
+        this.setValue('Nom_Prenom_Representant', bailleur.Nom_Prenom_Representant);
+        this.setValue('Domicille_siege_social_bailleur', bailleur.Domicille_siege_social_bailleur);
+        this.setValue('NIU', bailleur.NIU);
+        this.setValue('Telephone', bailleur.Telephone);
+        this.setValue('Num_doc', bailleur.Num_doc);
+        this.setValue('Date_delivrance_doc', bailleur.Date_delivrance_doc);
+        this.setDynamicChoice('Statut_bailleur', bailleur.Statut_bailleur);
+        await this.setSelect2Value('Banque', bailleur.Banque);
+        this.setValue('RIB', bailleur.RIB);
+        this.setValue('Intitule_compte', bailleur.Intitule_compte);
+
+        // Ayants droit
+        if (bailleur.ayants_droit) {
+          this.populateAyantsDroit(bailleur.ayants_droit);
+        }
+      }
+
+      // Avenants
+      if (data.contrat.avenants) {
+        this.populateAvenants(data.contrat.avenants);
+      }
+
+      // Non-mandatements
+      if (data.contrat.non_mandatements) {
+        this.populateNonMandatements(data.contrat.non_mandatements);
+      }
+    }
+
+    // Pièces collectées
+    if (data.pieces_collectees) {
+      this.populatePiecesCollectees(data.pieces_collectees);
+    }
+  }
+
+  // ✅ Méthodes utilitaires pour remplir le formulaire
+  setValue(fieldId, value) {
+    const field = document.getElementById(fieldId);
+    if (field && value !== null && value !== undefined) {
+      field.value = value;
+    }
+  }
+
+  setCheckboxValue(fieldId, value) {
+    const checkbox = document.getElementById(fieldId);
+    if (checkbox) {
+      checkbox.checked = Boolean(value);
+    }
+  }
+
+  setDynamicChoice(listId, value) {
+    if (!value) return;
+
+    const $list = document.getElementById(listId);
+    if (!$list) return;
+
+    const checkbox = $list.querySelector(`input[data-choice-id="${value}"]`);
+    if (checkbox) {
+      checkbox.checked = true;
+    }
+  }
+
+  async setSelect2Value(selectId, value, text = null) {
+    if (!value) return;
+
+    const $select = $(`#${selectId}`);
+    if (!$select.length) return;
+
+    // Si le texte est fourni, créer l'option
+    if (text) {
+      const option = new Option(text, value, true, true);
+      $select.append(option);
+    } else {
+      $select.val(value);
+    }
+
+    $select.trigger('change');
+  }
+
+  // ✅ Remplir les éléments de description
+  populateElementsDescription(elements) {
+    elements.forEach(element => {
+      const $row = $(`tr[data-el-id="${element.element_id}"]`);
+      if (!$row.length) return;
+
+      // Cocher le bon checkbox
+      if (element.statut === true) {
+        $row.find(`#element_${element.element_id}_oui`).prop('checked', true);
+        $row.find(`#nombre_input_${element.element_id}`).prop('disabled', false).val(element.nombre);
+      } else if (element.statut === false) {
+        $row.find(`#element_${element.element_id}_non`).prop('checked', true);
+      }
+    });
+  }
+
+  // ✅ Remplir les occupants (logements ou bureaux)
+  populateOccupants(managerName, occupants) {
+    const manager = window.TableManagers[managerName];
+    if (!manager) return;
+
+    occupants.forEach(occupant => {
+      const $row = manager.addNewRow();
+
+      // Remplir les champs de la ligne
+      Object.entries(occupant).forEach(([key, value]) => {
+        const $field = $row.find(`[data-field="${key}"]`);
+        if ($field.length) {
+          if ($field.hasClass('select2-ajax')) {
+            // Pour les champs Select2
+            const option = new Option(value.text || value, value.id || value, true, true);
+            $field.append(option).trigger('change');
+          } else {
+            $field.val(value);
+          }
+        }
+      });
+    });
+  }
+
+  // ✅ Remplir les ayants droit
+  populateAyantsDroit(ayantsDroit) {
+    const manager = window.TableManagers.ayantsDroitManager;
+    if (!manager) return;
+
+    ayantsDroit.forEach(ayant => {
+      const $row = manager.addNewRow();
+
+      $row.find('[data-field="nom_prenom"]').val(ayant.Nom_Prenom);
+      $row.find('[data-field="contact"]').val(ayant.Contact);
+      $row.find('[data-field="ref_grosse"]').val(ayant.Ref_Grosse);
+      $row.find('[data-field="date_delivrance_grosse"]').val(ayant.Date_delivrance_Grosse);
+      $row.find('[data-field="ref_certificat"]').val(ayant.Ref_Certificat_non_appel);
+      $row.find('[data-field="date_delivrance_certificat"]').val(ayant.Date_delivrance_Certificat);
+    });
+  }
+
+  // ✅ Remplir les avenants
+  populateAvenants(avenants) {
+    avenants.forEach((avenant, index) => {
+      const num = index + 1;
+      if (num > 2) return; // Maximum 2 avenants dans le formulaire
+
+      this.setValue(`reference_avenant_${num}`, avenant.Ref_Avenant);
+      this.setValue(`date_signature_avenant_${num}`, avenant.Date_Signature);
+      this.setValue(`date_effet_avenant_${num}`, avenant.Date_effet);
+
+      // Bailleurs
+      if (avenant.Ancien_bailleur) {
+        this.setSelect2Value(`avenant_${num}_ancien_bailleurs_list`, avenant.Ancien_bailleur);
+      }
+      if (avenant.Nouveau_bailleur) {
+        this.setSelect2Value(`avenant_${num}_nouveau_bailleurs_list`, avenant.Nouveau_bailleur);
+      }
+
+      this.setValue(`avenant_${num}_ancienmontant_loyer_mensuel`, avenant.Montant_TTC_Mensuel_ancien);
+      this.setValue(`avenant_${num}_nouveaumontant_loyer_mensuel`, avenant.Montant_TTC_Mensuel_Nouveau);
+    });
+  }
+
+  // ✅ Remplir les non-mandatements
+  populateNonMandatements(nonMandatements) {
+    const manager = window.TableManagers.nonMandatementManager;
+    if (!manager) return;
+
+    nonMandatements.forEach(nm => {
+      const $row = manager.addNewRow();
+      const rowId = $row.data('row-id');
+
+      // Champs simples
+      const $exercice = $row.find(`[name="nonmandatement_${rowId}_exercice"]`);
+      if (nm.Exercice) {
+        const option = new Option(nm.Exercice.libelle || nm.Exercice, nm.Exercice.id || nm.Exercice, true, true);
+        $exercice.append(option).trigger('change');
+      }
+
+      $row.find(`[name="nonmandatement_${rowId}_loyer_mensuel"]`).val(nm.Loyer_Mensuel);
+      $row.find(`[name="nonmandatement_${rowId}_reference"]`).val(nm.Ref_Attestattion);
+      $row.find(`[name="nonmandatement_${rowId}_date_signature"]`).val(nm.Date_signature);
+      $row.find(`[name="nonmandatement_${rowId}_montant_total"]`).val(nm.Montant_total_exercice);
+      $row.find(`[name="nonmandatement_${rowId}_visa"]`).val(nm.Visa_budgétaire);
+      $row.find(`[name="nonmandatement_${rowId}_reference_contrat"]`).val(nm.Ref_contrat_avenant);
+
+      // Cocher les mois
+      const moisMapping = [
+        'janvier',
+        'fevrier',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'aout',
+        'septembre',
+        'octobre',
+        'novembre',
+        'decembre'
+      ];
+
+      moisMapping.forEach((mois, index) => {
+        if (nm[mois]) {
+          $row.find(`[name="nonmandatement_${rowId}_mois_${index + 1}"]`).prop('checked', true);
+        }
+      });
+    });
+  }
+
+  // ✅ Remplir les pièces collectées
+  populatePiecesCollectees(pieces) {
+    pieces.forEach(piece => {
+      const $row = $(`.piece-row[data-piece-id="${piece.piece_id}"]`);
+      if (!$row.length) return;
+
+      // Cocher la checkbox
+      $row.find('.piece-checkbox').prop('checked', true);
+
+      // Activer et remplir le nombre
+      const $nombreInput = $row.find('.piece-nombre');
+      $nombreInput.prop('disabled', false).val(piece.nombre);
+
+      // Activer l'input fichier
+      const $fileInput = $row.find('.piece-files');
+      $fileInput.prop('disabled', false);
+
+      // Note: Les images existantes ne peuvent pas être pré-chargées dans un input file
+      // Vous pouvez afficher une liste des images existantes à côté
+      if (piece.images && piece.images.length > 0) {
+        this.displayExistingImages($row, piece.images);
+      }
+    });
+  }
+
+  // ✅ Afficher les images existantes
+  displayExistingImages($row, images) {
+    const pieceId = $row.data('piece-id');
+    const $imagesContainer = $row.find('.existing-images');
+
+    if (!$imagesContainer.length) {
+      $row.find('.piece-files').after('<div class="existing-images mt-2"></div>');
+    }
+
+    const imagesHtml = images
+      .map(
+        img => `
+      <div class="existing-image-item d-inline-block me-2 mb-2 position-relative">
+        <img src="${img.image}" alt="${img.legende || 'Image'}"
+          class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 delete-image"
+          data-image-id="${img.id}" style="padding: 2px 6px;">
+          <i class="bx bx-x"></i>
+        </button>
       </div>
-    `;
+    `
+      )
+      .join('');
 
-    document.body.insertAdjacentHTML('beforeend', toastHtml);
-    const toastElement = document.querySelector('.toast:last-child');
-    const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
-    toast.show();
+    $row.find('.existing-images').html(`
+      <small class="text-muted d-block">Images existantes:</small>
+      ${imagesHtml}
+    `);
 
-    // Supprimer après affichage
-    toastElement.addEventListener('hidden.bs.toast', () => {
-      toastElement.remove();
+    // Gérer la suppression d'images
+    $row.find('.delete-image').on('click', function () {
+      const imageId = $(this).data('image-id');
+      // Marquer pour suppression
+      if (!window.imagesToDelete) {
+        window.imagesToDelete = [];
+      }
+      window.imagesToDelete.push(imageId);
+      $(this).closest('.existing-image-item').remove();
     });
   }
 }
 
 $(function () {
-  // there the form validation and submission
-  const formHandler = new FicheCollecteFormHandler('ficheCollecteForm');
+  // Récupérer l'ID de la fiche depuis l'URL ou un attribut data
+  const urlParams = new URLSearchParams(window.location.search);
+  const ficheId = urlParams.get('fiche_id') || $('#ficheCollecteForm').data('fiche-id');
+  const formHandler = new FicheCollecteFormHandler('ficheCollecteForm', ficheId);
 });

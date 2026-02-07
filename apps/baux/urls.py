@@ -3,7 +3,7 @@ from django.contrib import admin
 from .views import *
 from django.urls import re_path as url
 from rest_framework.routers import DefaultRouter
-from .views.fichecollecteviews import FicheCollecteViewSet, FicheCollecteFormView
+from .views.fichecollecteviews import FicheCollecteViewSet, FicheCollecteFormView, FicheEditView
 
 app_name = 'baux'
 
@@ -98,6 +98,7 @@ urlpatterns = [
 
     # fiche collecte new approach
     path("collecte/add/", FicheCollecteFormView.as_view(), name="fiche_collecte_form"),
+    path('collecte/<int:fiche_id>/edit/', FicheEditView.as_view(), name='edit_fiche'),
 
     # api endpoints
     path('api/search-agents/', AgentNomSelect2().get, name='api_agents'),
@@ -112,7 +113,10 @@ urlpatterns = [
     path("api/get-bailleurs/", BailleursSelect2().get, name="api_bailleurs"),
     path("api/get-banques/", BanquesSelect2().get, name="api_bailleurs"),
     path("api/get-exercices/", ExercicesSelect2().get, name="api_exercices"),
-    path('api/fiches/create/', api_views.create_fiche_collecte, name='create_fiche_collecte'),
     path('api/fiches/numero/', api_views.generate_fiche_collecte_number, name='generate_fiche_collecte_number'),
+    # CRUD operations
+    path('api/fiches/create/', api_views.create_fiche_collecte, name='create_fiche_collecte'),
+    path('api/fiches/<int:fiche_id>/', get_fiche_collecte, name='get_fiche_collecte'),
+    path('api/fiches/<int:fiche_id>/update/', update_fiche_collecte, name='update_fiche_collecte'),
 ]
 urlpatterns += router.urls

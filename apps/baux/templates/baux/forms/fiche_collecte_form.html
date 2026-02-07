@@ -3,7 +3,9 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Collecte{% endblock %}
+{% block title %}
+  {% if fiche_id %}Modifier la fiche{% else %}Nouvelle fiche{% endif %}
+{% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -13,7 +15,7 @@
 
 <div class="card">
   <div class="card-body">
-    <form id="ficheCollecteForm" class="p-0 container-fluid" method="post">
+    <form id="ficheCollecteForm" data-fiche-id="{{ fiche_id|default:'' }}" class="p-0 container-fluid" method="post">
       {% csrf_token %}
 
       <!-- ===================== -->
@@ -658,7 +660,10 @@
 
       </div>
       <div class="mt-3">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <button type="submit" class="btn btn-primary">
+          {% if fiche_id %}Mettre à jour{% else %}Enregistrer{% endif %}
+        </button>
+        <a href="{% url 'baux:collecte_list' %}" class="btn btn-secondary">Annuler</a>
       </div>
     </form>
   </div>

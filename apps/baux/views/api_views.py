@@ -310,3 +310,71 @@ def get_arrondissement_code(libelle: str) -> str:
         libelle = libelle[len(prefix):].strip()
 
     return libelle[:3]
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_fiche_collecte(request, fiche_id):
+    """Récupérer une fiche de collecte pour modification"""
+    try:
+        fiche = get_object_or_404(Collectes, pk=fiche_id)
+        serializer = FicheCollecteSerializer(fiche)
+
+        return Response({
+            'success': True,
+            'data': serializer.data
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        logger.exception(f"Error fetching fiche: {str(e)}")
+        return Response({
+            'success': False,
+            'message': 'Erreur lors de la récupération de la fiche',
+            'errors': {'non_field_errors': [str(e)]}
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def update_fiche_collecte(request, fiche_id):
+    """Mettre à jour une fiche de collecte"""
+    try:
+        fiche = get_object_or_404(Collectes, pk=fiche_id)
+
+        # Utiliser partial=True pour PATCH (mise à jour partielle)
+        partial = request.method == 'PATCH'
+
+        serializer = FicheCollecteSerializer(
+            fiche,
+            data=request.data,
+            partial=partial
+        )
+
+        if not serializer.is_valid():
+            logger.error(f"Validation errors: {serializer.errors}")
+            return Response({
+                'success': False,
+                'message': 'Données invalides',
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        with transaction.atomic():
+            updated_fiche = serializer.save()
+
+            logger.info(f"Fiche {updated_fiche.Numero_fiche_de_collecte} mise à jour par {request.user}")
+
+            return Response({
+                'success': True,
+                'message': 'Fiche de collecte mise à jour avec succès',
+                'data': {
+                    'fiche_id': updated_fiche.id,
+                    'numero_fiche': updated_fiche.Numero_fiche_de_collecte
+                }
+            }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        logger.exception(f"Error updating fiche: {str(e)}")
+        return Response({
+            'success': False,
+            'message': 'Erreur lors de la mise à jour de la fiche',
+            'errors': {'non_field_errors': [str(e)]}
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

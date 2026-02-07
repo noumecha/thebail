@@ -69,3 +69,53 @@ class ImmeubleSerializer(serializers.ModelSerializer):
             )
 
         return immeuble
+
+    def update(self, instance, validated_data):
+        """Mettre à jour un immeuble"""
+        localisation_data = validated_data.pop('localisation', None)
+        elements_data = validated_data.pop('elements_description', None)
+        occupants_residents_data = validated_data.pop('occupants_residents', None)
+        occupants_bureaux_data = validated_data.pop('occupants_bureaux', None)
+        # Mettre à jour les champs simples
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Mettre à jour la localisation
+        if localisation_data:
+            for attr, value in localisation_data.items():
+                setattr(instance, attr, value)
+            instance.save()
+
+        # Mettre à jour les éléments de description
+        if elements_data is not None:
+            # Supprimer les anciens liens
+            ImmeubleElement.objects.filter(immeuble=instance).delete()
+            # Créer les nouveaux
+            for element_data in elements_data:
+                ImmeubleElement.objects.create(
+                    immeuble=instance,
+                    element_id=element_data['element_id'],
+                    statut=element_data['statut'],
+                    nombre=element_data['nombre']
+                )
+
+        # Mettre à jour les occupants résidents
+        if occupants_residents_data is not None:
+            Occupants.objects.filter(immeuble=instance).delete()
+            for occupant_data in occupants_residents_data:
+                Occupants.objects.create(
+                    immeuble=instance,
+                    **occupant_data
+                )
+
+        # Mettre à jour les occupants bureaux
+        if occupants_bureaux_data is not None:
+            OccupantBureaux.objects.filter(immeuble=instance).delete()
+            for occupant_data in occupants_bureaux_data:
+                OccupantBureaux.objects.create(
+                    immeuble=instance,
+                    **occupant_data
+                )
+
+        return instance

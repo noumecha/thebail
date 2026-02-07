@@ -102,3 +102,67 @@ class ContratSerializer(serializers.ModelSerializer):
 
 
         return contrat
+
+    def update(self, instance, validated_data):
+        """Mettre à jour un contrat"""
+        # Extraire les données imbriquées
+        bailleur_data = validated_data.pop('bailleur', None)
+        avenants_data = validated_data.pop('avenants', None)
+        non_mandatements_data = validated_data.pop('non_mandatements', None)
+
+        # Mettre à jour les champs simples du contrat
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Mettre à jour le bailleur
+        if bailleur_data:
+            ayants_droit_data = bailleur_data.pop('ayants_droit', None)
+
+            if instance.Bailleur:
+                # Mettre à jour le bailleur existant
+                for attr, value in bailleur_data.items():
+                    setattr(instance.Bailleur, attr, value)
+                instance.Bailleur.save()
+                bailleur = instance.Bailleur
+            else:
+                # Créer un nouveau bailleur
+                bailleur = Bailleurs.objects.create(**bailleur_data)
+                instance.Bailleur = bailleur
+                instance.save()
+
+            # Mettre à jour les ayants droit
+            if ayants_droit_data is not None:
+                Ayant_droits.objects.filter(Bailleur=bailleur).delete()
+                for ayant_data in ayants_droit_data:
+                    Ayant_droits.objects.create(
+                        Bailleur=bailleur,
+                        **ayant_data
+                    )
+
+        # Mettre à jour les avenants
+        if avenants_data is not None:
+            Avenants.objects.filter(contrat=instance).delete()
+            for avenant_data in avenants_data:
+                Avenants.objects.create(
+                    contrat=instance,
+                    **avenant_data
+                )
+
+        # Mettre à jour les non-mandatements
+        if non_mandatements_data is not None:
+            Non_Mandatement.objects.filter(contrat=instance).delete()
+
+            MOIS_FIELDS = [
+                'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+                'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+            ]
+
+            for nm_data in non_mandatements_data:
+                Non_Mandatement.objects.create(
+                    contrat=instance,
+                    Bailleur=instance.Bailleur,
+                    **nm_data
+                )
+
+        return instance

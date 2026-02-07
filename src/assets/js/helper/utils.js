@@ -412,3 +412,91 @@ $(document).on('change', 'input[type="file"][multiple]', function () {
     label.text(`${count} fich.`);
   }
 });
+
+// functions for collecte js class
+// getting values method
+function getValue(fieldId) {
+  const field = document.getElementById(fieldId);
+  return field ? field.value : null;
+}
+function getCheckboxValue(fieldId) {
+  const checkbox = document.getElementById(fieldId);
+  return checkbox ? checkbox.checked : false;
+}
+// ✅ Fonction utilitaire pour convertir un fichier en base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+    reader.onerror = error => {
+      reject(error);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+// ✅ Fonction récursive pour aplatir les erreurs imbriquées
+function flattenErrors(errors, prefix = '') {
+  const flatErrors = [];
+  Object.entries(errors).forEach(([field, value]) => {
+    const fullField = prefix ? `${prefix}.${field}` : field;
+    if (Array.isArray(value)) {
+      // C'est un tableau d'erreurs
+      value.forEach(err => {
+        flatErrors.push({
+          field: fullField,
+          message: err
+        });
+      });
+    } else if (typeof value === 'object' && value !== null) {
+      // C'est un objet imbriqué, récursion
+      flatErrors.push(...this.flattenErrors(value, fullField));
+    } else {
+      // C'est une erreur simple
+      flatErrors.push({
+        field: fullField,
+        message: value
+      });
+    }
+  });
+  return flatErrors;
+}
+// ✅ Notification discrète (toast)
+function showNotification(message, type = 'info') {
+  const toastHtml = `
+    <div class="toast align-items-center text-white bg-${type} border-0 position-fixed top-0 end-0 m-3"
+      role="alert"
+      style="z-index: 9999;">
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', toastHtml);
+  const toastElement = document.querySelector('.toast:last-child');
+  const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+  toast.show();
+  // Supprimer après affichage
+  toastElement.addEventListener('hidden.bs.toast', () => {
+    toastElement.remove();
+  });
+}
+// Utilitaires
+function getCsrfToken() {
+  return document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+}
+// message an ux tips
+function showLoader(form = null) {
+  // Afficher un message de chargement ou une animation
+  showNotification('Chargement des informations...', 'info');
+  // Afficher un spinner ou désactiver le bouton de soumission pour indiquer que le formulaire est en cours de traitement
+  if (form) {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enregistrement...';
+  }
+}

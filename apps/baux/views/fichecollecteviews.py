@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-
 from web_project import TemplateLayout
+from django.shortcuts import get_object_or_404
 from ..models import *
 from ..serializers import FicheCollecteSerializer
 from django.shortcuts import render
@@ -97,5 +97,20 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
 
         # api url for submission
         context["api_url"] = "/api/fiches/"
+
+        return context
+
+class FicheEditView(LoginRequiredMixin, TemplateView):
+    template_name = "baux/forms/fiche_collecte_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+
+        fiche_id = self.kwargs.get('fiche_id')
+        fiche = get_object_or_404(Collectes, pk=fiche_id)
+
+        context['mode'] = 'edit'
+        context['fiche_id'] = fiche.id
+        context['fiche'] = fiche
 
         return context
