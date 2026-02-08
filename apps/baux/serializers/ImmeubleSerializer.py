@@ -92,10 +92,10 @@ class ImmeubleSerializer(serializers.ModelSerializer):
         if occupants_residents_data is not None:
             existing_occupant_ids = []
             for occupant_data in occupants_residents_data:
-                nom_prenom = occupant_data.get('Nom_Prenom_occupant_residence')
+                #nom_prenom = occupant_data.get('Nom_Prenom_occupant_residence')
                 occupant, created = Occupants.objects.update_or_create(
                     Immeuble=instance,
-                    Nom_Prenom_occupant_residence=nom_prenom,
+                    #Nom_Prenom_occupant_residence=nom_prenom,
                     defaults=occupant_data
                 )
                 existing_occupant_ids.append(occupant.id)

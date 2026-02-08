@@ -153,10 +153,10 @@ class ContratSerializer(serializers.ModelSerializer):
         if avenants_data is not None:
             existing_avenant_ids = []
             for avenant_data in avenants_data:
-                ref_avenant = avenant_data.get('Ref_Avenant')
+                #ref_avenant = avenant_data.get('Ref_Avenant')
                 avenant, created = Avenants.objects.update_or_create(
                     contrat=instance,
-                    Ref_Avenant=ref_avenant,
+                    #Ref_Avenant=ref_avenant,
                     defaults=avenant_data
                 )
                 existing_avenant_ids.append(avenant.id)
@@ -172,10 +172,10 @@ class ContratSerializer(serializers.ModelSerializer):
         if non_mandatements_data is not None:
             existing_nm_ids = []
             for nm_data in non_mandatements_data:
-                ref_attestation = nm_data.get('Ref_Attestattion')
+                #ref_attestation = nm_data.get('Ref_Attestattion')
                 nm, created = Non_Mandatement.objects.update_or_create(
                     Contrat=instance,
-                    Ref_Attestattion=ref_attestation,
+                    #Ref_Attestattion=ref_attestation,
                     defaults={
                         **nm_data,
                         'Bailleur': instance.Bailleur

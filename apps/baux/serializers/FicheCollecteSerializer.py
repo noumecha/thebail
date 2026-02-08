@@ -18,6 +18,46 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
         model = Collectes
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        """Initialiser avec les instances imbriquées pour l'update"""
+        super().__init__(*args, **kwargs)
+
+        # ✅ En mode update, passer les instances aux serializers imbriqués
+        if self.instance:
+            if hasattr(self.instance, 'Immeuble') and self.instance.Immeuble:
+                self.fields['immeuble'].instance = self.instance.Immeuble
+
+            if hasattr(self.instance, 'Contrat') and self.instance.Contrat:
+                self.fields['contrat'].instance = self.instance.Contrat
+
+    def validate(self, data):
+        """Validation personnalisée pour l'update"""
+        # ✅ En mode update, passer l'instance aux serializers imbriqués
+        if self.instance:
+            # Pour l'immeuble
+            if 'Immeuble' in data and self.instance.Immeuble:
+                immeuble_serializer = ImmeubleSerializer(
+                    instance=self.instance.Immeuble,
+                    data=self.initial_data.get('immeuble', {}),
+                    partial=True
+                )
+                if not immeuble_serializer.is_valid():
+                    raise serializers.ValidationError({'immeuble': immeuble_serializer.errors})
+                data['Immeuble'] = immeuble_serializer.validated_data
+
+            # Pour le contrat
+            if 'Contrat' in data and self.instance.Contrat:
+                contrat_serializer = ContratSerializer(
+                    instance=self.instance.Contrat,
+                    data=self.initial_data.get('contrat', {}),
+                    partial=True
+                )
+                if not contrat_serializer.is_valid():
+                    raise serializers.ValidationError({'contrat': contrat_serializer.errors})
+                data['Contrat'] = contrat_serializer.validated_data
+
+        return data
+
     def create(self, validated_data):
         """Création avec gestion des relations imbriquées"""
         print("📥 Données reçues:")
@@ -54,12 +94,13 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Mise à jour avec gestion des relations imbriquées"""
-        print("📥 Données reçues pour update:")
-        print(json.dumps(self.initial_data, indent=2, ensure_ascii=False))
+        print("📥 UPDATE - Données reçues:")
+        print(f"Instance ID: {instance.id}")
+        print(f"Immeuble ID: {instance.Immeuble_id if instance.Immeuble else None}")
+        print(f"Contrat ID: {instance.Contrat_id if instance.Contrat else None}")
 
-        # Extraire les données imbriquées
-        immeuble_data = validated_data.pop('Immeuble', None)  # ✅ Utiliser 'Immeuble' pas 'immeuble'
-        contrat_data = validated_data.pop('Contrat', None)    # ✅ Utiliser 'Contrat' pas 'contrat'
+        immeuble_data = validated_data.pop('Immeuble', None)
+        contrat_data = validated_data.pop('Contrat', None)
         pieces_data = validated_data.pop('pieces_collectees', None)
 
         # Mettre à jour l'agent
@@ -68,32 +109,35 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
             agent = AgentCollecte.objects.get(id=agent_id)
             instance.Agent = agent
 
-        # Mettre à jour les champs simples de la fiche
+        # Mettre à jour les champs simples
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        # ✅ Mettre à jour l'immeuble (passer l'instance existante)
+        # ✅ Mettre à jour l'immeuble
         if immeuble_data:
             immeuble_serializer = ImmeubleSerializer()
             if instance.Immeuble:
+                print(f"🔄 Updating existing Immeuble ID: {instance.Immeuble.id}")
                 immeuble_serializer.update(instance.Immeuble, immeuble_data)
             else:
+                print("➕ Creating new Immeuble")
                 instance.Immeuble = immeuble_serializer.create(immeuble_data)
                 instance.save()
 
-        # ✅ Mettre à jour le contrat (passer l'instance existante)
+        # ✅ Mettre à jour le contrat
         if contrat_data:
             contrat_serializer = ContratSerializer()
             if instance.Contrat:
+                print(f"🔄 Updating existing Contrat ID: {instance.Contrat.id}")
                 contrat_serializer.update(instance.Contrat, contrat_data)
             else:
+                print("➕ Creating new Contrat")
                 instance.Contrat = contrat_serializer.create(contrat_data)
                 instance.save()
 
-        # Mettre à jour les pièces collectées
+        # Mettre à jour les pièces
         if pieces_data is not None:
-            # ✅ Ne pas supprimer, utiliser update_or_create
             self._update_pieces_collectees(pieces_data, instance)
 
         return instance
