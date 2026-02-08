@@ -441,19 +441,28 @@ function flattenErrors(errors, prefix = '') {
   const flatErrors = [];
   Object.entries(errors).forEach(([field, value]) => {
     const fullField = prefix ? `${prefix}.${field}` : field;
+    // ✅ CAS 1 : tableau
     if (Array.isArray(value)) {
-      // C'est un tableau d'erreurs
-      value.forEach(err => {
-        flatErrors.push({
-          field: fullField,
-          message: err
-        });
+      value.forEach((item, index) => {
+        // ➜ tableau de strings (cas simple)
+        if (typeof item === 'string') {
+          flatErrors.push({
+            field: fullField,
+            message: item
+          });
+        }
+        // ➜ tableau d'objets (cas DRF imbriqué)
+        else if (typeof item === 'object' && item !== null) {
+          flatErrors.push(...flattenErrors(item, `${fullField}[${index}]`));
+        }
       });
-    } else if (typeof value === 'object' && value !== null) {
-      // C'est un objet imbriqué, récursion
-      flatErrors.push(...this.flattenErrors(value, fullField));
-    } else {
-      // C'est une erreur simple
+    }
+    // ✅ CAS 2 : objet imbriqué
+    else if (typeof value === 'object' && value !== null) {
+      flatErrors.push(...flattenErrors(value, fullField));
+    }
+    // ✅ CAS 3 : valeur simple
+    else {
       flatErrors.push({
         field: fullField,
         message: value
@@ -462,6 +471,7 @@ function flattenErrors(errors, prefix = '') {
   });
   return flatErrors;
 }
+
 // ✅ Notification discrète (toast)
 function showNotification(message, type = 'info') {
   const toastHtml = `
