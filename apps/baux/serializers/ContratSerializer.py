@@ -13,6 +13,33 @@ class ContratSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contrats
         fields = '__all__'
+        # ✅ Désactiver la validation unique
+        extra_kwargs = {
+            'Numero_contrat': {'validators': []},
+        }
+
+    def __init__(self, *args, **kwargs):
+        """Initialiser avec les instances imbriquées pour l'update"""
+        super().__init__(*args, **kwargs)
+        # ✅ En mode update, passer les instances aux serializers imbriqués
+        if self.instance:
+            # Recréer les serializers avec les instances
+            if hasattr(self.instance, 'Bailleur') and self.instance.Bailleur:
+                self.fields['bailleur'] = BailleurSerializer(
+                    instance=self.instance.Bailleur,
+                    source='Bailleur',
+                    required=False
+                )
+
+    def validate_Numero_contrat(self, value):
+        """Validation manuelle de Numero_contrat"""
+        if self.instance and self.instance.Numero_contrat == value:
+            return value
+
+        if Contrats.objects.filter(Numero_contrat=value).exists():
+            raise serializers.ValidationError("Un contrat avec ce numéro existe déjà.")
+
+        return value
 
     def validate_montant_loyer_mensuel(self, value):
         """Validation du montant"""
@@ -105,16 +132,20 @@ class ContratSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Mettre à jour un contrat"""
+        # ✅ Extraire AVANT de faire la boucle sur validated_data
         bailleur_data = validated_data.pop('bailleur', None)
         avenants_data = validated_data.pop('avenants', None)
         non_mandatements_data = validated_data.pop('non_mandatements', None)
 
-        # Mettre à jour les champs simples du contrat
+        # ✅ Maintenant on peut mettre à jour les champs simples sans risque
+        print("avenant datas : ", avenants_data)
+        print("bailleur datas : ", bailleur_data)
+        print("non mandatement datas : ", non_mandatements_data)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        # ✅ Mettre à jour le bailleur (update_or_create)
+        # ✅ Mettre à jour le bailleur
         if bailleur_data:
             ayants_droit_data = bailleur_data.pop('ayants_droit', None)
 
@@ -130,64 +161,59 @@ class ContratSerializer(serializers.ModelSerializer):
                 instance.Bailleur = bailleur
                 instance.save()
 
-            # ✅ Mettre à jour les ayants droit (update_or_create)
+            # ✅ Mettre à jour les ayants droit
             if ayants_droit_data is not None:
-                existing_ayant_ids = []
+                # Supprimer et recréer pour éviter les problèmes d'unicité
+                Ayant_droits.objects.filter(Bailleur=bailleur).delete()
                 for ayant_data in ayants_droit_data:
-                    nom_prenom = ayant_data.get('Nom_Prenom_ayant_droit')
-                    ayant, created = Ayant_droits.objects.update_or_create(
+                    Ayant_droits.objects.create(
                         Bailleur=bailleur,
-                        Nom_Prenom_ayant_droit=nom_prenom,
-                        defaults=ayant_data
+                        **ayant_data
                     )
-                    existing_ayant_ids.append(ayant.id)
 
-                # Supprimer ceux qui ne sont plus présents
-                Ayant_droits.objects.filter(
-                    Bailleur=bailleur
-                ).exclude(
-                    id__in=existing_ayant_ids
-                ).delete()
-
-        # ✅ Mettre à jour les avenants (update_or_create)
+        # ✅ Mettre à jour les avenants
         if avenants_data is not None:
-            existing_avenant_ids = []
+            # Supprimer et recréer
+            Avenants.objects.filter(contrat=instance).delete()
             for avenant_data in avenants_data:
-                #ref_avenant = avenant_data.get('Ref_Avenant')
-                avenant, created = Avenants.objects.update_or_create(
+                Avenants.objects.create(
                     contrat=instance,
-                    #Ref_Avenant=ref_avenant,
-                    defaults=avenant_data
+                    **avenant_data
                 )
-                existing_avenant_ids.append(avenant.id)
 
-            # Supprimer ceux qui ne sont plus présents
-            Avenants.objects.filter(
-                contrat=instance
-            ).exclude(
-                id__in=existing_avenant_ids
-            ).delete()
-
-        # ✅ Mettre à jour les non-mandatements (update_or_create)
+        # ✅ Mettre à jour les non-mandatements
         if non_mandatements_data is not None:
-            existing_nm_ids = []
-            for nm_data in non_mandatements_data:
-                #ref_attestation = nm_data.get('Ref_Attestattion')
-                nm, created = Non_Mandatement.objects.update_or_create(
-                    Contrat=instance,
-                    #Ref_Attestattion=ref_attestation,
-                    defaults={
-                        **nm_data,
-                        'Bailleur': instance.Bailleur
-                    }
-                )
-                existing_nm_ids.append(nm.id)
+            # Supprimer et recréer
+            Non_Mandatement.objects.filter(Contrat=instance).delete()
+            MONTH_MAP = {
+                1: "janvier",
+                2: "fevrier",
+                3: "mars",
+                4: "avril",
+                5: "mai",
+                6: "juin",
+                7: "juillet",
+                8: "aout",
+                9: "septembre",
+                10: "octobre",
+                11: "novembre",
+                12: "decembre",
+            }
 
-            # Supprimer ceux qui ne sont plus présents
-            Non_Mandatement.objects.filter(
-                Contrat=instance
-            ).exclude(
-                id__in=existing_nm_ids
-            ).delete()
+            for nm_data in non_mandatements_data:
+                # Gérer les mois si présents
+                mois_data = nm_data.pop("mois_non_mandates", [])
+                mois_flags = {field: False for field in MONTH_MAP.values()}
+                for mois in mois_data:
+                    mois_numero = mois.get("mois_numero")
+                    if mois_numero in MONTH_MAP:
+                        mois_flags[MONTH_MAP[mois_numero]] = True
+
+                Non_Mandatement.objects.create(
+                    Contrat=instance,
+                    Bailleur=instance.Bailleur,
+                    **nm_data,
+                    **mois_flags
+                )
 
         return instance

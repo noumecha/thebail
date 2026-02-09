@@ -4,4 +4,7 @@ from ..models import *
 class OccupantResidentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Occupants
-        fields = '__all__'
+        exclude = ['Immeuble']
+        extra_kwargs = {
+            'Nom_Prenom_occupant_residence': {'validators': []},
+        }

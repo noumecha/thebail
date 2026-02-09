@@ -20,6 +20,22 @@ class ImmeubleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Immeubles
         fields = '__all__'
+        # ✅ Désactiver la validation unique pour permettre l'update
+        extra_kwargs = {
+            'Designation': {'validators': []},
+        }
+
+    def validate_Designation(self, value):
+        """Validation manuelle de Designation"""
+        # En mode update, si la valeur n'a pas changé, pas de validation
+        if self.instance and self.instance.Designation == value:
+            return value
+
+        # Sinon, vérifier l'unicité
+        if Immeubles.objects.filter(Designation=value).exists():
+            raise serializers.ValidationError("Un immeuble avec cette désignation existe déjà.")
+
+        return value
 
     def create(self, validated_data):
         """Créer l'immeuble avec toutes ses relations"""
@@ -67,7 +83,7 @@ class ImmeubleSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
-        # ✅ Mettre à jour les éléments (update_or_create au lieu de delete)
+        # Mettre à jour les éléments
         if elements_data is not None:
             existing_element_ids = []
             for element_data in elements_data:
@@ -81,35 +97,23 @@ class ImmeubleSerializer(serializers.ModelSerializer):
                 )
                 existing_element_ids.append(element_data['element_id'])
 
-            # Supprimer uniquement ceux qui ne sont plus présents
             ImmeubleElement.objects.filter(
                 immeuble=instance
             ).exclude(
                 element_id__in=existing_element_ids
             ).delete()
 
-        # ✅ Mettre à jour les occupants résidents (update_or_create)
+        # ✅ Supprimer et recréer les occupants résidents (évite les problèmes d'unicité)
         if occupants_residents_data is not None:
-            existing_occupant_ids = []
+            Occupants.objects.filter(Immeuble=instance).delete()
             for occupant_data in occupants_residents_data:
-                #nom_prenom = occupant_data.get('Nom_Prenom_occupant_residence')
-                occupant, created = Occupants.objects.update_or_create(
+                Occupants.objects.create(
                     Immeuble=instance,
-                    #Nom_Prenom_occupant_residence=nom_prenom,
-                    defaults=occupant_data
+                    **occupant_data
                 )
-                existing_occupant_ids.append(occupant.id)
 
-            # Supprimer ceux qui ne sont plus présents
-            Occupants.objects.filter(
-                Immeuble=instance
-            ).exclude(
-                id__in=existing_occupant_ids
-            ).delete()
-
-        # ✅ Mettre à jour les occupants bureaux (update_or_create)
+        # ✅ Supprimer et recréer les occupants bureaux
         if occupants_bureaux_data is not None:
-            # Supprimer et recréer (car pas de champ unique évident)
             OccupantBureaux.objects.filter(Immeuble=instance).delete()
             for occupant_data in occupants_bureaux_data:
                 OccupantBureaux.objects.create(

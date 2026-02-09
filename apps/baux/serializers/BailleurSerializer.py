@@ -11,6 +11,19 @@ class BailleurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bailleurs
         fields = '__all__'
+        extra_kwargs = {
+            'NIU': {'validators': []},
+        }
+
+    def validate_NIU(self, value):
+        """Validation manuelle de NIU"""
+        if self.instance and self.instance.NIU == value:
+            return value
+
+        if Bailleurs.objects.filter(NIU=value).exists():
+            raise serializers.ValidationError("Un bailleur avec ce NIU existe déjà.")
+
+        return value
 
     def validate(self, data):
         """Validations métier pour le bailleur"""

@@ -24,16 +24,26 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
 
         # ✅ En mode update, passer les instances aux serializers imbriqués
         if self.instance:
+            # Recréer les serializers avec les instances
             if hasattr(self.instance, 'Immeuble') and self.instance.Immeuble:
-                self.fields['immeuble'].instance = self.instance.Immeuble
+                self.fields['immeuble'] = ImmeubleSerializer(
+                    instance=self.instance.Immeuble,
+                    source='Immeuble',
+                    required=False
+                )
 
             if hasattr(self.instance, 'Contrat') and self.instance.Contrat:
-                self.fields['contrat'].instance = self.instance.Contrat
+                self.fields['contrat'] = ContratSerializer(
+                    instance=self.instance.Contrat,
+                    source='Contrat',
+                    required=False
+                )
 
     def validate(self, data):
         """Validation personnalisée pour l'update"""
         # ✅ En mode update, passer l'instance aux serializers imbriqués
         if self.instance:
+            print("instance : ", self.instance)
             # Pour l'immeuble
             if 'Immeuble' in data and self.instance.Immeuble:
                 immeuble_serializer = ImmeubleSerializer(
@@ -104,9 +114,9 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
         pieces_data = validated_data.pop('pieces_collectees', None)
 
         # Mettre à jour l'agent
-        agent_id = self.initial_data.get('agent_collecte_id')
-        if agent_id:
-            agent = AgentCollecte.objects.get(id=agent_id)
+        agent_matricule = self.initial_data.get('agent_collecte_id')
+        if agent_matricule:
+            agent = AgentCollecte.objects.get(Matricule=agent_matricule)
             instance.Agent = agent
 
         # Mettre à jour les champs simples

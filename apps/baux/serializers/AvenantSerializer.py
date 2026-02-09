@@ -13,3 +13,7 @@ class AvenantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Avenants
         fields = '__all__'
+        # ✅ Désactiver la validation unique
+        extra_kwargs = {
+            'Ref_Avenant': {'validators': []},
+        }
