@@ -45,7 +45,7 @@ services:
         - NODE_ENV=production
     container_name: thebail_web_prod
     restart: always
-    command: gunicorn thebail.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120
     volumes:
       - static_volume_prod:/app/staticfiles
       - media_volume_prod:/app/uploads
