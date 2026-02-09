@@ -227,6 +227,10 @@ LOGOUT_REDIRECT_URL = 'login'
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://baux-administratifs.com",
+    "https://www.baux-administratifs.com",
+]
 
 
 # Your stuff...
