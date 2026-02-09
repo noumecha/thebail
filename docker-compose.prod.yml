@@ -1,5 +1,20 @@
 # docker-compose.yml
 services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: thebail_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - '8081:80'
+    depends_on:
+      - db
+    networks:
+      - thebail_network
+
   db:
     env_file:
       - .env
