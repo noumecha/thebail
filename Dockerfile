@@ -72,7 +72,7 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 # Copier les fichiers de dépendances Node.js
-COPY src/package.json src/package-lock.json* ./src/
+COPY src/package*.json ./src/
 WORKDIR /app/src
 RUN npm install
 
