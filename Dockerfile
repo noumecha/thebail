@@ -76,6 +76,9 @@ COPY src/package.json src/package-lock.json* ./src/
 WORKDIR /app/src
 RUN npm install --production
 
+# build prod (génère assets/vendor)
+RUN npm run build
+
 # Retour au répertoire principal
 WORKDIR /app
 
