@@ -41,7 +41,7 @@ FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    NODE_ENV=production
+    #NODE_ENV=production
 
 # Installer uniquement les dépendances runtime
 RUN apt-get update && apt-get install -y \

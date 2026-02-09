@@ -29,3 +29,9 @@ docker-compose -f docker-compose.prod.yml restart web
 # Arrêter tout
 
 docker-compose -f docker-compose.prod.yml down
+
+# Fast on prod
+
+docker compose -f docker-compose.prod.yml down
+docker compose -f docker-compose.prod.yml build --no-cache
+docker compose -f docker-compose.prod.yml up -d
