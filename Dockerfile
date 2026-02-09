@@ -25,8 +25,7 @@ WORKDIR /app
 
 # Copier les fichiers de dépendances Python
 COPY requirements.txt ./
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copier les fichiers de dépendances Node.js depuis src/
 COPY src/package.json src/package-lock.json* ./src/
