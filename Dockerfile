@@ -74,7 +74,7 @@ COPY --from=builder /install /usr/local
 # Copier les fichiers de dépendances Node.js
 COPY src/package.json src/package-lock.json* ./src/
 WORKDIR /app/src
-RUN npm install --production
+RUN npm install
 
 # build prod (génère assets/vendor)
 RUN npm run build
