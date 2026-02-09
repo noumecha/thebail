@@ -15,7 +15,6 @@ services:
       - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - thebail_network
     healthcheck:
@@ -32,8 +31,9 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
+      - /app/src/node_modules # Éviter d'écraser node_modules
       - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - media_volume:/app/uploads
     ports:
       - '8000:8000'
     environment:
@@ -49,6 +49,22 @@ services:
         condition: service_healthy
     networks:
       - thebail_network
+
+  # Service optionnel pour watch les changements CSS/JS en dev
+  assets-watch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: thebail_assets_watch
+    restart: unless-stopped
+    command: sh -c "cd /app/src && npm run dev -- --watch"
+    volumes:
+      - .:/app
+      - /app/src/node_modules
+    networks:
+      - thebail_network
+    profiles:
+      - dev # Démarrer avec: docker-compose --profile dev up
 
 volumes:
   mysql_data:

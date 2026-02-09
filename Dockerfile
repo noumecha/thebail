@@ -5,7 +5,8 @@ FROM python:3.11-slim
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    NODE_ENV=production
 
 # Installer Node.js et dépendances système
 RUN apt-get update && apt-get install -y \
@@ -13,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     default-libmysqlclient-dev \
     pkg-config \
+    netcat-openbsd \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean \
@@ -21,24 +23,24 @@ RUN apt-get update && apt-get install -y \
 # Créer le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers de dépendances
-COPY requirements.txt package.json package-lock.json* ./
-
-# Installer les dépendances Python
+# Copier les fichiers de dépendances Python
+COPY requirements.txt ./
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Installer les dépendances Node.js
+# Copier les fichiers de dépendances Node.js depuis src/
+COPY src/package.json src/package-lock.json* ./src/
+WORKDIR /app/src
 RUN npm install
 
-# Copier le projet
+# Retour au répertoire principal
+WORKDIR /app
+
+# Copier tout le projet
 COPY . .
 
 # Créer les répertoires pour les fichiers statiques et médias
-RUN mkdir -p /app/staticfiles /app/media
-
-# Collecter les fichiers statiques (sera fait au démarrage)
-# RUN python manage.py collectstatic --noinput
+RUN mkdir -p /app/staticfiles /app/uploads
 
 # Exposer le port
 EXPOSE 8000
