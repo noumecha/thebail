@@ -40,7 +40,7 @@ RUN pip install --upgrade pip setuptools wheel && \
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONDONTWRITEBYTECODE=1
     #NODE_ENV=production
 
 # Installer uniquement les dépendances runtime
