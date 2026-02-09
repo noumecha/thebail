@@ -1,4 +1,4 @@
-# docker-compose.yml
+# docker-compose.prod.yml
 services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -8,6 +8,10 @@ services:
       PMA_HOST: db
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
+      # Augmenter les limites d'upload et d'exécution
+      UPLOAD_LIMIT: 512M
+      MEMORY_LIMIT: 2048M
+      MAX_EXECUTION_TIME: 600
     ports:
       - '8081:80'
     depends_on:
