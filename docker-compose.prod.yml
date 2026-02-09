@@ -1,5 +1,8 @@
+# docker-compose.yml
 services:
   db:
+    env_file:
+      - .env
     image: mysql:8.0
     container_name: thebail_db_prod
     restart: always
@@ -18,6 +21,8 @@ services:
       retries: 10
 
   web:
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: Dockerfile
