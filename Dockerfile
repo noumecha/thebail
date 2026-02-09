@@ -1,63 +1,82 @@
 # Dockerfile
-FROM python:3.11-slim
+# ============================================
+# Stage 1: Builder - Compilation des dépendances
+# ============================================
+FROM python:3.11-slim AS builder
 
-# Variables d'environnement
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    NODE_ENV=production
+    PIP_NO_CACHE_DIR=1
 
-# Installer Node.js et TOUTES les dépendances système nécessaires
+# Installer les dépendances de build
 RUN apt-get update && apt-get install -y \
-    # Outils de base
-    curl \
     gcc \
     g++ \
     make \
-    netcat-openbsd \
     pkg-config \
-    # MySQL
     default-libmysqlclient-dev \
-    # Cairo et dépendances pour pycairo, weasyprint, reportlab
     libcairo2-dev \
     libpango1.0-dev \
     libgdk-pixbuf2.0-dev \
     libffi-dev \
-    shared-mime-info \
-    # Fonts pour PDF
-    fonts-liberation \
-    fonts-dejavu-core \
-    # Librairies pour Pillow
     libjpeg-dev \
     libpng-dev \
     libtiff-dev \
     libwebp-dev \
     zlib1g-dev \
-    # Librairies pour lxml
     libxml2-dev \
     libxslt1-dev \
-    # Installer Node.js
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copier et installer les dépendances Python
+COPY requirements.txt .
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --prefix=/install -r requirements.txt
+
+# ============================================
+# Stage 2: Runtime - Image finale
+# ============================================
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    NODE_ENV=production
+
+# Installer uniquement les dépendances runtime
+RUN apt-get update && apt-get install -y \
+    curl \
+    netcat-openbsd \
+    default-libmysqlclient-dev \
+    libcairo2 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libffi8 \
+    shared-mime-info \
+    fonts-liberation \
+    fonts-dejavu-core \
+    libjpeg62-turbo \
+    libpng16-16 \
+    libtiff6 \
+    libwebp7 \
+    libxml2 \
+    libxslt1.1 \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    # Nettoyer le cache
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Créer le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers de dépendances Python
-COPY requirements.txt ./
+# Copier les packages Python depuis le builder
+COPY --from=builder /install /usr/local
 
-# Installer les dépendances Python
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install -r requirements.txt
-
-# Copier les fichiers de dépendances Node.js depuis src/
+# Copier les fichiers de dépendances Node.js
 COPY src/package.json src/package-lock.json* ./src/
 WORKDIR /app/src
-RUN npm install
+RUN npm install --production
 
 # Retour au répertoire principal
 WORKDIR /app
@@ -65,13 +84,11 @@ WORKDIR /app
 # Copier tout le projet
 COPY . .
 
-# Créer les répertoires pour les fichiers statiques et médias
+# Créer les répertoires
 RUN mkdir -p /app/staticfiles /app/uploads
 
-# Exposer le port
 EXPOSE 8000
 
-# Script de démarrage
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
