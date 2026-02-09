@@ -8,15 +8,39 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     NODE_ENV=production
 
-# Installer Node.js et dépendances système
+# Installer Node.js et TOUTES les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
+    # Outils de base
     curl \
     gcc \
-    default-libmysqlclient-dev \
-    pkg-config \
+    g++ \
+    make \
     netcat-openbsd \
+    pkg-config \
+    # MySQL
+    default-libmysqlclient-dev \
+    # Cairo et dépendances pour pycairo, weasyprint, reportlab
+    libcairo2-dev \
+    libpango1.0-dev \
+    libgdk-pixbuf2.0-dev \
+    libffi-dev \
+    shared-mime-info \
+    # Fonts pour PDF
+    fonts-liberation \
+    fonts-dejavu-core \
+    # Librairies pour Pillow
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libwebp-dev \
+    zlib1g-dev \
+    # Librairies pour lxml
+    libxml2-dev \
+    libxslt1-dev \
+    # Installer Node.js
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
+    # Nettoyer le cache
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -25,7 +49,10 @@ WORKDIR /app
 
 # Copier les fichiers de dépendances Python
 COPY requirements.txt ./
-RUN pip install -r requirements.txt
+
+# Installer les dépendances Python
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install -r requirements.txt
 
 # Copier les fichiers de dépendances Node.js depuis src/
 COPY src/package.json src/package-lock.json* ./src/
