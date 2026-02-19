@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.apps import apps
+from django.views.decorators.http import require_http_methods
 
+@require_http_methods(["POST"])
 def add_dynamic_choice(request):
     if request.method == 'GET':
         return JsonResponse({"message": "cette url n'accepte que la méthode POST."}, status=200)

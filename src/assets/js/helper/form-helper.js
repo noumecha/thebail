@@ -1,4 +1,10 @@
-function getCSRFToken() {
+function getCSRFToken(formWrapper = null) {
+  if (formWrapper) {
+    const token = $('#' + formWrapper)
+      .find('input[name="csrfmiddlewaretoken"]')
+      .val();
+    if (token) return token;
+  }
   const cookies = document.cookie.split(';');
   for (let cookie of cookies) {
     cookie = cookie.trim();
@@ -44,7 +50,7 @@ function toggleCheck({ listId, checkbox, dynamicCheckClass, dynamicOptionClass, 
   }
 }
 
-function initDynamicChoiceList(listId, hiddenId, newInputId, addBtnId, url) {
+function initDynamicChoiceList(listId, hiddenId, newInputId, formWrapper, addBtnId, url) {
   const $list = $('#' + listId);
 
   $list.on('change', '.dynamic-check', function () {
@@ -64,6 +70,9 @@ function initDynamicChoiceList(listId, hiddenId, newInputId, addBtnId, url) {
       .val()
       .trim();
     if (!val) return;
+    console.log('token: ', getCSRFToken(formWrapper));
+    console.log('list id ', listId);
+    console.log('data sent: ', { label: val, model: $('#' + listId).data('model') });
     if (url) {
       $.post({
         url: url,
@@ -72,7 +81,7 @@ function initDynamicChoiceList(listId, hiddenId, newInputId, addBtnId, url) {
           model: $('#' + listId).data('model')
         },
         headers: {
-          'X-CSRFToken': getCSRFToken()
+          'X-CSRFToken': getCSRFToken(formWrapper)
         }
       }).done(function (res) {
         addToList(res.id, res.label, listId);

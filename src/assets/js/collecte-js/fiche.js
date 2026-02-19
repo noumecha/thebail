@@ -144,57 +144,64 @@ $(function () {
   // gestion des éléments dynamique pour l'ajout des éléments à la liste dynamique
   const dynamic_choices_list_objects = [
     {
-      listId: 'construction_list',
+      listId: 'type_construction_id',
       hiddenId: 'construction_choice_hidden',
       newInputId: 'new_construction_input',
+      formWrapper: 'new_construction_wrapper',
       addButtonId: 'add_construction_btn',
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'type_location_list',
+      listId: 'type_location_id',
       hiddenId: 'type_location_choice_hidden',
       newInputId: 'new_type_location_input',
+      formWrapper: 'new_type_location_wrapper',
       addButtonId: 'add_type_location_btn',
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'statut_list',
+      listId: 'statut_batisse_id',
       hiddenId: 'statut_choice_hidden',
       newInputId: 'new_statut_input',
+      formWrapper: 'new_statut_wrapper',
       addButtonId: 'add_statut_btn',
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'revetementinterieure_list',
+      listId: 'revetement_int_id',
       hiddenId: 'revetementinterieure_choice_hidden',
       newInputId: 'new_revetementinterieure_input',
+      formWrapper: 'new_revetementinterieure_wrapper',
       addButtonId: 'add_revetementinterieure_btn',
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'revetementexterieure_list',
+      listId: 'revetement_ext_id',
       hiddenId: 'revetementexterieure_choice_hidden',
       newInputId: 'new_revetementexterieure_input',
+      formWrapper: 'new_revetementexterieure_wrapper',
       addButtonId: 'add_revetementexterieure_btn',
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'typecontrat_list',
+      listId: 'TypeContrat',
       hiddenId: 'typecontrat_choice_hidden',
       newInputId: 'new_typecontrat_input',
+      formWrapper: 'new_typecontrat_wrapper',
       addButtonId: 'add_typecontrat_btn',
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'periodicitereglement',
+      listId: 'Periodicite_Reglement_id',
       hiddenId: 'periodicitereglement_choice_hidden',
       newInputId: 'new_periodicitereglement_input',
+      formWrapper: 'new_periodicitereglement_wrapper',
       addButtonId: 'add_periodicitereglement_btn',
       ajaxUrl: '/add-choice/'
     }
   ];
   dynamic_choices_list_objects.forEach(obj => {
-    initDynamicChoiceList(obj.listId, obj.hiddenId, obj.newInputId, obj.addButtonId, obj.ajaxUrl);
+    initDynamicChoiceList(obj.listId, obj.hiddenId, obj.newInputId, obj.formWrapper, obj.addButtonId, obj.ajaxUrl);
   });
 
   // dynamic toogle non object elements
