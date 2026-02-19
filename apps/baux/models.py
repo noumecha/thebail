@@ -832,6 +832,7 @@ class Avenants (models.Model):
     Ref_Avenant = models.CharField(max_length=50, unique=True)
     Date_Signature = models.CharField(max_length=50,null=True)
     Date_effet = models.CharField(max_length=50,null=True)
+    statut_visa_budgetaire_avenant = models.BooleanField(null=True, blank=True)
     Existence_visa_budgétaire_avenant = models.BooleanField(null=True, blank=True)
     Montant_TTC_Mensuel_ancien = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
     Montant_TTC_Mensuel_Nouveau = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)

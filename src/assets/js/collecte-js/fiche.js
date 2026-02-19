@@ -211,6 +211,8 @@ $(function () {
     { listId: 'Existence_visa_budgétaire', hiddenId: null },
     { listId: 'tacite_reconduction', hiddenId: null },
     { listId: 'Existence_avenant', hiddenId: null },
+    { listId: 'statut_visa_budgetaire_avenant_1', hiddenId: null },
+    { listId: 'statut_visa_budgetaire_avenant_2', hiddenId: null },
     { listId: 'type_construction_id', hiddenId: null },
     { listId: 'TypeContrat', hiddenId: null },
     { listId: 'Periodicite_Reglement_id', hiddenId: null },
