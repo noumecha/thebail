@@ -30,8 +30,8 @@ class FicheCollecteFormHandler {
     const submitBtn = this.form.querySelector('button[type="submit"]');
     if (submitBtn) {
       submitBtn.innerHTML = this.isEditMode
-        ? '<i class="bx bx-edit"></i> Mettre à jour'
-        : '<i class="bx bx-save"></i> Enregistrer';
+        ? '<i class="bx bx-edit"></i> Mettre à jour la fiche'
+        : '<i class="bx bx-save"></i> Enregistrer la fiche';
       submitBtn.classList.add(this.isEditMode ? 'btn-warning' : 'btn-primary');
     }
   }
