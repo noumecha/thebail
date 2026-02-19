@@ -134,6 +134,7 @@ celerybeat.pid
 # Environments
 .venv
 .env
+.env.local
 env/
 venv/
 ENV/
@@ -171,5 +172,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# ---> remove uploads folder 
+# ---> remove uploads folder
 uploads/
