@@ -877,7 +877,7 @@ class Non_Mandatement (models.Model):
     novembre = models.BooleanField(default=False, verbose_name="Novembre")
     decembre = models.BooleanField(default=False, verbose_name="Decembre")
     Montant_total_exercice = models.DecimalField(null=True, max_digits=14, decimal_places=0, default=0)
-    Visa_budgétaire = models.CharField(max_length=50, null=True, blank=True)
+    statut_visa_budgetaire = models.BooleanField(null=True, blank=True)
     Ref_contrat_avenant = models.CharField(max_length=50, null=True, blank=True)
 
     # others

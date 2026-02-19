@@ -12,6 +12,7 @@ function DynamicTableManager(config) {
     autoAdd = true,
     minRows = 1,
     showRowNumber = false,
+    toggleChecker = null, // callback for yes or no choice
     customTemplate = null, // ✅ Template personnalisé
     onRowCreated = null, // ✅ Callback après création de ligne
     customCollectData = null // ✅ Nouveau paramètre
@@ -158,6 +159,10 @@ function DynamicTableManager(config) {
       // ✅ Appeler le callback personnalisé
       if (onRowCreated) {
         onRowCreated($newRow, rowCounter);
+      }
+
+      if (toggleChecker) {
+        toggleChecker(rowCounter);
       }
 
       $newRow.find('input:first, select:first').focus();
@@ -421,11 +426,34 @@ $(function () {
           readonly>
       </td>
       <td class="p-0">
-        <input type="text"
-          class="form-control form-control-sm dynamic-field"
-          name="${rowPrefix}_${rowId}_visa"
-          placeholder="Visa"
-          data-field="visa">
+        <div class="d-flex flex-row align-items-center mb-2">
+          <div id="non_mandatement_visa_${rowId}" class="d-flex visa-checkboxes">
+            <div class="form-check form-check-inline">
+              <label class="d-flex align-items-center gap-2 dynamic-option">
+                <input
+                  name="${rowPrefix}_${rowId}_visa"
+                  type="checkbox"
+                  class="form-check-input dynamic-check"
+                  data-field="statut_visa_budgetaire_oui"
+                  value="True"
+                  id="${rowPrefix}_${rowId}_visa-oui">
+                <span>Oui</span>
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <label class="d-flex align-items-center gap-2 dynamic-option">
+                <input
+                  name="${rowPrefix}_${rowId}_visa"
+                  type="checkbox"
+                  class="form-check-input dynamic-check"
+                  data-field="statut_visa_budgetaire_non"
+                  value="False"
+                  id="${rowPrefix}_${rowId}_visa-non">
+                <span>Non</span>
+              </label>
+            </div>
+          </div>
+        </div>
       </td>
       <td class="p-0">
         <input type="text"
@@ -470,6 +498,8 @@ $(function () {
       });
 
       // Construire l'objet ligne
+      const ouiChecked = $row.find('[data-field="statut_visa_budgetaire_oui"]').is(':checked');
+      const nonChecked = $row.find('[data-field="statut_visa_budgetaire_non"]').is(':checked');
       const rowData = {
         Exercice: $row.find('[data-field="exercice"]').val(),
         Loyer_Mensuel: parseFloat($row.find('.loyer-mensuel').val()) || 0,
@@ -477,7 +507,7 @@ $(function () {
         Date_signature: $row.find('[data-field="date_signature"]').val(),
         mois_non_mandates: moisNonMandates,
         Montant_total_exercice: parseFloat($row.find('.montant-total').val()) || 0,
-        Visa_budgétaire: $row.find('[data-field="visa"]').val(),
+        statut_visa_budgetaire: ouiChecked ? 'True' : nonChecked ? 'False' : null,
         Ref_contrat_avenant: $row.find('[data-field="reference_contrat"]').val()
       };
 
@@ -509,6 +539,20 @@ $(function () {
       // Calculer quand on coche/décoche un mois
       $row.find('.month-checkbox').on('change', function () {
         calculateMontantTotal($row);
+      });
+    },
+    toggleChecker: function (rowId) {
+      const listId = `non_mandatement_visa_${rowId}`;
+      const $list = $(`#${listId}`);
+      $list.on('change', '.dynamic-check', function () {
+        toggleCheck({
+          listId: listId,
+          checkbox: this,
+          dynamicCheckClass: 'dynamic-check',
+          dynamicOptionClass: 'dynamic-option',
+          dynamicInputClass: 'dynamic-x-input',
+          hiddenId: null
+        });
       });
     },
     fields: [],
