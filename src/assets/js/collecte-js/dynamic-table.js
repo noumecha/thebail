@@ -46,7 +46,8 @@ function DynamicTableManager(config) {
             name="${rowPrefix}_${rowId}_${field.name}"
             data-ajax-url="${field.ajaxUrl}"
             data-ajax-placeholder="${field.placeholder || 'Rechercher...'}"
-            data-field="${field.name}">
+            data-field="${field.name}"
+            data-ajax-length="0">
           </select>
         `;
       } else if (field.type === 'checkbox-group') {
@@ -103,49 +104,6 @@ function DynamicTableManager(config) {
     }
   }
 
-  function initSelect2ForRow($row) {
-    $row.find('.select2-ajax').each(function () {
-      const $select = $(this);
-
-      if ($select.hasClass('select2-hidden-accessible')) {
-        return;
-      }
-
-      const ajaxUrl = $select.data('ajax-url');
-      const placeholder = $select.data('ajax-placeholder');
-
-      try {
-        $select.select2({
-          ajax: {
-            url: ajaxUrl,
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-              return { q: params.term, page: params.page || 1 };
-            },
-            processResults: function (data) {
-              return {
-                results: data.results,
-                pagination: { more: data.pagination.more }
-              };
-            },
-            cache: true
-          },
-          placeholder: placeholder || 'Rechercher...',
-          minimumInputLength: 2,
-          language: {
-            inputTooShort: () => 'Veuillez saisir au moins 2 caractères',
-            searching: () => 'Recherche en cours...',
-            noResults: () => 'Aucun résultat trouvé'
-          },
-          width: '100%'
-        });
-      } catch (error) {
-        console.error('Erreur Select2:', error);
-      }
-    });
-  }
-
   function addNewRow() {
     rowCounter++;
     const $newRow = $(getRowTemplate(rowCounter));
@@ -154,7 +112,7 @@ function DynamicTableManager(config) {
     updateRowNumbers();
 
     setTimeout(() => {
-      initSelect2ForRow($newRow);
+      initSelect2Ajax($newRow, rowPrefix);
 
       // ✅ Appeler le callback personnalisé
       if (onRowCreated) {
@@ -377,10 +335,12 @@ $(function () {
       <td class="p-0">
         <select style="width: 150px !important;"
           class="form-select form-select-sm select2-ajax dynamic-field"
+          id="${rowPrefix}_${rowId}_exercice"
           name="${rowPrefix}_${rowId}_exercice"
           data-ajax-url="/api/get-exercices/"
           data-ajax-placeholder="Rechercher un exercice..."
-          data-field="exercice">
+          data-field="exercice"
+          data-ajax-length="0">
         </select>
       </td>
       <td class="p-0">

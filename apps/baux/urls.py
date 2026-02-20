@@ -112,8 +112,8 @@ urlpatterns = [
     path("api/get-administrations/", AdminisrationsSelect2().get, name="api_adminisration"),
     path("api/get-structures/", StructuresSelect2().get, name="api_structures"),
     path("api/get-bailleurs/", BailleursSelect2().get, name="api_bailleurs"),
-    path("api/get-banques/", BanquesSelect2().get, name="api_bailleurs"),
-    path("api/get-exercices/", ExercicesSelect2().get, name="api_exercices"),
+    path("api/get-banques/", BanquesSelect2().get, name="api_banques"),
+    path("api/get-exercices/", ExercicesSelect2.as_view(), name="api_exercices"),
     path('api/fiches/numero/', api_views.generate_fiche_collecte_number, name='generate_fiche_collecte_number'),
     # CRUD operations
     path('api/fiches/create/', api_views.create_fiche_collecte, name='create_fiche_collecte'),

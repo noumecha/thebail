@@ -1,6 +1,7 @@
 # Dans votre views.py
 from django.http import JsonResponse
 from django.db.models import Q
+from django.views import View
 from ..models import *
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
@@ -13,7 +14,7 @@ from django.db import transaction
 import logging
 import json
 
-class Select2SearchView:
+class Select2SearchView(View):
     """
     Classe générique pour les recherches Select2
 
@@ -32,8 +33,12 @@ class Select2SearchView:
     id_field = None
     text_template = None
     extra_fields = []
+    show_all_when_empty = False
 
     def get_queryset(self, search_term):
+        if not search_term and self.show_all_when_empty:
+            return self.model.objects.all()
+
         q = Q()
         for field in self.search_fields:
             q |= Q(**{f"{field}__icontains": search_term})
@@ -149,6 +154,7 @@ class ExercicesSelect2(Select2SearchView):
     text_template = "Exercice budgetaire {annee}"
     extra_fields = ["annee"]
     order_by = "-annee"
+    show_all_when_empty = True
 
 class BanquesSelect2(Select2SearchView):
     model = Banques
