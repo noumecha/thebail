@@ -47,7 +47,7 @@ function DynamicTableManager(config) {
             data-ajax-url="${field.ajaxUrl}"
             data-ajax-placeholder="${field.placeholder || 'Rechercher...'}"
             data-field="${field.name}"
-            data-ajax-length="0">
+            data-ajax-length="2">
           </select>
         `;
       } else if (field.type === 'checkbox-group') {

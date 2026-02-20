@@ -127,7 +127,7 @@ class AdminisrationsSelect2(Select2SearchView):
     model = Administrations
     search_fields = ["LibelleFr","AbreviationFr","code"]
     id_field = "pk"
-    text_template = "{LibelleFr}"
+    text_template = "{code} - {LibelleFr}"
     extra_fields = []
     order_by = "LibelleFr"
 
@@ -160,7 +160,7 @@ class BanquesSelect2(Select2SearchView):
     model = Banques
     search_fields = ["codeBanque","sigle","denominationFR","denominationUS","denominationES","siege","adresse","telephone","fax","email"]
     id_field = "pk"
-    text_template = "{sigle}"
+    text_template = "{codeBanque} - {sigle}"
     extra_fields = []
     order_by = "sigle"
 
