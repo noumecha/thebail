@@ -1,0 +1,3 @@
+/**
+ * Collectes des données
+ */

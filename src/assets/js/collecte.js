@@ -1,4 +1,8 @@
 // collecte.js
+import { FormUtils } from './collecte-js/modules/form-utils.js';
+import { Validators } from './collecte-js/modules/form-validator.js';
+import { APIUtils } from './collecte-js/modules/api-utils.js';
+
 class FicheCollecteFormHandler {
   constructor(formId, ficheId = null) {
     this.form = document.getElementById(formId);
@@ -13,8 +17,8 @@ class FicheCollecteFormHandler {
       this.handleSubmit();
     });
     // init pieces and elements states
-    this.initElementsImmeuble();
-    this.initPiecesCollectees();
+    FormUtils.initElementsImmeuble();
+    FormUtils.initPiecesCollectees();
     // mode :
     if (this.isEditMode) {
       await this.loadFicheData();
@@ -23,7 +27,7 @@ class FicheCollecteFormHandler {
     $('#arrondissement').on('select2:select', e => {
       const arrondissementId = e.params.data.id;
       if (arrondissementId) {
-        this.generateFicheCollecte(arrondissementId);
+        APIUtils.generateFicheCollecte(arrondissementId);
       }
     });
     // change btn text value base on the mode :
@@ -34,177 +38,6 @@ class FicheCollecteFormHandler {
         : '<i class="bx bx-save"></i> Enregistrer la fiche';
       submitBtn.classList.add(this.isEditMode ? 'btn-warning' : 'btn-primary');
     }
-  }
-
-  initPiecesCollectees() {
-    const $container = $('.pieces-collecte-container-tbody');
-
-    $container.find('input[type="number"]').each(function () {
-      $(this).prop('disabled', true).val('');
-    });
-    $container.find('input[type="file"]').each(function () {
-      $(this).prop('disabled', true).val('');
-    });
-
-    // ✅ Gestion du checkbox
-    $container.on('change', '.piece-checkbox', function () {
-      const $checkbox = $(this);
-      const $row = $checkbox.closest('tr');
-      const elementId = $row.data('piece-id');
-      const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
-      const $fileInput = $row.find(`#piece_image_input_${elementId}`);
-      const $fileLabel = $row.find(`label[for="piece_image_input_${elementId}"]`);
-
-      if ($checkbox.is(':checked')) {
-        $numberInput.prop('disabled', false).val('1');
-        $fileInput.prop('disabled', false);
-        // Initialiser avec max = 1
-        updateFileInputLimit($fileInput, 1, $fileLabel);
-        $numberInput.focus();
-      } else {
-        $numberInput.prop('disabled', true).val('');
-        $fileInput.prop('disabled', true).val('');
-        $fileLabel.text('0 fich.');
-        updateFileInputLimit($fileInput, 1, $fileLabel);
-      }
-    });
-
-    // ✅ Gestion du changement de quantité
-    $container.on('change input', '.piece-nombre', function () {
-      const $numberInput = $(this);
-      const $row = $numberInput.closest('tr');
-      const elementId = $row.data('piece-id');
-      const $fileInput = $row.find(`#piece_image_input_${elementId}`);
-      const $fileLabel = $row.find(`label[for="piece_image_input_${elementId}"]`);
-      const quantity = parseInt($numberInput.val()) || 1;
-
-      // Réinitialiser le file input si la quantité change
-      $fileInput.val('');
-      $fileLabel.text('0 fich.');
-      updateFileInputLimit($fileInput, quantity, $fileLabel);
-    });
-
-    // ✅ Gestion de la sélection des fichiers
-    $container.on('change', '.piece-files', function () {
-      const $fileInput = $(this);
-      const $row = $fileInput.closest('tr');
-      const elementId = $row.data('piece-id');
-      const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
-      const $fileLabel = $row.find(`label[for="piece_image_input_${elementId}"]`);
-      const maxFiles = parseInt($numberInput.val()) || 1;
-      const selectedFiles = this.files;
-
-      // ✅ Vérifier si l'utilisateur a sélectionné trop de fichiers
-      if (selectedFiles.length > maxFiles) {
-        showFileError($fileInput, $fileLabel, maxFiles, selectedFiles.length);
-        // Réinitialiser le file input
-        $fileInput.val('');
-        $fileLabel.text('0 fich.');
-        return;
-      }
-
-      // ✅ Mettre à jour le label
-      $fileLabel.text(`${selectedFiles.length} fich.`);
-      clearFileError($fileInput);
-    });
-  }
-
-  validatePiecesCollectees() {
-    const errors = [];
-    const $container = $('.pieces-collecte-container-tbody');
-
-    $container.find('tr[data-piece-id]').each(function () {
-      const $row = $(this);
-      const elementId = $row.data('piece-id');
-      const $checkbox = $row.find(`#piece_${elementId}`);
-      const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
-      const $imageInput = $row.find(`#piece_image_input_${elementId}`);
-      const elementLabel = $row.find('label.form-check-label').text().trim();
-
-      if ($checkbox.is(':checked')) {
-        const quantity = parseInt($numberInput.val()) || 0;
-
-        // ✅ Valider la quantité
-        if (!quantity || quantity <= 0) {
-          errors.push(`${elementLabel} : La quantité est obligatoire lorsque l'élément est coché`);
-          return;
-        }
-
-        // ✅ Valider le nombre d'images
-        const selectedFiles = $imageInput?.length || 0;
-        const hasExistingImages = $row.find('.existing-image-item').length;
-        const totalImages = selectedFiles + hasExistingImages;
-
-        if (totalImages === 0) {
-          errors.push(`${elementLabel} : Les images sont obligatoires lorsque l'élément est coché`);
-        } else if (selectedFiles > quantity) {
-          // ✅ Vérifier que le nombre d'images ne dépasse pas la quantité
-          errors.push(
-            `${elementLabel} : Vous avez sélectionné ${selectedFiles} images mais la quantité est ${quantity}`
-          );
-        }
-      }
-    });
-
-    return errors;
-  }
-
-  initElementsImmeuble() {
-    // Gérer TOUS les éléments de description avec un seul événement
-    const $container = $('#elements-immeuble-container');
-    $container.find('input[type="number"]').each(function () {
-      $(this).prop('disabled', true).val('');
-    });
-    $('#elements-immeuble-container').on('change', '.dynamic-check', function () {
-      const $checkbox = $(this);
-      const $row = $checkbox.closest('tr');
-      const elementId = $row.data('el-id');
-      const listId = 'immeuble_element_' + elementId;
-
-      toggleCheck({
-        listId: listId,
-        checkbox: this,
-        dynamicCheckClass: 'dynamic-check',
-        dynamicOptionClass: 'dynamic-option',
-        dynamicInputClass: 'dynamic-x-input',
-        doubleUnchecked: true,
-        hiddenId: null,
-        // function to surcharge toggleCheck (setting number to 1 when oui is checked and setting number to empty when non is checked)
-        onToggle: (isChecked, checkboxValue) => {
-          const $row = $(this).closest('tr');
-          const elementId = $row.data('el-id');
-          const $numberInput = $row.find(`#nombre_input_${elementId}`);
-          if (isChecked && checkboxValue === 'oui') {
-            $numberInput.prop('disabled', false).focus();
-            $numberInput.val('1');
-          } else {
-            $numberInput.prop('disabled', true).val('');
-          }
-        }
-      });
-    });
-  }
-
-  validateElementsImmeuble() {
-    const errors = [];
-    const $container = $('#elements-immeuble-container');
-
-    $container.find('tr[data-el-id]').each(function () {
-      const $row = $(this);
-      const elementId = $row.data('el-id');
-      const $ouiCheckbox = $row.find(`#element_${elementId}_oui`);
-      const $numberInput = $row.find(`#nombre_input_${elementId}`);
-      const elementLabel = $row.find('label.text-capitalize').text().trim();
-
-      if ($ouiCheckbox.is(':checked')) {
-        const quantity = $numberInput.val();
-        if (!quantity || quantity.trim() === '' || parseInt(quantity) <= 0) {
-          errors.push(`${elementLabel}: La quantité est obligatoire lorsque "Oui" est sélectionné`);
-        }
-      }
-    });
-
-    return errors;
   }
 
   // Collecter toutes les données du formulaire
@@ -473,12 +306,12 @@ class FicheCollecteFormHandler {
     }
 
     // valider les pièces collectées
-    const pieceErrors = this.validatePiecesCollectees();
+    const pieceErrors = Validators.validatePiecesCollectees();
     if (pieceErrors.length > 0) {
       errors.push(...pieceErrors);
     }
     // Valider les éléments d'immeuble
-    const elementErrors = this.validateElementsImmeuble();
+    const elementErrors = Validators.validateElementsImmeuble();
     if (elementErrors.length > 0) {
       errors.push(...elementErrors);
     }
@@ -501,8 +334,8 @@ class FicheCollecteFormHandler {
       // Valider les données
       const errors = this.validateData(formData);
       if (errors.length > 0) {
-        this.showErrors(errors);
-        this.hideLoader();
+        FormUtils.showErrors(errors, this.form);
+        FormUtils.hideLoader(this.form);
         return;
       }
 
@@ -524,212 +357,18 @@ class FicheCollecteFormHandler {
       console.log('📥 Réponse serveur:', result);
 
       if (response.ok && result.success) {
-        this.showSuccess(result.message, result.data?.numero_fiche);
+        this.showSuccess(result.message, result.data?.numero_fiche, this.form);
       } else {
-        this.showErrors([result.message || 'Erreur lors de la soumission']);
-        this.handleServerErrors(result);
+        FormUtils.showErrors([result.message || 'Erreur lors de la soumission'], this.form);
+        FormUtils.handleServerErrors(result);
         console.error('Erreurs de validation:', result.errors);
       }
     } catch (error) {
       console.error('Erreur:', error);
-      this.showErrors(['Une erreur est survenue lors de la soumission']);
+      FormUtils.showErrors(['Une erreur est survenue lors de la soumission'], this.form);
     } finally {
-      this.hideLoader();
+      FormUtils.hideLoader(this.form);
     }
-  }
-
-  // ✅ Gérer les erreurs du serveur de manière structurée
-  handleServerErrors(result) {
-    const errors = [];
-
-    if (result.message) {
-      errors.push(result.message);
-    }
-
-    if (result.errors) {
-      // Aplatir les erreurs imbriquées
-      const flatErrors = flattenErrors(result.errors);
-
-      flatErrors.forEach(({ field, message }) => {
-        const label = this.getFieldLabel(field);
-        const customMessage = this.getCustomErrorMessage(field, message);
-        errors.push(`${label}: ${customMessage}`);
-      });
-    }
-
-    this.showErrors(errors.length > 0 ? errors : ['Erreur de validation inconnue']);
-  }
-
-  // ✅ Messages d'erreur personnalisés
-  getCustomErrorMessage(field, originalMessage) {
-    // Mapping des erreurs génériques vers des messages personnalisés
-    const customMessages = window.configs.customMessages;
-    // Si un message personnalisé existe pour ce champ
-    if (customMessages[field]) {
-      return customMessages[field];
-    }
-    // Sinon, traduire les messages génériques
-    const genericMessages = window.configs.genericMessages;
-
-    return genericMessages[originalMessage] || originalMessage;
-  }
-
-  // ✅ Traduire les noms de champs en labels lisibles
-  getFieldLabel(field) {
-    const labels = {
-      // Champs de la fiche
-      date_collecte: 'Date de collecte',
-      agent_collecte_id: 'Responsable de collecte',
-      matricule_agent: 'Matricule',
-
-      // Champs de l'immeuble
-      'immeuble.Designation': 'Désignation du bien',
-      'immeuble.designation_bien': 'Désignation du bien',
-      'immeuble.type_construction_id': 'Type de construction',
-      'immeuble.type_location_id': 'Type de location',
-      'immeuble.date_construction': 'Date de construction',
-      'immeuble.nombre_pieces': 'Nombre de pièces',
-      'immeuble.superficie_louee': 'Superficie louée',
-      'immeuble.statut_batisse_id': 'Statut de la bâtisse',
-      'immeuble.revetement_int_id': 'Revêtement intérieur',
-      'immeuble.revetement_ext_id': 'Revêtement extérieur',
-
-      // Localisation
-      'immeuble.localisation.pays_id': 'Pays',
-      'immeuble.localisation.ville': 'Ville',
-      'immeuble.localisation.region_id': 'Région',
-
-      // Contrat
-      'contrat.numero_contrat': 'Numéro de contrat',
-      'contrat.type_contrat_id': 'Type de contrat',
-      'contrat.date_signature': 'Date de signature',
-      'contrat.montant_loyer_mensuel': 'Montant du loyer',
-      'contrat.Duree_Contrat': 'Durée du contrat',
-
-      // Bailleur
-      'contrat.bailleur.Type_personne': 'Type de personne',
-      'contrat.bailleur.nom_prenom_raison_sociale': 'Nom du bailleur',
-      'contrat.bailleur.niu': 'NIU',
-      'contrat.bailleur.telephone': 'Téléphone'
-    };
-
-    return labels[field] || field.split('.').pop();
-  }
-
-  // ✅ Générer le numéro de fiche de collecte
-  async generateFicheCollecte(arrondissementId) {
-    const params = new URLSearchParams({
-      arrondissement_id: arrondissementId,
-      ...(this.isEditMode && { edit_mode: 'true', fiche_id: this.ficheId })
-    });
-    let url = `/api/fiches/numero/?${params.toString()}`;
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken()
-        }
-      });
-      const result = await response.json();
-      if (response.ok && result.success) {
-        const numeroField = document.getElementById('Numero_fiche_de_collecte');
-        if (numeroField) {
-          numeroField.value = result.numero_collecte;
-          showNotification('Numéro de fiche généré automatiquement', 'success');
-        }
-        // also set automatically region an departement values
-        const region_select = $('#region');
-        const departement_select = $('#departement');
-
-        let regionId = result.region_id;
-        let departementId = result.dpt_id;
-        let region_libelle = result.region;
-        let departement_libelle = result.departement;
-
-        region_select.val(regionId).trigger('change');
-        departement_select.val(departementId).trigger('change');
-
-        let $region_option = region_select.find('option[value="' + regionId + '"]');
-        let $departement_option = departement_select.find('option[value="' + departementId + '"]');
-
-        if ($region_option.length) {
-          $region_option.text(region_libelle);
-        } else {
-          region_select.append(new Option(region_libelle, regionId, true, true));
-          region_select.trigger('change');
-        }
-
-        if ($departement_option.length) {
-          $departement_option.text(departement_libelle);
-        } else {
-          departement_select.append(new Option(departement_libelle, departementId, true, true));
-          departement_select.trigger('change');
-        }
-      } else {
-        console.error('Erreur génération numéro:', result.error);
-        showNotification(result.error || 'Erreur lors de la génération du numéro', 'warning');
-      }
-    } catch (error) {
-      console.error('❌ Erreur génération numéro:', error);
-      showNotification('Erreur lors de la génération du numéro de fiche', 'danger');
-    }
-  }
-
-  showErrors(errors) {
-    // Supprimer les anciennes alertes
-    const oldAlerts = this.form.querySelectorAll('.alert-danger');
-    oldAlerts.forEach(alert => alert.remove());
-
-    const alertHtml = `
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <h5 class="alert-heading">
-          <i class="bx bx-error-circle"></i> Erreurs de validation
-        </h5>
-        <ul class="mb-0">
-          ${errors.map(error => `<li>${error}</li>`).join('')}
-        </ul>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `;
-
-    this.form.insertAdjacentHTML('afterbegin', alertHtml);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  hideLoader() {
-    const submitBtn = this.form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = this.isEditMode
-        ? '<i class="bx bx-edit"></i> Mettre à jour'
-        : '<i class="bx bx-save"></i> Enregistrer';
-      submitBtn.classList.add(this.isEditMode ? 'btn-warning' : 'btn-primary');
-    }
-  }
-
-  showSuccess(message, ficheId) {
-    // Supprimer les anciennes alertes
-    const oldAlerts = this.form.querySelectorAll('.alert-danger');
-    oldAlerts.forEach(alert => alert.remove());
-
-    // Créer une alerte de succès
-    const alertHtml = `
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <h5 class="alert-heading"><i class="bx bx-check-circle"></i> Succès</h5>
-        <p>${message}</p>
-        <p class="mb-0">Numéro de fiche: <strong>${ficheId}</strong></p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `;
-
-    this.form.insertAdjacentHTML('afterbegin', alertHtml);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Rediriger après 3 secondes
-    setTimeout(() => {
-      window.location.href = `/collecte/list/`;
-    }, 3000);
   }
 
   // edit mode functions
@@ -752,13 +391,13 @@ class FicheCollecteFormHandler {
         console.log('datas :', result.data);
         showNotification('Données chargées avec succès', 'success');
       } else {
-        this.showErrors(['Erreur lors du chargement des données']);
+        FormUtils.showErrors(['Erreur lors du chargement des données'], this.form);
       }
     } catch (error) {
       console.error('Erreur chargement:', error);
-      this.showErrors(['Erreur lors du chargement de la fiche']);
+      FormUtils.showErrors(['Erreur lors du chargement de la fiche'], this.form);
     } finally {
-      this.hideLoader();
+      FormUtils.hideLoader(this.form);
     }
   }
 

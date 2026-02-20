@@ -253,7 +253,7 @@ function DynamicTableManager(config) {
   addNewRow();
 }
 
-// utilisation :
+// appel :
 $(function () {
   // tableaux dynamique d'ajouts d'éléments
   // Initialiser le tableau des ayants droit (avec numérotation)
