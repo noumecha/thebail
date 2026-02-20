@@ -141,7 +141,7 @@ $(function () {
     }
   });
 
-  // gestion des éléments dynamique pour l'ajout des éléments à la liste dynamique
+  // gestion des éléments dynamique [elements de type list avec checkbox + éléments de description]
   const dynamic_choices_list_objects = [
     {
       listId: 'type_construction_id',
@@ -204,7 +204,7 @@ $(function () {
     initDynamicChoiceList(obj.listId, obj.hiddenId, obj.newInputId, obj.formWrapper, obj.addButtonId, obj.ajaxUrl);
   });
 
-  // dynamic toogle non object elements
+  // gérer les checkbox oui/non des éléments de type oui/non
   const object_to_toggle = [
     { listId: 'Type_personne', hiddenId: 'types_personnes_choice' },
     { listId: 'Statut_bailleur', hiddenId: 'statut_bailleur_choice' },
@@ -232,23 +232,6 @@ $(function () {
         dynamicInputClass: 'dynamic-x-input',
         hiddenId: obj.hiddenId
       });
-    });
-  });
-
-  // Gérer TOUS les éléments de description avec un seul événement
-  $('#elements-immeuble-container').on('change', '.dynamic-check', function () {
-    const $checkbox = $(this);
-    const $row = $checkbox.closest('tr');
-    const elementId = $row.data('el-id');
-    const listId = 'immeuble_element_' + elementId;
-
-    toggleCheck({
-      listId: listId,
-      checkbox: this,
-      dynamicCheckClass: 'dynamic-check',
-      dynamicOptionClass: 'dynamic-option',
-      dynamicInputClass: 'dynamic-x-input',
-      hiddenId: null
     });
   });
 });

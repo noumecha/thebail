@@ -19,7 +19,16 @@ function updateHidden(value, hiddenId) {
   $('#' + hiddenId).val(value);
 }
 
-function toggleCheck({ listId, checkbox, dynamicCheckClass, dynamicOptionClass, dynamicInputClass, hiddenId }) {
+function toggleCheck({
+  listId,
+  checkbox,
+  dynamicCheckClass,
+  dynamicOptionClass,
+  dynamicInputClass,
+  doubleUnchecked = false,
+  hiddenId,
+  onToggle = null
+}) {
   const $list = $('#' + listId);
   const $cb = $(checkbox);
   const label = $cb.val();
@@ -36,17 +45,26 @@ function toggleCheck({ listId, checkbox, dynamicCheckClass, dynamicOptionClass, 
     .find('.' + dynamicInputClass)
     .addClass('d-none');
 
-  // 2️⃣ logique métier
-  if ($cb.is(':checked') && $xInput.length && label.includes('Etage R+')) {
-    $xInput.removeClass('d-none').focus();
+  // 2️⃣ lorsque l'option cochée est décoché on coche l'autre option (oui/non) et si l'option doubleUnchecked est défini
+  if (!$cb.is(':checked') && doubleUnchecked) {
+    // Récupérer l'autre checkbox qui vient d'être cochée
+    const $otherCb = $list.find('.' + dynamicCheckClass).not($cb);
+    $otherCb
+      .prop('checked', true)
+      .closest('.' + dynamicOptionClass)
+      .find('.' + dynamicInputClass)
+      .removeClass('d-none');
 
-    // évite les handlers multiples
-    $xInput.off('input').on('input', function () {
-      updateHidden(`Etage R+${$(this).val()}`, hiddenId);
-    });
+    // ✅ Appeler onToggle avec les valeurs de l'AUTRE checkbox (celle qui vient d'être activée)
+    onToggle && onToggle(true, $otherCb.val());
   } else {
-    updateHidden($cb.is(':checked') ? label : '', hiddenId);
-    $xInput.addClass('d-none');
+    $xInput.removeClass('d-none').focus();
+    onToggle && onToggle($cb.is(':checked'), label);
+  }
+
+  if (hiddenId) {
+    const value = $cb.is(':checked') ? label : '';
+    updateHidden(value, hiddenId);
   }
 }
 

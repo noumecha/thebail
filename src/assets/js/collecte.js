@@ -94,23 +94,38 @@ class FicheCollecteFormHandler {
   }
 
   initElementsImmeuble() {
+    // Gérer TOUS les éléments de description avec un seul événement
     const $container = $('#elements-immeuble-container');
     $container.find('input[type="number"]').each(function () {
       $(this).prop('disabled', true).val('');
     });
-
-    $container.on('change', '.dynamic-check', function () {
+    $('#elements-immeuble-container').on('change', '.dynamic-check', function () {
       const $checkbox = $(this);
       const $row = $checkbox.closest('tr');
       const elementId = $row.data('el-id');
-      const $numberInput = $row.find(`#nombre_input_${elementId}`);
-      const checkboxValue = $checkbox.val();
+      const listId = 'immeuble_element_' + elementId;
 
-      if ($checkbox.is(':checked') && checkboxValue === 'oui') {
-        $numberInput.prop('disabled', false).focus();
-      } else {
-        $numberInput.prop('disabled', true).val('');
-      }
+      toggleCheck({
+        listId: listId,
+        checkbox: this,
+        dynamicCheckClass: 'dynamic-check',
+        dynamicOptionClass: 'dynamic-option',
+        dynamicInputClass: 'dynamic-x-input',
+        doubleUnchecked: true,
+        hiddenId: null,
+        // function to surcharge toggleCheck (setting number to 1 when oui is checked and setting number to empty when non is checked)
+        onToggle: (isChecked, checkboxValue) => {
+          const $row = $(this).closest('tr');
+          const elementId = $row.data('el-id');
+          const $numberInput = $row.find(`#nombre_input_${elementId}`);
+          if (isChecked && checkboxValue === 'oui') {
+            $numberInput.prop('disabled', false).focus();
+            $numberInput.val('1');
+          } else {
+            $numberInput.prop('disabled', true).val('');
+          }
+        }
+      });
     });
   }
 
@@ -225,19 +240,18 @@ class FicheCollecteFormHandler {
     }
   }
 
-  // Collecter les éléments de description
+  // Collecter les éléments de description uniquement ceux qui sont à oui
   collectElementsDescription() {
     const elements = [];
     document.querySelectorAll('.elements-immeuble-container-tbody tr').forEach(row => {
       const elementId = row.dataset.elId;
       const ouiChecked = row.querySelector(`#element_${elementId}_oui`)?.checked;
-      const nonChecked = row.querySelector(`#element_${elementId}_non`)?.checked;
       const nombre = row.querySelector(`input[type="number"]`)?.value || 0;
 
-      if (ouiChecked || nonChecked) {
+      if (ouiChecked) {
         elements.push({
           element_id: parseInt(elementId),
-          statut: ouiChecked ? true : nonChecked ? false : null,
+          statut: ouiChecked,
           nombre: parseInt(nombre)
         });
       }
