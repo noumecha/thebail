@@ -419,10 +419,27 @@ function getValue(fieldId) {
   const field = document.getElementById(fieldId);
   return field ? field.value : null;
 }
+
+// getting checkbox value for yes or no
+function getCheckboxValueYesNo(fieldId) {
+  const container = $('#' + fieldId);
+  const ouiChecked = container.find('[data-field=' + fieldId + '-oui]').is(':checked');
+  const nonChecked = container.find('[data-field=' + fieldId + '-non]').is(':checked');
+  if (ouiChecked) {
+    return true;
+  } else if (nonChecked) {
+    return false;
+  }
+  return null;
+}
+
+// getting value for simple checkbox
 function getCheckboxValue(fieldId) {
   const checkbox = document.getElementById(fieldId);
+  console.log(checkbox);
   return checkbox ? checkbox.checked : false;
 }
+
 // ✅ Fonction utilitaire pour convertir un fichier en base64
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
