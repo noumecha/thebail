@@ -165,6 +165,7 @@ $(function () {
   const object_to_toggle = [
     { listId: 'Type_personne', hiddenId: 'types_personnes_choice' },
     { listId: 'Statut_bailleur', hiddenId: 'statut_bailleur_choice' },
+    { listId: 'Role_bailleur', hideenId: 'role_bailleur_choice' },
     { listId: 'Existence_visa_budgétaire', hiddenId: null },
     { listId: 'tacite_reconduction', hiddenId: null },
     { listId: 'Existence_avenant', hiddenId: null },
@@ -190,5 +191,17 @@ $(function () {
         hiddenId: obj.hiddenId
       });
     });
+  });
+
+  // disabled an enable Role_bailleur base on Statut_bailleur checked or no
+  // on init check directly if statut_bailleur is checked
+  const isStatutChecked = $('#Statut_bailleur .dynamic-check').is(':checked');
+  $('#Role_bailleur .dynamic-check').prop('disabled', !isStatutChecked);
+  $('#Statut_bailleur').on('change', '.dynamic-check', function () {
+    const isChecked = $(this).is(':checked');
+    $('#Role_bailleur .dynamic-check').prop('disabled', !isChecked);
+    if (!isChecked) {
+      $('#Role_bailleur .dynamic-check').prop('checked', false).trigger('change');
+    }
   });
 });

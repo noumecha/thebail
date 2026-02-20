@@ -132,6 +132,9 @@ NATURE_CONTRAT = (
 
 STATUT_BAILLEUR = (
     (1, 'Bailleur décédé'),
+)
+
+ROLE_BAILLEUR = (
     (2, 'Ayant-droits légaux et existant(si bailleur décédé)'),
     (3, 'Administrateur des biens existant(si bailleur décédé)'),
 )
@@ -356,6 +359,7 @@ class Bailleurs(models.Model):
     Nom_Prenom_Representant = models.CharField(max_length=50, null=True, blank=True)
     Telephone_representant = models.CharField(max_length=20, null=True, blank=True)
     Statut_bailleur = models.CharField(choices=STATUT_BAILLEUR, max_length=255, null=True, blank=True)
+    Role_bailleur = models.CharField(choices=ROLE_BAILLEUR, max_length=255, null=True, blank=True)
 
     # références bancaires
     Banque = models.ForeignKey(Banques, on_delete=models.CASCADE, null=True, related_name="bailleur_banque")

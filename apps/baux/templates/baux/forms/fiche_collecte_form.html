@@ -536,8 +536,9 @@
                           <div class="col-md-6">
                             {% include "baux/widgets/field_widget.html" with input_id="Date_delivrance_doc" input_label="Date délivrance CNI" input_type="date" input_name="Date_delivrance_doc" variant="html_only" %}
                           </div>
-                          <div class="col-md-12">
+                          <div class="col-md-12 d-flex align-items-center justify-content-evenly">
                             {% include "baux/widgets/field_widget.html" with list_id="Statut_bailleur" checkbox_name="Statut_bailleur" hidden_name="statut_bailleur_choice" hidden_id="statut_bailleur_choice_hidden" list_options=statut_bailleur variant="html_simple_checkbox_list" %}
+                            {% include "baux/widgets/field_widget.html" with list_id="Role_bailleur" checkbox_name="Role_bailleur" hidden_name="role_bailleur_choice" hidden_id="role_bailleur_choice_hidden" list_options=role_bailleur variant="html_simple_checkbox_list" %}
                           </div>
                         </div>
                       </td>

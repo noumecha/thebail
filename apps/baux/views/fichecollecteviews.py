@@ -60,6 +60,7 @@ class FicheCollecteFormView(LoginRequiredMixin, TemplateView):
         context["banques"] = transform_queryset_to_listable(Banques.objects.all()[:30])
         context["type_personnes"] = transform_queryset_to_listable(TYPE_PERSONNE)
         context["statut_bailleur"] = transform_queryset_to_listable(STATUT_BAILLEUR)
+        context["role_bailleur"] = transform_queryset_to_listable(ROLE_BAILLEUR)
 
         # Prepare element groups for the template
         elements = list(ElementDeDescription.objects.all())

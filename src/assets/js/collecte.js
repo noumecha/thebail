@@ -266,6 +266,7 @@ class FicheCollecteFormHandler {
           Num_doc: getValue('Num_doc'),
           Date_delivrance_doc: getValue('Date_delivrance_doc'),
           Statut_bailleur: this.getDynamicChoiceValue('Statut_bailleur'),
+          Role_bailleur: this.getDynamicChoiceValue('Role_bailleur'),
           Banque: getValue('Banque'),
           RIB: getValue('RIB'),
           Intitule_compte: getValue('Intitule_compte'),
@@ -464,6 +465,11 @@ class FicheCollecteFormHandler {
 
     if (!data.contrat.bailleur.Raison_social) {
       errors.push('Le nom du bailleur est requis');
+    }
+    // validder les statut bailleur
+    // si le statut est selectionné, il faut au moins selectionner un role
+    if (data.contrat.bailleur.Statut_bailleur && !data.contrat.bailleur.Role_bailleur) {
+      errors.push('Le rôle du bailleur est requis lorsque le statut est sélectionné');
     }
 
     // valider les pièces collectées
