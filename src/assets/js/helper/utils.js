@@ -512,11 +512,64 @@ function showNotification(message, type = 'info') {
     toastElement.remove();
   });
 }
+
 // Utilitaires
 function getCsrfToken() {
   return document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 }
-// message an ux tips
+
+/**
+ * Met à jour la limite du file input selon la quantité
+ */
+function updateFileInputLimit($fileInput, maxFiles, $fileLabel) {
+  if (maxFiles === 1) {
+    // Désactiver la sélection multiple si quantité = 1
+    $fileInput.removeAttr('multiple');
+  } else {
+    // Activer la sélection multiple si quantité > 1
+    $fileInput.attr('multiple', true);
+  }
+
+  // Stocker la limite dans un attribut data
+  $fileInput.data('max-files', maxFiles);
+
+  // Mettre à jour le tooltip pour informer l'utilisateur
+  $fileInput.attr('title', `Maximum ${maxFiles} image${maxFiles > 1 ? 's' : ''}`);
+}
+
+/**
+ * Affiche un message d'erreur sur le file input
+ */
+function showFileError($fileInput, $fileLabel, maxFiles, selectedCount) {
+  const $wrapper = $fileInput.closest('.file-upload-wrapper');
+
+  // Supprimer l'erreur précédente si elle existe
+  $wrapper.find('.file-error').remove();
+
+  // Ajouter le message d'erreur
+  $wrapper.append(`
+    <small class="file-error text-danger d-block">
+      ⚠️ Maximum ${maxFiles} image${maxFiles > 1 ? 's' : ''}
+      (vous avez sélectionné ${selectedCount})
+    </small>
+  `);
+
+  $fileLabel.text('0 fich.');
+  $fileInput.addClass('is-invalid');
+}
+
+/**
+ * Supprime le message d'erreur du file input
+ */
+function clearFileError($fileInput) {
+  const $wrapper = $fileInput.closest('.file-upload-wrapper');
+  $wrapper.find('.file-error').remove();
+  $fileInput.removeClass('is-invalid');
+}
+
+/**
+ * message an ux tips
+ */
 function showLoader(form = null) {
   // Afficher un message de chargement ou une animation
   if (!form) {

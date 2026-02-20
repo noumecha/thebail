@@ -38,32 +38,80 @@ class FicheCollecteFormHandler {
 
   initPiecesCollectees() {
     const $container = $('.pieces-collecte-container-tbody');
+
     $container.find('input[type="number"]').each(function () {
       $(this).prop('disabled', true).val('');
     });
     $container.find('input[type="file"]').each(function () {
       $(this).prop('disabled', true).val('');
     });
+
+    // ✅ Gestion du checkbox
     $container.on('change', '.piece-checkbox', function () {
       const $checkbox = $(this);
       const $row = $checkbox.closest('tr');
       const elementId = $row.data('piece-id');
       const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
       const $fileInput = $row.find(`#piece_image_input_${elementId}`);
+      const $fileLabel = $row.find(`label[for="piece_image_input_${elementId}"]`);
 
       if ($checkbox.is(':checked')) {
-        $numberInput.prop('disabled', false).focus();
-        $fileInput.prop('disabled', false).focus();
+        $numberInput.prop('disabled', false).val('1');
+        $fileInput.prop('disabled', false);
+        // Initialiser avec max = 1
+        updateFileInputLimit($fileInput, 1, $fileLabel);
+        $numberInput.focus();
       } else {
         $numberInput.prop('disabled', true).val('');
         $fileInput.prop('disabled', true).val('');
+        $fileLabel.text('0 fich.');
+        updateFileInputLimit($fileInput, 1, $fileLabel);
       }
+    });
+
+    // ✅ Gestion du changement de quantité
+    $container.on('change input', '.piece-nombre', function () {
+      const $numberInput = $(this);
+      const $row = $numberInput.closest('tr');
+      const elementId = $row.data('piece-id');
+      const $fileInput = $row.find(`#piece_image_input_${elementId}`);
+      const $fileLabel = $row.find(`label[for="piece_image_input_${elementId}"]`);
+      const quantity = parseInt($numberInput.val()) || 1;
+
+      // Réinitialiser le file input si la quantité change
+      $fileInput.val('');
+      $fileLabel.text('0 fich.');
+      updateFileInputLimit($fileInput, quantity, $fileLabel);
+    });
+
+    // ✅ Gestion de la sélection des fichiers
+    $container.on('change', '.piece-files', function () {
+      const $fileInput = $(this);
+      const $row = $fileInput.closest('tr');
+      const elementId = $row.data('piece-id');
+      const $numberInput = $row.find(`#piece_nombre_input_${elementId}`);
+      const $fileLabel = $row.find(`label[for="piece_image_input_${elementId}"]`);
+      const maxFiles = parseInt($numberInput.val()) || 1;
+      const selectedFiles = this.files;
+
+      // ✅ Vérifier si l'utilisateur a sélectionné trop de fichiers
+      if (selectedFiles.length > maxFiles) {
+        showFileError($fileInput, $fileLabel, maxFiles, selectedFiles.length);
+        // Réinitialiser le file input
+        $fileInput.val('');
+        $fileLabel.text('0 fich.');
+        return;
+      }
+
+      // ✅ Mettre à jour le label
+      $fileLabel.text(`${selectedFiles.length} fich.`);
+      clearFileError($fileInput);
     });
   }
 
   validatePiecesCollectees() {
     const errors = [];
-    const $container = $('#pieces-collecte-container-tbody');
+    const $container = $('.pieces-collecte-container-tbody');
 
     $container.find('tr[data-piece-id]').each(function () {
       const $row = $(this);
@@ -74,18 +122,26 @@ class FicheCollecteFormHandler {
       const elementLabel = $row.find('label.form-check-label').text().trim();
 
       if ($checkbox.is(':checked')) {
+        const quantity = parseInt($numberInput.val()) || 0;
+
         // ✅ Valider la quantité
-        const quantity = $numberInput.val();
-        if (!quantity || quantity.trim() === '' || parseInt(quantity) <= 0) {
-          errors.push(`${elementLabel}: La quantité est obligatoire lorsque l'élément est coché`);
+        if (!quantity || quantity <= 0) {
+          errors.push(`${elementLabel} : La quantité est obligatoire lorsque l'élément est coché`);
+          return;
         }
 
-        // ✅ Valider les images (nouvelles OU existantes)
-        const hasNewImages = $imageInput && $imageInput.files && $imageInput.files.length > 0;
-        const hasExistingImages = $row.find('.existing-image-item').length > 0;
+        // ✅ Valider le nombre d'images
+        const selectedFiles = $imageInput?.length || 0;
+        const hasExistingImages = $row.find('.existing-image-item').length;
+        const totalImages = selectedFiles + hasExistingImages;
 
-        if (!hasNewImages && !hasExistingImages) {
-          errors.push(`${elementLabel}: Les images sont obligatoires lorsque l'élément est coché`);
+        if (totalImages === 0) {
+          errors.push(`${elementLabel} : Les images sont obligatoires lorsque l'élément est coché`);
+        } else if (selectedFiles > quantity) {
+          // ✅ Vérifier que le nombre d'images ne dépasse pas la quantité
+          errors.push(
+            `${elementLabel} : Vous avez sélectionné ${selectedFiles} images mais la quantité est ${quantity}`
+          );
         }
       }
     });
