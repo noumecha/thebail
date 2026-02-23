@@ -1,0 +1,63 @@
+{# bloc reutilisable du bailleur pour le form #}
+<table class="table table-responsive table-bordered align-middle text-center">
+  <tbody>
+    <tr>
+      <td class="text-start p-0">
+        <label for="Type_personne" class="fw-bold text-start form-check-label ms-1">a. - Identification</label>
+      </td>
+      <td>
+        <div class="row">
+          <div class="col-md-12">
+            {% include "baux/widgets/field_widget.html" with list_id="Type_personne" checkbox_name="types_personnes_choice_checkbox" hidden_name="types_personnes_choice" hidden_id="types_personnes_choice_hidden" list_options=type_personnes variant="html_simple_checkbox_list" %}
+          </div>
+          <div class="col-md-12">
+            {% include "baux/widgets/field_widget.html" with style="width: 700px !important" input_id="Raison_social" input_label="Noms & prénoms/Raison Socaiale" input_type="text" input_name="Raison_social" variant="html_only" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="Nom_Prenom_Representant" input_label="Représenté par" input_type="text" input_name="Nom_Prenom_Representant" variant="html_only" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="Domicille_siege_social_bailleur" input_label="Domicilliation/Siège Social" input_type="text" input_name="Domicille_siege_social_bailleur" variant="html_only" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" settings="maxlength='14'" input_id="NIU" input_label="NIU" input_name="NIU" variant="html_only" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" settings="maxlength='20'" input_id="Telephone" input_type="text" input_label="Téléphone Bailleur" input_name="Telephone" variant="html_only" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" input_id="Num_doc" input_label="CNI Bailleur" input_type="text" input_name="Num_doc" variant="html_only" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with input_id="Date_delivrance_doc" input_label="Date délivrance CNI" input_type="date" input_name="Date_delivrance_doc" variant="html_only" %}
+          </div>
+          <div class="col-md-12 d-flex align-items-center justify-content-evenly">
+            {% include "baux/widgets/field_widget.html" with list_id="Statut_bailleur" checkbox_name="Statut_bailleur" hidden_name="statut_bailleur_choice" hidden_id="statut_bailleur_choice_hidden" list_options=statut_bailleur variant="html_simple_checkbox_list" %}
+            {% include "baux/widgets/field_widget.html" with list_id="Role_bailleur" checkbox_name="Role_bailleur" hidden_name="role_bailleur_choice" hidden_id="role_bailleur_choice_hidden" list_options=role_bailleur variant="html_simple_checkbox_list" %}
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-start p-0">
+        <label class="fw-bold text-start form-check-label ms-1">b. - Références Bancaires Valides</label>
+      </td>
+      <td class="">
+        <div class="row">
+          <div class="col-md-4">
+            {% include "baux/widgets/field_widget.html" with style="width: 200px !important" list_label="Libellé Banque" list_id=prefix|add:"-Banque" list_api_url='/api/get-banques/' placeholder="Rechercher une banque ..." variant="html_list_ajax" %}
+          </div>
+          <div class="col-md-8">
+            {% include "baux/widgets/field_widget.html" with settings="maxlength='26'" style="width: 600px !important" input_id="RIB" input_label="Numéro RIB" input_type="text" input_name="RIB" variant="html_only" %}
+          </div>
+          <div class="col-md-12">
+            {% include "baux/widgets/field_widget.html" with style="width: 700px !important" input_id="Intitule_compte" input_label="Intitulé du Compte" input_type="text" input_name="Intitule_compte" variant="html_only" %}
+          </div>
+        </div>
+      </td>
+    </tr>
+    {% if ayant_droit_bloc %}
+      {% include "baux/blocs/contrat/ayant_droit_bloc.html" %}
+    {% endif %}
+  </tbody>
+</table>

@@ -122,3 +122,19 @@
   text-align: center;
   margin-top: 1rem;
 }
+
+/* for modal positionning */
+/* Force le dropdown à s'ouvrir à la bonne position dans les modaux */
+.modal .select2-container--open .select2-dropdown {
+  position: absolute !important;
+  z-index: 10000 !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* Optionnel : si le dropdown est coupé, ajoute un padding au modal */
+.modal-content {
+  padding: 1rem;
+}

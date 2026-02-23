@@ -67,7 +67,8 @@ $(function () {
     addElementToList(obj.list_container, obj.list_input, obj.list_btn, obj.list_url);
   });
 
-  initSelect2Ajax();
+  // init select 2 on form
+  initSelect2Ajax($('#ficheCollecteForm'));
 
   // maj du champ responsable de collecte à partir du champ matricule du responsable
   $(document).on('change', '#matricule_responsable_collecte', function () {

@@ -1,0 +1,14 @@
+{# bloc reutilisable du contrat pour le form #}
+<div class="">
+  {% if show_elements_juridiques %}
+    {% include "baux/components/section_bloc.html" with number="I" title="Elements juridiques" template="baux/blocs/contrat/elements_juridiques.html" %}
+  {% endif %}
+
+  {% if show_bailleur %}
+    {% include "baux/components/section_bloc.html" with number="II" title="Bailleur" prefix='main' template="baux/blocs/contrat/bailleur_bloc.html" ayant_droit_bloc=True %}
+  {% endif %}
+
+  {% if show_attestation_non_mandatement %}
+    {% include "baux/components/section_bloc.html" with number="III" title="Attestation de non-mandatement(non-encore payé)" template="baux/blocs/contrat/attestation_non_mandatement.html" %}
+  {% endif %}
+</div>

@@ -26,7 +26,7 @@ window.configs.genericMessages = {
 function initSelect2Ajax($container = $(document), rowPrefix = null) {
   $container.find('.select2-ajax').each(function () {
     const $select = $(this);
-
+    console.log('Initialisation de Select2 pour:', $select.attr('name'));
     // Éviter de réinitialiser si déjà initialisé
     if ($select.hasClass('select2-hidden-accessible')) {
       return;
@@ -36,6 +36,9 @@ function initSelect2Ajax($container = $(document), rowPrefix = null) {
     const placeholder = $select.data('ajax-placeholder');
     const minLengthAttr = $select.attr('data-ajax-length');
     const minLength = minLengthAttr !== undefined && minLengthAttr !== '' ? parseInt(minLengthAttr) : 2;
+    // 👇 Détection automatique du bon parent
+    const $modalParent = $select.closest('.modal');
+    const $dropdownParent = $modalParent.length ? $modalParent : $container;
 
     try {
       $select.select2({
@@ -56,12 +59,14 @@ function initSelect2Ajax($container = $(document), rowPrefix = null) {
         },
         placeholder: placeholder || 'Rechercher...',
         minimumInputLength: minLength,
+        dropdownParent: $dropdownParent,
         language: {
           inputTooShort: () => 'Veuillez saisir au moins 2 caractères',
           searching: () => 'Recherche en cours...',
           noResults: () => 'Aucun résultat trouvé'
         }
       });
+
       // ✅ Si minLength = 0, charger les résultats à l'ouverture (UNE SEULE FOIS)
       if (minLength === 0) {
         $select.on('select2:open', function () {

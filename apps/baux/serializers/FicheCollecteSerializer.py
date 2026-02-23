@@ -376,7 +376,7 @@ class FicheCollecteSerializer(serializers.ModelSerializer):
                     'novembre': nm.novembre,
                     'decembre': nm.decembre,
                     'Montant_total_exercice': str(nm.Montant_total_exercice) if nm.Montant_total_exercice else None,
-                    'Visa_budgétaire': nm.Visa_budgétaire,
+                    'statut_visa_budgetaire': nm.statut_visa_budgetaire,
                     'Ref_contrat_avenant': nm.Ref_contrat_avenant
                 }
                 for nm in non_mandatements

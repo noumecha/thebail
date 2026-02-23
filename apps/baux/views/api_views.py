@@ -1,4 +1,3 @@
-# Dans votre views.py
 from django.http import JsonResponse
 from django.db.models import Q
 from django.views import View

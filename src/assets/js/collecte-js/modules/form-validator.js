@@ -62,5 +62,71 @@ export const Validators = {
     });
 
     return errors;
+  },
+
+  // Valider les données avant soumission
+  validateData(data) {
+    const errors = [];
+
+    // Validations de base
+    if (!data.Numero_fiche_de_collecte) {
+      errors.push('Le numéro de fiche de collecte est requis');
+    }
+
+    if (!data.Date_de_collecte) {
+      errors.push('La date de collecte est requise');
+    }
+
+    if (!data.agent_collecte_id) {
+      errors.push('Le responsable de collecte est requis');
+    }
+
+    if (!data.immeuble.Designation) {
+      errors.push('La désignation du bien est requise');
+    }
+
+    if (!data.immeuble.type_construction_id) {
+      errors.push('Le type de construction est requis');
+    }
+
+    if (!data.immeuble.pays) {
+      errors.push('Le pays est requis');
+    }
+    if (!data.immeuble.region) {
+      errors.push('La région est requise');
+    }
+    if (!data.immeuble.departement) {
+      errors.push('Le département est requis');
+    }
+
+    if (!data.immeuble.arrondissement) {
+      errors.push("L'arrondissement est requis");
+    }
+
+    if (!data.contrat.Numero_contrat) {
+      errors.push('Le numéro de contrat est requis');
+    }
+
+    if (!data.contrat.bailleur.Raison_social) {
+      errors.push('Le nom du bailleur est requis');
+    }
+    // validder les statut bailleur
+    // si le statut est selectionné, il faut au moins selectionner un role
+    if (data.contrat.bailleur.Statut_bailleur && !data.contrat.bailleur.Role_bailleur) {
+      errors.push('Le rôle du bailleur est requis lorsque le statut est sélectionné');
+    }
+
+    // valider les pièces collectées
+    const pieceErrors = Validators.validatePiecesCollectees();
+    if (pieceErrors.length > 0) {
+      errors.push(...pieceErrors);
+    }
+    // Valider les éléments d'immeuble
+    const elementErrors = Validators.validateElementsImmeuble();
+    if (elementErrors.length > 0) {
+      errors.push(...elementErrors);
+    }
+
+    return errors;
   }
 };

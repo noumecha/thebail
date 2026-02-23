@@ -244,5 +244,71 @@ export const FormUtils = {
     setTimeout(() => {
       window.location.href = `/collecte/list/`;
     }, 3000);
+  },
+
+  getDynamicChoiceValue(listId, returnId = true) {
+    const $list = document.getElementById(listId);
+    if (!$list) return null;
+
+    const checkedCheckbox = $list.querySelector('.dynamic-check:checked');
+    if (!checkedCheckbox) return null;
+
+    if (returnId) {
+      // ✅ Retourner l'ID pour Django
+      return checkedCheckbox.getAttribute('data-choice-id') || checkedCheckbox.value;
+    } else {
+      // Retourner le libellé
+      const label = checkedCheckbox.closest('.dynamic-option');
+      return label ? label.querySelector('span').textContent.trim() : null;
+    }
+  },
+
+  // getting values method
+  getValue(fieldId) {
+    const field = document.getElementById(fieldId);
+    return field ? field.value : null;
+  },
+
+  // getting checkbox value for yes or no
+  getCheckboxValueYesNo(fieldId) {
+    const container = $('#' + fieldId);
+    const ouiChecked = container.find('[data-field=' + fieldId + '-oui]').is(':checked');
+    const nonChecked = container.find('[data-field=' + fieldId + '-non]').is(':checked');
+    if (ouiChecked) {
+      return true;
+    } else if (nonChecked) {
+      return false;
+    }
+    return null;
+  },
+
+  // ✅ Fonction utilitaire pour convertir un fichier en base64
+  fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = error => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  },
+
+  /**
+   * message an ux tips
+   */
+  showLoader(form = null) {
+    // Afficher un message de chargement ou une animation
+    if (!form) {
+      showNotification('Chargement des informations...', 'info');
+    }
+    // Afficher un spinner ou désactiver le bouton de soumission pour indiquer que le formulaire est en cours de traitement
+    if (form) {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enregistrement...';
+    }
   }
 };
