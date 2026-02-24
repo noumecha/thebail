@@ -92,19 +92,19 @@ class FicheCollecteFormHandler {
         Periodicite_Reglement_id: FormUtils.getDynamicChoiceValue('Periodicite_Reglement_id'),
         Existence_avenant: FormUtils.getCheckboxValueYesNo('Existence_avenant'),
         bailleur: {
-          Type_personne: FormUtils.getDynamicChoiceValue('Type_personne'),
-          Raison_social: FormUtils.getValue('Raison_social'),
-          Nom_Prenom_Representant: FormUtils.getValue('Nom_Prenom_Representant'),
-          Domicille_siege_social_bailleur: FormUtils.getValue('Domicille_siege_social_bailleur'),
-          NIU: FormUtils.getValue('NIU'),
-          Telephone: FormUtils.getValue('Telephone'),
-          Num_doc: FormUtils.getValue('Num_doc'),
-          Date_delivrance_doc: FormUtils.getValue('Date_delivrance_doc'),
-          Statut_bailleur: FormUtils.getDynamicChoiceValue('Statut_bailleur'),
-          Role_bailleur: FormUtils.getDynamicChoiceValue('Role_bailleur'),
-          Banque: FormUtils.getValue('Banque'),
-          RIB: FormUtils.getValue('RIB'),
-          Intitule_compte: FormUtils.getValue('Intitule_compte'),
+          Type_personne: FormUtils.getDynamicChoiceValue('main_Type_personne'),
+          Raison_social: FormUtils.getValue('main_Raison_social'),
+          Nom_Prenom_Representant: FormUtils.getValue('main_Nom_Prenom_Representant'),
+          Domicille_siege_social_bailleur: FormUtils.getValue('main_Domicille_siege_social_bailleur'),
+          NIU: FormUtils.getValue('main_NIU'),
+          Telephone: FormUtils.getValue('main_Telephone'),
+          Num_doc: FormUtils.getValue('main_Num_doc'),
+          Date_delivrance_doc: FormUtils.getValue('main_Date_delivrance_doc'),
+          Statut_bailleur: FormUtils.getDynamicChoiceValue('main_Statut_bailleur'),
+          Role_bailleur: FormUtils.getDynamicChoiceValue('main_Role_bailleur'),
+          Banque: FormUtils.getValue('main_Banque'),
+          RIB: FormUtils.getValue('main_RIB'),
+          Intitule_compte: FormUtils.getValue('main_Intitule_compte'),
           ayants_droit: window.TableManagers.ayantsDroitManager?.collectData() || []
         },
         avenants: Collectors.collectAvenants(),
@@ -153,10 +153,10 @@ class FicheCollecteFormHandler {
       console.log('📥 Réponse serveur:', result);
 
       if (response.ok && result.success) {
-        this.showSuccess(result.message, result.data?.numero_fiche, this.form);
+        FormUtils.showSuccess(result.message, this.form);
       } else {
         FormUtils.showErrors([result.message || 'Erreur lors de la soumission'], this.form);
-        FormUtils.handleServerErrors(result);
+        FormUtils.handleServerErrors(result, this.form);
         console.error('Erreurs de validation:', result.errors);
       }
     } catch (error) {

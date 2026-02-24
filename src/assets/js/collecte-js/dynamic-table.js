@@ -1,3 +1,4 @@
+import { FormUtils } from './modules/form-utils.js';
 // exposition des managers
 window.TableManagers = window.TableManagers || {};
 
@@ -112,7 +113,7 @@ function DynamicTableManager(config) {
     updateRowNumbers();
 
     setTimeout(() => {
-      initSelect2Ajax($newRow, rowPrefix);
+      FormUtils.initSelect2Ajax($newRow, rowPrefix);
 
       // ✅ Appeler le callback personnalisé
       if (onRowCreated) {

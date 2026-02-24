@@ -16,12 +16,15 @@
 <div class="card">
   <div class="card-body">
     <form id="ficheCollecteForm" data-fiche-id="{{ fiche_id|default:'' }}" class="p-0 container-fluid" method="post">
+      <!-- block alert message -->
+      <div class="alert-block" id="alert-block"></div>
+
+      <!-- token -->
       {% csrf_token %}
 
       <!-- ===================== -->
       <!-- CHAMPS FICHE COLLECTE -->
       <!-- ===================== -->
-
       <div class="container-fluid p-0">
         <div class="row">
           <div class="table-borderless table col-12 mb-0">
@@ -64,7 +67,6 @@
       <!-- ===================== -->
       <!-- ACCORDION -->
       <!-- ===================== -->
-
       <div class="accordion mt-3" id="accordionCollecte">
 
         <!-- SECTION 1 -->
@@ -144,36 +146,13 @@
 </div>
 
 <!-- popup for adding new bailleur -->
-<div class="modal fade" id="create-bailleur-modal" tabindex="-1" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content p-0">
-            <form id="bailleur-form" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title">Enregistrement d'un Bailleur</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="bailleur-form-container">
-                      {% include "baux/blocs/contrat/bailleur_bloc.html" with prefix='popup' ayant_droit_bloc=False %}
-                    </div>
-                    <div class="alert alert-success" style="display: none;" id="form-success"></div>
-                    <div class="alert alert-danger" style="display: none;" id="form-error"></div>
-                    <input type="hidden" value="" name="id" id="update-id">
-                </div>
-                <div class="modal-footer flex-row-reverse">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="submit" id="save-btn" class="btn btn-primary">Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+{% include "baux/components/dynamic_modal.html" with modal_id="create-bailleur-modal" form_id="bailleur-form" title="Enregistrement d'un bailleur" form_template="baux/blocs/contrat/bailleur_bloc.html" form_action="/api/bailleur/create/" %}
+
 {% endblock %}
 {% block extra_js %}
-    <script src="{% static 'js/collecte-js/config.js' %}"></script>
-    <script src="{% static 'js/collecte-js/fiche.js' %}"></script>
-    <script src="{% static 'js/collecte-js/dynamic-table.js' %}"></script>
-    <script src="{% static 'js/collecte-js/popup.js' %}"></script>
-    <script type="module" src="{% static 'js/collecte.js' %}"></script>
+  <script src="{% static 'js/collecte-js/config.js' %}"></script>
+  <script type="module" src="{% static 'js/collecte-js/fiche.js' %}"></script>
+  <script type="module" src="{% static 'js/collecte-js/dynamic-table.js' %}"></script>
+  <script type="module" src="{% static 'js/collecte-js/popup-init.js' %}"></script>
+  <script type="module" src="{% static 'js/collecte.js' %}"></script>
 {% endblock %}

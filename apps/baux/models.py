@@ -347,7 +347,7 @@ class Bailleurs(models.Model):
     # specifics fields
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
     Nom_prenom = models.CharField(max_length=50, null=True, blank=True, unique=True)
-    Raison_social = models.CharField(max_length=200, null=True, blank=True)
+    Raison_social = models.CharField(max_length=200, null=False, unique=True)
     NIU = models.CharField(max_length=14, null=True, blank=True, unique=True)
     Maticule = models.CharField(max_length=14, null=True, blank=True)
     Telephone = models.CharField(max_length=20, null=True)

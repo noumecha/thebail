@@ -208,7 +208,7 @@ def create_fiche_collecte(request):
 
             return Response({
                 'success': True,
-                'message': 'Fiche de collecte créée avec succès',
+                'message': f'Fiche de collecte numéro : {fiche.Numero_fiche_de_collecte} créée avec succès',
                 'data': {
                     'fiche_id': fiche.id,
                     'numero_fiche': fiche.Numero_fiche_de_collecte

@@ -113,7 +113,7 @@ export const FormUtils = {
   },
 
   // ✅ Gérer les erreurs du serveur de manière structurée
-  handleServerErrors(result) {
+  handleServerErrors(result, form) {
     const errors = [];
 
     if (result.message) {
@@ -131,7 +131,7 @@ export const FormUtils = {
       });
     }
 
-    this.showErrors(errors.length > 0 ? errors : ['Erreur de validation inconnue']);
+    this.showErrors(errors.length > 0 ? errors : ['Erreur de validation inconnue'], form);
   },
 
   // ✅ Messages d'erreur personnalisés
@@ -191,9 +191,10 @@ export const FormUtils = {
   },
 
   showErrors(errors, form = null) {
-    // Supprimer les anciennes alertes
-    const oldAlerts = form.querySelectorAll('.alert-danger');
-    oldAlerts.forEach(alert => alert.remove());
+    if (form) {
+      const oldAlerts = form.querySelectorAll('.alert-danger');
+      oldAlerts.forEach(alert => alert.remove());
+    }
 
     const alertHtml = `
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -206,8 +207,9 @@ export const FormUtils = {
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     `;
-
-    form.insertAdjacentHTML('afterbegin', alertHtml);
+    // append error on alert-block
+    const errorBlock = form.querySelector('#alert-block');
+    errorBlock.innerHTML = alertHtml;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 
@@ -222,7 +224,7 @@ export const FormUtils = {
     }
   },
 
-  showSuccess(message, ficheId, form = null) {
+  showSuccess(message, form = null) {
     // Supprimer les anciennes alertes
     const oldAlerts = form.querySelectorAll('.alert-danger');
     oldAlerts.forEach(alert => alert.remove());
@@ -232,12 +234,12 @@ export const FormUtils = {
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <h5 class="alert-heading"><i class="bx bx-check-circle"></i> Succès</h5>
         <p>${message}</p>
-        <p class="mb-0">Numéro de fiche: <strong>${ficheId}</strong></p>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     `;
-
-    form.insertAdjacentHTML('afterbegin', alertHtml);
+    // append error on alert-block
+    const alertBlock = form.querySelector('#alert-block');
+    alertBlock.innerHTML = alertHtml;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Rediriger après 3 secondes
@@ -310,5 +312,226 @@ export const FormUtils = {
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enregistrement...';
     }
+  },
+
+  /**
+   * init select2 with ajax for a select element
+   * @returns void
+   */
+  initSelect2Ajax($container = $(document), rowPrefix = null) {
+    $container.find('.select2-ajax').each(function () {
+      const $select = $(this);
+      // Éviter de réinitialiser si déjà initialisé
+      if ($select.hasClass('select2-hidden-accessible')) {
+        return;
+      }
+
+      const ajaxUrl = $select.data('ajax-url');
+      const placeholder = $select.data('ajax-placeholder');
+      const minLengthAttr = $select.attr('data-ajax-length');
+      const minLength = minLengthAttr !== undefined && minLengthAttr !== '' ? parseInt(minLengthAttr) : 2;
+      // 👇 Détection automatique du bon parent
+      const $modalParent = $select.closest('.modal');
+      const $dropdownParent = $modalParent.length ? $modalParent : $container;
+
+      try {
+        $select.select2({
+          ajax: {
+            url: ajaxUrl,
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return { q: params.term || '', page: params.page || 1 };
+            },
+            processResults: function (data) {
+              return {
+                results: data.results,
+                pagination: { more: data.pagination.more }
+              };
+            },
+            cache: true
+          },
+          placeholder: placeholder || 'Rechercher...',
+          minimumInputLength: minLength,
+          dropdownParent: $dropdownParent,
+          language: {
+            inputTooShort: () => 'Veuillez saisir au moins 2 caractères',
+            searching: () => 'Recherche en cours...',
+            noResults: () => 'Aucun résultat trouvé'
+          }
+        });
+
+        // ✅ Si minLength = 0, charger les résultats à l'ouverture (UNE SEULE FOIS)
+        if (minLength === 0) {
+          $select.on('select2:open', function () {
+            // Charger les résultats seulement si le champ est vide
+            if (!$(this).val()) {
+              $(this).data('select2').trigger('query', { term: '' });
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Erreur Select2:', error);
+      }
+    });
+  },
+
+  /**
+   * toggle checkbox with dynamic behavior (show/hide input, update hidden field, double unchecked)
+   * @param {string} listId - the id of the checkbox list container
+   * @param {HTMLElement} checkbox - the checkbox that triggered the event
+   * @param {string} dynamicCheckClass - the class of the checkboxes in the list
+   * @param {string} dynamicOptionClass - the class of the option container (used to find the input to show/hide)
+   * @param {string} dynamicInputClass - the class of the input to show/hide
+   * @param {boolean} doubleUnchecked - if true, when an option is unchecked, the other option will be checked (used for yes/no options)
+   * @param {string|null} hiddenId - the id of the hidden input to update with the selected value (optional)
+   * @param {function|null} onToggle - a callback function that will be called when an option is toggled, with the signature (isChecked, value) (optional)
+   * @returns void
+   */
+  toggleCheck({
+    listId,
+    checkbox,
+    dynamicCheckClass,
+    dynamicOptionClass,
+    dynamicInputClass,
+    doubleUnchecked = false,
+    hiddenId,
+    onToggle = null
+  }) {
+    const $list = $('#' + listId);
+    const $cb = $(checkbox);
+    const label = $cb.val();
+
+    const $container = $cb.closest('.' + dynamicOptionClass);
+    const $xInput = $container.find('.' + dynamicInputClass);
+
+    // 1️⃣ décocher les autres
+    $list
+      .find('.' + dynamicCheckClass)
+      .not($cb)
+      .prop('checked', false)
+      .closest('.' + dynamicOptionClass)
+      .find('.' + dynamicInputClass)
+      .addClass('d-none');
+
+    // 2️⃣ lorsque l'option cochée est décoché on coche l'autre option (oui/non) et si l'option doubleUnchecked est défini
+    if (!$cb.is(':checked') && doubleUnchecked) {
+      // Récupérer l'autre checkbox qui vient d'être cochée
+      const $otherCb = $list.find('.' + dynamicCheckClass).not($cb);
+      $otherCb
+        .prop('checked', true)
+        .closest('.' + dynamicOptionClass)
+        .find('.' + dynamicInputClass)
+        .removeClass('d-none');
+
+      // ✅ Appeler onToggle avec les valeurs de l'AUTRE checkbox (celle qui vient d'être activée)
+      onToggle && onToggle(true, $otherCb.val());
+    } else {
+      $xInput.removeClass('d-none').focus();
+      onToggle && onToggle($cb.is(':checked'), label);
+    }
+
+    if (hiddenId) {
+      const value = $cb.is(':checked') ? label : '';
+      this.updateHidden(value, hiddenId);
+    }
+  },
+
+  /**
+   *
+   */
+  updateHidden(value, hiddenId) {
+    $('#' + hiddenId).val(value);
+  },
+
+  /**
+   *
+   */
+  addToList(id, label, listId) {
+    const $label = $(`
+      <label class="d-flex align-items-center gap-2 dynamic-option">
+        <input type="checkbox"
+          name="${listId}_checkbox"
+          value="${id || label}"
+          class="form-check-input dynamic-check">
+        <span class="fw-bold">${label}</span>
+      </label>
+    `);
+
+    $list = $('#' + listId);
+    $list.append($label);
+    $label.find('.dynamic-check').change();
+  },
+
+  /**
+   * init a dynamic choice list with add new option functionality
+   * @param {*} listId
+   * @param {*} hiddenId
+   * @param {*} newInputId
+   * @param {*} formWrapper
+   * @param {*} addBtnId
+   * @param {*} url
+   */
+  initDynamicChoiceList(listId, hiddenId, newInputId, formWrapper, addBtnId, url) {
+    const $list = $('#' + listId);
+
+    $list.on('change', '.dynamic-check', function () {
+      toggleCheck({
+        listId: listId,
+        checkbox: this,
+        dynamicCheckClass: 'dynamic-check',
+        dynamicOptionClass: 'dynamic-option',
+        dynamicInputClass: 'dynamic-x-input',
+        hiddenId: hiddenId
+      });
+    });
+
+    // save option to db and add to the list
+    $('#' + addBtnId).click(function () {
+      const val = $('#' + newInputId)
+        .val()
+        .trim();
+      if (!val) return;
+      console.log('token: ', this.getCSRFToken(formWrapper));
+      console.log('list id ', listId);
+      console.log('data sent: ', { label: val, model: $('#' + listId).data('model') });
+      if (url) {
+        $.post({
+          url: url,
+          data: {
+            label: val,
+            model: $('#' + listId).data('model')
+          },
+          headers: {
+            'X-CSRFToken': this.getCSRFToken(formWrapper)
+          }
+        }).done(function (res) {
+          this.addToList(res.id, res.label, listId);
+        });
+      } else {
+        this.addToList(null, val, listId);
+      }
+      $('#' + newInputId).val('');
+    });
+  },
+
+  /**
+   * get csrf token from cookie or from form input
+   */
+  getCSRFToken(formWrapper = null) {
+    if (formWrapper) {
+      const token = $('#' + formWrapper)
+        .find('input[name="csrfmiddlewaretoken"]')
+        .val();
+      if (token) return token;
+    }
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith('csrftoken=')) {
+        return cookie.substring('csrftoken='.length);
+      }
+    }
+    return '';
   }
 };
