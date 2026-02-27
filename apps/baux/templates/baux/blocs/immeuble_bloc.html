@@ -1,0 +1,22 @@
+{# bloc reutilisable de l'immeuble pour le form #}
+<div class="">
+  {% if show_identification %}
+    {% include "baux/components/section_bloc.html" with number="I" title="Identification" template="baux/blocs/immeuble/identification.html" %}
+  {% endif %}
+
+  {% if show_localisation %}
+    {% include "baux/components/section_bloc.html" with number="II" title="Localisation" template="baux/blocs/immeuble/localisation.html" %}
+  {% endif %}
+
+  {% if show_etat_physique %}
+    {% include "baux/components/section_bloc.html" with number="III" title="Etat physique du bâtiment" template="baux/blocs/immeuble/etat_physique.html" %}
+  {% endif %}
+
+  {% if show_description %}
+    {% include "baux/components/section_bloc.html" with number="IV" title="Description de la bâtisse" template="baux/widgets/immeuble_elements.html" %}
+  {% endif %}
+
+  {% if show_occupants %}
+    {% include "baux/components/section_bloc.html" with number="V" title="Occupants actuels de l'immeuble" template="baux/blocs/immeuble/occupants.html" %}
+  {% endif %}
+</div>

@@ -1,0 +1,53 @@
+{# localisation bloc of immeuble form #}
+<table class="table table-bordered align-middle text-center">
+  <tbody>
+    <!-- localisation géographique -->
+    <tr>
+      <td class="text-start pt-0 pb-0 ps-0" rowspan="3">
+        <label for="pays" class="fw-bold text-start form-check-label ms-1">a. - Localisation géographique</label>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-start">
+        <div class="row">
+          <div class="col-md-4">
+            {% include "baux/widgets/field_widget.html" with style="width: 250px !important" list_label="Pays" list_id="pays" list_api_url='/api/get-pays/' placeholder="Rechercher un pays ..." variant="html_list_ajax" %}
+          </div>
+          <div class="col-md-4">
+            {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id="Ville" input_label="Ville" input_type="text" input_name="ville" variant="html_only" %}
+          </div>
+          <div class="col-md-4">
+            {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id="Rue" input_label="Rue" input_type="text" input_name="Rue" variant="html_only" %}
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-start">
+        <div class="row">
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with settings="readonly disabled" style="width: 300px !important" list_label="Région" list_id="region" list_api_url='/api/get-regions/' placeholder="Rechercher une région ..." variant="html_list_ajax" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with settings="readonly disabled" style="width: 300px !important" list_label="Departement" list_id="departement" list_api_url='/api/get-departement/' placeholder="Rechercher un département ..." variant="html_list_ajax" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with style="width: 300px !important" list_label="Arrondissement" list_id="arrondissement" list_api_url='/api/get-arrondissement/' placeholder="Rechercher un arrondissement ..." variant="html_list_ajax" %}
+          </div>
+          <div class="col-md-6">
+            {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="Quartier" input_label="Quartier" input_type="text" input_name="Quartier" variant="html_only" %}
+          </div>
+        </div>
+      </td>
+    </tr>
+    <!-- coordonnées GPS -->
+    <tr>
+      <td class="text-start p-0">
+        <label for="Coordonee_gps" class="fw-bold text-start form-check-label ms-1">c. - Coordonnées GPS</label>
+      </td>
+      <td class="text-start p-0">
+        {% include "baux/widgets/field_widget.html" with input_id="Coordonee_gps" input_type="text" input_name="Coordonee_gps" variant="html_no_label" %}
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,33 @@
+{# bloc reutilisable des ayant droits #}
+<tr>
+  <td class="text-start p-0">
+    <label class="fw-bold text-start form-check-label ms-1">c. - Ayants Droits du Bailleur</label>
+  </td>
+  <td class="p-0">
+    <div>
+      <table class="table table-responsive table-bordered" id="ayants-droit-table">
+        <thead>
+          <tr>
+            <th style="width: 50px;">N°</th>
+            <th>Noms & prénoms</th>
+            <th>Contact</th>
+            <th>Référence Grosse</th>
+            <th>Date de délivrance grosse</th>
+            <th>Référence Certificat non appel</th>
+            <th>Date délivrance Certificat</th>
+            <th style="width: 80px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ayants-droit-tbody"></tbody>
+      </table>
+      <div class="d-flex align-items-center justify-content-between mt-2">
+        <button type="button" class="btn btn-sm btn-primary" id="add-ayant-droit-row">
+          <i class="bx bx-plus"></i> Ajouter un ayant droit
+        </button>
+        <small class="text-muted">
+          <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement
+        </small>
+      </div>
+    </div>
+  </td>
+</tr>

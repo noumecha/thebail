@@ -1,0 +1,64 @@
+{# bloc reutilisable des occupants #}
+<!-- occupant pour résidence -->
+<ul class="mb-0">
+  <li type="square"><span class="fw-bold">Logements</span></li>
+</ul>
+<table class="table table-bordered align-middle text-center" id="occupants-logements-table">
+  <thead>
+    <tr>
+      <th>Noms & prénoms</th>
+      <th>Administration de rattachement(Ministère)</th>
+      <th>Fonction ou qualité de l'occupant</th>
+      <th>Matricule</th>
+      <th>Référence de l'acte juridique d'attribution</th>
+      <th>Date de signature de l'acte</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="occupants-logements-tbody"></tbody>
+</table>
+<div class="d-flex align-items-center justify-content-between mt-2">
+  <button type="button" class="btn btn-sm btn-primary" id="add-occupant-logement-row">
+    <i class="bx bx-plus"></i> Ajouter un occupant
+  </button>
+  <!-- div class="d-flex align-item-center justify-content-center">
+    <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
+    <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
+      <i>y-a til d'autre occupant pour le même contrat ?</i>
+    </label>
+  </div -->
+  <small class="text-muted">
+    <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement
+  </small>
+</div>
+<!-- occupant pour bureaux -->
+<ul class="mb-0 mt-3">
+  <li type="square"><span class="fw-bold">Bureaux</span></li>
+</ul>
+<table class="table table-bordered align-middle text-center" id="occupants-bureaux-table">
+  <thead>
+    <tr>
+      <th>Service administratif Occupant</th>
+      <th>Administration (Ministère)</th>
+      <th>Fonction du plus haut responsable du service</th>
+      <th>Référence de l'acte juridique d'attribution du MINDCAF</th>
+      <th>Date signature de l'acte</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="occupants-bureaux-tbody"></tbody>
+</table>
+<div class="d-flex align-items-center justify-content-between mt-2">
+  <button type="button" class="btn btn-sm btn-primary" id="add-occupant-bureau-row">
+    <i class="bx bx-plus"></i> Ajouter un occupant
+  </button>
+  <!--div class="d-flex align-item-center justify-content-center">
+    <input type="checkbox" name="add_another_occupant_logement" id="add_another_occupant_logement" class="">
+    <label for="add_another_occupant_logement" class="form-label fs-6 text-lowercase ms-1 mb-0">
+      <i>y-a til d'autres services occupants le même immeuble ?</i>
+    </label>
+  </div -->
+  <small class="text-muted">
+    <i class="bx bx-info-circle"></i> Une nouvelle ligne sera ajoutée automatiquement
+  </small>
+</div>

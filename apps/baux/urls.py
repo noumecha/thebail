@@ -1,5 +1,7 @@
 from django.urls import path
 from django.contrib import admin
+
+from apps.baux.views import api_bailleur_views
 from .views import *
 from django.urls import re_path as url
 from rest_framework.routers import DefaultRouter
@@ -119,6 +121,7 @@ urlpatterns = [
     path('api/fiches/create/', api_views.create_fiche_collecte, name='create_fiche_collecte'),
     path('api/fiches/<int:fiche_id>/', get_fiche_collecte, name='get_fiche_collecte'),
     path('api/fiches/<int:fiche_id>/update/', update_fiche_collecte, name='update_fiche_collecte'),
+    path('api/bailleur/create/', api_bailleur_views.create_bailleur, name='create_bailleur'),
 ]
 urlpatterns += router.urls
 if settings.DEBUG:

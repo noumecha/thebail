@@ -1,3 +1,5 @@
+import { FormUtils } from './modules/form-utils.js';
+import { bindStatutRoleDependency } from './modules/dependencies.js';
 $(function () {
   // gestion dynamique avec pour les modals et les éléments de types list avec checkbox
   const ajax_modal_objects = [
@@ -67,7 +69,8 @@ $(function () {
     addElementToList(obj.list_container, obj.list_input, obj.list_btn, obj.list_url);
   });
 
-  initSelect2Ajax();
+  // init select 2 on form
+  FormUtils.initSelect2Ajax($('#ficheCollecteForm'));
 
   // maj du champ responsable de collecte à partir du champ matricule du responsable
   $(document).on('change', '#matricule_responsable_collecte', function () {
@@ -163,9 +166,9 @@ $(function () {
 
   // gérer les checkbox oui/non des éléments de type oui/non
   const object_to_toggle = [
-    { listId: 'Type_personne', hiddenId: 'types_personnes_choice' },
-    { listId: 'Statut_bailleur', hiddenId: 'statut_bailleur_choice' },
-    { listId: 'Role_bailleur', hideenId: 'role_bailleur_choice' },
+    { listId: 'main_Type_personne', hiddenId: 'main_types_personnes_choice' },
+    { listId: 'main_Statut_bailleur', hiddenId: 'main_statut_bailleur_choice' },
+    { listId: 'main_Role_bailleur', hiddenId: 'main_role_bailleur_choice' },
     { listId: 'Existence_visa_budgétaire', hiddenId: null },
     { listId: 'tacite_reconduction', hiddenId: null },
     { listId: 'Existence_avenant', hiddenId: null },
@@ -195,13 +198,5 @@ $(function () {
 
   // disabled an enable Role_bailleur base on Statut_bailleur checked or no
   // on init check directly if statut_bailleur is checked
-  const isStatutChecked = $('#Statut_bailleur .dynamic-check').is(':checked');
-  $('#Role_bailleur .dynamic-check').prop('disabled', !isStatutChecked);
-  $('#Statut_bailleur').on('change', '.dynamic-check', function () {
-    const isChecked = $(this).is(':checked');
-    $('#Role_bailleur .dynamic-check').prop('disabled', !isChecked);
-    if (!isChecked) {
-      $('#Role_bailleur .dynamic-check').prop('checked', false).trigger('change');
-    }
-  });
+  bindStatutRoleDependency('main');
 });

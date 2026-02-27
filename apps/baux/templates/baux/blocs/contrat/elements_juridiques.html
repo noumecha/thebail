@@ -1,0 +1,245 @@
+{# elements juridiques du contrat #}
+<table class="table table-bordered align-middle text-center">
+  <tbody>
+    <tr>
+      <td class="text-start ps-0 pt-0 pb-0">
+        <label for="TypeContrat" class="fw-bold text-start form-check-label ms-1">a. - Typologie</label>
+      </td>
+      <td class="text-start p-0">
+        {% include "baux/widgets/dynamic_choice_list.html" with list_id="TypeContrat" checkbox_name="typecontrat_choice_checkbox" hidden_name="typecontrat_choice" hidden_id="typecontrat_choice_hidden" add_wrapper_id="new_typecontrat_wrapper" new_input_id="new_typecontrat_input" add_btn_id="add_typecontrat_btn" choices=type_contrats selected=form.initial.construction_choice model="TypeContrats" %}
+      </td>
+    </tr>
+    <tr>
+      <td class="text-start  ps-0 pt-0 pb-0" rowspan="2">
+        <label for="Numero_contrat" class="fw-bold text-start form-check-label ms-1">b. - Contrat</label>
+      </td>
+      <td class="text-start">
+      <div class="row">
+        <div class="col-md-8">
+          {% include "baux/widgets/field_widget.html" with style="width: 500px !important" input_id="Numero_contrat" input_label="Référence ou Numéro du Contrat" input_type="text" input_name="Numero_contrat" variant="html_only" %}
+        </div>
+        <div class="col-md-4">
+          {% include "baux/widgets/field_widget.html" with input_id="Date_Signature_contrat" input_label="Date Signature" input_type="date" input_name="Date_Signature_contrat" variant="html_only" %}
+        </div>
+        <div class="col-md-8">
+          {% include "baux/widgets/field_widget.html" with style="width: 400px !important" input_id="Fonction_signataire_contrat" input_label="Qualité, fonction, ou sigles du ou des Signataires" input_type="text" input_name="Fonction_signataire_contrat" variant="html_only" %}
+        </div>
+        <div class="col-md-4">
+          {% include "baux/widgets/field_widget.html" with input_id="Date_effet_contrat" input_label="Date d'effet" input_type="date" input_name="Date_effet_contrat" variant="html_only" %}
+        </div>
+        <div class="col-md-6">
+          {% include "baux/widgets/field_widget.html" with input_id="Existence_visa_budgétaire" checkbox_name="Existence_visa_budgétaire" input_label="Existence du visa bugetaire sur le Contrat ?" input_name="Existence_visa_budgétaire" variant="html_checkbox" %}
+        </div>
+        <div class="col-md-3">
+          {% include "baux/widgets/field_widget.html" with style="width: 120px !important" input_id="Duree_Contrat" input_type="number" input_label="Durée du contrat" input_name="Duree_Contrat" variant="html_only" %}
+        </div>
+        <div class="col-md-3">
+          {% include "baux/widgets/field_widget.html" with input_id="Tacite_reconduction_contrat" checkbox_name="Tacite_reconduction_contrat" input_label="Tacite reconduction ?" input_name="Tacite_reconduction_contrat" variant="html_checkbox" %}
+        </div>
+        <div class="col-md-6">
+          {% include "baux/widgets/field_widget.html" with input_id="Regime_fiscal_contrat" input_label="Régime fiscal applicable" input_type="text" input_name="Regime_fiscal_contrat" variant="html_only" %}
+        </div>
+        <div class="col-md-3">
+          {% include "baux/widgets/field_widget.html" with style="width: 120px !important" input_id="Montant_loyer_mensuel" input_label="Montant loyer mensuel (TTC)" input_type="number" input_name="Montant_loyer_mensuel" variant="html_only" %}
+        </div>
+        <div class="col-md-3">
+          {% include "baux/widgets/field_widget.html" with style="width: 120px !important" list_id="Devise" list_options=devises variant="html_simple_list" label="Devise" %}
+        </div>
+        <div class="col-md-12">
+          {% include "baux/widgets/field_widget.html" with input_id="Existence_avenant" checkbox_name="Existence_avenant" input_label="Existence d'au moins un avenant attaché au présent contrat ?" input_name="Existence_avenant" variant="html_checkbox" %}
+        </div>
+      </div>
+    </td>
+    </tr>
+    <tr>
+      <td class="text-start">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- avenant 1 du contrat inital -->
+            <table class="table table-borderless">
+              <tr>
+                <td class="text-start p-0" colspan="2">
+                  {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="reference_avenant_1" input_label="Référence de l'avenant N° 01" input_type="text" input_name="reference_avenant_1" variant="html_only" %}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-start p-0 pe-1">
+                  {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_1" input_type="date" input_label="Date signature" input_name="date_signature_avenant_1" variant="html_only" %}
+                </td>
+                <td class="text-start p-0 ps-1">
+                  {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_1" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_1" variant="html_only" %}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="p-0">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th class="text-center text-capitalize p-0">
+                          <i>Avenant N°01</i>
+                        </th>
+                        <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
+                          Ancienne valeur
+                        </th>
+                        <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
+                          Nouvelle valeur
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          Nom & prénoms ou raison sociale du bailleur
+                        </td>
+                        <td class="p-0">
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_1_ancien_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
+                        </td>
+                        <td class="p-0">
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_1_nouveau_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Montant Loyer Mensuel (TTC)
+                        </td>
+                        <td class="p-0">
+                          {% include "baux/widgets/field_widget.html" with input_id="avenant_1_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_1_ancienmontant_loyer_mensuel" variant="html_no_label" %}
+                        </td>
+                        <td class="p-0">
+                          {% include "baux/widgets/field_widget.html" with input_id="avenant_1_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_1_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="p-0">
+                  {% include "baux/widgets/field_widget.html" with input_id="statut_visa_budgetaire_avenant_1" checkbox_name="statut_visa_budgetaire_avenant_1" input_label="Existence du visa budgétaire sur l'avenant N°01 ?" input_name="statut_visa_budgetaire_avenant_1" variant="html_checkbox" %}
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <!-- avenant 2 du contrat inital -->
+            <table class="table table-borderless">
+              <tr>
+                <td class="text-start p-0" colspan="2">
+                  {% include "baux/widgets/field_widget.html" with style="width: 300px !important" input_id="reference_avenant_2" input_label="Référence de l'avenant N° 02" input_type="text" input_name="reference_avenant_2" variant="html_only" %}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-start p-0 pe-1">
+                  {% include "baux/widgets/field_widget.html" with input_id="date_signature_avenant_2" input_type="date" input_label="Date signature" input_name="date_signature_avenant_2" variant="html_only" %}
+                </td>
+                <td class="text-start p-0 ps-1">
+                  {% include "baux/widgets/field_widget.html" with input_id="date_effet_avenant_2" input_type="date" input_label="Date d'effet" input_name="date_effet_avenant_2" variant="html_only" %}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="p-0">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th class="text-center text-capitalize p-0">
+                          <i>Avenant N°02</i>
+                        </th>
+                        <th class="text-center text-capitalize  bg-secondary-subtle ps-1 p-0 pe-1">
+                          Ancienne valeur
+                        </th>
+                        <th class="text-center text-capitalize bg-secondary-subtle ps-1 p-0 pe-1">
+                          Nouvelle valeur
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          Nom & prénoms ou raison sociale du bailleur
+                        </td>
+                        <td class="p-0">
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_2_ancien_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
+                        </td>
+                        <td class="p-0">
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_2_nouveau_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Montant Loyer Mensuel (TTC)
+                        </td>
+                        <td class="p-0">
+                          {% include "baux/widgets/field_widget.html" with input_id="avenant_2_ancienmontant_loyer_mensuel" input_type="number" input_name="avenant_2_ancienmontant_loyer_mensuel" variant="html_no_label" %}
+                        </td>
+                        <td class="p-0">
+                          {% include "baux/widgets/field_widget.html" with input_id="avenant_2_nouveaumontant_loyer_mensuel" input_type="number" input_name="avenant_2_nouveaumontant_loyer_mensuel" variant="html_no_label" %}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="p-0">
+                  {% include "baux/widgets/field_widget.html" with input_id="statut_visa_budgetaire_avenant_2" checkbox_name="statut_visa_budgetaire_avenant_2" input_label="Existence du visa budgétaire sur l'avenant N°02 ?" input_name="statut_visa_budgetaire_avenant_2" variant="html_checkbox" %}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-start ps-0 pt-0 pb-0">
+        <label for="Periodicite_Reglement_id" class="fw-bold text-start form-check-label ms-1">d. - Périodicité de règlement selon le contrat</label>
+      </td>
+      <td class="text-start p-0">
+        {% include "baux/widgets/dynamic_choice_list.html" with list_id="Periodicite_Reglement_id" checkbox_name="Periodicite_Reglement" hidden_name="periodicitereglement_choice" hidden_id="periodicitereglement_choice_hidden" add_wrapper_id="new_periodicitereglement_wrapper" new_input_id="new_periodicitereglement_input" add_btn_id="add_periodicitereglement_btn" choices=periodicite_reglements model="PeriodiciteReglement" %}
+      </td>
+    </tr>
+  </tbody>
+</table>

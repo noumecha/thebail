@@ -1,14 +1,3 @@
-// function to set select2 on element of type select
-function setSelect2(selector, placeholder, modalId) {
-  if ($(selector).is('select')) {
-    $(selector).select2({
-      placeholder: placeholder,
-      allowClear: true,
-      dropdownParent: $(modalId)
-    });
-  }
-}
-
 // set the success message after form submission is successful
 function setMessage(msg, id) {
   const msgBlock = $(id);
@@ -414,24 +403,6 @@ $(document).on('change', 'input[type="file"][multiple]', function () {
 });
 
 // functions for collecte js class
-// getting values method
-function getValue(fieldId) {
-  const field = document.getElementById(fieldId);
-  return field ? field.value : null;
-}
-
-// getting checkbox value for yes or no
-function getCheckboxValueYesNo(fieldId) {
-  const container = $('#' + fieldId);
-  const ouiChecked = container.find('[data-field=' + fieldId + '-oui]').is(':checked');
-  const nonChecked = container.find('[data-field=' + fieldId + '-non]').is(':checked');
-  if (ouiChecked) {
-    return true;
-  } else if (nonChecked) {
-    return false;
-  }
-  return null;
-}
 
 // getting value for simple checkbox
 function getCheckboxValue(fieldId) {
@@ -440,19 +411,6 @@ function getCheckboxValue(fieldId) {
   return checkbox ? checkbox.checked : false;
 }
 
-// ✅ Fonction utilitaire pour convertir un fichier en base64
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      resolve(reader.result);
-    };
-    reader.onerror = error => {
-      reject(error);
-    };
-    reader.readAsDataURL(file);
-  });
-}
 // ✅ Fonction récursive pour aplatir les erreurs imbriquées
 function flattenErrors(errors, prefix = '') {
   const flatErrors = [];
@@ -565,20 +523,4 @@ function clearFileError($fileInput) {
   const $wrapper = $fileInput.closest('.file-upload-wrapper');
   $wrapper.find('.file-error').remove();
   $fileInput.removeClass('is-invalid');
-}
-
-/**
- * message an ux tips
- */
-function showLoader(form = null) {
-  // Afficher un message de chargement ou une animation
-  if (!form) {
-    showNotification('Chargement des informations...', 'info');
-  }
-  // Afficher un spinner ou désactiver le bouton de soumission pour indiquer que le formulaire est en cours de traitement
-  if (form) {
-    const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enregistrement...';
-  }
 }
