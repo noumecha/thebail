@@ -92,10 +92,32 @@
                           Nom & prénoms ou raison sociale du bailleur
                         </td>
                         <td class="p-0">
-                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_1_ancien_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
                         </td>
                         <td class="p-0">
-                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_1_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_1_nouveau_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
                         </td>
                       </tr>
                       <tr>
@@ -157,21 +179,33 @@
                         <td>
                           Nom & prénoms ou raison sociale du bailleur
                         </td>
-                        <td class="p-0 d-flex flex-column">
-                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
-                          <button
-                            type="button"
-                            class="btn btn-primary"
-                            data-bs-toggle="modal"
-                            id="add-button"
-                            data-main-list="avenant_2_ancien_bailleurs_list"
-                            data-bs-target="#create-bailleur-modal"
-                          >
-                            <i class="bx bx-plus"></i> Nouveau bailleur
-                          </button>
+                        <td class="p-0">
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_ancien_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_2_ancien_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
                         </td>
                         <td class="p-0">
-                          {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                          <div class="d-flex flex-column">
+                            {% include "baux/widgets/field_widget.html" with style="width: 200px !important;" list_id="avenant_2_nouveau_bailleurs_list" list_api_url='/api/get-bailleurs/' placeholder="Rechercher un bailleur ..." variant="html_list_ajax" %}
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-bs-toggle="modal"
+                              data-main-list="avenant_2_nouveau_bailleurs_list"
+                              data-bs-target="#create-bailleur-modal"
+                            >
+                              <i class="bx bx-plus"></i> Nouveau bailleur
+                            </button>
+                          </div>
                         </td>
                       </tr>
                       <tr>

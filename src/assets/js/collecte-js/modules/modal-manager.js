@@ -2,6 +2,7 @@ import { FormUtils } from './form-utils.js';
 export class ModalManager {
   constructor(config) {
     this.modalId = config.modalId;
+    this.mainListId = config.mainListId;
     this.formId = config.formId;
     this.onSuccess = config.onSuccess || null;
     this.onOpen = config.onOpen || null;
@@ -14,8 +15,11 @@ export class ModalManager {
   init() {
     const $modal = $(this.modalId);
 
-    $modal.on('shown.bs.modal', () => {
+    $modal.on('shown.bs.modal', event => {
       if (this.onOpen) this.onOpen($modal);
+      const button = $(event.relatedTarget);
+      const mainList = button.data('main-list');
+      this.currentMainListId = mainList ? '#' + mainList : this.mainListId;
     });
 
     $modal.on('hidden.bs.modal', () => {
@@ -51,7 +55,7 @@ export class ModalManager {
       const result = await response.json();
       console.log('📥 Réponse serveur:', result);
       if (response.ok && result.success) {
-        if (this.onSuccess) this.onSuccess(result);
+        if (this.onSuccess) this.onSuccess(result, this.currentMainListId);
       } else {
         FormUtils.showErrors([result.message || 'Erreur lors de la soumission'], form);
         FormUtils.handleServerErrors(result, form);

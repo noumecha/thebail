@@ -1,4 +1,5 @@
 import { FormUtils } from './modules/form-utils.js';
+import { bindStatutRoleDependency } from './modules/dependencies.js';
 $(function () {
   // gestion dynamique avec pour les modals et les éléments de types list avec checkbox
   const ajax_modal_objects = [
@@ -197,13 +198,5 @@ $(function () {
 
   // disabled an enable Role_bailleur base on Statut_bailleur checked or no
   // on init check directly if statut_bailleur is checked
-  const isStatutChecked = $('#Statut_bailleur .dynamic-check').is(':checked');
-  $('#Role_bailleur .dynamic-check').prop('disabled', !isStatutChecked);
-  $('#Statut_bailleur').on('change', '.dynamic-check', function () {
-    const isChecked = $(this).is(':checked');
-    $('#Role_bailleur .dynamic-check').prop('disabled', !isChecked);
-    if (!isChecked) {
-      $('#Role_bailleur .dynamic-check').prop('checked', false).trigger('change');
-    }
-  });
+  bindStatutRoleDependency('main');
 });

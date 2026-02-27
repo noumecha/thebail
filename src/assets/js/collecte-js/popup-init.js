@@ -3,6 +3,7 @@
  */
 import { ModalManager } from './modules/modal-manager.js';
 import { FormUtils } from './modules/form-utils.js';
+import { bindStatutRoleDependency } from './modules/dependencies.js';
 
 /**
  * function to reset form
@@ -41,15 +42,7 @@ new ModalManager({
       });
     });
     // disabled an enable Role_bailleur base on Statut_bailleur checked or no
-    const isStatutChecked = $('#create-bailleur-modal_Statut_bailleur .dynamic-check').is(':checked');
-    $('#create-bailleur-modal_Role_bailleur .dynamic-check').prop('disabled', !isStatutChecked);
-    $('#create-bailleur-modal_Statut_bailleur').on('change', '.dynamic-check', function () {
-      const isChecked = $(this).is(':checked');
-      $('#create-bailleur-modal_Role_bailleur .dynamic-check').prop('disabled', !isChecked);
-      if (!isChecked) {
-        $('#create-bailleur-modal_Role_bailleur .dynamic-check').prop('checked', false).trigger('change');
-      }
-    });
+    bindStatutRoleDependency('create-bailleur-modal');
   },
 
   onClose: $modal => {
@@ -61,13 +54,12 @@ new ModalManager({
     resetForm($modal);
   },
 
-  onSuccess: result => {
+  onSuccess: (result, mainListId) => {
     resetForm($('#create-bailleur-modal'));
     $('#create-bailleur-modal').modal('hide');
-    console.log('result : ', result);
     const newOption = new Option(result.data?.bailleur, result.data?.bailleur_id, true, true);
-    $('#avenant_2_ancien_bailleurs_list').append(newOption).trigger('change');
-    console.log(newOption);
+    console.log('main list id : ', mainListId);
+    $(mainListId).append(newOption).trigger('change');
   },
 
   collectFormData: async () => {

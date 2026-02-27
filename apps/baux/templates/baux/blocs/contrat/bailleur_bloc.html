@@ -26,7 +26,7 @@
             {% include "baux/widgets/field_widget.html" with style="width: 400px !important" settings="maxlength='20'" input_id=prefix|add:"_Telephone" input_type="text" input_label="Téléphone Bailleur" input_name="Telephone" variant="html_only" %}
           </div>
           <div class="col-md-6">
-            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" input_id=prefix|add:"_Num_doc" input_label="CNI Bailleur" input_type="text" input_name="Num_doc" variant="html_only" %}
+            {% include "baux/widgets/field_widget.html" with style="width: 400px !important" settings="maxlength='50'" input_id=prefix|add:"_Num_doc" input_label="CNI Bailleur" input_type="text" input_name="Num_doc" variant="html_only" %}
           </div>
           <div class="col-md-6">
             {% include "baux/widgets/field_widget.html" with input_id=prefix|add:"_Date_delivrance_doc" input_label="Date délivrance CNI" input_type="date" input_name="Date_delivrance_doc" variant="html_only" %}
