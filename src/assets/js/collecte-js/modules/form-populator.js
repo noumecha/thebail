@@ -10,6 +10,13 @@ export const FormPopulator = {
     }
   },
 
+  clearValue(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.value = '';
+    }
+  },
+
   setCheckboxValue(fieldId, value) {
     const checkbox = document.getElementById(fieldId);
     if (checkbox) {
@@ -24,8 +31,23 @@ export const FormPopulator = {
     if (!$list) return;
 
     const checkbox = $list.querySelector(`input[data-choice-id="${value}"]`);
+    const checkedBox = $list.querySelector('input[type="checkbox"]:checked');
     if (checkbox) {
       checkbox.checked = true;
+    }
+    if (checkedBox) {
+      checkedBox.checked = false;
+    }
+  },
+
+  // clear DynamicChoice
+  clearDynamicChoice(listId) {
+    const $list = $('#' + listId);
+    // uncheck all checkbox
+    let checkedBoxes = $list.find('input[type="checkbox"]:checked');
+    console.log('checkboxes : ', checkedBoxes);
+    if (checkedBoxes.length > 0) {
+      checkedBoxes.prop('checked', false);
     }
   },
 
@@ -44,6 +66,12 @@ export const FormPopulator = {
     }
 
     $select.trigger('change');
+  },
+
+  clearSelect2Value(selectId) {
+    const $select = $(`#${selectId}`);
+    if (!$select.length) return;
+    $select.val(null).trigger('change');
   },
 
   // ✅ Remplir les éléments de description
@@ -132,6 +160,14 @@ export const FormPopulator = {
         });
       }, 200);
     });
+  },
+
+  clearOccupants(managerName) {
+    const manager = window.TableManagers[managerName];
+    // Vider les lignes existantes
+    if (manager.clearAllRows) {
+      manager.clearAllRows();
+    }
   },
 
   // ✅ Remplir les ayants droit
@@ -313,6 +349,10 @@ export const FormPopulator = {
     this.setValue('Nombre_de_pieces', immeuble.Nombre_de_pieces);
     this.setValue('Superficie_louer', immeuble.Superficie_louer);
     this.setValue('observation', immeuble.observation);
+    this.setValue('Quartier', immeuble.quartier);
+    this.setValue('Coordonee_gps', immeuble.coordonnees_gps);
+    this.setValue('Ville', immeuble.ville);
+    this.setValue('Rue', immeuble.rue);
 
     // Dynamic choices
     this.setDynamicChoice('type_construction_id', immeuble.type_construction_id);
@@ -320,14 +360,12 @@ export const FormPopulator = {
     this.setDynamicChoice('statut_batisse_id', immeuble.statut_batisse_id);
     this.setDynamicChoice('revetement_int_id', immeuble.revetement_int_id);
     this.setDynamicChoice('revetement_ext_id', immeuble.revetement_ext_id);
+
+    // select2 lists
     await this.setSelect2Value('pays', immeuble.pays_id, immeuble.pays?.libelle);
-    this.setValue('Ville', immeuble.ville);
-    this.setValue('Rue', immeuble.rue);
     await this.setSelect2Value('region', immeuble.region_id, immeuble.region?.libelle);
     await this.setSelect2Value('departement', immeuble.departement_id, immeuble.departement?.libelle);
     await this.setSelect2Value('arrondissement', immeuble.arrondissement_id, immeuble.arrondissement?.libelle);
-    this.setValue('Quartier', immeuble.quartier);
-    this.setValue('Coordonee_gps', immeuble.coordonnees_gps);
 
     // Éléments de description
     if (immeuble.elements_description) {

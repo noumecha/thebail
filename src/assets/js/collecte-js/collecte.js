@@ -56,6 +56,7 @@ class FicheCollecteFormHandler {
       Date_de_collecte: FormUtils.getValue('Date_de_collecte'),
       immeuble: {
         Designation: FormUtils.getValue('Designation'),
+        immeuble_id: FormUtils.getValue('immeuble_id'),
         type_construction_id: FormUtils.getDynamicChoiceValue('type_construction_id'),
         type_location_id: FormUtils.getDynamicChoiceValue('type_location_id'),
         Date_Construction: FormUtils.getValue('Date_Construction'),

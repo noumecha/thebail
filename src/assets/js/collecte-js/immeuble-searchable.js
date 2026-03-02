@@ -1,5 +1,6 @@
 import { SearchableManager } from './modules/searchable-manager.js';
 import { FormPopulator } from './modules/form-populator.js';
+import { FormUtils } from './modules/form-utils.js';
 import { APIUtils } from './modules/api-utils.js';
 new SearchableManager({
   listId: 'Designation',
@@ -10,10 +11,33 @@ new SearchableManager({
     const data = await response.json();
     return data;
   },
+  onSelect: result => {
+    $('#Designation-error').text('').toggleClass('d-none');
+    // re-init the form populated
+    FormUtils.initElementsImmeuble();
+    FormPopulator.clearDynamicChoice('type_construction_id');
+    FormPopulator.clearDynamicChoice('type_location_id');
+    FormPopulator.clearDynamicChoice('statut_batisse_id');
+    FormPopulator.clearDynamicChoice('revetement_int_id');
+    FormPopulator.clearDynamicChoice('revetement_ext_id');
+    FormPopulator.clearOccupants('logementsManager');
+    FormPopulator.clearOccupants('bureauxManager');
+    FormPopulator.clearValue('Designation');
+    FormPopulator.clearValue('Date_Construction');
+    FormPopulator.clearValue('Nombre_de_pieces');
+    FormPopulator.clearValue('Superficie_louer');
+    FormPopulator.clearValue('observation');
+    FormPopulator.clearValue('Quartier');
+    FormPopulator.clearValue('Coordonee_gps');
+    FormPopulator.clearValue('Ville');
+    FormPopulator.clearValue('Rue');
+    FormPopulator.clearSelect2Value('pays');
+    FormPopulator.clearSelect2Value('region');
+    FormPopulator.clearSelect2Value('departement');
+    FormPopulator.clearSelect2Value('arrondissement');
+  },
   populateFunction: data => {
-    console.log('data', data.datas);
     FormPopulator.populateImmeubleDatas(data.datas);
-    console.log('arrondissement_id : ', data.datas.arrondissement_id || 0);
     if (data.datas.arrondissement_id) {
       APIUtils.generateFicheCollecte(data.datas.arrondissement_id);
     }

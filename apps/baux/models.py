@@ -347,7 +347,7 @@ class Bailleurs(models.Model):
     # specifics fields
     Type_personne = models.CharField(choices=TYPE_PERSONNE, max_length=1, null=False)
     Nom_prenom = models.CharField(max_length=50, null=True, blank=True, unique=True)
-    Raison_social = models.CharField(max_length=200, null=False, unique=True)
+    Raison_social = models.CharField(max_length=200, null=True, blank=True)
     NIU = models.CharField(max_length=14, null=True, blank=True, unique=True)
     Maticule = models.CharField(max_length=14, null=True, blank=True)
     Telephone = models.CharField(max_length=20, null=True)
@@ -406,7 +406,7 @@ class Administrations (models.Model):
     Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.LibelleFr}"
+        return f"{self.code} - {self.LibelleFr}"
 
 class Structures (models.Model):
     LibelleFr = models.CharField(max_length=50)
@@ -416,7 +416,7 @@ class Structures (models.Model):
     Date_miseajour = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.LibelleFr}"
+        return f"{self.CodeFr} - {self.LibelleFr}"
 
 class Normes (models.Model):
     DesignationFr = models.CharField(max_length=50)

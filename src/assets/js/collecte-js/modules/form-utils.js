@@ -265,7 +265,6 @@ export const FormUtils = {
     }
   },
 
-  // getting values method
   getValue(fieldId) {
     const field = document.getElementById(fieldId);
     return field ? field.value : null;
