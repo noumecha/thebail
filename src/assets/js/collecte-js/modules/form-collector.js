@@ -124,5 +124,32 @@ export const Collectors = {
     );
 
     return pieces;
+  },
+
+  // collecter informations de immeuble:
+  async collectImmeubleDatas() {
+    return {
+      Designation: FormUtils.getValue('Designation'),
+      type_construction_id: FormUtils.getDynamicChoiceValue('type_construction_id'),
+      type_location_id: FormUtils.getDynamicChoiceValue('type_location_id'),
+      Date_Construction: FormUtils.getValue('Date_Construction'),
+      Nombre_de_pieces: FormUtils.getValue('Nombre_de_pieces'),
+      Superficie_louer: FormUtils.getValue('Superficie_louer'),
+      statut_batisse_id: FormUtils.getDynamicChoiceValue('statut_batisse_id'),
+      revetement_int_id: FormUtils.getDynamicChoiceValue('revetement_int_id'),
+      revetement_ext_id: FormUtils.getDynamicChoiceValue('revetement_ext_id'),
+      observation: FormUtils.getValue('observation'),
+      pays: FormUtils.getValue('pays'),
+      Ville: FormUtils.getValue('Ville'),
+      Rue: FormUtils.getValue('Rue'),
+      region: FormUtils.getValue('region'),
+      departement: FormUtils.getValue('departement'),
+      arrondissement: FormUtils.getValue('arrondissement'),
+      Quartier: FormUtils.getValue('Quartier'),
+      Coordonee_gps: FormUtils.getValue('Coordonee_gps'),
+      elements_description: Collectors.collectElementsDescription(),
+      occupants_residents: window.TableManagers.logementsManager?.collectData() || [],
+      occupants_bureaux: window.TableManagers.bureauxManager?.collectData() || []
+    };
   }
 };

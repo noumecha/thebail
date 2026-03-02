@@ -1,3 +1,4 @@
+{# field widget configuration #}
 {% load crispy_forms_tags %}
 {% if variant == "left_label" %}
   <div class="d-flex align-items-center mb-2">
@@ -18,6 +19,11 @@
     <input type="{{ input_type }}"
       style="{% if input_type == 'date' %}width: 150px !important{% endif %} {{ style }}"
       class="form-control" id="{{ input_id }}" name="{{ input_name }}" {{ settings }}>
+  </div>
+{% elif variant == "html_searchable_input" %}
+  {# Render nothing, only the field's HTML is needed #}
+  <div class="d-flex align-items-center">
+    <select class="form-control" id="{{ input_id }}" name="{{ input_name }}" {{ settings }} style="{{ style }}"></select>
   </div>
 {% elif variant == "html_no_label" %}
   {# Render nothing, only the field's HTML is needed #}

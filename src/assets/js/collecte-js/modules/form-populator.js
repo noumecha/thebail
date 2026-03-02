@@ -55,9 +55,11 @@ export const FormPopulator = {
       // Cocher le bon checkbox
       if (element.statut === true) {
         $row.find(`#element_${element.element_id}_oui`).prop('checked', true);
+        $row.find(`#element_${element.element_id}_non`).prop('checked', false);
         $row.find(`#nombre_input_${element.element_id}`).prop('disabled', false).val(element.nombre);
       } else if (element.statut === false) {
         $row.find(`#element_${element.element_id}_non`).prop('checked', true);
+        $row.find(`#element_${element.element_id}_oui`).prop('checked', false);
       }
     });
   },
@@ -298,5 +300,46 @@ export const FormPopulator = {
       window.imagesToDelete.push(imageId);
       $(this).closest('.existing-image-item').remove();
     });
+  },
+
+  // remplir les informations de l'immeuble
+  async populateImmeubleDatas(immeuble) {
+    // set hidden input value for id :
+    this.setValue('immeuble_id', immeuble.id);
+
+    // set simple input value :
+    this.setValue('Designation', immeuble.Designation);
+    this.setValue('Date_Construction', immeuble.Date_Construction);
+    this.setValue('Nombre_de_pieces', immeuble.Nombre_de_pieces);
+    this.setValue('Superficie_louer', immeuble.Superficie_louer);
+    this.setValue('observation', immeuble.observation);
+
+    // Dynamic choices
+    this.setDynamicChoice('type_construction_id', immeuble.type_construction_id);
+    this.setDynamicChoice('type_location_id', immeuble.type_location_id);
+    this.setDynamicChoice('statut_batisse_id', immeuble.statut_batisse_id);
+    this.setDynamicChoice('revetement_int_id', immeuble.revetement_int_id);
+    this.setDynamicChoice('revetement_ext_id', immeuble.revetement_ext_id);
+    await this.setSelect2Value('pays', immeuble.pays_id, immeuble.pays?.libelle);
+    this.setValue('Ville', immeuble.ville);
+    this.setValue('Rue', immeuble.rue);
+    await this.setSelect2Value('region', immeuble.region_id, immeuble.region?.libelle);
+    await this.setSelect2Value('departement', immeuble.departement_id, immeuble.departement?.libelle);
+    await this.setSelect2Value('arrondissement', immeuble.arrondissement_id, immeuble.arrondissement?.libelle);
+    this.setValue('Quartier', immeuble.quartier);
+    this.setValue('Coordonee_gps', immeuble.coordonnees_gps);
+
+    // Éléments de description
+    if (immeuble.elements_description) {
+      this.populateElementsDescription(immeuble.elements_description);
+    }
+
+    // Occupants
+    if (immeuble.occupants_residents) {
+      this.populateOccupants('logementsManager', immeuble.occupants_residents);
+    }
+    if (immeuble.occupants_bureaux) {
+      this.populateOccupants('bureauxManager', immeuble.occupants_bureaux);
+    }
   }
 };

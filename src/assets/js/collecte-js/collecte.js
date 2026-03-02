@@ -1,9 +1,9 @@
 // collecte.js
-import { FormUtils } from './collecte-js/modules/form-utils.js';
-import { Validators } from './collecte-js/modules/form-validator.js';
-import { Collectors } from './collecte-js/modules/form-collector.js';
-import { FormPopulator } from './collecte-js/modules/form-populator.js';
-import { APIUtils } from './collecte-js/modules/api-utils.js';
+import { FormUtils } from './modules/form-utils.js';
+import { Validators } from './modules/form-validator.js';
+import { Collectors } from './modules/form-collector.js';
+import { FormPopulator } from './modules/form-populator.js';
+import { APIUtils } from './modules/api-utils.js';
 
 class FicheCollecteFormHandler {
   constructor(formId, ficheId = null) {

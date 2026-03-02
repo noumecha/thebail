@@ -1,12 +1,11 @@
 /**
  * fichier dédié à la gestion des dépendances entre champs, notamment pour les champs de type checkbox
  * exemple : le champ Role_bailleur qui doit être désactivé tant que le champ Statut_bailleur n'est pas coché
- * @param {*} prefix
+ * @param {*} statutSelector : le sélecteur du champ statut (ex: '#create-bailleur-modal_Statut_bailleur')
+ * @param {*} roleSelector : le sélecteur du champ rôle (ex: '#create-bailleur-modal_Role_bailleur')
+ * @return void
  */
-export function bindStatutRoleDependency(prefix) {
-  const statutSelector = `#${prefix}_Statut_bailleur`;
-  const roleSelector = `#${prefix}_Role_bailleur`;
-
+export function bindStatutRoleDependency(statutSelector, roleSelector) {
   // 🔥 On retire les anciens handlers avant d'en ajouter
   $(statutSelector).off('change.dependency');
 

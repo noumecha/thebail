@@ -349,6 +349,10 @@ export const FormUtils = {
                 pagination: { more: data.pagination.more }
               };
             },
+            error: () => {
+              console.error('Erreur lors du chargement des options');
+              return { results: [] };
+            },
             cache: true
           },
           placeholder: placeholder || 'Rechercher...',

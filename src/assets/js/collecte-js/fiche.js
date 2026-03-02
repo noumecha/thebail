@@ -198,5 +198,5 @@ $(function () {
 
   // disabled an enable Role_bailleur base on Statut_bailleur checked or no
   // on init check directly if statut_bailleur is checked
-  bindStatutRoleDependency('main');
+  bindStatutRoleDependency('#main_Statut_bailleur', '#main_Role_bailleur');
 });

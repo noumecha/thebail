@@ -6,7 +6,9 @@
         <label for="Designation" class="fw-bold text-start form-check-label ms-1">a. - Désignation du bien</label>
       </td>
       <td class="text-start p-0">
-        {% include "baux/widgets/field_widget.html" with input_id="Designation" input_type="text" input_name="Designation" variant="html_no_label" %}
+        {% include "baux/widgets/field_widget.html" with input_id="Designation" input_type="text" input_name="Designation" variant="html_searchable_input" %}
+        <!-- Zone d'erreur -->
+        <div id="Designation-error" class="text-danger mt-1 d-none"></div>
       </td>
     </tr>
     <tr>

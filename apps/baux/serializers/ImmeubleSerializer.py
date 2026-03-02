@@ -122,3 +122,99 @@ class ImmeubleSerializer(serializers.ModelSerializer):
                 )
 
         return instance
+
+    def to_representation(self, instance):
+        """Personnaliser la représentation pour l'affichage"""
+        pays = Pays.objects.get(id=instance.pays_id).LibelleFR if instance.pays_id else None,
+        region = Regions.objects.get(id=instance.region_id).Libelle if instance.region_id else None,
+        departement = Departements.objects.get(id=instance.departement_id).LibelleFR if instance.departement_id else None,
+        arrondissement = Arrondissemements.objects.get(id=instance.arrondissement_id).LibelleFR if instance.arrondissement_id else None,
+        representation = {
+            'id': instance.id,
+            'Designation': instance.Designation,
+            'type_construction_id': instance.Construction_id,
+            'type_location_id': instance.Type_location_id,
+            'Date_Construction': instance.Date_Construction,
+            'Nombre_de_pieces': str(instance.Nombre_de_pieces) if instance.Nombre_de_pieces else None,
+            'Superficie_louer': str(instance.Superficie_louer) if instance.Superficie_louer else None,
+            'statut_batisse_id': instance.Situation_batisse_id,
+            'revetement_int_id': instance.Revetement_interieure_id,
+            'revetement_ext_id': instance.Revetement_exterieure_id,
+            'observation': instance.observation,
+            'pays_id': instance.pays_id,
+            'pays': {
+                'id': instance.pays_id,
+                'libelle': pays
+            },
+            'ville': instance.Ville,
+            'rue': instance.Rue,
+            'region_id': instance.region_id,
+            'region': {
+                'id': instance.region_id,
+                'libelle': region
+            },
+            'departement_id': instance.departement_id,
+            'departement': {
+                'id': instance.departement_id,
+                'libelle': departement
+            },
+            'arrondissement_id': instance.arrondissement_id,
+            'arrondissement': {
+                'id': instance.arrondissement_id,
+                'libelle': arrondissement
+            },
+            'quartier': instance.Quartier,
+            'coordonnees_gps': instance.Coordonee_gps,
+            'elements_description': [],
+            'occupants_residents': [],
+            'occupants_bureaux': []
+        }
+        # Éléments de description
+        elements = ImmeubleElement.objects.filter(immeuble=instance)
+        representation['elements_description'] = [
+            {
+                'element_id': el.element_id,
+                'statut': el.statut,
+                'nombre': el.nombre
+            }
+            for el in elements
+        ]
+        # Occupants résidents
+        occupants_res = Occupants.objects.filter(Immeuble=instance)
+        representation['occupants_residents'] = [
+            {
+                'nom_prenom': occ.Nom_Prenom_occupant_residence,
+                'administration': occ.Administration_rattachement.id if occ.Administration_rattachement else None,
+                'administration_rattachement': {
+                    'id': occ.Administration_rattachement.id if occ.Administration_rattachement else None,
+                    'libelle': occ.Administration_rattachement.LibelleFr if occ.Administration_rattachement else None
+                },
+                'fonction': occ.Fonction_occupant_residence,
+                'matricule': occ.Matricule_occupant_residence,
+                'ref_acte': occ.Ref_ActeJuridique_attribution,
+                'date_signature': occ.Date_Signature_acte_juridique
+            }
+            for occ in occupants_res
+        ]
+        # Occupants bureaux
+        occupants_bur = OccupantBureaux.objects.filter(Immeuble=instance)
+        representation['occupants_bureaux'] = [
+            {
+                'service': occ.Service_occupant_bureau.id if occ.Service_occupant_bureau else None,
+                'service_occupant_bureau' : {
+                    'id': occ.Service_occupant_bureau.id if occ.Service_occupant_bureau else None,
+                    'libelle': occ.Service_occupant_bureau.LibelleFr if occ.Service_occupant_bureau else None
+                },
+                'administration': occ.Administration_correspondante.id if occ.Administration_correspondante else None,
+                'administration_correspondante': {
+                    'id': occ.Administration_correspondante.id if occ.Administration_correspondante else None,
+                    'libelle': occ.Administration_correspondante.LibelleFr if occ.Administration_correspondante else None
+                },
+                'fonction_responsable': occ.Fonction_occupant_bureau,
+                'ref_acte': occ.Ref_ActeJuridique_attribution,
+                'date_signature': occ.Date_signature_acte_attribution
+            }
+            for occ in occupants_bur
+        ]
+
+        return representation

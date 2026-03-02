@@ -42,7 +42,7 @@ new ModalManager({
       });
     });
     // disabled an enable Role_bailleur base on Statut_bailleur checked or no
-    bindStatutRoleDependency('create-bailleur-modal');
+    bindStatutRoleDependency('#create-bailleur-modal_Statut_bailleur', '#create-bailleur-modal_Role_bailleur');
   },
 
   onClose: $modal => {

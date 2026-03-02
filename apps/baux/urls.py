@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 
-from apps.baux.views import api_bailleur_views
+from apps.baux.views import api_bailleur_views, api_fiche_views, api_immeuble_views
 from .views import *
 from django.urls import re_path as url
 from rest_framework.routers import DefaultRouter
@@ -106,7 +106,7 @@ urlpatterns = [
     # api endpoints
     path('api/search-agents/', AgentNomSelect2().get, name='api_agents'),
     path('api/search-matricule-agents/', AgentMatriculeSelect2().get, name='api_matricules_agents'),
-    path("api/get-agent-name/", api_views.get_agent_name, name='get_agent_name'),
+    path("api/get-agent-name/", api_fiche_views.get_agent_name, name='get_agent_name'),
     path("api/get-pays/", PaysSelect2().get, name='api_pays'),
     path("api/get-regions/", RegionSelect2().get, name="api_regions"),
     path("api/get-departement/", DepartementSelect2().get, name="api_departement"),
@@ -116,11 +116,14 @@ urlpatterns = [
     path("api/get-bailleurs/", BailleursSelect2().get, name="api_bailleurs"),
     path("api/get-banques/", BanquesSelect2().get, name="api_banques"),
     path("api/get-exercices/", ExercicesSelect2.as_view(), name="api_exercices"),
-    path('api/fiches/numero/', api_views.generate_fiche_collecte_number, name='generate_fiche_collecte_number'),
-    # CRUD operations
-    path('api/fiches/create/', api_views.create_fiche_collecte, name='create_fiche_collecte'),
-    path('api/fiches/<int:fiche_id>/', get_fiche_collecte, name='get_fiche_collecte'),
-    path('api/fiches/<int:fiche_id>/update/', update_fiche_collecte, name='update_fiche_collecte'),
+    # api immeubles
+    path("api/get-immeubles/", ImmeublesSelect2().get, name="api_immeubles"),
+    path("api/get-immeubles/<int:immeuble_id>/", api_immeuble_views.get_immeuble_data, name="get_immeuble_data"),
+    # api fiches
+    path('api/fiches/numero/', api_fiche_views.generate_fiche_collecte_number, name='generate_fiche_collecte_number'),
+    path('api/fiches/create/', api_fiche_views.create_fiche_collecte, name='create_fiche_collecte'),
+    path('api/fiches/<int:fiche_id>/', api_fiche_views.get_fiche_collecte, name='get_fiche_collecte'),
+    path('api/fiches/<int:fiche_id>/update/', api_fiche_views.update_fiche_collecte, name='update_fiche_collecte'),
     path('api/bailleur/create/', api_bailleur_views.create_bailleur, name='create_bailleur'),
 ]
 urlpatterns += router.urls
