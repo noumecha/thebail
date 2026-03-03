@@ -3,6 +3,7 @@ export class ModalManager {
   constructor(config) {
     this.modalId = config.modalId;
     this.mainListId = config.mainListId;
+    this.method = config.method || 'POST';
     this.formId = config.formId;
     this.onSuccess = config.onSuccess || null;
     this.onOpen = config.onOpen || null;
@@ -43,7 +44,7 @@ export class ModalManager {
       const data = await this.collectFormData();
       console.log('data : ', data);
       const response = await fetch(form.action, {
-        method: 'POST',
+        method: this.method,
         body: JSON.stringify(data),
         credentials: 'same-origin',
         headers: {

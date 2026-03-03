@@ -80,10 +80,8 @@
 
           <div id="immeubleSection" class="accordion-collapse collapse">
             <div class="accordion-body overflow-auto">
-              <!-- hidden input for immeuble id-->
-              <input type="hidden" name="immeuble_id" id="immeuble_id" value="">
               <!-- bloc immeuble -->
-              {% include "baux/blocs/immeuble_bloc.html" with show_identification=True show_localisation=True show_etat_physique=True show_description=True show_occupants=True %}
+              {% include "baux/blocs/immeuble_bloc.html" with prefix='main' show_identification=True show_localisation=True show_etat_physique=True show_description=True show_occupants=True show_udpate_button=True element_groups_id="main-elements-immeuble-container" %}
             </div>
           </div>
         </div>
@@ -152,12 +150,15 @@
 <!-- popup for adding new bailleur -->
 {% include "baux/components/dynamic_modal.html" with modal_id="create-bailleur-modal" form_id="bailleur-form" title="Enregistrement d'un bailleur" form_template="baux/blocs/contrat/bailleur_bloc.html" form_action="/api/bailleur/create/" %}
 
+<!-- pop for updating immeubl -->
+{% include "baux/components/dynamic_modal.html" with modal_id="update-immeuble-modal" form_id="update-immeuble-form" title="Mettre à jour un immeuble" form_template="baux/blocs/immeuble_bloc.html" show_identification=True show_localisation=True show_etat_physique=True show_description=True show_udpate_button=False element_groups_id="popup-elements-immeuble-container"%}
+
 {% endblock %}
 {% block extra_js %}
-  <script src="{% static 'js/collecte-js/config.js' %}"></script>
+  <script type="module" src="{% static 'js/collecte-js/config.js' %}"></script>
   <script type="module" src="{% static 'js/collecte-js/fiche.js' %}"></script>
   <script type="module" src="{% static 'js/collecte-js/immeuble-searchable.js' %}"></script>
-  <script type="module" src="{% static 'js/collecte-js/dynamic-table.js' %}"></script>
-  <script type="module" src="{% static 'js/collecte-js/popup-init.js' %}"></script>
+  <script type="module" src="{% static 'js/collecte-js/bailleur-popup.js' %}"></script>
+  <script type="module" src="{% static 'js/collecte-js/immeuble-popup.js' %}"></script>
   <script type="module" src="{% static 'js/collecte-js/collecte.js' %}"></script>
 {% endblock %}

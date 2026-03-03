@@ -104,7 +104,7 @@ $(function () {
   // gestion des éléments dynamique [elements de type list avec checkbox + éléments de description]
   const dynamic_choices_list_objects = [
     {
-      listId: 'type_construction_id',
+      listId: 'main_type_construction_id',
       hiddenId: 'construction_choice_hidden',
       newInputId: 'new_construction_input',
       formWrapper: 'new_construction_wrapper',
@@ -112,7 +112,7 @@ $(function () {
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'type_location_id',
+      listId: 'main_type_location_id',
       hiddenId: 'type_location_choice_hidden',
       newInputId: 'new_type_location_input',
       formWrapper: 'new_type_location_wrapper',
@@ -120,7 +120,7 @@ $(function () {
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'statut_batisse_id',
+      listId: 'main_statut_batisse_id',
       hiddenId: 'statut_choice_hidden',
       newInputId: 'new_statut_input',
       formWrapper: 'new_statut_wrapper',
@@ -128,7 +128,7 @@ $(function () {
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'revetement_int_id',
+      listId: 'main_revetement_int_id',
       hiddenId: 'revetementinterieure_choice_hidden',
       newInputId: 'new_revetementinterieure_input',
       formWrapper: 'new_revetementinterieure_wrapper',
@@ -136,7 +136,7 @@ $(function () {
       ajaxUrl: '/add-choice/'
     },
     {
-      listId: 'revetement_ext_id',
+      listId: 'main_revetement_ext_id',
       hiddenId: 'revetementexterieure_choice_hidden',
       newInputId: 'new_revetementexterieure_input',
       formWrapper: 'new_revetementexterieure_wrapper',
@@ -166,22 +166,25 @@ $(function () {
 
   // gérer les checkbox oui/non des éléments de type oui/non
   const object_to_toggle = [
-    { listId: 'main_Type_personne', hiddenId: 'main_types_personnes_choice' },
-    { listId: 'main_Statut_bailleur', hiddenId: 'main_statut_bailleur_choice' },
-    { listId: 'main_Role_bailleur', hiddenId: 'main_role_bailleur_choice' },
+    // immeuble :
+    { listId: 'main_type_construction_id', hiddenId: null },
+    { listId: 'main_type_location_id', hiddenId: null },
+    { listId: 'main_statut_batisse_id', hiddenId: null },
+    { listId: 'main_revetement_int_id', hiddenId: null },
+    { listId: 'main_revetement_ext_id', hiddenId: null },
+    // contrat :
     { listId: 'Existence_visa_budgétaire', hiddenId: null },
     { listId: 'tacite_reconduction', hiddenId: null },
     { listId: 'Existence_avenant', hiddenId: null },
     { listId: 'statut_visa_budgetaire_avenant_1', hiddenId: null },
     { listId: 'statut_visa_budgetaire_avenant_2', hiddenId: null },
-    { listId: 'type_construction_id', hiddenId: null },
     { listId: 'TypeContrat', hiddenId: null },
     { listId: 'Periodicite_Reglement_id', hiddenId: null },
-    { listId: 'type_location_id', hiddenId: null },
-    { listId: 'statut_batisse_id', hiddenId: null },
-    { listId: 'revetement_int_id', hiddenId: null },
-    { listId: 'revetement_ext_id', hiddenId: null },
-    { listId: 'Tacite_reconduction_contrat', hiddenId: null }
+    { listId: 'Tacite_reconduction_contrat', hiddenId: null },
+    // bailleur element :
+    { listId: 'main_Type_personne', hiddenId: 'main_types_personnes_choice' },
+    { listId: 'main_Statut_bailleur', hiddenId: 'main_statut_bailleur_choice' },
+    { listId: 'main_Role_bailleur', hiddenId: 'main_role_bailleur_choice' }
   ];
   object_to_toggle.forEach(obj => {
     $('#' + obj.listId).on('change', '.dynamic-check', function () {

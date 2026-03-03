@@ -3,7 +3,7 @@
   <tbody>
     <tr>
       <td>
-        {% include "baux/widgets/dynamic_choice_list.html" with list_id="statut_batisse_id" checkbox_name="statut_choice_checkbox" hidden_name="statut_choice" hidden_id="statut_choice_hidden" add_wrapper_id="new_statut_wrapper" new_input_id="new_statut_input" add_btn_id="add_statut_btn" choices=statut_batisses selected=form.initial.statut_choice model="StatutBatisse" %}
+        {% include "baux/widgets/dynamic_choice_list.html" with list_id=prefix|add:"_statut_batisse_id" checkbox_name="statut_choice_checkbox" hidden_name="statut_choice" hidden_id="statut_choice_hidden" add_wrapper_id="new_statut_wrapper" new_input_id="new_statut_input" add_btn_id="add_statut_btn" choices=statut_batisses selected=form.initial.statut_choice model="StatutBatisse" %}
       </td>
     </tr>
     <tr>
@@ -12,7 +12,7 @@
           <li type="square"><span class="fw-bold">Revêtement intérieure : </span></li>
         </ul>
         <ul class="ms-2 mb-0">
-          {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetement_int_id" checkbox_name="revetementinterieure_choice_checkbox" hidden_name="revetementinterieure_choice" hidden_id="revetementinterieure_choice_hidden" add_wrapper_id="new_revetementinterieure_wrapper" new_input_id="new_revetementinterieure_input" add_btn_id="add_revetementinterieure_btn" choices=revetement_interieures selected=form.initial.revetementinterieure_choice model="RevetementInts" %}
+          {% include "baux/widgets/dynamic_choice_list.html" with list_id=prefix|add:"_revetement_int_id" checkbox_name="revetementinterieure_choice_checkbox" hidden_name="revetementinterieure_choice" hidden_id="revetementinterieure_choice_hidden" add_wrapper_id="new_revetementinterieure_wrapper" new_input_id="new_revetementinterieure_input" add_btn_id="add_revetementinterieure_btn" choices=revetement_interieures selected=form.initial.revetementinterieure_choice model="RevetementInts" %}
         </ul>
       </td>
     </tr>
@@ -22,13 +22,13 @@
           <li type="square"><span class="fw-bold">Revêtement extérieure : </span></li>
         </ul>
         <ul class="ms-2 mb-0">
-          {% include "baux/widgets/dynamic_choice_list.html" with list_id="revetement_ext_id" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure_choice_hidden" add_wrapper_id="new_revetementexterieure_wrapper" new_input_id="new_revetementexterieure_input" add_btn_id="add_revetementexterieure_btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts" %}
+          {% include "baux/widgets/dynamic_choice_list.html" with list_id=prefix|add:"_revetement_ext_id" checkbox_name="revetementexterieure_choice_checkbox" hidden_name="revetementexterieure_choice" hidden_id="revetementexterieure_choice_hidden" add_wrapper_id="new_revetementexterieure_wrapper" new_input_id="new_revetementexterieure_input" add_btn_id="add_revetementexterieure_btn" choices=revetement_exterieures selected=form.initial.revetementexterieure_choice model="RevetementExts" %}
         </ul>
       </td>
     </tr>
     <tr>
       <td class="" colspan="2">
-        {% include "baux/widgets/field_widget.html" with input_id="observation" input_type="text" input_name="observation" input_label="Observation" variant="html_text_area" %}
+        {% include "baux/widgets/field_widget.html" with input_id=prefix|add:"_observation" input_type="text" input_name="observation" input_label="Observation" variant="html_text_area" %}
       </td>
     </tr>
   </tbody>

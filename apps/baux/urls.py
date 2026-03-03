@@ -119,6 +119,8 @@ urlpatterns = [
     # api immeubles
     path("api/get-immeubles/", ImmeublesSelect2().get, name="api_immeubles"),
     path("api/get-immeubles/<int:immeuble_id>/", api_immeuble_views.get_immeuble_data, name="get_immeuble_data"),
+    path("api/update-immeubles/<int:immeuble_id>/", api_immeuble_views.update_immeuble, name="update_immeuble"),
+    path("api/create-immeubles/", api_immeuble_views.create_immeuble, name="create_immeuble"),
     # api fiches
     path('api/fiches/numero/', api_fiche_views.generate_fiche_collecte_number, name='generate_fiche_collecte_number'),
     path('api/fiches/create/', api_fiche_views.create_fiche_collecte, name='create_fiche_collecte'),

@@ -4,7 +4,8 @@ import { Validators } from './modules/form-validator.js';
 import { Collectors } from './modules/form-collector.js';
 import { FormPopulator } from './modules/form-populator.js';
 import { APIUtils } from './modules/api-utils.js';
-
+import { DynamicTableManager } from './modules/tables-manager.js';
+import { tableManagers } from './config.js';
 class FicheCollecteFormHandler {
   constructor(formId, ficheId = null) {
     this.form = document.getElementById(formId);
@@ -45,7 +46,7 @@ class FicheCollecteFormHandler {
   // Collecter toutes les données du formulaire
   async collectFormData() {
     // Vérifier que les managers sont disponibles
-    if (!window.TableManagers) {
+    if (!tableManagers) {
       console.error('TableManagers not initialized');
       throw new Error('Les gestionnaires de tableaux ne sont pas initialisés');
     }
@@ -54,63 +55,8 @@ class FicheCollecteFormHandler {
       agent_collecte_id: FormUtils.getValue('responsable_collecte'),
       matricule_agent: FormUtils.getValue('matricule_responsable_collecte'),
       Date_de_collecte: FormUtils.getValue('Date_de_collecte'),
-      immeuble: {
-        Designation: FormUtils.getValue('Designation'),
-        immeuble_id: FormUtils.getValue('immeuble_id'),
-        type_construction_id: FormUtils.getDynamicChoiceValue('type_construction_id'),
-        type_location_id: FormUtils.getDynamicChoiceValue('type_location_id'),
-        Date_Construction: FormUtils.getValue('Date_Construction'),
-        Nombre_de_pieces: FormUtils.getValue('Nombre_de_pieces'),
-        Superficie_louer: FormUtils.getValue('Superficie_louer'),
-        statut_batisse_id: FormUtils.getDynamicChoiceValue('statut_batisse_id'),
-        revetement_int_id: FormUtils.getDynamicChoiceValue('revetement_int_id'),
-        revetement_ext_id: FormUtils.getDynamicChoiceValue('revetement_ext_id'),
-        observation: FormUtils.getValue('observation'),
-        pays: FormUtils.getValue('pays'),
-        Ville: FormUtils.getValue('Ville'),
-        Rue: FormUtils.getValue('Rue'),
-        region: FormUtils.getValue('region'),
-        departement: FormUtils.getValue('departement'),
-        arrondissement: FormUtils.getValue('arrondissement'),
-        Quartier: FormUtils.getValue('Quartier'),
-        Coordonee_gps: FormUtils.getValue('Coordonee_gps'),
-        elements_description: Collectors.collectElementsDescription(),
-        occupants_residents: window.TableManagers.logementsManager?.collectData() || [],
-        occupants_bureaux: window.TableManagers.bureauxManager?.collectData() || []
-      },
-      contrat: {
-        TypeContrat: FormUtils.getDynamicChoiceValue('TypeContrat'),
-        Numero_contrat: FormUtils.getValue('Numero_contrat'),
-        Date_Signature_contrat: FormUtils.getValue('Date_Signature_contrat'),
-        Fonction_signataire_contrat: FormUtils.getValue('Fonction_signataire_contrat'),
-        Date_effet_contrat: FormUtils.getValue('Date_effet_contrat'),
-        Existence_visa_budgétaire: FormUtils.getCheckboxValueYesNo('Existence_visa_budgétaire'),
-        Duree_Contrat: FormUtils.getValue('Duree_Contrat'),
-        Tacite_reconduction_contrat: FormUtils.getCheckboxValueYesNo('Tacite_reconduction_contrat'),
-        Regime_fiscal_contrat: FormUtils.getValue('Regime_fiscal_contrat'),
-        Montant_loyer_mensuel: FormUtils.getValue('Montant_loyer_mensuel'),
-        Devise: FormUtils.getValue('Devise'),
-        Periodicite_Reglement_id: FormUtils.getDynamicChoiceValue('Periodicite_Reglement_id'),
-        Existence_avenant: FormUtils.getCheckboxValueYesNo('Existence_avenant'),
-        bailleur: {
-          Type_personne: FormUtils.getDynamicChoiceValue('main_Type_personne'),
-          Raison_social: FormUtils.getValue('main_Raison_social'),
-          Nom_Prenom_Representant: FormUtils.getValue('main_Nom_Prenom_Representant'),
-          Domicille_siege_social_bailleur: FormUtils.getValue('main_Domicille_siege_social_bailleur'),
-          NIU: FormUtils.getValue('main_NIU'),
-          Telephone: FormUtils.getValue('main_Telephone'),
-          Num_doc: FormUtils.getValue('main_Num_doc'),
-          Date_delivrance_doc: FormUtils.getValue('main_Date_delivrance_doc'),
-          Statut_bailleur: FormUtils.getDynamicChoiceValue('main_Statut_bailleur'),
-          Role_bailleur: FormUtils.getDynamicChoiceValue('main_Role_bailleur'),
-          Banque: FormUtils.getValue('main_Banque'),
-          RIB: FormUtils.getValue('main_RIB'),
-          Intitule_compte: FormUtils.getValue('main_Intitule_compte'),
-          ayants_droit: window.TableManagers.ayantsDroitManager?.collectData() || []
-        },
-        avenants: Collectors.collectAvenants(),
-        non_mandatements: window.TableManagers.nonMandatementManager?.collectData() || []
-      },
+      immeuble: await Collectors.collectImmeubleDatas(),
+      contrat: await Collectors.collectContratDatas(),
       pieces_collectees: await Collectors.collectPiecesCollectees()
     };
     return data;

@@ -5,10 +5,29 @@
       <td class="text-start pt-0 pb-0 ps-0">
         <label for="Designation" class="fw-bold text-start form-check-label ms-1">a. - Désignation du bien</label>
       </td>
-      <td class="text-start p-0">
-        {% include "baux/widgets/field_widget.html" with input_id="Designation" input_type="text" input_name="Designation" variant="html_searchable_input" %}
+      <td class="d-flex text-start p-0">
+        <!-- hidden input for immeuble id-->
+        <input type="hidden" name="immeuble_id" id="immeuble_id" value="">
+        <!-- input for designation -->
+        {% if prefix == "main" %}
+          {% include "baux/widgets/field_widget.html" with parent_style="width: 100% !important;" input_id=prefix|add:"_Designation" input_type="text" input_name=prefix|add:"_Designation" variant="html_searchable_input" %}
+        {% else %}
+          <!-- simple html input -->
+          {% include "baux/widgets/field_widget.html" with parent_style="width: 100% !important;" input_id=prefix|add:"_Designation" input_type="text" input_name=prefix|add:"_Designation" variant="html_no_label" %}
+        {% endif %}
         <!-- Zone d'erreur -->
         <div id="Designation-error" class="text-danger mt-1 d-none"></div>
+        {% if show_udpate_button %}
+          <!-- zone de popup pour modification de l'immeuble -->
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#update-immeuble-modal"
+          >
+            <i class="bx bx-edit"></i> Modifier
+          </button>
+        {% endif %}
       </td>
     </tr>
     <tr>
@@ -16,7 +35,7 @@
         <label for="type_construction_id" class="fw-bold text-start form-check-label ms-1">b. - Type de construction</label>
       </td>
       <td class="text-start p-0">
-        {% include "baux/widgets/dynamic_choice_list.html" with list_id="type_construction_id" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction_choice_hidden" add_wrapper_id="new_construction_wrapper" new_input_id="new_construction_input" add_btn_id="add_construction_btn" choices=type_constructions selected=form.initial.construction_choice model="TypeConstructions" %}
+        {% include "baux/widgets/dynamic_choice_list.html" with list_id=prefix|add:"_type_construction_id" checkbox_name="construction_choice_checkbox" hidden_name="construction_choice" hidden_id="construction_choice_hidden" add_wrapper_id="new_construction_wrapper" new_input_id="new_construction_input" add_btn_id="add_construction_btn" choices=type_constructions selected=form.initial.construction_choice model="TypeConstructions" %}
       </td>
     </tr>
     <tr>
@@ -26,13 +45,13 @@
       <td class="text-start">
         <div class="row">
           <div class="col-md-6">
-            {% include "baux/widgets/field_widget.html" with input_id="Date_Construction" input_label="Date construction" input_type="date" input_name="Date_Construction" variant="html_only" %}
+            {% include "baux/widgets/field_widget.html" with input_id=prefix|add:"_Date_Construction" input_label="Date construction" input_type="date" input_name="Date_Construction" variant="html_only" %}
           </div>
           <div class="col-md-6">
-            {% include "baux/widgets/field_widget.html" with style="width: 100px !important" input_id="Nombre_de_pieces" input_label="Nombre Total de pièces" input_type="number" input_name="Nombre_de_pieces" variant="html_only" %}
+            {% include "baux/widgets/field_widget.html" with style="width: 100px !important" input_id=prefix|add:"_Nombre_de_pieces" input_label="Nombre Total de pièces" input_type="number" input_name="Nombre_de_pieces" variant="html_only" %}
           </div>
           <div class="col-md-6">
-            {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id="Superficie_louer" input_label="Superficie louée(m<sup>2</sup>) (Cf. contrat)" input_type="number" input_name="Superficie_louer" variant="html_only" %}
+            {% include "baux/widgets/field_widget.html" with style="width: 250px !important" input_id=prefix|add:"_Superficie_louer" input_label="Superficie louée(m<sup>2</sup>) (Cf. contrat)" input_type="number" input_name="Superficie_louer" variant="html_only" %}
           </div>
         </div>
       </td>
@@ -42,7 +61,7 @@
         <label for="type_location_id" class="fw-bold text-start form-check-label ms-1">d. - Type de location</label>
       </td>
       <td class="text-start p-0">
-        {% include "baux/widgets/dynamic_choice_list.html" with list_id="type_location_id" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type_location_choice_hidden" add_wrapper_id="new_type_location_wrapper" new_input_id="new_type_location_input" add_btn_id="add_type_location_btn" choices=type_locations selected=form.initial.type_location_choice model="TypeLocations" %}
+        {% include "baux/widgets/dynamic_choice_list.html" with list_id=prefix|add:"_type_location_id" checkbox_name="type_location_choice_checkbox" hidden_name="type_location_choice" hidden_id="type_location_choice_hidden" add_wrapper_id="new_type_location_wrapper" new_input_id="new_type_location_input" add_btn_id="add_type_location_btn" choices=type_locations selected=form.initial.type_location_choice model="TypeLocations" %}
       </td>
     </tr>
   </tbody>

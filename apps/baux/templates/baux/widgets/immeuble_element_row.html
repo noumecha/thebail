@@ -1,5 +1,5 @@
-<tr data-el-id="{{ el.id }}">
-  <td class="d-flex ps-0 pe-0" id="immeuble_element_{{ el.id }}">
+<tr data-el-id="{{ el.id }}" data-context="{{ element_groups_id }}">
+  <td class="d-flex ps-0 pe-0" id="immeuble_element_{{ el.id }}_{{ element_groups_id }}">
     <div class="form-check form-check-inline">
       <label class="d-flex align-items-center gap-2 dynamic-option">
         <input
@@ -18,7 +18,6 @@
           type="checkbox"
           class="form-check-input dynamic-check"
           value="non"
-          checked
           id="element_{{ el.id }}_non">
         <span class="">Non</span>
       </label>

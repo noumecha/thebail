@@ -76,18 +76,27 @@ export const FormUtils = {
     });
   },
 
-  initElementsImmeuble() {
+  initElementsImmeuble(containerId = '#main-elements-immeuble-container') {
     // Gérer TOUS les éléments de description avec un seul événement
-    const $container = $('#elements-immeuble-container');
+    const $container = $(containerId);
     $container.find('input[type="number"]').each(function () {
       $(this).prop('disabled', true).val('');
     });
-    $('#elements-immeuble-container').on('change', '.dynamic-check', function () {
+    // on init by default, we nee to get all element with id="element_{{ el.id }}_non" and set it checked
+    $container.find('.dynamic-check').each(function () {
+      const $row = $(this).closest('tr');
+      const elementId = $row.data('el-id');
+      $row.find(`#element_${elementId}_non`).prop('checked', true);
+      $row.find(`#element_${elementId}_oui`).prop('checked', false);
+    });
+
+    $(containerId).on('change', '.dynamic-check', function () {
       const $checkbox = $(this);
       const $row = $checkbox.closest('tr');
       const elementId = $row.data('el-id');
-      const listId = 'immeuble_element_' + elementId;
-
+      const context = $row.data('context');
+      const listId = `immeuble_element_${elementId}_${context}`;
+      console.log('list id : ', listId);
       toggleCheck({
         listId: listId,
         checkbox: this,
@@ -218,8 +227,8 @@ export const FormUtils = {
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.innerHTML = this.isEditMode
-        ? '<i class="bx bx-edit"></i> Mettre à jour'
-        : '<i class="bx bx-save"></i> Enregistrer';
+        ? '<i class="bx bx-edit"></i> Mettre à jour la fiche'
+        : '<i class="bx bx-save"></i> Enregistrer la fiche';
       submitBtn.classList.add(this.isEditMode ? 'btn-warning' : 'btn-primary');
     }
   },

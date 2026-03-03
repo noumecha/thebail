@@ -22,12 +22,12 @@
   </div>
 {% elif variant == "html_searchable_input" %}
   {# Render nothing, only the field's HTML is needed #}
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center" style="{{ parent_style }}">
     <select class="form-control" id="{{ input_id }}" name="{{ input_name }}" {{ settings }} style="{{ style }}"></select>
   </div>
 {% elif variant == "html_no_label" %}
   {# Render nothing, only the field's HTML is needed #}
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center" style="{{ parent_style }}">
     <input type="{{ input_type }}" style="{{ style }}" class="form-control" id="{{ input_id }}" name="{{ input_name }}" {{ settings }}>
   </div>
 {% elif variant == "html_text_area" %}

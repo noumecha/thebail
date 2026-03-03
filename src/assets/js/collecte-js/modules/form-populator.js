@@ -1,6 +1,8 @@
 /**
  * module de remplissage du formulaire
  */
+import { tableManagers, initTableManagers } from '../config.js';
+import { FormUtils } from './form-utils.js';
 export const FormPopulator = {
   // ✅ Méthodes utilitaires pour remplir le formulaire
   setValue(fieldId, value) {
@@ -45,7 +47,6 @@ export const FormPopulator = {
     const $list = $('#' + listId);
     // uncheck all checkbox
     let checkedBoxes = $list.find('input[type="checkbox"]:checked');
-    console.log('checkboxes : ', checkedBoxes);
     if (checkedBoxes.length > 0) {
       checkedBoxes.prop('checked', false);
     }
@@ -94,7 +95,7 @@ export const FormPopulator = {
 
   // ✅ Remplir les occupants (logements ou bureaux)
   populateOccupants(managerName, occupants) {
-    const manager = window.TableManagers[managerName];
+    const manager = tableManagers[managerName];
 
     if (!manager) {
       console.warn(`Manager ${managerName} non trouvé`);
@@ -163,7 +164,7 @@ export const FormPopulator = {
   },
 
   clearOccupants(managerName) {
-    const manager = window.TableManagers[managerName];
+    const manager = tableManagers[managerName];
     // Vider les lignes existantes
     if (manager.clearAllRows) {
       manager.clearAllRows();
@@ -172,7 +173,7 @@ export const FormPopulator = {
 
   // ✅ Remplir les ayants droit
   populateAyantsDroit(ayantsDroit) {
-    const manager = window.TableManagers.ayantsDroitManager;
+    const manager = tableManagers.ayantsDroitManager;
     if (!manager) return;
 
     // Vider les lignes existantes
@@ -220,7 +221,7 @@ export const FormPopulator = {
 
   // ✅ Remplir les non-mandatements
   populateNonMandatements(nonMandatements) {
-    const manager = window.TableManagers.nonMandatementManager;
+    const manager = tableManagers.nonMandatementManager;
     if (!manager) return;
 
     // Vider les lignes existantes
@@ -339,33 +340,37 @@ export const FormPopulator = {
   },
 
   // remplir les informations de l'immeuble
-  async populateImmeubleDatas(immeuble) {
+  async populateImmeubleDatas(immeuble, prefix = 'main') {
     // set hidden input value for id :
     this.setValue('immeuble_id', immeuble.id);
 
     // set simple input value :
-    this.setValue('Designation', immeuble.Designation);
-    this.setValue('Date_Construction', immeuble.Date_Construction);
-    this.setValue('Nombre_de_pieces', immeuble.Nombre_de_pieces);
-    this.setValue('Superficie_louer', immeuble.Superficie_louer);
-    this.setValue('observation', immeuble.observation);
-    this.setValue('Quartier', immeuble.quartier);
-    this.setValue('Coordonee_gps', immeuble.coordonnees_gps);
-    this.setValue('Ville', immeuble.ville);
-    this.setValue('Rue', immeuble.rue);
+    this.setValue(`${prefix}_Designation`, immeuble.Designation);
+    this.setValue(`${prefix}_Date_Construction`, immeuble.Date_Construction);
+    this.setValue(`${prefix}_Nombre_de_pieces`, immeuble.Nombre_de_pieces);
+    this.setValue(`${prefix}_Superficie_louer`, immeuble.Superficie_louer);
+    this.setValue(`${prefix}_observation`, immeuble.observation);
+    this.setValue(`${prefix}_Quartier`, immeuble.quartier);
+    this.setValue(`${prefix}_Coordonee_gps`, immeuble.coordonnees_gps);
+    this.setValue(`${prefix}_Ville`, immeuble.ville);
+    this.setValue(`${prefix}_Rue`, immeuble.rue);
 
     // Dynamic choices
-    this.setDynamicChoice('type_construction_id', immeuble.type_construction_id);
-    this.setDynamicChoice('type_location_id', immeuble.type_location_id);
-    this.setDynamicChoice('statut_batisse_id', immeuble.statut_batisse_id);
-    this.setDynamicChoice('revetement_int_id', immeuble.revetement_int_id);
-    this.setDynamicChoice('revetement_ext_id', immeuble.revetement_ext_id);
+    this.setDynamicChoice(`${prefix}_type_construction_id`, immeuble.type_construction_id);
+    this.setDynamicChoice(`${prefix}_type_location_id`, immeuble.type_location_id);
+    this.setDynamicChoice(`${prefix}_statut_batisse_id`, immeuble.statut_batisse_id);
+    this.setDynamicChoice(`${prefix}_revetement_int_id`, immeuble.revetement_int_id);
+    this.setDynamicChoice(`${prefix}_revetement_ext_id`, immeuble.revetement_ext_id);
 
     // select2 lists
-    await this.setSelect2Value('pays', immeuble.pays_id, immeuble.pays?.libelle);
-    await this.setSelect2Value('region', immeuble.region_id, immeuble.region?.libelle);
-    await this.setSelect2Value('departement', immeuble.departement_id, immeuble.departement?.libelle);
-    await this.setSelect2Value('arrondissement', immeuble.arrondissement_id, immeuble.arrondissement?.libelle);
+    await this.setSelect2Value(`${prefix}_pays`, immeuble.pays_id, immeuble.pays?.libelle);
+    await this.setSelect2Value(`${prefix}_region`, immeuble.region_id, immeuble.region?.libelle);
+    await this.setSelect2Value(`${prefix}_departement`, immeuble.departement_id, immeuble.departement?.libelle);
+    await this.setSelect2Value(
+      `${prefix}_arrondissement`,
+      immeuble.arrondissement_id,
+      immeuble.arrondissement?.libelle
+    );
 
     // Éléments de description
     if (immeuble.elements_description) {
@@ -379,5 +384,30 @@ export const FormPopulator = {
     if (immeuble.occupants_bureaux) {
       this.populateOccupants('bureauxManager', immeuble.occupants_bureaux);
     }
+  },
+
+  clearImmeubleForm(prefix = 'main') {
+    FormUtils.initElementsImmeuble();
+    this.clearDynamicChoice(`${prefix}_type_construction_id`);
+    this.clearDynamicChoice(`${prefix}_type_location_id`);
+    this.clearDynamicChoice(`${prefix}_statut_batisse_id`);
+    this.clearDynamicChoice(`${prefix}_revetement_int_id`);
+    this.clearDynamicChoice(`${prefix}_revetement_ext_id`);
+    this.clearOccupants(`logementsManager`);
+    this.clearOccupants(`bureauxManager`);
+    this.clearValue(`${prefix}_Designation`);
+    this.clearValue(`${prefix}_Date_Construction`);
+    this.clearValue(`${prefix}_Nombre_de_pieces`);
+    this.clearValue(`${prefix}_Superficie_louer`);
+    this.clearValue(`${prefix}_observation`);
+    this.clearValue(`${prefix}_Quartier`);
+    this.clearValue(`${prefix}_Coordonee_gps`);
+    this.clearValue(`${prefix}_Ville`);
+    this.clearValue(`${prefix}_Rue`);
+    this.clearSelect2Value(`${prefix}_pays`);
+    this.clearSelect2Value(`${prefix}_region`);
+    this.clearSelect2Value(`${prefix}_departement`);
+    this.clearSelect2Value(`${prefix}_arrondissement`);
+    initTableManagers();
   }
 };

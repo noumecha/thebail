@@ -85,7 +85,7 @@ function DynamicTableManager(config) {
     rowHtml += `
       <td class="p-0">
         <div class="btn-group btn-group-sm" role="group">
-          <button type="button" class="btn btn-outline-danger delete-row" title="Supprimer">
+          <button type="button" class="btn btn-outline-danger delete-row" title="Supprimer une ligne">
             <i class="bx bx-trash"></i>
           </button>
         </div>
@@ -256,76 +256,6 @@ function DynamicTableManager(config) {
 
 // appel :
 $(function () {
-  // tableaux dynamique d'ajouts d'éléments
-  // Initialiser le tableau des ayants droit (avec numérotation)
-  window.TableManagers.ayantsDroitManager = new DynamicTableManager({
-    tbodyId: 'ayants-droit-tbody',
-    addButtonId: 'add-ayant-droit-row',
-    tableId: 'ayants-droit-table',
-    rowPrefix: 'ayant_droit',
-    autoAdd: true,
-    minRows: 1,
-    showRowNumber: true, // ✅ Activer la numérotation
-    fields: [
-      { name: 'Nom_Prenom_ayant_droit', type: 'text', placeholder: 'Nom & Prénoms' },
-      { name: 'Contact_ayant_droit', type: 'text', placeholder: 'Contact' },
-      { name: 'Reference_Grosse_ayant_droit', type: 'text', placeholder: 'Référence Grosse' },
-      { name: 'Date_delivrance_grosse', type: 'date' },
-      { name: 'Reference_certificat_non_appel', type: 'text', placeholder: 'Référence Certificat' },
-      { name: 'Date_delivrance_certificat_non_appel', type: 'date' }
-    ]
-  });
-
-  window.TableManagers.logementsManager = new DynamicTableManager({
-    tbodyId: 'occupants-logements-tbody',
-    addButtonId: 'add-occupant-logement-row',
-    tableId: 'occupants-logements-table',
-    rowPrefix: 'occupant_logement',
-    autoAdd: true,
-    minRows: 1,
-    showRowNumber: false, // ✅ Pas de numérotation
-    fields: [
-      { name: 'Nom_Prenom_occupant_residence', type: 'text', placeholder: 'Nom & Prénoms' },
-      {
-        name: 'Administration_rattachement',
-        type: 'select2',
-        ajaxUrl: '/api/get-administrations/',
-        placeholder: 'Rechercher une administration...'
-      },
-      { name: 'Fonction_occupant_residence', type: 'text', placeholder: 'Fonction' },
-      { name: 'Matricule_occupant_residence', type: 'text', placeholder: 'Matricule', settings: "maxlength='7'" },
-      { name: 'Ref_ActeJuridique_attribution', type: 'text', placeholder: 'Référence' },
-      { name: 'Date_Signature_acte_juridique', type: 'date' }
-    ]
-  });
-
-  window.TableManagers.bureauxManager = new DynamicTableManager({
-    tbodyId: 'occupants-bureaux-tbody',
-    addButtonId: 'add-occupant-bureau-row',
-    tableId: 'occupants-bureaux-table',
-    rowPrefix: 'occupant_bureau',
-    autoAdd: true,
-    minRows: 1,
-    showRowNumber: false, // ✅ Pas de numérotation
-    fields: [
-      {
-        name: 'Service_occupant_bureau',
-        type: 'select2',
-        ajaxUrl: '/api/get-structures/',
-        placeholder: 'Rechercher un service...'
-      },
-      {
-        name: 'Administration_correspondante',
-        type: 'select2',
-        ajaxUrl: '/api/get-administrations/',
-        placeholder: 'Rechercher une administration...'
-      },
-      { name: 'Fonction_occupant_bureau', type: 'text', placeholder: 'Fonction du responsable' },
-      { name: 'Ref_ActeJuridique_attribution', type: 'text', placeholder: 'Référence' },
-      { name: 'Date_signature_acte_attribution', type: 'date' }
-    ]
-  });
-
   // non-mandatement management
   // Template personnalisé pour non-mandatement
   function getNonMandatementTemplate(rowId, rowPrefix) {
@@ -481,7 +411,86 @@ $(function () {
     return data;
   }
 
-  // Initialiser le tableau Non-Mandatement
+  // Attacher les événements sur le tbody pour les lignes existantes et futures
+  $('#nonmandatement-collecte-tbody').on('input change', '.loyer-mensuel', function () {
+    const $row = $(this).closest('.dynamic-row');
+    calculateMontantTotal($row);
+  });
+
+  $('#nonmandatement-collecte-tbody').on('change', '.month-checkbox', function () {
+    const $row = $(this).closest('.dynamic-row');
+    calculateMontantTotal($row);
+  });
+
+  // Initialiser les tableaux
+  window.TableManagers.ayantsDroitManager = new DynamicTableManager({
+    tbodyId: 'ayants-droit-tbody',
+    addButtonId: 'add-ayant-droit-row',
+    tableId: 'ayants-droit-table',
+    rowPrefix: 'ayant_droit',
+    autoAdd: true,
+    minRows: 1,
+    showRowNumber: true, // ✅ Activer la numérotation
+    fields: [
+      { name: 'Nom_Prenom_ayant_droit', type: 'text', placeholder: 'Nom & Prénoms' },
+      { name: 'Contact_ayant_droit', type: 'text', placeholder: 'Contact' },
+      { name: 'Reference_Grosse_ayant_droit', type: 'text', placeholder: 'Référence Grosse' },
+      { name: 'Date_delivrance_grosse', type: 'date' },
+      { name: 'Reference_certificat_non_appel', type: 'text', placeholder: 'Référence Certificat' },
+      { name: 'Date_delivrance_certificat_non_appel', type: 'date' }
+    ]
+  });
+
+  window.TableManagers.logementsManager = new DynamicTableManager({
+    tbodyId: 'occupants-logements-tbody',
+    addButtonId: 'add-occupant-logement-row',
+    tableId: 'occupants-logements-table',
+    rowPrefix: 'occupant_logement',
+    autoAdd: true,
+    minRows: 1,
+    showRowNumber: false, // ✅ Pas de numérotation
+    fields: [
+      { name: 'Nom_Prenom_occupant_residence', type: 'text', placeholder: 'Nom & Prénoms' },
+      {
+        name: 'Administration_rattachement',
+        type: 'select2',
+        ajaxUrl: '/api/get-administrations/',
+        placeholder: 'Rechercher une administration...'
+      },
+      { name: 'Fonction_occupant_residence', type: 'text', placeholder: 'Fonction' },
+      { name: 'Matricule_occupant_residence', type: 'text', placeholder: 'Matricule', settings: "maxlength='7'" },
+      { name: 'Ref_ActeJuridique_attribution', type: 'text', placeholder: 'Référence' },
+      { name: 'Date_Signature_acte_juridique', type: 'date' }
+    ]
+  });
+
+  window.TableManagers.bureauxManager = new DynamicTableManager({
+    tbodyId: 'occupants-bureaux-tbody',
+    addButtonId: 'add-occupant-bureau-row',
+    tableId: 'occupants-bureaux-table',
+    rowPrefix: 'occupant_bureau',
+    autoAdd: true,
+    minRows: 1,
+    showRowNumber: false, // ✅ Pas de numérotation
+    fields: [
+      {
+        name: 'Service_occupant_bureau',
+        type: 'select2',
+        ajaxUrl: '/api/get-structures/',
+        placeholder: 'Rechercher un service...'
+      },
+      {
+        name: 'Administration_correspondante',
+        type: 'select2',
+        ajaxUrl: '/api/get-administrations/',
+        placeholder: 'Rechercher une administration...'
+      },
+      { name: 'Fonction_occupant_bureau', type: 'text', placeholder: 'Fonction du responsable' },
+      { name: 'Ref_ActeJuridique_attribution', type: 'text', placeholder: 'Référence' },
+      { name: 'Date_signature_acte_attribution', type: 'date' }
+    ]
+  });
+
   window.TableManagers.nonMandatementManager = new DynamicTableManager({
     tbodyId: 'nonmandatement-collecte-tbody',
     addButtonId: 'add-nonmandatement-row',
@@ -518,16 +527,5 @@ $(function () {
     },
     fields: [],
     customCollectData: collectNonMandatementData
-  });
-
-  // Attacher les événements sur le tbody pour les lignes existantes et futures
-  $('#nonmandatement-collecte-tbody').on('input change', '.loyer-mensuel', function () {
-    const $row = $(this).closest('.dynamic-row');
-    calculateMontantTotal($row);
-  });
-
-  $('#nonmandatement-collecte-tbody').on('change', '.month-checkbox', function () {
-    const $row = $(this).closest('.dynamic-row');
-    calculateMontantTotal($row);
   });
 });
