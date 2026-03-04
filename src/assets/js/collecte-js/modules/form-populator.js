@@ -409,5 +409,41 @@ export const FormPopulator = {
     this.clearSelect2Value(`${prefix}_departement`);
     this.clearSelect2Value(`${prefix}_arrondissement`);
     initTableManagers();
+  },
+
+  // for reloading immeubles elements
+  async reloadElements(containerId) {
+    const response = await fetch(`/reload-immeuble-elements/?context=${containerId.replace('#', '')}`);
+    const data = await response.json();
+
+    const wrapperId = containerId.replace('#', '') + '-wrapper';
+    $('#' + wrapperId).replaceWith(data.html);
+
+    // 🔥 Rebind après remplacement
+    FormUtils.initElementsImmeuble(containerId);
+  },
+
+  async reloadDynamicChoices(config) {
+    const params = new URLSearchParams(config).toString();
+
+    const response = await fetch(`/reload-dynamic-choices/?${params}`);
+    const data = await response.json();
+
+    const wrapperId = config.list_id + '-wrapper';
+
+    $('#' + wrapperId).replaceWith(data.html);
+
+    // Rebind toggle logic
+    $('#' + config.list_id).off('change', '.dynamic-check');
+    $('#' + config.list_id).on('change', '.dynamic-check', function () {
+      FormUtils.toggleCheck({
+        listId: config.list_id,
+        checkbox: this,
+        dynamicCheckClass: 'dynamic-check',
+        dynamicOptionClass: 'dynamic-option',
+        dynamicInputClass: 'dynamic-x-input',
+        hiddenId: config.hidden_id
+      });
+    });
   }
 };

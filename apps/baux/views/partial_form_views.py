@@ -26,7 +26,6 @@ class ElementPartialFormView(GenericPartialFormView):
         form_parent = ImmeublesForm()
         statut_oui = form_parent[f"element_{instance.pk}_statut_oui"]
         statut_non = form_parent[f"element_{instance.pk}_statut_non"]
-        nombre_input = form_parent[f"element_{instance.pk}_nombre"]
 
         html_row = render_to_string(
             "baux/widgets/immeuble_element_row.html",
@@ -36,7 +35,6 @@ class ElementPartialFormView(GenericPartialFormView):
                     "libelle": instance.libelle,
                     "statut_oui": statut_oui,
                     "statut_non": statut_non,
-                    "nombre_input": nombre_input,
                 }
             },
             request=request,

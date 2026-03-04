@@ -12,18 +12,18 @@ def add_dynamic_choice(request):
     label = request.POST.get("label", "").strip()
 
     if not model_name or not label:
-        return JsonResponse({"error": "Invalid data"}, status=400)
+        return JsonResponse({"error": "Données invalides."}, status=400)
 
-    # Dynamically load the model by its name
     Model = apps.get_model("baux", model_name)
-    obj, created = Model.objects.get_or_create(libelle=label)
+    if Model.objects.filter(libelle__iexact=label).exists():
+        return JsonResponse({
+            "error": "Ce libellé existe déjà."
+        }, status=409)
+
+    obj = Model.objects.create(libelle=label)
 
     return JsonResponse({
         "id": obj.pk,
         "label": obj.libelle,
-        "created": created
+        "created": True
     })
-
-def add_dynamic_element(request):
-    if request.method == 'GET':
-        return JsonResponse({"message": "Cette url n'accepte que la méthode POST."}, status=200)

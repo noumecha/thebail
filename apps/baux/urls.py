@@ -5,7 +5,7 @@ from apps.baux.views import api_bailleur_views, api_fiche_views, api_immeuble_vi
 from .views import *
 from django.urls import re_path as url
 from rest_framework.routers import DefaultRouter
-from .views.fichecollecteviews import FicheCollecteViewSet, FicheCollecteFormView, FicheEditView
+from .views.fichecollecteviews import *
 from django.conf.urls.static import static
 
 app_name = 'baux'
@@ -103,6 +103,10 @@ urlpatterns = [
     path("collecte/add/", FicheCollecteFormView.as_view(), name="fiche_collecte_form"),
     path('collecte/<int:fiche_id>/edit/', FicheEditView.as_view(), name='edit_fiche'),
 
+    # reload immeubles elements
+    path("reload-immeuble-elements/", reload_immeuble_elements, name="reload_immeuble_elements"),
+    path("reload_dynamic_choices/", reload_dynamic_choices, name="reload_dynamic_choices"),
+
     # api endpoints
     path('api/search-agents/', AgentNomSelect2().get, name='api_agents'),
     path('api/search-matricule-agents/', AgentMatriculeSelect2().get, name='api_matricules_agents'),
@@ -116,6 +120,7 @@ urlpatterns = [
     path("api/get-bailleurs/", BailleursSelect2().get, name="api_bailleurs"),
     path("api/get-banques/", BanquesSelect2().get, name="api_banques"),
     path("api/get-exercices/", ExercicesSelect2.as_view(), name="api_exercices"),
+
     # api immeubles
     path("api/get-immeubles/", ImmeublesSelect2().get, name="api_immeubles"),
     path("api/get-immeubles/<int:immeuble_id>/", api_immeuble_views.get_immeuble_data, name="get_immeuble_data"),

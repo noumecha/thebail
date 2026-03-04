@@ -1,74 +1,24 @@
 import { FormUtils } from './modules/form-utils.js';
 import { bindStatutRoleDependency } from './modules/dependencies.js';
 $(function () {
-  // gestion dynamique avec pour les modals et les éléments de types list avec checkbox
-  const ajax_modal_objects = [
-    {
-      modalId: '#addTypeContratModal',
-      formContainerId: '#typecontrat-form-content',
-      formId: '#typecontratForm',
-      fetchUrl: '/type-contrat-partial-form/',
-      selectItemId: '#id_TypeContrat'
-    },
-    {
-      modalId: '#addRevetementInterieureModal',
-      formContainerId: '#revetementint-form-content',
-      formId: '#revetementintForm',
-      fetchUrl: '/revetement-int-partial-form/',
-      selectItemId: '#id_immeubles-0-Revetement_interieure'
-    },
-    {
-      modalId: '#addRevetementExterieureModal',
-      formContainerId: '#revetementext-form-content',
-      formId: '#revetementextForm',
-      fetchUrl: '/revetement-ext-partial-form/',
-      selectItemId: '#id_immeubles-0-Revetement_exterieure'
-    },
-    {
-      modalId: '#addExerciceModal',
-      formContainerId: '#exercice-form-content',
-      formId: '#exerciceForm',
-      fetchUrl: '/exercice-partial-form/',
-      selectItemId: '#id_non_mandatements-0-Exercice'
-    },
-    {
-      modalId: '#addBailleurModal',
-      formContainerId: '#bailleur-form-content',
-      formId: '#bailleurForm',
-      fetchUrl: '/bailleur-partial-form/',
-      selectItemId: '#id_Bailleur'
-    },
-    {
-      modalId: '#addPieceModal',
-      formContainerId: '#piece-form-content',
-      formId: '#pieceForm',
-      fetchUrl: '/piece-collecte-partial-form/',
-      selectItemId: '#pieces-collecte-container'
-    }
-  ];
-  ajax_modal_objects.forEach(obj => {
-    ajaxModal(obj.modalId, obj.formContainerId, obj.formId, obj.fetchUrl, obj.selectItemId);
-  });
-
   // elements and pieces adding
   const add_to_list_object = [
     {
       list_container: '#pieces-collecte-container',
-      list_input: 'piece-collecte-input',
-      list_btn: 'add-piece-btn',
+      list_input: 'pieces-collecte-container-piece-collecte-input',
+      list_btn: 'pieces-collecte-container-add-piece-btn',
       list_url: '/piece-collecte-partial-form/'
     },
     {
-      list_container: '#elements-immeuble-container',
-      list_input: 'element-immeuble-input',
-      list_btn: 'add-element-btn',
+      list_container: '#main-elements-immeuble-container',
+      list_input: 'main-elements-immeuble-container-element-immeuble-input',
+      list_btn: 'main-elements-immeuble-container-add-element-btn',
       list_url: '/element-description-partial-form/'
     }
   ];
   add_to_list_object.forEach(obj => {
-    addElementToList(obj.list_container, obj.list_input, obj.list_btn, obj.list_url);
+    FormUtils.addElementToList(obj.list_container, obj.list_input, obj.list_btn, obj.list_url);
   });
-
   // init select 2 on form
   FormUtils.initSelect2Ajax($('#ficheCollecteForm'));
 
@@ -102,61 +52,62 @@ $(function () {
   });
 
   // gestion des éléments dynamique [elements de type list avec checkbox + éléments de description]
+  // id="{{ list_id }}-{{ add_btn_id }}"
   const dynamic_choices_list_objects = [
     {
       listId: 'main_type_construction_id',
-      hiddenId: 'construction_choice_hidden',
-      newInputId: 'new_construction_input',
-      formWrapper: 'new_construction_wrapper',
-      addButtonId: 'add_construction_btn',
+      hiddenId: 'main_type_construction_id-construction_choice_hidden',
+      newInputId: 'main_type_construction_id-new_construction_input',
+      formWrapper: 'main_type_construction_id-new_construction_wrapper',
+      addButtonId: 'main_type_construction_id-add_construction_btn',
       ajaxUrl: '/add-choice/'
     },
     {
       listId: 'main_type_location_id',
-      hiddenId: 'type_location_choice_hidden',
-      newInputId: 'new_type_location_input',
-      formWrapper: 'new_type_location_wrapper',
-      addButtonId: 'add_type_location_btn',
+      hiddenId: 'main_type_construction_id-type_location_choice_hidden',
+      newInputId: 'main_type_construction_id-new_type_location_input',
+      formWrapper: 'main_type_construction_id-new_type_location_wrapper',
+      addButtonId: 'main_type_construction_id-add_type_location_btn',
       ajaxUrl: '/add-choice/'
     },
     {
       listId: 'main_statut_batisse_id',
-      hiddenId: 'statut_choice_hidden',
-      newInputId: 'new_statut_input',
-      formWrapper: 'new_statut_wrapper',
-      addButtonId: 'add_statut_btn',
+      hiddenId: 'main_type_construction_id-statut_choice_hidden',
+      newInputId: 'main_type_construction_id-new_statut_input',
+      formWrapper: 'main_type_construction_id-new_statut_wrapper',
+      addButtonId: 'main_type_construction_id-add_statut_btn',
       ajaxUrl: '/add-choice/'
     },
     {
       listId: 'main_revetement_int_id',
-      hiddenId: 'revetementinterieure_choice_hidden',
-      newInputId: 'new_revetementinterieure_input',
-      formWrapper: 'new_revetementinterieure_wrapper',
-      addButtonId: 'add_revetementinterieure_btn',
+      hiddenId: 'main_type_construction_id-revetementinterieure_choice_hidden',
+      newInputId: 'main_type_construction_id-new_revetementinterieure_input',
+      formWrapper: 'main_type_construction_id-new_revetementinterieure_wrapper',
+      addButtonId: 'main_type_construction_id-add_revetementinterieure_btn',
       ajaxUrl: '/add-choice/'
     },
     {
       listId: 'main_revetement_ext_id',
-      hiddenId: 'revetementexterieure_choice_hidden',
-      newInputId: 'new_revetementexterieure_input',
-      formWrapper: 'new_revetementexterieure_wrapper',
-      addButtonId: 'add_revetementexterieure_btn',
+      hiddenId: 'main_type_construction_id-revetementexterieure_choice_hidden',
+      newInputId: 'main_type_construction_id-new_revetementexterieure_input',
+      formWrapper: 'main_type_construction_id-new_revetementexterieure_wrapper',
+      addButtonId: 'main_type_construction_id-add_revetementexterieure_btn',
       ajaxUrl: '/add-choice/'
     },
     {
       listId: 'TypeContrat',
-      hiddenId: 'typecontrat_choice_hidden',
-      newInputId: 'new_typecontrat_input',
-      formWrapper: 'new_typecontrat_wrapper',
-      addButtonId: 'add_typecontrat_btn',
+      hiddenId: 'TypeContrat-typecontrat_choice_hidden',
+      newInputId: 'TypeContrat-new_typecontrat_input',
+      formWrapper: 'TypeContrat-new_typecontrat_wrapper',
+      addButtonId: 'TypeContrat-add_typecontrat_btn',
       ajaxUrl: '/add-choice/'
     },
     {
       listId: 'Periodicite_Reglement_id',
-      hiddenId: 'periodicitereglement_choice_hidden',
-      newInputId: 'new_periodicitereglement_input',
-      formWrapper: 'new_periodicitereglement_wrapper',
-      addButtonId: 'add_periodicitereglement_btn',
+      hiddenId: 'Periodicite_Reglement_id-periodicitereglement_choice_hidden',
+      newInputId: 'Periodicite_Reglement_id-new_periodicitereglement_input',
+      formWrapper: 'Periodicite_Reglement_id-new_periodicitereglement_wrapper',
+      addButtonId: 'Periodicite_Reglement_id-add_periodicitereglement_btn',
       ajaxUrl: '/add-choice/'
     }
   ];

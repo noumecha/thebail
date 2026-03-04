@@ -82,6 +82,8 @@ export const FormUtils = {
     $container.find('input[type="number"]').each(function () {
       $(this).prop('disabled', true).val('');
     });
+    // befor rebinding :
+    $(containerId).off('change', '.dynamic-check');
     // on init by default, we nee to get all element with id="element_{{ el.id }}_non" and set it checked
     $container.find('.dynamic-check').each(function () {
       const $row = $(this).closest('tr');
@@ -96,7 +98,6 @@ export const FormUtils = {
       const elementId = $row.data('el-id');
       const context = $row.data('context');
       const listId = `immeuble_element_${elementId}_${context}`;
-      console.log('list id : ', listId);
       toggleCheck({
         listId: listId,
         checkbox: this,
@@ -545,5 +546,130 @@ export const FormUtils = {
       }
     }
     return '';
+  },
+
+  /**
+   * for dynamic elements
+   */
+
+  // form for element inside another form
+  addElementToList(listId, newInputId, addBtnId, url) {
+    const selectContainer = $(listId);
+    $('#' + addBtnId).click(function () {
+      const val = $('#' + newInputId)
+        .val()
+        .trim();
+      if (!val) return;
+      if (url) {
+        $.post({
+          url: url,
+          data: {
+            libelle: val,
+            model: selectContainer.data('model')
+          },
+          headers: {
+            'X-CSRFToken': FormUtils.getCSRFToken()
+          }
+        }).done(function (data) {
+          console.log('data : ', data);
+          if (data.html) {
+            FormUtils.appendToDynamicGroup(listId, data.html);
+          }
+          if (data.success) {
+            FormUtils.showAlertMessage(data.message, `${listId}-form-success`, 3000);
+          } else {
+            FormUtils.showAlertMessage(data.errors, `${listId}-form-error`, 3000);
+          }
+        });
+      } else {
+        FormUtils.showAlertMessage(data.message, `${listId}-form-error`, 3000);
+      }
+      $('#' + newInputId).val('');
+    });
+  },
+  GROUP_HEADERS: {
+    element: `
+    <thead class="table-light">
+      <tr>
+        <th class="bg-secondary-subtle text-capitalize p-0">Existence</th>
+        <th class="p-0"></th>
+        <th class="bg-secondary-subtle text-capitalize p-0">Quantité</th>
+      </tr>
+    </thead>
+  `,
+    piece: `
+    <thead class="table-light">
+      <tr>
+        <th class="p-0">Désignation</th>
+        <th class="p-0">Quantité</th>
+        <th class="p-0">Images</th>
+      </tr>
+    </thead>
+  `
+  },
+  appendToDynamicGroup(containerSelector, newRowHtml) {
+    const $container = $(containerSelector);
+    console.log('container : ', $container);
+    const groupType = $container.data('group-type');
+    console.log('group type : ', groupType);
+    const maxItems = parseInt($container.data('max-items')) || 9;
+
+    // Find last group
+    let $lastGroup = $container.find('.col-block').last();
+
+    // If no group exists, create one
+    if (!$lastGroup.length) {
+      $lastGroup = FormUtils.createNewGroup($container, groupType);
+      $container.append($lastGroup);
+    }
+
+    const $tbody = $lastGroup.find('tbody');
+    const currentCount = $tbody.find('tr').length;
+
+    // If last group is full, create a new one
+    if (currentCount >= maxItems) {
+      const $newGroup = FormUtils.createNewGroup($container, groupType);
+      $container.append($newGroup);
+      $newGroup.find('tbody').append(newRowHtml);
+    } else {
+      $tbody.append(newRowHtml);
+    }
+  },
+
+  createNewGroup($container, type) {
+    const headerHtml = FormUtils.GROUP_HEADERS[type] || '';
+    const colClass = type === 'piece' ? 'col-md-6 col-lg-4' : 'col-md-4';
+
+    const $newGroup = $(`
+    <div class="${colClass} col-block mb-4">
+      <table class="table align-middle text-center">
+        ${headerHtml}
+        <tbody class="${type}-collecte-container-tbody"></tbody>
+      </table>
+    </div>
+  `);
+
+    return $newGroup;
+  },
+  showAlertMessage(msg, id, timeout = 5000) {
+    const msgBlock = $(id);
+    msgBlock.stop(true, true).empty();
+
+    if (typeof msg === 'object' && !Array.isArray(msg)) {
+      // Handle JSON object with fields and arrays of messages
+      const list = $('<ul></ul>');
+      Object.keys(msg).forEach(key => {
+        msg[key].forEach(error => {
+          list.append($('<li></li>').text(`${key}: ${error}`));
+        });
+      });
+      msgBlock.append(list);
+    } else {
+      // Handle string messages
+      msgBlock.append($('<p class="text-center mb-0"></p>').text(msg));
+    }
+
+    msgBlock.fadeIn().css('display', 'block');
+    setTimeout(() => msgBlock.fadeOut(), timeout);
   }
 };

@@ -84,30 +84,46 @@ function initDynamicChoiceList(listId, hiddenId, newInputId, formWrapper, addBtn
 
   // save option to db and add to the list
   $('#' + addBtnId).click(function () {
-    const val = $('#' + newInputId)
-      .val()
-      .trim();
-    if (!val) return;
-    console.log('token: ', getCSRFToken(formWrapper));
-    console.log('list id ', listId);
-    console.log('data sent: ', { label: val, model: $('#' + listId).data('model') });
-    if (url) {
-      $.post({
-        url: url,
-        data: {
-          label: val,
-          model: $('#' + listId).data('model')
-        },
-        headers: {
-          'X-CSRFToken': getCSRFToken(formWrapper)
-        }
-      }).done(function (res) {
-        addToList(res.id, res.label, listId);
-      });
-    } else {
-      addToList(null, val, listId);
+    try {
+      const val = $('#' + newInputId)
+        .val()
+        .trim();
+      if (!val) return;
+      console.log('token: ', getCSRFToken(formWrapper));
+      console.log('list id ', listId);
+      console.log('data sent: ', { label: val, model: $('#' + listId).data('model') });
+      if (url) {
+        $.post({
+          url: url,
+          data: {
+            label: val,
+            model: $('#' + listId).data('model')
+          },
+          headers: {
+            'X-CSRFToken': getCSRFToken(formWrapper)
+          }
+        })
+          .done(function (res) {
+            addToList(res.id, res.label, listId);
+          })
+          .fail(function (xhr) {
+            if (xhr.status === 409) {
+              let errorBlock = $(`#${listId}-alert-block`);
+              let errorMessage = $(errorBlock).find('.error-message');
+              errorBlock.toggleClass('d-none');
+              errorMessage.text('Ce libellé existe déjà.');
+              setTimeout(() => {
+                errorBlock.toggleClass('d-none');
+              }, 3000);
+            }
+          });
+      } else {
+        addToList(null, val, listId);
+      }
+      $('#' + newInputId).val('');
+    } catch (error) {
+      console.log('error : ', error);
     }
-    $('#' + newInputId).val('');
   });
 }
 

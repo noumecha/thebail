@@ -1,3 +1,4 @@
+{# immeuble element row template #}
 <tr data-el-id="{{ el.id }}" data-context="{{ element_groups_id }}">
   <td class="d-flex ps-0 pe-0" id="immeuble_element_{{ el.id }}_{{ element_groups_id }}">
     <div class="form-check form-check-inline">
@@ -18,16 +19,17 @@
           type="checkbox"
           class="form-check-input dynamic-check"
           value="non"
+          checked
           id="element_{{ el.id }}_non">
         <span class="">Non</span>
       </label>
     </div>
   </td>
   <td class="p-0 align-items-center justify-content-center text-start">
-    <label class="text-capitalize">{{ el.libelle|capfirst }}</label>
+    <label class="text-uppercase">{{ el.libelle|capfirst }}</label>
   </td>
   <td class="p-0 align-items-center" style="width: 80px;">
-    <input type="number" id="nombre_input_{{ el.id }}" name="nombre_input_{{ el.id }}"
+    <input type="number" disabled id="nombre_input_{{ el.id }}" name="nombre_input_{{ el.id }}"
       class="form-control form-control-sm" value="{{ el.nombre_input.value }}">
   </td>
 </tr>

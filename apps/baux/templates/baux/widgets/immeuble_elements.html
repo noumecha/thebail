@@ -1,33 +1,36 @@
-<div class="row" id="{{ element_groups_id }}" data-group-type="element" data-max-items="9">
-  {% for group in element_groups %}
-    <div class="col-md-4 col-block mb-4">
-      <table class="table align-middle text-center">
-        <thead class="table-light">
-          <tr>
-            <th class="bg-secondary-subtle text-capitalize p-0">Existence</th>
-            <th class="p-0"></th>
-            <th class="bg-secondary-subtle text-capitalize p-0">Quantité</th>
-          </tr>
-        </thead>
-        <tbody id="{{ element_groups_id }}-tbody" class="{{ element_groups_id }}-tbody">
-          {% for el in group %}
-            {% include "baux/widgets/immeuble_element_row.html" with el=el %}
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  {% endfor %}
-</div>
+{# immeuble elements widget list #}
+<div id="{{ element_groups_id }}-wrapper">
+  <div class="row" id="{{ element_groups_id }}" data-group-type="element" data-max-items="9">
+    {% for group in element_groups %}
+      <div class="col-md-4 col-block mb-4">
+        <table class="table align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th class="bg-secondary-subtle text-capitalize p-0">Existence</th>
+              <th class="p-0"></th>
+              <th class="bg-secondary-subtle text-capitalize p-0">Quantité</th>
+            </tr>
+          </thead>
+          <tbody id="{{ element_groups_id }}-tbody" class="{{ element_groups_id }}-tbody">
+            {% for el in group %}
+              {% include "baux/widgets/immeuble_element_row.html" with el=el %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+  </div>
 
-<div class="row">
-  <div class="alert alert-success" style="display: none;" id="form-success"></div>
-  <div class="alert alert-danger" style="display: none;" id="form-error"></div>
-</div>
+  <div class="row">
+    <div class="alert alert-success" style="display: none;" id="{{ element_groups_id }}-form-success"></div>
+    <div class="alert alert-danger" style="display: none;" id="{{ element_groups_id }}-form-error"></div>
+  </div>
 
-<div class="ps-2">
-  <form method="POST" class="ps-2 d-flex" id="element-immeuble-form">
-    {% csrf_token %}
-    <input type="text" id="element-immeuble-input" name="libelle" class="form-control form-control-sm" placeholder="Autre élément de description ..." />
-    <button type="button" id="add-element-btn" class="btn btn-outline-primary btn-sm">+</button>
-  </form>
+  <div class="ps-2">
+    <form method="POST" class="ps-2 d-flex" id="{{ element_groups_id }}-element-immeuble-form">
+      {% csrf_token %}
+      <input type="text" id="{{ element_groups_id }}-element-immeuble-input" name="libelle" class="form-control form-control-sm" placeholder="Autre élément de description ..." />
+      <button type="button" id="{{ element_groups_id }}-add-element-btn" class="btn btn-outline-primary btn-sm">+</button>
+    </form>
+  </div>
 </div>

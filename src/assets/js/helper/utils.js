@@ -71,9 +71,9 @@ const GROUP_HEADERS = {
   element: `
     <thead class="table-light">
       <tr>
-        <th class="p-0">Existence</th>
-        <th class="bg-secondary-subtle p-0"></th>
-        <th class="p-0">Quantité</th>
+        <th class="bg-secondary-subtle text-capitalize p-0">Existence</th>
+        <th class="p-0"></th>
+        <th class="bg-secondary-subtle text-capitalize p-0">Quantité</th>
       </tr>
     </thead>
   `,
@@ -96,9 +96,6 @@ function addElementToList(listId, newInputId, addBtnId, url) {
       .val()
       .trim();
     if (!val) return;
-    console.log('select container : ', selectContainer);
-    console.log(`variables : listid = ${listId}
-      newinputId = ${newInputId}; addBtnId = ${addBtnId}; url = ${url}; val = ${val}`);
     if (url) {
       $.post({
         url: url,
@@ -121,7 +118,6 @@ function addElementToList(listId, newInputId, addBtnId, url) {
         }
       });
     } else {
-      console.log('error');
       showAlertMessage(data.message, '#form-error');
     }
     $('#' + newInputId).val('');
@@ -173,7 +169,7 @@ function createNewGroup($container, type) {
   return $newGroup;
 }
 
-// generic function to mange checkboxes in the dynamic groups
+// generic function to manage checkboxes in the dynamic groups
 document.addEventListener('change', function (e) {
   if (e.target.classList.contains('statut-checkbox')) {
     const group = e.target.getAttribute('data-group');

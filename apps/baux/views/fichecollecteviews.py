@@ -8,8 +8,80 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from django.apps import apps
 
+@require_GET
+def reload_dynamic_choices(request):
+    model_name = request.GET.get("model")
+    list_id = request.GET.get("list_id")
+
+    ALLOWED_MODELS = [
+        "TypeConstructions",
+        "TypeLocations",
+        "StatutBatisse",
+        "RevetementInt",
+        "RevetementExt",
+    ]
+
+    if model_name not in ALLOWED_MODELS:
+        return JsonResponse({"error": "Unauthorized model"}, status=403)
+
+    if not model_name or not list_id:
+        return JsonResponse({"error": "Missing parameters"}, status=400)
+
+    try:
+        Model = apps.get_model("baux", model_name)
+    except LookupError:
+        return JsonResponse({"error": "Invalid model"}, status=400)
+
+    choices = Model.objects.all()
+
+    html = render_to_string(
+        "baux/widgets/dynamic_choice_list.html",
+        {
+            "list_id": list_id,
+            "checkbox_name": request.GET.get("checkbox_name"),
+            "hidden_name": request.GET.get("hidden_name"),
+            "hidden_id": request.GET.get("hidden_id"),
+            "add_wrapper_id": request.GET.get("add_wrapper_id"),
+            "new_input_id": request.GET.get("new_input_id"),
+            "add_btn_id": request.GET.get("add_btn_id"),
+            "choices": choices,
+            "model": model_name,
+        },
+        request=request
+    )
+
+    return JsonResponse({"html": html})
+
+def reload_immeuble_elements(request):
+    elements = list(ElementDeDescription.objects.all())
+
+    element_groups = []
+    group = []
+    for index, el in enumerate(elements, start=1):
+        group.append({
+            "id": el.pk,
+            "libelle": str(el),
+        })
+        if index % 9 == 0 or index == len(elements):
+            element_groups.append(group)
+            group = []
+
+    html = render_to_string(
+        "baux/widgets/immeuble_elements.html",
+        {
+            "element_groups": element_groups,
+            "element_groups_id": request.GET.get("context"),
+            #"element_groups_id": request.GET.get("context", "main-elements-immeuble-container")
+        },
+        request=request
+    )
+
+    return JsonResponse({"html": html})
 
 def transform_queryset_to_listable(q, id_field='id', name_field='__str__'):
     listable = []
